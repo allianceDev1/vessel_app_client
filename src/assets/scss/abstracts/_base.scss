@@ -1,0 +1,15 @@
+@import '../fonts/Config_rounded.scss';
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'ConfigRounded', 'Montserrat', sans-serif;
+    overflow-wrap: anywhere;
+}
+
+
+body {
+    overscroll-behavior-y: contain;
+    background-color: var(--background);
+    color: var(--text-primary);
+}

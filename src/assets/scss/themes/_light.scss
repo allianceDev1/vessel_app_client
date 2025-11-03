@@ -1,0 +1,134 @@
+// scss/_themes.scss
+@use "sass:color";
+@use "../abstracts/variables" as *;
+
+
+@mixin light-theme {
+   /*
+     * == TEXT AND FOREGROUND COLORS ==
+     * Uses darker neutrals for contrast against light backgrounds.
+     */
+   --text-primary: var(--color-neutral-900);
+   --text-primary-alt: var(--color-neutral-800);
+
+   --text-secondary: var(--color-neutral-700);
+   --text-secondary-1: var(--color-neutral-600);
+   --text-secondary-2: var(--color-neutral-500);
+   --text-secondary-3: var(--color-neutral-400);
+   --text-secondary-4: var(--color-neutral-300);
+
+   --text-muted: var(--color-neutral-200);
+
+   /*
+     * == BACKGROUND AND SURFACE COLORS ==
+     * Uses the lightest neutrals.
+     */
+   --background: var(--color-neutral-0);
+
+   --surface: var(--color-neutral-50);
+   --surface-1: var(--color-neutral-75);
+   --surface-2: var(--color-neutral-100);
+   --surface-3: var(--color-neutral-150);
+   --surface-4: var(--color-neutral-200);
+
+
+   /*
+     * == BORDER COLORS (4 VARIANTS) ==
+     * Progressing from lightest to darkest for various uses (subtle lines, default, emphasis, separation).
+     */
+   --border-light: var(--color-neutral-150);
+   --border-default: var(--color-neutral-200);
+   --border-medium: var(--color-neutral-300);
+   --border-dark: var(--color-neutral-400);
+
+   /*
+     * == SHADOW COLORS (4 VARIANTS) ==
+     * All use the darkest neutral's RGB (43, 43, 43) with varying opacity for depth.
+     */
+   --shadow-xs: rgba(43, 43, 43, 0.05);
+   --shadow-sm: rgba(43, 43, 43, 0.10);
+   --shadow-md: rgba(43, 43, 43, 0.15);
+   --shadow-lg: rgba(43, 43, 43, 0.25);
+
+   /*
+     * == PRIMARY ACCENT COLOR (NEW) ==
+     * Used for main calls to action (buttons, links, focus states).
+     */
+   --color-primary: var(--color-primary-light-500);
+   --color-primary-6: var(--color-primary-light-600);
+   --color-primary-bg: var(--color-primary-light-50);
+   --color-primary-text: var(--color-primary-light-600);
+   --color-primary-hover: var(--color-primary-light-600);
+
+
+   /*
+     * == STATUS AND ACCENT COLORS ==
+     * Organized into solid (default), light (background), and dark (text/icon).
+     */
+
+   /* Success */
+   --color-success: var(--color-success-light-500);
+   --color-success-6: var(--color-success-light-600);
+   --color-success-bg: var(--color-success-light-50);
+   --color-success-text: var(--color-success-light-500);
+   --color-success-trans-33: color-mix(in srgb, var(--color-success-light-300) 30%, transparent);
+
+   /* Danger */
+   --color-danger: var(--color-danger-light-500);
+   --color-danger-6: var(--color-danger-light-600);
+   --color-danger-bg: var(--color-danger-light-50);
+   --color-danger-text: var(--color-danger-light-600);
+   --color-danger-trans-33: color-mix(in srgb, var(--color-danger-light-300) 30%, transparent);
+   --color-danger-trans-81: color-mix(in srgb, var(--color-danger-light-800) 10%, transparent);
+
+   /* Warning */
+   --color-warning: var(--color-warning-light-500);
+   --color-warning-6: var(--color-warning-light-600);
+   --color-warning-bg: var(--color-warning-light-50);
+   --color-warning-text: var(--color-warning-light-900);
+   --color-warning-trans-33: color-mix(in srgb, var(--color-warning-light-300) 30%, transparent);
+
+   /* Info */
+   --color-info: var(--color-info-light-500);
+   --color-info-6: var(--color-info-light-600);
+   --color-info-bg: var(--color-info-light-50);
+   --color-info-text: var(--color-info-light-800);
+   --color-info-trans-33: color-mix(in srgb, var(--color-info-light-300) 30%, transparent);
+
+
+   /*
+     * == UTILITY COLORS ==
+     */
+   --color-white: var(--color-neutral-0);
+   --color-black: var(--color-neutral-1000);
+
+   //** == NATURAL SHADES (NEUTRALS) == **//
+   --color-natural-1: var(--color-neutral-50);
+   --color-natural-2: var(--color-neutral-75);
+   --color-natural-3: var(--color-neutral-100);
+   --color-natural-4: var(--color-neutral-150);
+   --color-natural-5: var(--color-neutral-200);
+   --color-natural-6: var(--color-neutral-350);
+   --color-natural-7: var(--color-neutral-500);
+   --color-natural-8: var(--color-neutral-650);
+   --color-natural-9: var(--color-neutral-800);
+   --color-natural-10: var(--color-neutral-950);
+
+
+   --color-natural-trans-73: color-mix(in srgb, var(--color-natural-7) 30%, transparent);
+   --color-natural-trans-53: color-mix(in srgb, var(--color-natural-5) 30%, transparent);
+
+
+   // Button
+   --button-primary-bg: var(--color-primary-light-500);
+   --button-primary-text: var(--color-primary-light-50);
+   --button-primary-bg-hover: var(--color-primary-light-600);
+   --button-primary-outline: var(--color-primary-light-500);
+   --button-primary-outline-hover: var(--color-primary-light-600);
+
+
+   //  Nav button
+   --nav-active-bg: color-mix(in srgb, var(--color-primary-light-200) 30%, transparent);
+   --nav-active-text: var(--color-primary-light-500);
+
+}

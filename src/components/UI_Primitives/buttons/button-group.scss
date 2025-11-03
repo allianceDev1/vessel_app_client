@@ -1,0 +1,32 @@
+.btn-group {
+    display: flex;
+
+    button {
+        border-radius: 0;
+
+        &:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        &:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+    }
+
+    &.btn-group-vertical {
+        flex-direction: column;
+        width: auto;
+
+        button {
+            border-radius: 0;
+
+            &:first-child {
+                border-radius: 8px 8px 0 0;
+            }
+
+            &:last-child {
+                border-radius: 0 0 8px 8px;
+            }
+        }
+    }
+}

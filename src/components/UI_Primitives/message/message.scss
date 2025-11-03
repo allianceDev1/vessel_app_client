@@ -1,0 +1,68 @@
+.alert-message {
+    display: flex;
+    gap: 10px;
+    padding: 15px 13px 15px 18px;
+    background-color: var(--color-danger-trans-73);
+    backdrop-filter: blur(5px);
+    color: var(--text-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px var(--shadow-sm);
+
+     .icon {
+        font-size: 24px;
+    }
+
+    .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }
+}
+
+
+.alert-message-danger {
+    background-color: var(--color-danger-trans-33);
+    color: var(--color-danger-text);
+
+    .line {
+        background-color: var(--color-danger);
+    }
+}
+
+.alert-message-success {
+    background-color: var(--color-success-trans-33);
+    color: var(--color-success-text);
+
+    .line {
+        background-color: var(--color-success);
+    }
+}
+
+.alert-message-info {
+    background-color: var(--color-info-trans-33);
+    color: var(--color-info-text);
+
+    .line {
+        background-color: var(--color-info);
+    }
+}
+
+.alert-message-warning {
+    background-color: var(--color-warning-trans-33);
+    color: var(--color-warning-text);
+
+    .line {
+        background-color: var(--color-warning);
+    }
+}

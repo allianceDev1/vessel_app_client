@@ -1,0 +1,73 @@
+@use "sass:color";
+@use 'palette' as *;
+
+// Generate the CSS Custom Property: --color-primary-100: #...;
+
+@mixin generate-color-light-variables {
+
+  // Primary color
+  @each $key, $value in $primary-light-palette {
+    --color-primary-light-#{$key}: #{$value};
+  }
+
+  // Success color
+  @each $key, $value in $success-light-palette {
+    --color-success-light-#{$key}: #{$value};
+  }
+
+  // Warning color
+  @each $key, $value in $warning-light-palette {
+    --color-warning-light-#{$key}: #{$value};
+  }
+
+  // Danger color
+  @each $key, $value in $danger-light-palette {
+    --color-danger-light-#{$key}: #{$value};
+  }
+
+  // Info color
+  @each $key, $value in $info-light-palette {
+    --color-info-light-#{$key}: #{$value};
+  }
+
+  // Neutral color
+  @each $key, $value in $neutral-palette {
+    --color-neutral-#{$key}: #{$value};
+  }
+
+}
+
+@mixin generate-color-dark-variables {
+
+  // Primary color
+  @each $key, $value in $primary-dark-palette {
+    --color-primary-dark-#{$key}: #{$value};
+  }
+
+
+  // Success color
+  @each $key, $value in $success-dark-palette {
+    --color-success-dark-#{$key}: #{$value};
+  }
+
+  // Warning color
+  @each $key, $value in $warning-dark-palette {
+    --color-warning-dark-#{$key}: #{$value};
+  }
+
+  // Danger color
+  @each $key, $value in $danger-dark-palette {
+    --color-danger-dark-#{$key}: #{$value};
+  }
+
+  // Info color
+  @each $key, $value in $info-dark-palette {
+    --color-info-dark-#{$key}: #{$value};
+  }
+
+  // Neutral color
+  @each $key, $value in $neutral-palette {
+    --color-neutral-#{$key}: #{$value};
+  }
+
+}

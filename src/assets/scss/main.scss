@@ -1,0 +1,35 @@
+// scss/main.scss
+// Entry point for SCSS compilation.
+
+@use "./themes/dark.scss" as dark;
+@use "./themes/light.scss" as light;
+@use "./abstracts/variables" as *;
+@use "./abstracts/base" as *;
+
+
+.light {
+    color-scheme: light;
+    @include light.light-theme;
+    @include generate-color-light-variables;
+}
+
+.dark {
+    color-scheme: dark;
+    @include dark.dark-theme;
+    @include generate-color-dark-variables;
+}
+
+// OS Default.
+:root:not(.light):not(.dark) {
+    @media (prefers-color-scheme: light) {
+        color-scheme: light;
+        @include light.light-theme;
+        @include generate-color-light-variables;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color-scheme: dark;
+        @include dark.dark-theme;
+        @include generate-color-dark-variables;
+    }
+}

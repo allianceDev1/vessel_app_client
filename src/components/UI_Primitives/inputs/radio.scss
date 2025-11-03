@@ -1,0 +1,131 @@
+.ui-radio-container {
+    .radio-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        input {
+            display: none;
+        }
+
+        .radio-custom {
+            border: 2px solid var(--color-natural-4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            transition: border-color 0.2s ease-in-out;
+            background-color: var(--color-natural-1);
+            width: 21px;
+            height: 21px;
+            border-width: 2px;
+
+
+            &:hover {
+                border-color: var(--color-primary);
+            }
+
+            svg {
+                color: var(--color-primary);
+                display: none;
+                font-size: 12px;
+            }
+        }
+
+        .radio-custom:hover {
+            border-color: var(--color-primary);
+        }
+
+        input:checked+.radio-custom {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary-bg);
+
+            svg {
+                display: block;
+            }
+        }
+
+
+        input:disabled+.radio-custom {
+            border-color: var(--color-natural-5);
+            background-color: var(--color-natural-4);
+            cursor: not-allowed;
+
+            svg {
+                display: none;
+            }
+        }
+
+        input:disabled+.radio-custom+.label-text {
+            color: var(--color-natural-7); // Changed label color when disabled
+        }
+
+        .label-text {
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+        }
+    }
+
+    &.small {
+        .radio-label {
+            .radio-custom {
+                width: 16px;
+                height: 16px;
+                border-width: 1px;
+                border-radius: 50%;
+
+                svg {
+                    font-size: 10px;
+                }
+            }
+
+            .label-text {
+                font-size: 14px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    &.medium {
+        .radio-label {
+            .radio-custom {
+                width: 21px;
+                height: 21px;
+                border-width: 2px;
+                border-radius: 50%;
+
+                svg {
+                    font-size: 12px;
+                }
+            }
+
+            .label-text {
+                font-size: 15px;
+                font-weight: 500;
+            }
+        }
+    }
+
+    &.large {
+        .radio-label {
+            .radio-custom {
+                width: 25px;
+                height: 25px;
+                border-width: 2px;
+                border-radius: 50%;
+
+                svg {
+                    font-size: 14px;
+                }
+            }
+
+            .label-text {
+                font-size: 16px;
+                font-weight: 500;
+            }
+        }
+    }
+
+}

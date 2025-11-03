@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci  # Install dependencies efficiently
+    build:
+      commands:
+        - export NODE_OPTIONS="--max-old-space-size=6144"  # Set heap size to 6 GB
+        - npm run build  # Default build command
+  artifacts:
+    baseDirectory: build  # Adjust this based on your output folder
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

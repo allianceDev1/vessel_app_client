@@ -1,0 +1,124 @@
+.toast {
+    display: flex;
+    position: relative;
+    gap: 10px;
+    padding: 15px 13px 15px 18px;
+    background-color: var(--color-natural-trans-73);
+    backdrop-filter: blur(5px);
+    color: var(--text-primary);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px var(--shadow-sm);
+    animation: slideIn 0.3s ease-out forwards;
+
+    .line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        background-color: var(--color-natural-10);
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .icon {
+        font-size: 24px;
+    }
+
+    .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        h4 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    }
+
+    .close {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 50%;
+
+        &:hover {
+            background-color: var(--surface-1);
+        }
+    }
+
+    &.toast-exit {
+        animation: slideOut 0.3s ease-in forwards;
+        /* Slide-out animation on close */
+    }
+}
+
+.toast-danger {
+    background-color: var(--color-danger-trans-33);
+    color: var(--color-danger-text);
+
+    .line {
+        background-color: var(--color-danger);
+    }
+}
+
+.toast-success {
+    background-color: var(--color-success-trans-33);
+    color: var(--color-success-text);
+
+    .line {
+        background-color: var(--color-success);
+    }
+}
+
+.toast-info {
+    background-color: var(--color-info-trans-33);
+    color: var(--color-info-text);
+
+    .line {
+        background-color: var(--color-info);
+    }
+}
+
+.toast-warning {
+    background-color: var(--color-warning-trans-33);
+    color: var(--color-warning-text);
+
+    .line {
+        background-color: var(--color-warning);
+    }
+}
+
+/* Keyframes for slide-in animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%); /* Start from right */
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0); /* End at original position */
+    opacity: 1;
+  }
+}
+
+/* Keyframes for slide-out animation */
+@keyframes slideOut {
+  from {
+    transform: translateX(0); /* Start at original position */
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%); /* Slide out to the right */
+    opacity: 0;
+  }
+}

@@ -1,0 +1,151 @@
+// scss/_themes.scss
+@use "sass:color";
+@use "../abstracts/variables" as *;
+
+
+@mixin dark-theme {
+    /*
+     * == TEXT AND FOREGROUND COLORS ==
+     * Uses lightest neutrals for high contrast against dark backgrounds.
+     */
+    --text-primary: var(--color-neutral-50);
+    --text-primary-alt: var(--color-neutral-50);
+
+    --text-secondary: var(--color-neutral-150);
+    --text-secondary-1: var(--color-neutral-250);
+    --text-secondary-2: var(--color-neutral-350);
+    --text-secondary-3: var(--color-neutral-450);
+    --text-secondary-4: var(--color-neutral-550);
+
+    --text-muted: var(--color-neutral-650);
+
+    /*
+     * == BACKGROUND AND SURFACE COLORS ==
+     * Uses the darkest neutrals for depth.
+     */
+    --background: var(--color-neutral-1000);
+
+    --surface: var(--color-neutral-900);
+    --surface-1: var(--color-neutral-850);
+    --surface-2: var(--color-neutral-800);
+    --surface-3: var(--color-neutral-750);
+    --surface-4: var(--color-neutral-700);
+
+
+    /*
+     * == BORDER COLORS (4 VARIANTS) ==
+     * Progressing from darkest to lightest.
+     */
+    --border-light: var(--color-neutral-800);
+    --border-default: var(--color-neutral-700);
+    --border-medium: var(--color-neutral-600);
+    --border-dark: var(--color-neutral-500);
+
+    /*
+     * == SHADOW COLORS (4 VARIANTS) ==
+     * All use the lightest neutral's RGB (255, 255, 255) with very low opacity, or black with low opacity.
+     * We'll stick to a very dark, low-opacity shadow as is common for modern dark themes.
+     */
+    --shadow-xs: rgba(0, 0, 0, 0.15);
+    --shadow-sm: rgba(0, 0, 0, 0.25);
+    --shadow-md: rgba(0, 0, 0, 0.45);
+    --shadow-lg: rgba(0, 0, 0, 0.65);
+
+    /*
+     * == PRIMARY ACCENT COLOR ==
+     * Uses the same vibrant mid-shade as the light theme, but text color is white.
+     */
+    --color-primary: var(--color-primary-dark-500);
+    --color-primary-6: var(--color-primary-dark-600);
+    --color-primary-bg: var(--color-primary-dark-900);
+    --color-primary-text: var(--color-neutral-0);
+    --color-primary-hover: var(--color-primary-dark-400);
+
+    /*
+     * == STATUS AND ACCENT COLORS ==
+     * Uses the same colors for consistency, with white text for solid backgrounds.
+     */
+
+    /* Success */
+    --color-success: var(--color-success-dark-500);
+    /* #009a46 - Solid button/badge */
+    --color-success-6: var(--color-success-dark-600);
+    /* #009a46 - Solid button/badge */
+    --color-success-bg: var(--color-success-dark-900);
+    /* #004B20 - Darker, muted alert background */
+    --color-success-text: var(--color-success-dark-100);
+    /* #FFFFFF - Text color on solid success color */
+    --color-success-trans-33: color-mix(in srgb, var(--color-success-dark-300) 30%, transparent);
+
+    /* Danger */
+    --color-danger: var(--color-danger-dark-500);
+    /* #d30038 - Solid button/badge */
+    --color-danger-6: var(--color-danger-dark-600);
+    /* #d30038 - Solid button/badge */
+    --color-danger-bg: var(--color-danger-dark-900);
+    /* #74001B - Darker, muted alert background */
+    --color-danger-text: var(--color-danger-dark-300);
+    /* #FFFFFF - Text color on solid danger color */
+    --color-danger-trans-33: color-mix(in srgb, var(--color-danger-dark-300) 30%, transparent);
+    --color-danger-trans-81: color-mix(in srgb, var(--color-danger-dark-800) 10%, transparent);
+
+    /* Warning */
+    --color-warning: var(--color-warning-dark-500);
+    /* #938700 - Solid button/badge */
+    --color-warning-6: var(--color-warning-dark-600);
+    /* #938700 - Solid button/badge */
+    --color-warning-bg: var(--color-warning-dark-900);
+    /* #4B3E00 - Darker, muted alert background */
+    --color-warning-text: var(--color-warning-dark-100);
+    /* #FFFFFF - Text color on solid warning color */
+    --color-warning-trans-33: color-mix(in srgb, var(--color-warning-dark-300) 30%, transparent);
+
+    /* Info */
+    --color-info: var(--color-info-dark-500);
+    /* #0085f2 - Solid button/badge */
+    --color-info-6: var(--color-info-dark-600);
+    /* #0085f2 - Solid button/badge */
+    --color-info-bg: var(--color-info-dark-900);
+    /* #00388A - Darker, muted alert background */
+    --color-info-text: var(--color-info-dark-100);
+    /* #FFFFFF - Text color on solid info color */
+    --color-info-trans-33: color-mix(in srgb, var(--color-info-dark-300) 30%, transparent);
+
+
+    /*
+     * == UTILITY COLORS ==
+     */
+    --color-white: var(--color-neutral-0);
+    /* #FFFFFF */
+    --color-black: var(--color-neutral-1000);
+    /* #000000 */
+
+    //** == NATURAL SHADES (NEUTRALS) == **//
+    --color-natural-1: var(--color-neutral-950);
+    --color-natural-2: var(--color-neutral-900);
+    --color-natural-3: var(--color-neutral-850);
+    --color-natural-4: var(--color-neutral-800);
+    --color-natural-5: var(--color-neutral-750);
+    --color-natural-6: var(--color-neutral-600);
+    --color-natural-7: var(--color-neutral-500);
+    --color-natural-8: var(--color-neutral-350);
+    --color-natural-9: var(--color-neutral-200);
+    --color-natural-10: var(--color-neutral-50);
+
+
+    --color-natural-trans-73: color-mix(in srgb, var(--color-natural-7) 30%, transparent);
+    --color-natural-trans-53: color-mix(in srgb, var(--color-natural-5) 30%, transparent);
+
+    // Button
+    --button-primary-bg: var(--color-primary-dark-100);
+    --button-primary-text: var(--color-primary-dark-900);
+    --button-primary-bg-hover: var(--color-primary-dark-200);
+    --button-primary-outline: var(--color-primary-dark-500);
+    --button-primary-outline-hover: var(--color-primary-dark-600);
+
+    //  Nav button
+    --nav-active-bg: color-mix(in srgb, var(--color-primary-dark-100) 20%, transparent);
+    --nav-active-text: var(--color-primary-dark-500);
+
+
+}

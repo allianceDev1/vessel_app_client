@@ -1,0 +1,57 @@
+@mixin scrollBar($width: 6px, $thumb-color: var(--color-natural-4), $track-color: transparent, $thumb-hover-color: var(--color-natural-6)) {
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $track-color;
+        border-radius: 12px;
+
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $thumb-color;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        background-clip: content-box;
+        transition: background 0.3s ease, width 0.3s ease, border-color 0.3s ease;
+
+        &:hover {
+            background: $thumb-hover-color;
+            width: calc($width + 2px);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        &:active {
+            background: $thumb-hover-color;
+        }
+    }
+
+    &::-webkit-scrollbar-corner {
+        background: $track-color;
+    }
+
+    &:not(:hover)::-webkit-scrollbar {
+        width: calc($width - 2px);
+        height: calc($width - 2px);
+    }
+}
+
+@mixin threeDots($line: 1, $max-height: unset, $ellipsis-color: inherit) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+
+    // Fallback for non-Webkit browsers
+    @supports not (-webkit-line-clamp: $line) {
+        max-height: $max-height;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+    }
+    
+}
