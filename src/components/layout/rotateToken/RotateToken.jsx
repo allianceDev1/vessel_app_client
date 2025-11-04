@@ -1,16 +1,15 @@
 import React, { useEffect } from 'react'
 import Cookies from 'js-cookie';
-import { ttSv2Axios } from '../../../config/axios';
+import { api } from "../../../api";
 
 const RotateToken = () => {
 
     useEffect(() => {
-        console.log('hii')
         const interval = setInterval(() => {
 
             const refreshToken = Cookies.get('_rfs_tkn'); // Retrieve the refresh token
 
-            ttSv2Axios.post('/auth/rotate-token', { refresh_token: refreshToken }).then((response) => {
+            api.ttSv2Axios.post('/auth/rotate-token', { refresh_token: refreshToken }).then((response) => {
 
                 const cookieOptions = {
                     secure: false,

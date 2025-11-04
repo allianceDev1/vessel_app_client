@@ -1,0 +1,16 @@
+.not-found-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-c1);
+    padding: 20px;
+
+    .border {
+        width: 600px;
+        max-width: 100%;
+    }
+}

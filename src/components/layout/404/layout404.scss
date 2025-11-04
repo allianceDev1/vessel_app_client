@@ -1,4 +1,4 @@
-.not-found-page {
+.not-found-layout {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,48 +66,12 @@
         }
     }
 
-    .main {
-        z-index: 1;
-        max-width: 100%;
+    .border {
         width: 600px;
-
-        h4 {
-            font-size: 45px;
-            width: fit-content;
-            user-select: none;
-            background: linear-gradient(146deg,
-                    var(--color-primary),
-                    rgb(212, 0, 255) 75%,
-                    rgb(255, 0, 212) 100%);
-            background-size: 200% 200%;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: colorShift 4s ease infinite;
-        }
-
-        .text {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-
-            p:first-child {
-                font-size: 18px;
-                font-weight: 600;
-            }
-
-            p:last-child {
-                color: var(--text-c2);
-            }
-        }
-
-        .comment {
-            margin-top: 20px;
-
-            p:last-child {
-                color: var(--text-c2);
-            }
-        }
+        max-width: 100%;
     }
+
+
 
     @keyframes moveAndScale {
         0% {
@@ -131,17 +95,5 @@
         }
     }
 
-    @keyframes colorShift {
-        0% {
-            background-position: 0% 50%;
-        }
 
-        50% {
-            background-position: 100% 50%;
-        }
-
-        100% {
-            background-position: 0% 50%;
-        }
-    }
 }

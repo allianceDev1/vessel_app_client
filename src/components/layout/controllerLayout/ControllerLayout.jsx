@@ -1,18 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './controllerLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
-import { TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb';
-import { useLocation } from 'react-router-dom';
+import { TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbReport, TbUsers } from 'react-icons/tb';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
 
 const ControllerLayout = ({ children }) => {
+    const navigate = useNavigate()
     const location = useLocation();
+    const navbarRef = useRef(null);
     const [activeSegment, setActiveSegment] = useState('');
     const [navbarShow, setNavbarShow] = useState(false)
+    const { pageTitle } = useSelector((state) => state.miniSystem)
+    const { user } = useSelector((state) => state.user)
+    const userProfileImage = getUserProfileImagePath(user?.first_name);
+
+    const handleMenuClick = (path) => {
+        navigate(path);
+        setNavbarShow(false);
+    }
+
 
     useEffect(() => {
         const firstSegment = location?.pathname?.split("/")[2] || ''
         setActiveSegment(firstSegment)
     }, [location?.pathname])
+
+    // Outside click close (only when visible)
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (navbarShow && navbarRef.current && !navbarRef.current.contains(e.target)) {
+                setNavbarShow(false);
+            }
+        };
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => document.removeEventListener('mousedown', handleOutsideClick);
+    }, [navbarShow]);
 
 
     return (
@@ -27,20 +51,23 @@ const ControllerLayout = ({ children }) => {
             <div className="layout-body">
                 <div className="body-container">
                     <div className="header">
-                        <div className="title-section">
-                            <h3>Page Title</h3>
-                            <p>Page Description</p>
-                        </div>
-                        <div className="nav-icon-section">
-                            {navbarShow
-                                ? <TbLayoutSidebarLeftCollapse onClick={() => setNavbarShow(!navbarShow)} />
-                                : <TbLayoutSidebarLeftExpand onClick={() => setNavbarShow(!navbarShow)} />}
-                        </div>
+                        {(pageTitle?.title || pageTitle.note) && <div className="title-section">
+                            {pageTitle?.title && <h3>{pageTitle?.title}</h3>}
+                            {pageTitle.note && <p>{pageTitle.note}</p>}
+                        </div>}
+
+                        {navbarShow
+                            ? <div className="nav-icon-section" onClick={() => setNavbarShow(false)}>
+                                <TbLayoutSidebarLeftCollapse />
+                            </div>
+                            : <div className="nav-icon-section" onClick={() => setNavbarShow(true)} >
+                                <TbLayoutSidebarLeftExpand />
+                            </div>}
                     </div>
                     {children}
                 </div>
             </div>
-            <div className="layout-navbar">
+            <div className="layout-navbar" ref={navbarRef}>
                 <div className="nav-sections">
                     <div className="title-section">
                         <div className="brand-logo">
@@ -52,27 +79,44 @@ const ControllerLayout = ({ children }) => {
                         </div>
                     </div>
                     <div className="items-section">
-                        <div className={`item ${!activeSegment && 'active'}`}>
+                        <div className={`item ${!activeSegment && 'active'}`} onClick={() => handleMenuClick('/controller')}>
                             <TbHome />
                             <span>Home</span>
                         </div>
-                        <div className={`item ${activeSegment === 'a' && 'active'}`}>
-                            <TbHome />
-                            <span>Home</span>
+                        <div className={`item ${activeSegment === 'area-list' && 'active'}`} onClick={() => handleMenuClick('/controller/area-list')}>
+                            <TbMap2 />
+                            <span>Area list</span>
                         </div>
-                        <div className={`item ${activeSegment === 'a' && 'active'}`}>
-                            <TbHome />
-                            <span>Home</span>
+                        <div className={`item ${activeSegment === 'customer-list' && 'active'}`} onClick={() => handleMenuClick('/controller/customer-list')}>
+                            <TbUsers />
+                            <span>Customer list</span>
+                        </div>
+                        <div className={`item ${activeSegment === 'csr-list' && 'active'}`} onClick={() => handleMenuClick('/controller/csr-list')}>
+                            <TbFilePhone />
+                            <span>CSR list</span>
+                        </div>
+                        <div className={`item ${activeSegment === 'dar-list' && 'active'}`} onClick={() => handleMenuClick('/controller/dar-list')}>
+                            <TbReport />
+                            <span>DAR list</span>
+                        </div>
+                        {user?.allowed_origins?.includes('vfcr_appConfig_write') &&
+                            <div className={`item ${activeSegment === 'app-config' && 'active'}`} onClick={() => handleMenuClick('/controller/app-config')}>
+                                <TbDropletCog />
+                                <span>App Configuration</span>
+                            </div>}
+                        <div className={`item danger`} onClick={() => window.location.href = 'http://localhost:3000?page=home'}>
+                            <TbLogout2 />
+                            <span>Exit</span>
                         </div>
                     </div>
                     <div className="footer-section">
                         <div className="profile">
                             <div className="profile-image">
-                                <img src={BrandLogo} alt='profile-image' />
+                                <img src={userProfileImage || BrandLogo} alt='profile-image' />
                             </div>
                             <div className="profile-name">
-                                <h4>Controller Name</h4>
-                                <p>Designation</p>
+                                <h4>{user?.first_name} {user?.last_name}</h4>
+                                <p>{user?.designation}</p>
                             </div>
                         </div>
                     </div>

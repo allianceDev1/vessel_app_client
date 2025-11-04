@@ -5,10 +5,12 @@ import { IoChevronBack } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import { useLocation } from 'react-router-dom';
 import { TbHome } from 'react-icons/tb';
+import { useSelector } from 'react-redux';
 
 const TechLayout = ({ children }) => {
     const location = useLocation();
     const [activeSegment, setActiveSegment] = useState('')
+    const { pageTitle } = useSelector((state) => state.miniSystem)
 
     useEffect(() => {
         const firstSegment = location?.pathname?.split("/")[2] || ''
@@ -38,10 +40,10 @@ const TechLayout = ({ children }) => {
             </div>
             <div className="layout-body">
                 <div className="body-container">
-                    <div className="body-title">
-                        <h3>Page Heading</h3>
-                        <p>Page Description</p>
-                    </div>
+                    {(pageTitle?.title || pageTitle.note) && <div className="body-title">
+                        {pageTitle?.title && <h3>{pageTitle?.title}</h3>}
+                        {pageTitle.note && <p>{pageTitle.note}</p>}
+                    </div>}
                     {children}
                 </div>
             </div>

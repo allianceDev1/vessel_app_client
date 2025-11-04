@@ -53,5 +53,11 @@
         text-overflow: ellipsis;
         white-space: normal;
     }
-    
+
+}
+
+@mixin subTitleMedium() {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text-secondary);
 }

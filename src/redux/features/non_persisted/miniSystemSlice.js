@@ -1,14 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { generateUniqueId } from '../../../assets/javascript/utils/generateId'
-import { act } from 'react'
-
+import { generateUniqueId } from '../../../utils/generateId'
 
 
 const initialState = {
     toasts: [],
     dialog: {},
     modals: [],
-    controller: {}
+    pageTitle: {}
 }
 
 export const miniSystemSlice = createSlice({
@@ -104,13 +102,20 @@ export const miniSystemSlice = createSlice({
             state.modals = []
         },
 
-        // Controller
-       
+        // pageTitle
+        setPageTitle: (state, action) => {
+            state.pageTitle = {
+                title: action.payload.title,
+                note: action.payload.note
+            }
+        }
+
     }
 })
 
 const {
-    toastPush, pullSingleToast, pullAllToast, alert, confirm, pullDialog, pushModal, pullSingleModal, pullAllModal, removeModal
+    toastPush, pullSingleToast, pullAllToast, alert, confirm, pullDialog, pushModal, pullSingleModal, pullAllModal, removeModal,
+    setPageTitle
 } = miniSystemSlice.actions
 
 
@@ -118,6 +123,7 @@ const {
 export const toast = { pull: { single: pullSingleToast, all: pullAllToast }, push: toastPush }
 export const doDialog = { alert, confirm, clear: pullDialog }
 export const modal = { push: pushModal, pull: { single: pullSingleModal, all: pullAllModal } }
+export const page = { setTitle: setPageTitle }
 
 
 

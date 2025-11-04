@@ -1,16 +1,15 @@
-import React, { useEffect, Suspense } from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { changeThemeColor, connection } from './redux/features/persisted/systemSlice'
-import SkeletonPage from './components/UI_Primitives/skeleton/SkeletonPage';
-import Master from './Master';
+import AppRoutes from './routes/AppRoutes';
 import Cookies from 'js-cookie'
 
 
 function App() {
-
   const dispatch = useDispatch()
   const colorMode = Cookies.get('color_mode')
+
 
   // Theme and Network
   useEffect(() => {
@@ -42,12 +41,10 @@ function App() {
 
 
   return (
-    <div className="App">
-      <Suspense fallback={<SkeletonPage />}>
-        <Routes>
-          <Route element={<Master />} path='/*' />
-        </Routes>
-      </Suspense>
+    <div className="App" >
+      <Routes>
+        <Route element={<AppRoutes />} path='/*' />
+      </Routes>
     </div>
   );
 }
