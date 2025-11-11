@@ -1,0 +1,105 @@
+.ui-input-color-container {
+    .border-input {
+        border: 1px solid var(--color-natural-4);
+        padding: 0px 10px 8px 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: var(--color-natural-trans-53);
+        backdrop-filter: blur(5px);
+
+        .label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            pointer-events: none;
+
+            .required {
+                color: var(--color-danger);
+                margin-left: 2px;
+                font-size: 18px;
+                position: absolute;
+            }
+        }
+
+        .color-inputs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+
+            .color-option {
+                cursor: pointer;
+
+                input {
+
+                    &[type="color"],
+                    &[type="radio"] {
+                        display: none;
+                    }
+
+                    &:checked~.color-circle {
+                        border-color: var(--color-primary);
+                        transform: scale(1.2);
+                    }
+                }
+
+                .color-circle {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    display: block;
+                    border: 3px solid transparent;
+                    transition: transform 0.2s ease, border-color 0.2s ease;
+                }
+
+                .rainbow {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 50%;
+                    border: 0 solid transparent;
+                    background: conic-gradient(red,
+                            yellow,
+                            lime,
+                            cyan,
+                            blue,
+                            magenta,
+                            red);
+                }
+            }
+
+            .custom-picker {
+                position: relative;
+
+                &[type="color"] {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 28px;
+                    height: 28px;
+                    opacity: 0;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .helper-text {
+            font-size: 12px;
+            margin-top: 5px;
+            margin-left: 0px;
+            color: var(--color-natural-6);
+        }
+
+        &.error {
+            position: relative;
+            border: 1px solid var(--color-danger);
+
+            label {
+                color: var(--color-danger);
+            }
+
+            .helper-text {
+                color: var(--color-danger);
+            }
+        }
+    }
+}

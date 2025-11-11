@@ -8,6 +8,8 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'My Page', note: "Page Note" }))
+
+        // eslint-disable-next-line
     }, [])
 
     return (

@@ -45,7 +45,7 @@ function Textarea({
                 {label}
                 {required && <span className="required">*</span>}
             </label>
-            
+
             {(error || helperText) && (
                 <div className="helper-text">{error || helperText}</div>
             )}

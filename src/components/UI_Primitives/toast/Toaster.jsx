@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import './toaster.scss'
 import Toast from './Toast'
 import { TbAlertCircle, TbAlertHexagon } from "react-icons/tb";

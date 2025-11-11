@@ -118,11 +118,17 @@ const {
     setPageTitle
 } = miniSystemSlice.actions
 
+// ✅ Thunk (delay remove modal after closing)
+export const closeModalWithDelay = (id, delay = 5000) => async (dispatch) => {
+    dispatch(pullSingleModal(id))
+    await new Promise(resolve => setTimeout(resolve, delay))
+    dispatch(removeModal(id))
+}
 
 // Export 
 export const toast = { pull: { single: pullSingleToast, all: pullAllToast }, push: toastPush }
 export const doDialog = { alert, confirm, clear: pullDialog }
-export const modal = { push: pushModal, pull: { single: pullSingleModal, all: pullAllModal } }
+export const modal = { push: pushModal, pull: { single: closeModalWithDelay, all: pullAllModal } }
 export const page = { setTitle: setPageTitle }
 
 

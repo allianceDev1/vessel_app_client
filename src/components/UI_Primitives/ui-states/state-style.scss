@@ -1,0 +1,33 @@
+.ui-state-component {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        text-align: center;
+
+        .icon {
+            svg {
+                font-size: 50px;
+            }
+        }
+
+        .text {
+            h2 {
+                font-size: 21px;
+                font-weight: 600;
+            }
+
+            p {
+                font-size: 14;
+                margin-top: 5px;
+                color: var(--text-secondary-2);
+            }
+        }
+    }
+}

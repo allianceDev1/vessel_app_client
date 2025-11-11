@@ -1,44 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './radio.scss';
-import { FaCheck } from 'react-icons/fa'; // Default check icon
-
+import { FaCheck } from 'react-icons/fa';
 
 function Radio({
     label,
     name,
     id,
     value = false,
-    customIcon = false,
+    radioValue,
+    customIcon = null,
     onChange = () => { },
     size = 'medium', // small, medium, large
     disabled = false,
-    checked = false,
+    checked, // if provided (boolean) -> controlled component
     ...props
 }) {
-    const [isChecked, setIsChecked] = useState(value);
+    const isControlled = typeof checked === 'boolean';
+
 
     const handleChange = (e) => {
-        if (!disabled) {
-            const newValue = e.target.checked;
-            setIsChecked(newValue);
-            onChange({ target: { name, value: newValue } });
-        }
+        if (disabled) return;
+        const payloadValue = radioValue !== undefined ? radioValue : e.target.checked;
+        onChange({ target: { name, value: payloadValue, nativeEvent: e } });
     };
 
     return (
         <div className={`ui-radio-container ${size}`}>
-            <label className="radio-label">
+            <label className="radio-label" htmlFor={id}>
                 <input
                     type="radio"
                     id={id}
                     name={name}
-                    checked={isChecked}
+                    {...(isControlled ? { checked } : { defaultChecked: !!value })}
                     onChange={handleChange}
                     disabled={disabled}
+                    {...(radioValue !== undefined ? { value: radioValue } : {})}
                     {...props}
                 />
-                <span className="radio-custom">
-                    {isChecked && (customIcon ? customIcon : <FaCheck />)}
+                <span className="radio-custom" aria-hidden>
+                    {(isControlled ? checked : value) && (customIcon ? customIcon : <FaCheck />)}
                 </span>
                 {label && <span className="label-text">{label}</span>}
             </label>

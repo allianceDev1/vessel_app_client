@@ -10,6 +10,11 @@ import Page404 from '../components/layout/404/Page404';
 const Dashboard = React.lazy(() => import('../pages/controller/dashboard/Dashboard'))
 const AreaList = React.lazy(() => import('../pages/controller/area-list/AreaList'))
 const AppConfig = React.lazy(() => import('../pages/controller/app-config/AppConfig'))
+const ServicePackages = React.lazy(() => import('../pages/controller/service-packages/ServicePackages'))
+const ViewServicePackage = React.lazy(() => import('../pages/controller/view-service-package/ViewServicePackage'))
+
+
+
 
 
 
@@ -32,6 +37,8 @@ const Controller = () => {
                     {/* App Config */}
                     {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>
                         <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
+                        <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
+                        <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
                     </>}
 
 

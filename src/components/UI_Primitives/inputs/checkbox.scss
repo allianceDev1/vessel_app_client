@@ -6,7 +6,9 @@
         cursor: pointer;
 
         input {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .checkbox-custom {
@@ -17,7 +19,8 @@
             justify-content: center;
             margin-right: 8px;
             transition: border-color 0.2s ease-in-out;
-            background-color: var(--color-natural-1);
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
             width: 21px;
             height: 21px;
 
@@ -45,7 +48,7 @@
             }
         }
 
-         input:disabled+.checkbox-custom {
+        input:disabled+.checkbox-custom {
             border-color: var(--color-natural-5);
             background-color: var(--color-natural-4);
             cursor: not-allowed;
@@ -55,7 +58,7 @@
             }
         }
 
-           input:disabled+.checkbox-custom+.label-text {
+        input:disabled+.checkbox-custom+.label-text {
             color: var(--color-natural-7); // Changed label color when disabled
         }
 

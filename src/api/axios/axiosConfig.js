@@ -11,6 +11,10 @@ const url = (apiServer, path = "") => `${apiServer}${path}`;
 
 export const recallAxios = axios.create({ headers: apiHeaders });
 
+export const vfCv2Axios = axios.create({
+    baseURL: url(env.API.VESSEL, "/c/v2/"),
+    headers: apiHeaders,
+});
 export const ttSv2Axios = axios.create({
     baseURL: url(env.API.TIMETRACK, "/s/v2/"),
     headers: apiHeaders,
@@ -29,6 +33,7 @@ const instances = [
     ttSv2Axios,
     ttPv2Axios,
     cnPv2Axios,
+    vfCv2Axios
 ];
 
 instances.forEach((instance) => {
@@ -36,8 +41,11 @@ instances.forEach((instance) => {
     instance.interceptors.response.use(responseSuccess, responseError);
 });
 
-export default {
+const axiosClients = {
     ttSv2Axios,
     ttPv2Axios,
     cnPv2Axios,
+    vfCv2Axios
 };
+
+export default axiosClients;

@@ -4,9 +4,11 @@ import { useDispatch } from 'react-redux';
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbArrowLeft } from 'react-icons/tb';
 import { ui_version } from '../../../config/appConfig';
+import { useNavigate } from 'react-router-dom';
 
 const AppConfig = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -41,7 +43,7 @@ const AppConfig = () => {
                         <h3>Service Packages</h3>
                     </div>
                     <div className="content">
-                        <div className="list-item">
+                        <div className="list-item" onClick={() => navigate('/controller/app-config/service-packages')}>
                             <div className="l">
                                 <p>View Available Packages</p>
                             </div>

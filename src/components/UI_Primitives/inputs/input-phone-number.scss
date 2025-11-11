@@ -18,8 +18,9 @@
             padding: 28px 15px 18px 70px;
             outline: none;
             border: 1px solid var(--color-natural-4);
-            border-radius: 5px;
-            background-color: var(--color-natural-1);
+            border-radius: 10px;
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
             color: var(--text-primary);
         }
 
@@ -28,17 +29,20 @@
             top: 0;
             bottom: 0;
             padding: 0;
-            background-color: var(--color-natural-1);
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
             border: 1px solid var(--color-natural-4);
             border-radius: 3px 0 0 3px;
 
             &.open {
                 z-index: 2;
-                background: var(--color-natural-4);
+                background-color: var(--color-natural-trans-53);
+                backdrop-filter: blur(5px);
                 border-radius: 3px 0 0 0;
 
                 .selected-flag {
-                    background: var(--color-natural-1);
+                    background-color: var(--color-natural-trans-73);
+                    backdrop-filter: blur(5px);
                     border-radius: 3px 0 0 0;
                 }
             }
@@ -54,7 +58,8 @@
 
             &:hover,
             &:focus {
-                background-color: var(--color-natural-2);
+                background-color: var(--color-natural-trans-53);
+                backdrop-filter: blur(5px);
             }
 
             .arrow {
@@ -165,15 +170,17 @@
         position: absolute;
         width: 85%;
         height: 45px;
-        left: 15px;
+        left: 0px;
         top: 1px;
         color: var(--text-secondary);
-        background-color: var(--color-natural-1);
-        padding: 13px 0px;
+        backdrop-filter: blur(5px);
+        padding: 13px 0px 13px 15px;
         font-size: 16px;
         font-weight: 500;
         transition: all 0.2s ease-in-out;
         pointer-events: none;
+        border-radius: 10px;
+         @include threeDots();
 
         .required {
             color: var(--color-danger);
@@ -204,9 +211,11 @@
     &.active {
         label {
             background: none;
+            padding: 0;
+            backdrop-filter: blur(0px);
             border: none;
             left: 70px;
-            top: -9px;
+            top: 3px;
             font-size: 12px;
             font-weight: 400;
         }

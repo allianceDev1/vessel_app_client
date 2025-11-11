@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './input-text.scss';
 import InputText from './InputText';
 import { GrClose } from 'react-icons/gr';
@@ -7,7 +7,7 @@ function Select({
     label,
     name,
     id,
-    value,
+    value = '',
     options = [], // Array of { value: string, label: string }
     required,
     selectStyle,
@@ -72,9 +72,8 @@ function Select({
                     onChange={handleChange}
                     {...props}
                 >
-                    <option value="" disabled hidden></option>
                     {options.map((option) => (
-                        <option key={option.value} value={option.value}>
+                        <option key={option.value} value={option.value} >
                             {option.label}
                         </option>
                     ))}

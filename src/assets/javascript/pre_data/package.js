@@ -1,0 +1,1 @@
+export const work_modes = ['Complaint', 'Service', 'Renewal']

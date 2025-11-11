@@ -60,6 +60,7 @@ const Dialog = () => {
                         severity={dialog?.accept?.theme || 'primary'}
                         icon={dialog?.accept?.icon}
                         onClick={clickAccept}
+                        rounded
                     />
                     {dialog?.type === 'confirm' &&
                         <Button
@@ -69,6 +70,7 @@ const Dialog = () => {
                             icon={dialog?.reject?.icon}
                             outlined
                             onClick={clickReject}
+                            rounded
                         />}
                 </div>
             </div>

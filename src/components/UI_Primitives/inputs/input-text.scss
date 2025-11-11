@@ -1,3 +1,5 @@
+@import '../../../assets/scss/mixins/mixin.scss';
+
 .ui-input-text-container {
     position: relative;
     width: 100%;
@@ -8,12 +10,14 @@
         font-weight: 500;
         outline: none;
         border: 1px solid var(--color-natural-4);
-        border-radius: 5px;
-        background-color: var(--color-natural-1);
+        border-radius: 10px;
+        background-color: var(--color-natural-trans-53);
+        backdrop-filter: blur(5px);
         transition: border-color 0.2s ease-in-out;
         padding: 20px 15px 8px 15px;
         font-size: 15px;
         color: var(--text-primary);
+        @include hide-date-placeholder;
 
         &:focus {
             border-color: var(--color-primary);
@@ -24,14 +28,18 @@
         }
 
         &:disabled {
-            background-color: var(--color-natural-4);
+            background-color: var(--color-natural-3);
             cursor: not-allowed;
         }
 
         &:disabled~label {
-            background-color: var(--color-natural-4);
             cursor: not-allowed;
         }
+    }
+
+    select option {
+        background-color: var(--color-natural-4);
+        color: var(--text-primary);
     }
 
     label {
@@ -41,12 +49,12 @@
         left: 15px;
         top: 1px;
         color: var(--text-secondary);
-        background-color: var(--color-natural-1);
         padding: 13px 0px;
         font-size: 16px;
         font-weight: 500;
         transition: all 0.2s ease-in-out;
         pointer-events: none;
+        @include threeDots();
 
         &.active {
             background: none;

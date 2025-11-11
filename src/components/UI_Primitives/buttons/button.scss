@@ -7,6 +7,7 @@
     text-align: center;
     color: var(--color-natural-1);
     background-color: var(--color-natural-10);
+    border: var(--color-natural-10) solid 2px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -19,10 +20,12 @@
 
     &:hover {
         background-color: var(--color-natural-9);
+        border: var(--color-natural-9) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-natural-5);
+        border: var(--color-natural-5) solid 2px;
         cursor: not-allowed;
     }
 
@@ -65,13 +68,16 @@
 .btn-secondary {
     color: var(--color-natural-1);
     background-color: var(--color-natural-10);
+    border: var(--color-natural-10) solid 2px;
 
     &:hover {
         background-color: var(--color-natural-9);
+        border: var(--color-natural-9) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-natural-5);
+        border: var(--color-natural-5) solid 2px;
     }
 
     &.outlined {
@@ -94,6 +100,7 @@
 
         &:hover {
             color: var(--color-natural-9);
+
         }
 
         &:disabled {
@@ -105,13 +112,16 @@
 .btn-success {
     color: var(--color-white);
     background-color: var(--color-success);
+    border: var(--color-success) solid 2px;
 
     &:hover {
         background-color: var(--color-success-6);
+        border: var(--color-success-6) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-success-6);
+        border: var(--color-success-6) solid 2px;
         opacity: .5;
     }
 
@@ -148,13 +158,16 @@
 .btn-danger {
     color: var(--color-white);
     background-color: var(--color-danger);
+    border: var(--color-danger) solid 2px;
 
     &:hover {
         background-color: var(--color-danger-6);
+        border: var(--color-danger-6) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-danger-6);
+        border: var(--color-danger-6) solid 2px;
         opacity: .5;
     }
 
@@ -191,13 +204,16 @@
 .btn-warning {
     color: var(--color-white);
     background-color: var(--color-warning);
+    border: var(--color-warning) solid 2px;
 
     &:hover {
         background-color: var(--color-warning-6);
+        border: var(--color-warning-6) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-warning-6);
+        border: var(--color-warning-6) solid 2px;
         opacity: .5;
     }
 
@@ -234,13 +250,16 @@
 .btn-info {
     color: var(--color-white);
     background-color: var(--color-info);
+    border: var(--color-info) solid 2px;
 
     &:hover {
         background-color: var(--color-info-6);
+        border: var(--color-info-6) solid 2px;
     }
 
     &:disabled {
         background-color: var(--color-info-6);
+        border: var(--color-info-6) solid 2px;
         opacity: .5;
     }
 
@@ -277,13 +296,16 @@
 .btn-primary {
     color: var(--button-primary-text);
     background-color: var(--button-primary-bg);
+    border: var(--button-primary-bg) solid 2px;
 
     &:hover {
         background-color: var(--button-primary-bg-hover);
+        border: var(--button-primary-bg-hover) solid 2px;
     }
 
     &:disabled {
         background-color: var(--button-primary-bg);
+        border: var(--button-primary-bg) solid 2px;
         opacity: .5;
     }
 
@@ -321,7 +343,7 @@
     border-radius: 6px;
     font-size: 0.875rem;
     font-weight: 500;
-    padding: 8px 12px;
+    padding: 8px;
     gap: 8px;
 
     svg {
@@ -333,7 +355,7 @@
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 500;
-    padding: 10px 15px;
+    padding: 10px;
     gap: 10px;
 
     svg {
@@ -345,12 +367,16 @@
     border-radius: 10px;
     font-size: 1.125rem;
     font-weight: 500;
-    padding: 12px 18px;
+    padding: 12px;
     gap: 12px;
 
     svg {
         font-size: 24px;
     }
+}
+
+.btn-rounded {
+    border-radius: 100px;
 }
 
 .btn-spin-icon {

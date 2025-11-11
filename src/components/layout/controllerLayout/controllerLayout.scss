@@ -4,9 +4,7 @@
     width: 100%;
     position: relative;
     min-height: 100vh;
-    // background-color: var(--background);
     color: var(--text-primary);
-    // background-color: salmon;
 
     // Background Container
     .color-temp-div {
@@ -246,14 +244,19 @@
 
         .body-container {
             width: 100%;
+           
+            min-height: 100vh;
+            overflow-x: hidden;
+
 
             .header {
                 display: flex;
                 justify-content: space-between;
                 gap: 0;
-                margin: 20px 0;
 
                 .title-section {
+                    margin-top: 20px;
+
                     h3 {
                         font-size: 23px;
                         font-weight: 700;

@@ -10,7 +10,7 @@ import ColumnsList from './ColumnsList';
 import { modal } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { useDispatch } from 'react-redux';
 
-const Table = ({ columns = [], data, rowCheckBox = false, topComponents, bulkActions, columnVisible, columnListing }) => {
+const Table = ({ columns = [], data = [], rowCheckBox = false, topComponents, bulkActions, columnVisible, columnListing }) => {
 
     // Example
     //  const columns = [
@@ -113,7 +113,7 @@ const Table = ({ columns = [], data, rowCheckBox = false, topComponents, bulkAct
 
     const pageIndex = table?.getState()?.pagination?.pageIndex || 0;
     const pageSize = table?.getState()?.pagination?.pageSize || 0;
-    const totalRows = table.getFilteredRowModel()?.rows?.length || 0;
+    const totalRows = table?.getFilteredRowModel()?.rows?.length || 0;
     const startRow = pageIndex * pageSize + 1;
     const endRow = Math.min(startRow + pageSize - 1, totalRows);
 
@@ -181,7 +181,7 @@ const Table = ({ columns = [], data, rowCheckBox = false, topComponents, bulkAct
                                 {row.getVisibleCells().map(cell => {
                                     const colMeta = cell.column.columnDef.meta || {};
                                     const cellStyle = row.original._cellStyle?.[cell.column.id] || {};
-                                    
+
                                     return <td className={`${colMeta.className || ''} ${row?.getIsSelected() && 'selected-td'}`} key={cell.id}
                                         onClick={(e) => cell.column.id === 'select' && e.stopPropagation()}
                                         style={{ ...colMeta.style, ...cellStyle }}>

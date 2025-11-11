@@ -7,7 +7,7 @@ const InputPhoneNumber = ({
     label,
     name,
     id,
-    value,
+    value = '',
     required,
     rightIcon,
     rightIconAction,

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialState = {
-   
+
 }
 
 export const controllerSlice = createSlice({
@@ -10,12 +10,10 @@ export const controllerSlice = createSlice({
     initialState,
     reducers: {
 
-        
+
     }
 })
 
 
-export const {
-   
-} = controllerSlice.actions;
+// export const { } = controllerSlice.actions;
 export default controllerSlice.reducer

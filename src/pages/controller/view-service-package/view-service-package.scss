@@ -1,0 +1,207 @@
+@import '../../../assets/scss/mixins/mixin.scss';
+
+.view-service-packages-page-load {
+    margin-top: 70px;
+    padding-bottom: 50px;
+
+    .top-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+}
+
+.view-service-package-page {
+    margin-top: 20px;
+    padding-bottom: 50px;
+
+    .top-section {
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px
+        }
+    }
+
+    .package-title {
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+        border-radius: 15px;
+        padding: 15px 10px 25px 10px;
+        position: relative;
+
+        .sub-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 25px;
+
+            .sub-item {
+                border-right: 2px dashed var(--border-medium);
+
+                &:last-child {
+                    border: none;
+                }
+
+                h4 {
+                    font-size: 20px;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    font-size: 14px;
+                }
+            }
+
+        }
+
+        .status-fold {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 15px;
+            border-radius: 15px 0px 25px 0px;
+            gap: 10px;
+
+            svg {
+                font-size: 18px;
+            }
+
+            p {
+                font-size: 13px;
+            }
+
+
+            &.active {
+                background-color: var(--color-success-6);
+            }
+
+            &.inactive {
+                background-color: var(--color-danger-6);
+            }
+        }
+
+
+    }
+
+    .service-section {
+        margin-top: 30px;
+
+        .sub-title {
+            @include subTitleMedium();
+            margin-bottom: 12px;
+        }
+
+        .service-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+
+            .service-item {
+                background-color: var(--surface-1);
+                border-radius: 15px;
+                padding: 15px;
+                position: relative;
+
+                .line-one {
+                    display: flex;
+                    align-items: end;
+                    justify-content: space-between;
+                    gap: 15px;
+                    margin-bottom: 10px;
+
+                    h4 {
+                        font-size: 17px;
+                        font-weight: 500;
+                    }
+
+                    p {
+                        font-size: 14px;
+                        color: var(--text-secondary-1);
+                    }
+                }
+
+                .line-two {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+
+                    p {
+                        font-size: 13px;
+                        color: var(--text-secondary-1);
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+
+                        svg {
+                            font-size: 18px;
+                            min-width: fit-content;
+                        }
+                    }
+
+                    & .active {
+                        svg {
+                            color: var(--color-success-6);
+                        }
+                    }
+
+                    & .inactive {
+                        svg {
+                            color: var(--color-danger-6);
+                        }
+                    }
+
+                }
+
+                .fold-action {
+                    position: absolute;
+                    display: none;
+                    top: 0;
+                    right: 0;
+                    background-color: var(--surface-1);
+                    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, var(--surface-1) 19%, var(--surface-1) 100%);
+                    width: 110px;
+                    height: 100%;
+                    justify-content: flex-end;
+                    align-items: center;
+                    padding: 0 20px;
+                    border-radius: 0 15px 15px 0;
+
+                }
+
+                &:hover {
+                    .fold-action {
+                        display: flex;
+                    }
+                }
+
+            }
+        }
+    }
+
+    >p {
+        font-size: 12px;
+        text-align: start;
+        font-weight: 300;
+        color: var(--text-secondary-2);
+        margin-top: 25px;
+    }
+
+    @media screen and (max-width:650px) {
+        .service-section {
+            .service-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+
+
+}

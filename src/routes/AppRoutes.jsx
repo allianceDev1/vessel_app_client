@@ -19,7 +19,6 @@ const Master = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log(process.env.REACT_APP_PROJECT_STAGE, 'aa')
         if ((DVC_ID && DVC_ID.length === 32) && acc_tkn) {
             api.ttSv2Axios.get('/worker/initial-info').then((response) => {
                 dispatch(setUser({

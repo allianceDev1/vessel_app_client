@@ -51,6 +51,7 @@ const Toast = ({ id, type, icon, head, message, doClose = true, autoClose = true
         toastElement.removeEventListener('mouseleave', handleMouseLeave);
       }
     };
+    // eslint-disable-next-line
   }, [id, autoClose, doClose, dispatch]);
 
   /**

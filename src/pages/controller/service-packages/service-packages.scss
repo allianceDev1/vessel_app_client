@@ -1,0 +1,102 @@
+.service-packages-page {
+    margin-top: 20px;
+    padding-bottom: 50px;
+
+    .content {
+        display: grid;
+        gap: 15px;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        .pack-card {
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            background-color: silver;
+            padding: 20px 20px;
+            border-radius: 20px;
+            border: 4px solid #1966da;
+            background: linear-gradient(50deg,
+                    rgba(25, 102, 218, 0.205) 25%,
+                    rgba(25, 102, 218, 0.418) 60%,
+                    rgba(25, 102, 218, 0.589) 85%);
+
+            h2 {
+                font-size: 26px;
+                text-align: center;
+                color: #fff;
+            }
+
+            >p {
+                font-size: 14px;
+                text-align: center;
+            }
+
+            .section {
+                margin-top: 25px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+
+                .box {
+                    background-color: rgba(255, 255, 255, 0.103);
+                    text-align: center;
+                    padding: 15px 5px;
+                    border-radius: 10px;
+
+                    h3 {
+                        font-weight: 600;
+                    }
+
+                    >p {
+                        font-size: 13px;
+                        text-align: center;
+                    }
+
+                }
+            }
+
+            .status-fold {
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: var(--color-white);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 15px;
+                border-radius: 0px 15px 0 25px;
+                gap: 10px;
+
+                svg {
+                    font-size: 18px;
+                }
+
+                p {
+                    font-size: 13px;
+                }
+
+
+                &.active {
+                    background-color: var(--color-success-6);
+                }
+
+                &.inactive {
+                    background-color: var(--color-danger-6);
+                }
+            }
+        }
+    }
+
+
+    @media screen and (max-width:1024px) {
+        .content {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media screen and (max-width:600px) {
+        .content {
+            grid-template-columns: 1fr;
+        }
+    }
+}

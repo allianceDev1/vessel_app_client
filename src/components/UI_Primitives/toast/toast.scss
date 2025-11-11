@@ -4,7 +4,7 @@
     gap: 10px;
     padding: 15px 13px 15px 18px;
     background-color: var(--color-natural-trans-73);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(30px);
     color: var(--text-primary);
     border-radius: 8px;
     overflow: hidden;
@@ -101,24 +101,30 @@
 
 /* Keyframes for slide-in animation */
 @keyframes slideIn {
-  from {
-    transform: translateX(100%); /* Start from right */
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0); /* End at original position */
-    opacity: 1;
-  }
+    from {
+        transform: translateX(100%);
+        /* Start from right */
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        /* End at original position */
+        opacity: 1;
+    }
 }
 
 /* Keyframes for slide-out animation */
 @keyframes slideOut {
-  from {
-    transform: translateX(0); /* Start at original position */
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%); /* Slide out to the right */
-    opacity: 0;
-  }
+    from {
+        transform: translateX(0);
+        /* Start at original position */
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        /* Slide out to the right */
+        opacity: 0;
+    }
 }

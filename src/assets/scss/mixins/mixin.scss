@@ -59,5 +59,59 @@
 @mixin subTitleMedium() {
     font-size: 19px;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--text-secondary-1);
+}
+
+@mixin subTitleSmall() {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-secondary-1);
+}
+
+@mixin hide-date-placeholder {
+
+    &[type="date"],
+    &[type="datetime-local"],
+    &[type="month"],
+    &[type="week"],
+    &[type="time"] {
+
+        // hide entire date ghost text
+        &::-webkit-datetime-edit,
+        &::-webkit-datetime-edit-text,
+        &::-webkit-datetime-edit-day-field,
+        &::-webkit-datetime-edit-month-field,
+        &::-webkit-datetime-edit-year-field,
+        &::-webkit-datetime-edit-hour-field,
+        &::-webkit-datetime-edit-minute-field,
+        &::-webkit-datetime-edit-second-field {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+
+        // this line hides the / / separators specifically
+        &::-webkit-datetime-edit-text {
+            color: transparent !important;
+            -webkit-text-fill-color: transparent !important;
+        }
+
+        // reveal actual value when focused or filled
+        &:focus::-webkit-datetime-edit,
+        &:focus::-webkit-datetime-edit-text,
+        &:focus::-webkit-datetime-edit-day-field,
+        &:focus::-webkit-datetime-edit-month-field,
+        &:focus::-webkit-datetime-edit-year-field,
+        &:valid::-webkit-datetime-edit,
+        &:valid::-webkit-datetime-edit-text,
+        &:not([value=""])::-webkit-datetime-edit,
+        &:not([value=""])::-webkit-datetime-edit-text {
+            color: inherit !important;
+            -webkit-text-fill-color: inherit !important;
+        }
+
+        // optional: hide calendar icon
+        &::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+    }
 }

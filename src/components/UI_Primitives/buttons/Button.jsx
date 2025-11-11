@@ -1,5 +1,6 @@
 import React from 'react'
 import './button.scss'
+import { TbLoader } from 'react-icons/tb'
 
 export const Button = ({
     label,
@@ -8,12 +9,12 @@ export const Button = ({
     icon,
     iconPos = "left",
     outlined = false,
+    rounded = false,
     text = false,
     disabled = false,
     size = 'medium',
     spinIcon = false,
     style,
-    loading = false,
     onClick = () => { },
     ...props
 }) => {
@@ -22,16 +23,20 @@ export const Button = ({
         <button
             className={`${severity ? 'ui-button btn-' + severity : 'ui-button'} 
             ${outlined ? 'outlined' : ''} ${text ? 'text' : ''} ${size ? 'btn-size-' + size : ''} 
-            ${spinIcon ? 'btn-spin-icon' : ''}`}
+            ${spinIcon ? 'btn-spin-icon' : ''}
+            ${rounded ? 'btn-rounded' : ''}`}
             disabled={disabled}
             onClick={onClick}
             style={style}
+            type={spinIcon ? 'button' : 'auto'}
             {...props}
         >
-            {(icon && iconPos !== 'right') && icon}
+            {(icon && !spinIcon && iconPos !== 'right') && icon}
+            {(spinIcon && iconPos !== 'right') && <TbLoader />}
             {label && <span>{label}</span>}
             {badge && <span>{badge}</span>}
-            {(icon && iconPos === 'right') && icon}
+            {(icon && !spinIcon && iconPos === 'right') && icon}
+            {(spinIcon && iconPos === 'right') && <TbLoader />}
         </button>
     )
 }

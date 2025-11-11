@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './modal.scss'
 import { GrClose } from 'react-icons/gr'
 import { useDispatch, useSelector } from 'react-redux'

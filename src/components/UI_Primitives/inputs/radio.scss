@@ -1,3 +1,4 @@
+/* radio.scss */
 .ui-radio-container {
     .radio-label {
         display: flex;
@@ -5,7 +6,9 @@
         cursor: pointer;
 
         input {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .radio-custom {
@@ -16,11 +19,11 @@
             justify-content: center;
             margin-right: 8px;
             transition: border-color 0.2s ease-in-out;
-            background-color: var(--color-natural-1);
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
             width: 21px;
             height: 21px;
             border-width: 2px;
-
 
             &:hover {
                 border-color: var(--color-primary);
@@ -37,6 +40,7 @@
             border-color: var(--color-primary);
         }
 
+        /* when input is checked (browser-controlled or controlled via checked prop) */
         input:checked+.radio-custom {
             border-color: var(--color-primary);
             background-color: var(--color-primary-bg);
@@ -45,7 +49,6 @@
                 display: block;
             }
         }
-
 
         input:disabled+.radio-custom {
             border-color: var(--color-natural-5);
@@ -58,7 +61,7 @@
         }
 
         input:disabled+.radio-custom+.label-text {
-            color: var(--color-natural-7); // Changed label color when disabled
+            color: var(--color-natural-7);
         }
 
         .label-text {
@@ -127,5 +130,4 @@
             }
         }
     }
-
 }

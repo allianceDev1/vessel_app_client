@@ -26,13 +26,13 @@ function MultiSelectInput({
     setIsOpen(!isOpen)
   };
 
-  const handleCheckboxChange = (e, value) => {
+  const handleCheckboxChange = (e, { label, value }) => {
     const isChecked = e.target.checked;
     const newSelectedValues = isChecked
-      ? [...selectedValues, value]
-      : selectedValues.filter((v) => v !== value);
+      ? [...selectedValues, { label, value }]
+      : selectedValues.filter((v) => v.value !== value);
     setSelectedValues(newSelectedValues);
-    onChange({ target: { name, value: newSelectedValues } });
+    onChange({ name, selectedValues: newSelectedValues });
   };
 
   const handleClickOutside = (e) => {
@@ -49,9 +49,9 @@ function MultiSelectInput({
   }, []);
 
   const displayText = selectedValues.length === 1
-    ? selectedValues[0]
+    ? selectedValues[0]?.label
     : selectedValues.length > 1
-      ? `${selectedValues?.[0]} & ${selectedValues.length - 1} item${(selectedValues.length - 1) > 1 ? 's' : ''} selected`
+      ? `${selectedValues?.[0]?.label} & ${selectedValues.length - 1} item${(selectedValues.length - 1) > 1 ? 's' : ''} selected`
       : '';
 
   return (
@@ -75,8 +75,8 @@ function MultiSelectInput({
         <div className="multiselect-options">
           {options.map((option) => (
             <span key={option.value} className='option-item'>
-              <Checkbox label={option.label} value={option.value} onChange={(e) => handleCheckboxChange(e, option.value)}
-                checked={selectedValues.includes(option.value)} />
+              <Checkbox label={option.label} name={name} value={option.value} onChange={(e) => handleCheckboxChange(e, { label: option.label, value: option.value })}
+                checked={selectedValues?.map((v) => v.value)?.includes(option.value)} />
             </span>
           ))}
         </div>

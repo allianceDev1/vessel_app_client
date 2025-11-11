@@ -9,6 +9,7 @@ const AreaList = () => {
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Area List', note: "View all areas name base or technician base" }))
+        // eslint-disable-next-line
     }, [])
     return (
         <div>AreaList</div>
