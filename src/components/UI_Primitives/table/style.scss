@@ -27,16 +27,17 @@
     }
 
     .bulk-actions {
-        background-color: var(--surface-2);
+        background-color: var(--color-natural-trans-73);
+        backdrop-filter: blur(5px);
         margin-bottom: 15px;
         margin-top: 14px;
         min-height: 45px;
-        border-radius: 10px;
+        border-radius: 25px;
         display: flex;
         align-items: center;
         padding: 2px 25px;
         box-shadow: 0 2px 5px var(--shadow-sm);
-        border: 2px solid var(--border-default);
+        border: 1px solid var(--border-default);
 
         .section-one {
             height: 25px;
@@ -59,6 +60,8 @@
 
     .table-filter-content {
         width: 100%;
+        border: 1px solid var(--border-light);
+        border-radius: 25px;
         overflow: auto;
 
         table {
@@ -131,7 +134,7 @@
 
             td,
             th {
-                border: 1px solid var(--border-default);
+                border: 1px solid var(--border-light);
                 padding: 5px 8px;
                 font-size: 14px;
                 font-weight: 500;
@@ -140,7 +143,17 @@
             }
 
             tr {
-                background-color: var(--color-natural-1);
+                background-color: var(--color-natural-trans-18);
+
+                &:hover {
+                    background-color: var(--color-natural-trans-53);
+                }
+
+                &:last-child {
+                    td {
+                        border-bottom: none;
+                    }
+                }
             }
 
             th {
@@ -152,11 +165,22 @@
                 text-align: center;
                 font-weight: 600;
                 font-size: 14px;
+                border: 1px 0px solid var(--border-light);
+            }
+
+            td {
+                &:first-child {
+                    border-left: none;
+                }
+
+                &:last-child {
+                    border-right: none;
+                }
             }
 
             .danger-row {
-                color: var(--color-danger);
-                background-color: var(--color-danger-bg);
+                color: var(--color-danger-text);
+                background-color: var(--color-danger-trans-83);
             }
 
             .warning-row {
@@ -181,6 +205,15 @@
 
             .selected-td {
                 background-color: var(--color-natural-2);
+            }
+
+            .no-data-row {
+                text-align: center;
+                padding: 20px;
+                font-size: 14px;
+                color: var(--text-secondary-3);
+                height: calc(5 * 48px);
+                vertical-align: middle;
             }
         }
 
@@ -213,6 +246,11 @@
                     font-size: 14px;
                     font-weight: 500;
                     margin-right: 10px;
+                }
+
+                select {
+                    border: none;
+                    outline: none;
                 }
             }
         }

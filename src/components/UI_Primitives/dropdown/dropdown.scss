@@ -16,7 +16,8 @@
     overflow-y: auto;
     min-width: 220px;
     padding: 8px 8px;
-    background: var(--color-natural-1);
+    background-color: var(--color-natural-trans-18);
+    backdrop-filter: blur(5px);
     border-radius: 15px;
     box-shadow: 0 2px 5px var(--shadow-lg);
     z-index: 70;
@@ -55,12 +56,12 @@
             height: 100%;
 
             svg {
-                font-size: 17px;
+                font-size: 19px;
             }
         }
 
         &:hover:not(.disabled) {
-            background: var(--color-natural-2);
+            background-color: var(--color-natural-trans-53);
         }
 
         &.disabled {

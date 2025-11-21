@@ -13,6 +13,7 @@ import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import UpdatePackage from '../../../components/forms/update-package/UpdatePackage';
 import UpdatePackageService from '../../../components/forms/update-package/UpdatePackageService';
+import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 
 
 const ViewServicePackage = () => {
@@ -41,7 +42,7 @@ const ViewServicePackage = () => {
                 api.vfCv2Axios.get(`/package/${package_id}`),
                 api.vfCv2Axios.get(`/package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,service_limit,extra_charge_applied,service_charge_applied,credit_limit`)
             ]);
-            
+
             setPackageInfo(packageRes.data)
             setServiceList(serviceRes.data)
 
@@ -63,8 +64,9 @@ const ViewServicePackage = () => {
                         setPackageInfo({ ...packageInfo, is_active })
                     } catch (error) {
                         dispatch(toast.push({
-                            title: 'Update failed',
-                            body: error.message
+                            type: 'danger',
+                            head: 'Update failed',
+                            message: error.message
                         }))
                     } finally {
                         setLoading('')
@@ -188,7 +190,7 @@ const ViewServicePackage = () => {
                         ))}
                     </div>}
             </div>
-            <p>The package is updated at {new Date(packageInfo?.updated_at).toDateString()} by {packageInfo?.updated_by}</p>
+            <p>The package is updated at {isoToDDMonYYYY(new Date(packageInfo?.updated_at))} by {packageInfo?.updated_by}</p>
         </div >
     )
 }

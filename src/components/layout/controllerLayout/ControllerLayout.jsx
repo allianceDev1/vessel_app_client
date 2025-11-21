@@ -83,10 +83,12 @@ const ControllerLayout = ({ children }) => {
                             <TbHome />
                             <span>Home</span>
                         </div>
-                        <div className={`item ${activeSegment === 'area-list' && 'active'}`} onClick={() => handleMenuClick('/controller/area-list')}>
-                            <TbMap2 />
-                            <span>Area list</span>
-                        </div>
+                        {user?.allowed_origins?.some(access => ['vfcr_areas_read', 'vfcr_areas_write'].includes(access)) &&
+                            <div className={`item ${activeSegment === 'area-list' && 'active'}`} onClick={() => handleMenuClick('/controller/area-list')}>
+                                <TbMap2 />
+                                <span>Area list</span>
+                            </div>}
+
                         <div className={`item ${activeSegment === 'customer-list' && 'active'}`} onClick={() => handleMenuClick('/controller/customer-list')}>
                             <TbUsers />
                             <span>Customer list</span>

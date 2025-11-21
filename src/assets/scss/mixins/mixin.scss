@@ -68,15 +68,14 @@
     color: var(--text-secondary-1);
 }
 
-@mixin hide-date-placeholder {
 
+@mixin hide-date-placeholder {
     &[type="date"],
     &[type="datetime-local"],
     &[type="month"],
     &[type="week"],
     &[type="time"] {
-
-        // hide entire date ghost text
+       
         &::-webkit-datetime-edit,
         &::-webkit-datetime-edit-text,
         &::-webkit-datetime-edit-day-field,
@@ -88,30 +87,30 @@
             color: transparent !important;
             -webkit-text-fill-color: transparent !important;
         }
+       
+        &:focus,
+        &.has-value,
+        &:valid,
+        &:not([value=""]) {
 
-        // this line hides the / / separators specifically
-        &::-webkit-datetime-edit-text {
-            color: transparent !important;
-            -webkit-text-fill-color: transparent !important;
+            &::-webkit-datetime-edit,
+            &::-webkit-datetime-edit-text,
+            &::-webkit-datetime-edit-day-field,
+            &::-webkit-datetime-edit-month-field,
+            &::-webkit-datetime-edit-year-field,
+            &::-webkit-datetime-edit-hour-field,
+            &::-webkit-datetime-edit-minute-field,
+            &::-webkit-datetime-edit-second-field {
+                color: inherit !important;
+                -webkit-text-fill-color: inherit !important;
+            }
         }
-
-        // reveal actual value when focused or filled
-        &:focus::-webkit-datetime-edit,
-        &:focus::-webkit-datetime-edit-text,
-        &:focus::-webkit-datetime-edit-day-field,
-        &:focus::-webkit-datetime-edit-month-field,
-        &:focus::-webkit-datetime-edit-year-field,
-        &:valid::-webkit-datetime-edit,
-        &:valid::-webkit-datetime-edit-text,
-        &:not([value=""])::-webkit-datetime-edit,
-        &:not([value=""])::-webkit-datetime-edit-text {
-            color: inherit !important;
-            -webkit-text-fill-color: inherit !important;
+      
+        &:-moz-focusring {
+            outline: none;
         }
-
-        // optional: hide calendar icon
-        &::-webkit-calendar-picker-indicator {
-            display: none;
-        }
+       
+        appearance: none;
+        -webkit-appearance: none;
     }
 }

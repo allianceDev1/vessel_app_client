@@ -12,6 +12,9 @@ const AreaList = React.lazy(() => import('../pages/controller/area-list/AreaList
 const AppConfig = React.lazy(() => import('../pages/controller/app-config/AppConfig'))
 const ServicePackages = React.lazy(() => import('../pages/controller/service-packages/ServicePackages'))
 const ViewServicePackage = React.lazy(() => import('../pages/controller/view-service-package/ViewServicePackage'))
+const ViewArea = React.lazy(() => import('../pages/controller/view-area/ViewArea'))
+
+
 
 
 
@@ -32,7 +35,10 @@ const Controller = () => {
                     <Route path='/' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Area */}
-                    <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />
+                    {user?.allowed_origins?.some(access => ['vfcr_areas_read', 'vfcr_areas_write'].includes(access)) && <>
+                        <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />
+                        <Route path='/area-list/:city_id' element={<PrivateRoute element={<ViewArea />} isAuthenticated={isAuthenticated} />} />
+                    </>}
 
                     {/* App Config */}
                     {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>

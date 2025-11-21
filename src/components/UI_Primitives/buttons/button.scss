@@ -50,15 +50,18 @@
 
     &.text {
         background: none;
+        border: none;
         color: var(--color-natural-10);
 
         &:hover {
             background: none;
+            border: none;
             color: var(--color-natural-9);
         }
 
         &:disabled {
             background: none;
+            border: none;
             color: var(--color-natural-5);
             cursor: not-allowed;
         }

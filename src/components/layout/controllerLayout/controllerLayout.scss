@@ -4,6 +4,7 @@
     width: 100%;
     position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
     color: var(--text-primary);
 
     // Background Container
@@ -33,15 +34,20 @@
         .box-one {
             background: radial-gradient(circle, rgba(0, 219, 193, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
             width: 195vh;
+            width: 195dvh;
             height: 95vh;
+            height: 95dvh;
             left: -40%;
             top: -10vh;
+            top: -10dvh;
         }
 
         .box-two {
             background: radial-gradient(circle, rgba(255, 0, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
             width: 210vh;
+            width: 210dvh;
             height: 110vh;
+            height: 110dvh;
             right: -50%;
             bottom: -40%;
         }
@@ -49,7 +55,9 @@
         .box-three {
             background: radial-gradient(circle, rgba(170, 100, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
             width: 230vh;
+            width: 230dvh;
             height: 130vh;
+            height: 130dvh;
             left: -10%;
             bottom: -60%;
         }
@@ -57,19 +65,22 @@
         .box-four {
             background: radial-gradient(circle, rgba(0, 255, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
             width: 175vh;
+            width: 175dvh;
             height: 75vh;
+            height: 75dvh;
             right: -20%;
             top: -20%;
         }
     }
 
     .layout-navbar {
-        background-color: var(--color-natural-trans-53);
-        backdrop-filter: blur(5px);
+      background-color: var(--color-natural-trans-18);
+    backdrop-filter: blur(5px);
         border-right: 1px solid var(--border-light);
         color: var(--text-primary);
         position: fixed;
         height: 100vh;
+        height: 100dvh;
         width: 220px;
         top: 0;
         left: 0;
@@ -82,6 +93,7 @@
 
         .nav-sections {
             height: 100vh;
+            height: 100dvh;
             padding: 15px 12px;
             display: grid;
             grid-template-rows: 50px auto 60px;
@@ -144,11 +156,11 @@
                     gap: 10px;
                     align-items: center;
                     padding: 10px 15px;
-                    border-radius: 5px;
-                    -webkit-border-radius: 5px;
-                    -moz-border-radius: 5px;
-                    -ms-border-radius: 5px;
-                    -o-border-radius: 5px;
+                    border-radius: 50px;
+                    -webkit-border-radius: 50px;
+                    -moz-border-radius: 50px;
+                    -ms-border-radius: 50px;
+                    -o-border-radius: 50px;
                     cursor: pointer;
 
                     svg {
@@ -241,13 +253,15 @@
         -moz-transition: ease-in-out .3s;
         -ms-transition: ease-in-out .3s;
         -o-transition: ease-in-out .3s;
+        display: flex;
+        justify-content: center;
 
         .body-container {
             width: 100%;
-           
+            max-width: 1600px;
             min-height: 100vh;
+            min-height: 100dvh;
             overflow-x: hidden;
-
 
             .header {
                 display: flex;

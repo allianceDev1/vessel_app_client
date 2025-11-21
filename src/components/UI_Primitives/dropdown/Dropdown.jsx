@@ -78,7 +78,7 @@ const Dropdown = ({ button, list }) => {
             style={{ top: `${position.y}px`, left: `${position.x}px`, position: 'absolute', zIndex: 1000 }}
             ref={menuRef}
         >
-            {list.map((section, sectionIndex) => (
+            {list?.map((section, sectionIndex) => (
                 <div key={sectionIndex} className="dropdown-section">
                     {section.heading && (
                         <>

@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100dvh;
     position: relative;
     overflow: hidden;
     background-color: var(--background);
@@ -32,16 +33,21 @@
         .box-one {
             background: radial-gradient(circle, rgba(0, 219, 193, 0.4) 0%, rgba(4, 43, 7, 0) 50%);
             width: 195vh;
+            width: 195dvh;
             height: 95vh;
+            height: 95dvh;
             left: -40%;
             top: -10vh;
+            top: -10dvh;
             animation: moveAndScale 10s ease-in-out infinite;
         }
 
         .box-two {
             background: radial-gradient(circle, rgba(255, 0, 255, 0.4) 0%, rgba(4, 43, 7, 0) 50%);
             width: 210vh;
+            width: 210dvh;
             height: 110vh;
+            height: 110dvh;
             right: -50%;
             bottom: -40%;
             animation: moveAndScale 12s ease-in-out infinite reverse;
@@ -50,7 +56,9 @@
         .box-three {
             background: radial-gradient(circle, rgba(170, 100, 255, 0.45) 0%, rgba(4, 43, 7, 0) 50%);
             width: 230vh;
+            width: 230dvh;
             height: 130vh;
+            height: 130dvh;
             left: -10%;
             bottom: -60%;
             animation: moveAndScale 14s ease-in-out infinite;
@@ -59,7 +67,9 @@
         .box-four {
             background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, rgba(4, 43, 7, 0) 50%);
             width: 175vh;
+            width: 175dvh;
             height: 75vh;
+            height: 75dvh;
             right: -20%;
             top: -20%;
             animation: moveAndScale 16s ease-in-out infinite reverse;
