@@ -14,3 +14,13 @@ body {
     color: var(--text-primary);
     overflow-x: hidden;
 }
+
+
+.tooltip {
+    background-color: wheat;
+    color: black;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 2px 8px;
+    font-size: 13px
+}

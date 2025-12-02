@@ -68,7 +68,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
             setLoading('fetch')
 
             const list = await api.ttPv2Axios.get(`/worker/account/list?nameOnly=Yes`)
-            const inactiveList = listInactiveAreaWorker(list.data, activeWorkers)
+            const inactiveList = listInactiveAreaWorker(list, activeWorkers)
             setWorkers(inactiveList)
 
         } catch (error) {

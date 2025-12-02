@@ -34,20 +34,20 @@ const UpdatePackageService = ({ packageId, serviceId, mode, setData }) => {
         api.vfCv2Axios.get(`/package/${packageId}/${serviceId}`)
       ]);
 
-      setPackages(packageRes?.data?.map(i => ({ label: i.package_name, value: i.package_id })))
+      setPackages(packageRes?.map(i => ({ label: i.package_name, value: i.package_id })))
       setForm({
-        service_id: serviceRes?.data?.service_id,
-        service_name: serviceRes?.data?.service_name,
-        service_limit: String(serviceRes?.data?.service_limit),
-        credit_type: serviceRes?.data?.credit_type,
-        credit_limit: String(serviceRes?.data?.credit_limit),
-        target_package: mode === 'Renewal' ? serviceRes?.data?.target_package : undefined,
-        bag_price_type: serviceRes?.data?.bag_price_type,
-        vessel_price_type: serviceRes?.data?.vessel_price_type,
-        primary_spare_price_type: serviceRes?.data?.primary_spare_price_type,
-        service_charge_applied: serviceRes?.data?.service_charge_applied,
-        service_charges: serviceRes?.data?.service_charges,
-        extra_charge_applied: serviceRes?.data?.extra_charge_applied
+        service_id: serviceRes?.service_id,
+        service_name: serviceRes?.service_name,
+        service_limit: String(serviceRes?.service_limit),
+        credit_type: serviceRes?.credit_type,
+        credit_limit: String(serviceRes?.credit_limit),
+        target_package: mode === 'Renewal' ? serviceRes?.target_package : undefined,
+        bag_price_type: serviceRes?.bag_price_type,
+        vessel_price_type: serviceRes?.vessel_price_type,
+        primary_spare_price_type: serviceRes?.primary_spare_price_type,
+        service_charge_applied: serviceRes?.service_charge_applied,
+        service_charges: serviceRes?.service_charges,
+        extra_charge_applied: serviceRes?.extra_charge_applied
       })
     } catch (err) {
       setError({ error: true, title: 'Data fetching failed', message: err.message })

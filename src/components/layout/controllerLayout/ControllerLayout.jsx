@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './controllerLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
-import { TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbReport, TbUsers } from 'react-icons/tb';
+import { TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbReport } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
@@ -89,9 +89,9 @@ const ControllerLayout = ({ children }) => {
                                 <span>Area list</span>
                             </div>}
 
-                        <div className={`item ${activeSegment === 'customer-list' && 'active'}`} onClick={() => handleMenuClick('/controller/customer-list')}>
-                            <TbUsers />
-                            <span>Customer list</span>
+                        <div className={`item ${activeSegment === 'customers' && 'active'}`} onClick={() => handleMenuClick('/controller/customers')}>
+                            <TbMoodSpark />
+                            <span>Customers</span>
                         </div>
                         <div className={`item ${activeSegment === 'csr-list' && 'active'}`} onClick={() => handleMenuClick('/controller/csr-list')}>
                             <TbFilePhone />

@@ -66,7 +66,7 @@ function InputText({
     return (
         <div className={`ui-input-text-container ${size} ${error ? 'error' : ''}`}>
             <input
-                id={id}
+                id={id || name}
                 name={name}
                 value={value}
                 required={required}

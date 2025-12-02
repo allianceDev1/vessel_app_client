@@ -13,11 +13,9 @@ const AppConfig = React.lazy(() => import('../pages/controller/app-config/AppCon
 const ServicePackages = React.lazy(() => import('../pages/controller/service-packages/ServicePackages'))
 const ViewServicePackage = React.lazy(() => import('../pages/controller/view-service-package/ViewServicePackage'))
 const ViewArea = React.lazy(() => import('../pages/controller/view-area/ViewArea'))
-
-
-
-
-
+const Customers = React.lazy(() => import('../pages/controller/customers/Customers'))
+const CustomerMiniReport = React.lazy(() => import('../components/charts/customer-mini-report/CustomerMiniReport'))
+const SearchCustomer = React.lazy(() => import('../components/modules/controller/search-customer/SearchCustomer'))
 
 
 
@@ -46,6 +44,16 @@ const Controller = () => {
                         <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
                         <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
                     </>}
+
+                    {/* Customer list */}
+                    {user?.allowed_origins?.some(access => ['vfcr_customers_read', 'vfcr_customers_write'].includes(access)) && <>
+                        <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
+                            <Route index element={<CustomerMiniReport />} />
+                            <Route path="search" element={<SearchCustomer />} />
+                            {/* <Route path="filter" element={<SearchPage />} /> */}
+                        </Route>
+                    </>}
+
 
 
                     {/* 404 */}

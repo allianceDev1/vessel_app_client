@@ -1,7 +1,7 @@
 import { handleTokenError } from "../tokenHandler";
 import env from "../../../config/env";
 
-export const responseSuccess = (response) => response.data;
+export const responseSuccess = (response) => response.data.data || response.data;
 
 export const responseError = async (error) => {
     const originalRequest = error.config;

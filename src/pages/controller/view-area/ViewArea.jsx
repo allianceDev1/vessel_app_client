@@ -91,7 +91,7 @@ const ViewArea = () => {
             setError({ error: false, title: null, message: null })
 
             const data = await api.vfCv2Axios.get(`/branch-area/city/${city_id}`)
-            setData(data.data)
+            setData(data)
 
         } catch (error) {
             setError({ error: true, title: 'Data feting failed', message: error.message })

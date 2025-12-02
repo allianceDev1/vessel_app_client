@@ -109,7 +109,7 @@ const AreaList = () => {
             setReportLoading('fetch')
             setError({ error: false, title: null, message: null })
             const report = await api.vfCv2Axios.get('/branch-area/mini-report')
-            setMiniReport(report.data)
+            setMiniReport(report)
 
         } catch (error) {
             setError({ error: true, title: 'Data feting failed', message: error.message })
@@ -137,7 +137,7 @@ const AreaList = () => {
                         { header: 'Tech count.', accessorKey: 'Tech count', meta: { style: { textAlign: 'center' } } },
                     ])
 
-                    setData(data?.data?.map((city, index) => ({
+                    setData(data?.map((city, index) => ({
                         Index: index + 1,
                         'City name': city.city_name,
                         city_id: city.city_id,
@@ -181,7 +181,7 @@ const AreaList = () => {
 
                     setTableColumns(tempColumns)
 
-                    setData(data?.data?.map((city, index) => ({
+                    setData(data?.map((city, index) => ({
                         Index: index + 1,
                         'Worker name': city.worker_name,
                         worker_uuid: city.worker_uuid,
@@ -201,7 +201,7 @@ const AreaList = () => {
                         { header: 'City name', accessorKey: 'City name' }
                     ])
 
-                    setData(data?.data?.map((city, index) => ({
+                    setData(data?.map((city, index) => ({
                         Index: index + 1,
                         'Post office': city.post_office,
                         'City name': city.city_name,
@@ -217,7 +217,7 @@ const AreaList = () => {
                         { header: 'City name', accessorKey: 'City name' }
                     ])
 
-                    setData(data?.data?.map((city, index) => ({
+                    setData(data?.map((city, index) => ({
                         Index: index + 1,
                         'Pin code': city.pin_code,
                         'City name': city.city_name,

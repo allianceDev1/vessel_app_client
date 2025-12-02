@@ -22,12 +22,12 @@ const Master = () => {
         if ((DVC_ID && DVC_ID.length === 32) && acc_tkn) {
             api.ttSv2Axios.get('/worker/initial-info').then((response) => {
                 dispatch(setUser({
-                    acc_id: response.data.acc_id,
-                    dvc_id: response.data.dvc_id,
-                    first_name: response.data.first_name,
-                    last_name: response.data.last_name,
-                    designation: response.data.designation,
-                    allowed_origins: response.data.allowed_origins
+                    acc_id: response.acc_id,
+                    dvc_id: response.dvc_id,
+                    first_name: response.first_name,
+                    last_name: response.last_name,
+                    designation: response.designation,
+                    allowed_origins: response.allowed_origins
                 }))
             })
                 .catch(() => {

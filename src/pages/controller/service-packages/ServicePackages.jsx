@@ -23,7 +23,7 @@ const ServicePackages = () => {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
             const res = await api.vfCv2Axios.get('/package/list?product_type=Vessel&hidden=Yes')
-            setData(res.data)
+            setData(res)
         } catch (error) {
             setError({ error: true, title: 'Data feting failed', message: error.message })
         } finally {

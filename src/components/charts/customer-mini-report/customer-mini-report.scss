@@ -1,0 +1,220 @@
+@import '../../../assets/scss/mixins/mixin.scss';
+
+.customer-mini-report-comp {
+    .search-button-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 10px;
+        border-radius: 25px;
+        border: 1px dashed var(--border-medium);
+        background-color: var(--color-natural-trans-51);
+        backdrop-filter: blur(5px);
+        cursor: pointer;
+
+        span {
+            svg {
+                font-size: 40px;
+                color: var(--color-primary);
+            }
+        }
+
+        h3 {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        p {
+            font-size: 13px;
+            text-align: center;
+            color: var(--text-secondary-2);
+        }
+    }
+
+    .reports {
+        margin-top: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+
+        .report-box {
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
+            padding: 10px 15px;
+            border-radius: 15px;
+
+            .title-section {
+                padding-bottom: 10px;
+
+                h4 {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+
+                .content {
+                    overflow: hidden;
+                }
+            }
+        }
+
+        .vessel-report {
+            width: 64%;
+
+            .content {
+                display: grid;
+                grid-template-columns: 1fr 200px;
+                gap: 30px;
+
+                .number-chart {
+                    .section-one {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr 1fr;
+                        gap: 5px;
+
+                        .item-div {
+                            h2 {
+                                font-size: 25px;
+                                font-weight: 700;
+                                text-align: center;
+                                color: var(--color-primary);
+                            }
+
+                            p {
+                                font-size: 13px;
+                                text-align: center;
+                            }
+
+                            padding: 10px 5px;
+                            border-right: 1px solid var(--border-light);
+
+                            &:last-child {
+                                border: none;
+                            }
+                        }
+                    }
+
+                    .section-two {
+                        margin-top: 15px;
+
+                        .bar-border {
+                            margin-top: 10px;
+
+                            p {
+                                font-size: 13px;
+                                margin-left: 8px;
+                            }
+                        }
+
+                    }
+                }
+
+                .chart {
+                    width: 100%;
+                }
+            }
+        }
+
+        .customer-report {
+            width: 33%;
+        }
+
+        .add-on-report {
+            width: 100%;
+
+            .content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                width: 100%;
+                align-items: center;
+
+                .section-two {
+                    p {
+                        font-size: 13px;
+                        margin-left: 8px;
+                    }
+                }
+
+                .section-one {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr 1fr;
+                    gap: 5px;
+
+                    .item-div {
+                        padding: 10px 5px;
+                        border-right: 1px solid var(--border-light);
+
+                        h2 {
+                            font-size: 25px;
+                            font-weight: 700;
+                            text-align: center;
+                            color: var(--color-primary);
+                        }
+
+                        p {
+                            font-size: 13px;
+                            text-align: center;
+                        }
+
+                        &:last-child {
+                            border: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width:750px) {
+        .reports {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+
+            .vessel-report {
+                grid-column: 1;
+                grid-row: 1 / 3;
+                width: 100%;
+
+                .content {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .customer-report {
+                grid-column: 2;
+                grid-row: 1;
+                width: 100%;
+            }
+
+            .add-on-report {
+                grid-column: 2;
+                grid-row: 2;
+                width: 100%;
+
+                .content {
+                    grid-template-columns: 1fr;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width:500px) {
+        .reports {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .add-on-report,
+            .customer-report,
+            .vessel-report {
+                width: 100%;
+                grid-column: unset;
+                grid-row: unset;
+            }
+        }
+    }
+}

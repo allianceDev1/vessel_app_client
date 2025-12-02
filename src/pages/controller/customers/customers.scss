@@ -1,0 +1,20 @@
+.customers-page {
+    padding-top: 20px;
+    padding-bottom: 40px;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+
+        button {
+            min-width: fit-content;
+        }
+    }
+
+    .outlet {
+        margin-top: 15px;
+    }
+}

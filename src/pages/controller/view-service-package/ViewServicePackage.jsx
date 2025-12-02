@@ -43,8 +43,8 @@ const ViewServicePackage = () => {
                 api.vfCv2Axios.get(`/package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,service_limit,extra_charge_applied,service_charge_applied,credit_limit`)
             ]);
 
-            setPackageInfo(packageRes.data)
-            setServiceList(serviceRes.data)
+            setPackageInfo(packageRes)
+            setServiceList(serviceRes)
 
         } catch (err) {
             setError({ error: true, title: 'Data fetching failed', message: err.message })
