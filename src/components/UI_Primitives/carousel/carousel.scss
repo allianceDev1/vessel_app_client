@@ -1,0 +1,71 @@
+.ui-carousel {
+    position: relative;
+
+    .carousel__container {
+        overflow: hidden;
+        border-radius: 24px;
+    }
+
+    .carousel__track {
+        display: flex;
+        transition: transform 300ms ease-in-out;
+    }
+
+    .carousel__item {
+        min-width: 100%;
+    }
+
+    .carousel__button {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        border: none;
+        width: 30%;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        transition: opacity 200ms;
+        padding: 20px;
+
+        svg {
+            font-size: 30px;
+            background-color: var(--surface-1);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 200ms;
+        }
+    }
+
+    .carousel__button--prev {
+        left: 0px;
+
+    }
+
+    .carousel__button--next {
+        right: 0px;
+        justify-content: flex-end;
+    }
+
+    .carousel__dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 5px;
+    }
+
+    .carousel__dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--surface-3);
+        border: none;
+        cursor: pointer;
+        transition: background-color 200ms;
+        padding: 0;
+    }
+
+    .carousel__dot--active {
+        background-color: var(--color-primary);
+    }
+
+}

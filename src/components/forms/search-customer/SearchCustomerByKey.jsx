@@ -14,7 +14,7 @@ import Button from '../../UI_Primitives/buttons/Button';
 const SearchCustomerByKey = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [searchParams] = useSearchParams()
     const [loading, setLoading] = useState('')
     const [cityList, setCityList] = useState([])
     const [cityOptions, setCityOptions] = useState([])
@@ -106,9 +106,9 @@ const SearchCustomerByKey = () => {
         } catch (error) {
             dispatch(modal.pull.all())
             dispatch(toast.push({
-                type: 'Danger',
-                head: 'Unknown error',
-                message: error?.message
+                type: 'danger',
+                head: 'City fetch failed',
+                message: "Try again later"
             }))
         } finally {
             setLoading('')

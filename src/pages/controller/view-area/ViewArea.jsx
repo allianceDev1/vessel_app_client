@@ -94,7 +94,7 @@ const ViewArea = () => {
             setData(data)
 
         } catch (error) {
-            setError({ error: true, title: 'Data feting failed', message: error.message })
+            setError({ error: true, title: 'Data fecting failed', message: error.message })
         } finally {
             setLoading('')
         }

@@ -89,9 +89,9 @@
         max-height: 55px;
         padding: 0px 4%;
         overflow: hidden;
-        background-color: var(--color-natural-trans-53);
+        background-color: var(--color-natural-trans-18);
+        backdrop-filter: blur(20px);
         box-shadow: var(--shadow-lg) 0 5px 10px -5px;
-        backdrop-filter: blur(5px);
         border-bottom: 1px solid var(--border-light);
         color: var(--text-primary);
 
@@ -154,8 +154,9 @@
 
         .body-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             margin: 50px 0 0 0;
+            padding-bottom: 50px;
 
             .body-title {
                 margin: 15px 0;
@@ -182,7 +183,7 @@
 
     .layout-menu {
         position: fixed;
-        z-index: 15;
+        z-index: 50;
         left: 0;
         bottom: 0;
         width: 100%;
@@ -190,14 +191,14 @@
         justify-content: center;
         padding: 5px 15px;
         height: 55px;
-        background-color: var(--color-natural-trans-53);
-        box-shadow: var(--shadow-lg) 0 -5px 10px -5px;
+        background-color: var(--color-natural-trans-18);
         backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-light);
+        box-shadow: var(--shadow-lg) 0 -5px 10px -5px;
+        border-top: 1px solid var(--border-light);
 
         .menu-items {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
             align-items: center;

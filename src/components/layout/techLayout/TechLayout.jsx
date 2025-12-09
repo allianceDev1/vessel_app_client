@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import './techLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
+import env from '../../../config/env';
 import { IoChevronBack } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
-import { useLocation } from 'react-router-dom';
-import { TbHome } from 'react-icons/tb';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { TbCalendarStats, TbCategory2, TbHome, TbMenu2 } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 
 const TechLayout = ({ children }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('')
     const { pageTitle } = useSelector((state) => state.miniSystem)
 
@@ -28,12 +30,12 @@ const TechLayout = ({ children }) => {
 
             <div className="layout-header">
                 <div className="section-one">
-                    <IoChevronBack />
-                    <img src={BrandLogo} alt='brand-logo' />
+                    <IoChevronBack onClick={() => navigate(-1)} />
+                    <img src={BrandLogo} alt='brand-logo' onClick={() => navigate(-1)} />
                     <h3>Alliance</h3>
                 </div>
                 <div className="section-two">
-                    <div className="navigate-button" title='Home Software' onClick={() => window.location.href = ('http://localhost:3000/')}>
+                    <div className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)}>
                         <RxDashboard />
                     </div>
                 </div>
@@ -49,21 +51,21 @@ const TechLayout = ({ children }) => {
             </div>
             <div className="layout-menu">
                 <div className="menu-items">
-                    <div className={`item ${!activeSegment && 'active'}`}>
+                    <div className={`item ${!activeSegment && 'active'}`} onClick={() => navigate('/tech')}>
                         <TbHome />
                         <p>Home</p>
                     </div>
-                    <div className={`item ${activeSegment === 'a' && 'active'}`}>
-                        <TbHome />
-                        <p>Home</p>
+                    <div className={`item ${activeSegment === 'a' && 'active'}`} onClick={() => navigate('/tech')}>
+                        <TbCalendarStats />
+                        <p>Schedules</p>
                     </div>
-                    <div className={`item ${!activeSegment === 'a' && 'active'}`}>
-                        <TbHome />
-                        <p>Home</p>
+                    <div className={`item ${activeSegment === 'services' && 'active'}`} onClick={() => navigate('/tech/services')}>
+                        <TbCategory2 />
+                        <p>Services</p>
                     </div>
-                    <div className={`item ${!activeSegment === 'a' && 'active'}`}>
-                        <TbHome />
-                        <p>Home</p>
+                    <div className={`item ${activeSegment === 'a' && 'active'}`} onClick={() => navigate('/tech/app-config')}>
+                        <TbMenu2 />
+                        <p>More</p>
                     </div>
                 </div>
             </div>

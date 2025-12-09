@@ -64,7 +64,7 @@ const CustomerMiniReport = () => {
                 rental_products: reports?.addOn_report?.rental_products || 0,
             })
         } catch (error) {
-            setError({ error: true, title: 'Data feting failed', message: error.message })
+            setError({ error: true, title: 'Data fecting failed', message: error.message })
         } finally {
             setLoading('')
         }

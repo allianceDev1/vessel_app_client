@@ -1,0 +1,24 @@
+.tech-service-filter-comp {
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .reset-text {
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--color-primary);
+            text-align: end;
+            margin-right: 20px;
+            text-decoration: underline;
+            user-select: none;
+        }
+    }
+}

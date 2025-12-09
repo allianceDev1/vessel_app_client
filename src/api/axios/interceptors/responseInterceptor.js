@@ -6,8 +6,20 @@ export const responseSuccess = (response) => response.data.data || response.data
 export const responseError = async (error) => {
     const originalRequest = error.config;
 
-    const status = error.response.status;
-    const data = error.response.data;
+    if (!error.response) {
+        const networkMsg =
+            error.code === "ECONNABORTED"
+                ? "Network timeout or bad connection"
+                : "Unable to reach server. Please check your internet connection.";
+
+        return Promise.reject({
+            code: null,
+            message: networkMsg,
+            error,
+        });
+    }
+
+    const { status, data } = error.response;
 
     // 🧩 Normalize code (works for both new + old)
     const code =
@@ -26,11 +38,18 @@ export const responseError = async (error) => {
 
     if (code === 401 && !originalRequest?._retry) {
         return await handleTokenError(originalRequest);
-    } else if ([401, 403].includes(code)) {
+    }
+
+    if ([401, 403].includes(code)) {
         window.location.href = env.REDIRECT_URL;
-    } else if (error?.code === "ECONNABORTED") {
+        return;
+    }
+
+    if (error?.code === "ECONNABORTED") {
         return Promise.reject({ message: "Network timeout or bad connection" });
-    } else if (code >= 400) {
+    }
+
+    if (code >= 400) {
         return Promise.reject({
             code,
             message,

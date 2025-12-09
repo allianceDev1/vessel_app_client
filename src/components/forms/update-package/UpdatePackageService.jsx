@@ -28,6 +28,7 @@ const UpdatePackageService = ({ packageId, serviceId, mode, setData }) => {
   const fetchApi = async () => {
     try {
       setLoading('fetch')
+      setError({ error: false, title: null, message: null })
 
       const [packageRes, serviceRes] = await Promise.all([
         api.vfCv2Axios.get(`/package/list?product_type=Vessel&fields=package_name`),

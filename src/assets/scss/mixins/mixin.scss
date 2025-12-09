@@ -59,7 +59,7 @@
 @mixin subTitleMedium() {
     font-size: 19px;
     font-weight: 500;
-    color: var(--text-secondary-1);
+    color: var(--text-secondary-3);
 }
 
 @mixin subTitleSmall() {
@@ -70,12 +70,13 @@
 
 
 @mixin hide-date-placeholder {
+
     &[type="date"],
     &[type="datetime-local"],
     &[type="month"],
     &[type="week"],
     &[type="time"] {
-       
+
         &::-webkit-datetime-edit,
         &::-webkit-datetime-edit-text,
         &::-webkit-datetime-edit-day-field,
@@ -87,7 +88,7 @@
             color: transparent !important;
             -webkit-text-fill-color: transparent !important;
         }
-       
+
         &:focus,
         &.has-value,
         &:valid,
@@ -105,11 +106,11 @@
                 -webkit-text-fill-color: inherit !important;
             }
         }
-      
+
         &:-moz-focusring {
             outline: none;
         }
-       
+
         appearance: none;
         -webkit-appearance: none;
     }

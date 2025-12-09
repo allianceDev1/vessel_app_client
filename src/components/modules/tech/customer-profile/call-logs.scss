@@ -1,0 +1,28 @@
+.tech-customer-call-logs {
+    padding-top: 20px;
+
+    h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--text-secondary-2);
+    }
+
+    .description__item {
+        display: grid;
+        grid-template-columns: 150px auto;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .header__right {
+            text-align: end;
+            color: var(--text-secondary-2);
+        }
+
+        .item__text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+}

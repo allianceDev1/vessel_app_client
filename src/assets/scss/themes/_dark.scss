@@ -24,6 +24,8 @@
      * Uses the darkest neutrals for depth.
      */
     --background: var(--color-neutral-1000);
+    // #111827 // plan to change
+
 
     --surface: var(--color-neutral-900);
     --surface-1: var(--color-neutral-850);
@@ -61,6 +63,8 @@
     --color-primary-text: var(--color-primary-dark-600);
     --color-primary-hover: var(--color-primary-dark-400);
 
+    --color-primary-trans-53: color-mix(in srgb, var(--color-primary-dark-500) 30%, transparent);
+
     /*
      * == STATUS AND ACCENT COLORS ==
      * Uses the same colors for consistency, with white text for solid backgrounds.
@@ -80,6 +84,7 @@
     --color-danger-text: var(--color-danger-dark-300);
     --color-danger-trans-33: color-mix(in srgb, var(--color-danger-dark-300) 30%, transparent);
     --color-danger-trans-81: color-mix(in srgb, var(--color-danger-dark-800) 10%, transparent);
+    --color-danger-trans-82: color-mix(in srgb, var(--color-danger-dark-800) 20%, transparent);
     --color-danger-trans-83: color-mix(in srgb, var(--color-danger-dark-800) 30%, transparent);
     --color-danger-trans-13: color-mix(in srgb, var(--color-danger-dark-100) 30%, transparent);
 
@@ -89,6 +94,7 @@
     --color-warning-bg: var(--color-warning-dark-900);
     --color-warning-text: var(--color-warning-dark-100);
     --color-warning-trans-33: color-mix(in srgb, var(--color-warning-dark-300) 30%, transparent);
+    --color-warning-trans-82: color-mix(in srgb, var(--color-warning-dark-800) 20%, transparent);
 
     /* Info */
     --color-info: var(--color-info-dark-500);

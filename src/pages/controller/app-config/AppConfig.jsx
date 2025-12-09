@@ -37,10 +37,10 @@ const AppConfig = () => {
                     </div>
                 </div>
 
-                {/* Service Packages */}
+                {/* System Essentials */}
                 <div className="section">
                     <div className="sub-title">
-                        <h3>Service Packages</h3>
+                        <h3>System Essentials</h3>
                     </div>
                     <div className="content">
                         <div className="list-item" onClick={() => navigate('/controller/app-config/service-packages')}>
@@ -51,18 +51,17 @@ const AppConfig = () => {
                                 <TbArrowLeft className='arrow' />
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                {/* Service Solutions */}
-                <div className="section">
-                    <div className="sub-title">
-                        <h3>Service Solutions</h3>
-                    </div>
-                    <div className="content">
                         <div className="list-item">
                             <div className="l">
-                                <p>Manage service solution options</p>
+                                <p>Manage Service Solutions</p>
+                            </div>
+                            <div className="r">
+                                <TbArrowLeft className='arrow' />
+                            </div>
+                        </div>
+                        <div className="list-item">
+                            <div className="l">
+                                <p>Form Resources</p>
                             </div>
                             <div className="r">
                                 <TbArrowLeft className='arrow' />

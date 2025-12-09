@@ -5,6 +5,7 @@ import { TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayou
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
+import env from '../../../config/env';
 
 const ControllerLayout = ({ children }) => {
     const navigate = useNavigate()
@@ -106,7 +107,7 @@ const ControllerLayout = ({ children }) => {
                                 <TbDropletCog />
                                 <span>App Configuration</span>
                             </div>}
-                        <div className={`item danger`} onClick={() => window.location.href = 'http://localhost:3000?page=home'}>
+                        <div className={`item danger`} onClick={() => window.location.href = `${env.REDIRECT_URL}?page=home`}>
                             <TbLogout2 />
                             <span>Exit</span>
                         </div>
@@ -124,7 +125,7 @@ const ControllerLayout = ({ children }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

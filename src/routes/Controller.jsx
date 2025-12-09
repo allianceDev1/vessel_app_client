@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
 import { Route, Routes } from 'react-router-dom';
 import Page404 from '../components/layout/404/Page404';
+import env from '../config/env';
 
 
 // Lazy
@@ -70,7 +71,7 @@ export default Controller
 
 function PrivateRoute({ element, isAuthenticated }) {
     if (!isAuthenticated) {
-        window.location.href = 'http://localhost:3000/?page=home';
+        window.location.href = `${env.REDIRECT_URL}?page=home`;
         return null;
     }
 

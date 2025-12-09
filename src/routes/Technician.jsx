@@ -4,11 +4,18 @@ import { useSelector } from 'react-redux'
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage'
 import { Route, Routes } from 'react-router-dom'
 import Page404 from '../components/layout/404/Page404'
-
+import env from '../config/env'
 
 
 // Lazy
 const Home = React.lazy(() => import('../pages/technician/home/Home'))
+const Service = React.lazy(() => import('../pages/technician/services/Services'))
+const ServiceProfile = React.lazy(() => import('../pages/technician/service-profile/ServiceProfile'))
+
+
+
+
+
 
 const Technician = () => {
   const { user } = useSelector((state) => state.user)
@@ -21,6 +28,10 @@ const Technician = () => {
         <Routes>
           {/* Home */}
           <Route path='/' element={<PrivateRoute element={<Home />} isAuthenticated={isAuthenticated} />} />
+
+          {/* Upcoming Services */}
+          <Route path='/services' element={<PrivateRoute element={<Service />} isAuthenticated={isAuthenticated} />} />
+          <Route path='/services/:service_type/:customer_id' element={<PrivateRoute element={<ServiceProfile />} isAuthenticated={isAuthenticated} />} />
 
 
           {/* 404 */}
@@ -36,7 +47,7 @@ export default Technician
 
 function PrivateRoute({ element, isAuthenticated, }) {
   if (!isAuthenticated) {
-    window.location.href = 'http://localhost:3000/?page=home';
+    window.location.href = `${env.REDIRECT_URL}?page=home`;
     return null;
   }
 

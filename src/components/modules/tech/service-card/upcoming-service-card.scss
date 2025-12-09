@@ -1,0 +1,86 @@
+@import '../../../../assets/scss/mixins/mixin.scss';
+
+.upcoming-service-card-border {
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid var(--border-medium);
+    background-color: var(--color-natural-trans-53);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+
+    &.warning-border {
+        background-color: var(--color-warning-trans-82);
+        border: 1px solid var(--color-warning-6);
+    }
+
+    &.danger-border {
+        background-color: var(--color-danger-trans-82);
+        border: 1px solid var(--color-danger-6);
+    }
+
+    .s-one {
+        display: flex;
+        justify-content: space-between;
+
+        .name-section {
+            h3 {
+                font-weight: 600;
+                @include threeDots();
+            }
+
+            h5 {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-secondary-2);
+                @include threeDots();
+            }
+        }
+
+        .date-section {
+            p {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--color-info-text);
+                text-align: end;
+            }
+        }
+    }
+
+    .s-two {
+        display: grid;
+        grid-template-columns: auto 100px;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin: 5px 0;
+
+        >.text {
+            p {
+                font-size: 13px;
+                font-weight: 500;
+                @include threeDots(2);
+            }
+        }
+
+        .contacts {
+            .icons {
+                cursor: pointer;
+                display: flex;
+                justify-content: flex-end;
+                gap: 7px;
+
+                svg {
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+
+    .s-three {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+}

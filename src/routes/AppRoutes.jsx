@@ -9,6 +9,7 @@ import Technician from './Technician';
 import Controller from './Controller';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
 import Layout404 from '../components/layout/404/Layout404';
+import env from '../config/env';
 
 
 
@@ -31,11 +32,11 @@ const Master = () => {
                 }))
             })
                 .catch(() => {
-                    window.location.href = 'http://localhost:3000/?page=home'
+                    window.location.href = `${env.REDIRECT_URL}?page=home`
                 })
                 .finally(() => setLoading(false));
         } else {
-            window.location.href = 'http://localhost:3000/?page=home'
+            window.location.href = `${env.REDIRECT_URL}?page=home`
         }
         // eslint-disable-next-line
     }, [])

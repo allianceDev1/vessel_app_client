@@ -27,5 +27,18 @@ export const isoToDDMonYYYY = (input) => {
     return `${dd} ${mon} ${yyyy}`;
 };
 
+export const getIsoDayDifference = (iso1, iso2) => {
+    if (!iso1 || !iso2) return null;
+
+    if (typeof iso1 === "string" || typeof iso2 === "string") {
+        return null;
+    }
+
+    const d1 = new Date(iso1);
+    const d2 = new Date(iso2);
+
+    return Math.floor(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
+};
+
 
 

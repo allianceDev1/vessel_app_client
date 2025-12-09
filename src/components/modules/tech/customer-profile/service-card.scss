@@ -1,0 +1,70 @@
+.tech-customer-service-card {
+    background-color: var(--color-natural-trans-53);
+    backdrop-filter: blur(5px);
+    border-radius: 24px;
+    padding: 20px;
+    min-width: 100%;
+
+    .service-card__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .header__right,
+        .header__left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .item__text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+
+    .service-card__eligibility {
+        margin-top: 20px;
+
+        .service-card__eligibility-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary-2);
+        }
+    }
+
+
+    .service-card__eligibility-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .service-card__eligibility-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .service-card__icon {
+        font-size: 22px;
+    }
+
+    .service-card__icon--success {
+        color: var(--color-success);
+    }
+
+    .service-card__icon--error {
+        color: var(--color-danger);
+    }
+
+    .service-card__note {
+        color: var(--text-secondary-3);
+        margin-left: 15px;
+    }
+}

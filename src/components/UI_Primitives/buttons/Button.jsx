@@ -15,6 +15,7 @@ export const Button = ({
     size = 'medium',
     spinIcon = false,
     style,
+    type = 'auto',
     onClick = () => { },
     ...props
 }) => {
@@ -28,7 +29,7 @@ export const Button = ({
             disabled={disabled}
             onClick={onClick}
             style={style}
-            type={spinIcon ? 'button' : 'auto'}
+            type={spinIcon ? 'button' : type}
             {...props}
         >
             {(icon && !spinIcon && iconPos !== 'right') && icon}

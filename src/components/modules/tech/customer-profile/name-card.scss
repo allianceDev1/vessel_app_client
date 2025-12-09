@@ -1,0 +1,41 @@
+@import '../../../../assets/scss/mixins/mixin.scss';
+
+.tech-customer-name-card-comp {
+    background-color: var(--color-natural-trans-53);
+    backdrop-filter: blur(5px);
+    padding: 12px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    position: relative;
+
+    h3 {
+        font-size: 21px;
+        font-weight: 600;
+        @include threeDots();
+    }
+
+    h5 {
+        font-size: 14px;
+        font-weight: 500;
+        margin-top: 5px;
+        color: var(--text-secondary-1);
+    }
+
+    .arrow {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+
+        svg {
+            font-size: 24px;
+            color: var(--text-secondary-3);
+        }
+    }
+
+    .status-card {
+        position: absolute;
+        right: 15px;
+        bottom: 10px;
+    }
+
+}

@@ -60,6 +60,8 @@
    --color-primary-text: var(--color-primary-light-600);
    --color-primary-hover: var(--color-primary-light-600);
 
+   --color-primary-trans-53: color-mix(in srgb, var(--color-primary-light-500) 30%, transparent);
+
 
    /*
      * == STATUS AND ACCENT COLORS ==
@@ -80,6 +82,7 @@
    --color-danger-text: var(--color-danger-light-600);
    --color-danger-trans-33: color-mix(in srgb, var(--color-danger-light-300) 30%, transparent);
    --color-danger-trans-81: color-mix(in srgb, var(--color-danger-light-800) 10%, transparent);
+   --color-danger-trans-82: color-mix(in srgb, var(--color-danger-light-800) 20%, transparent);
    --color-danger-trans-83: color-mix(in srgb, var(--color-danger-light-800) 30%, transparent);
    --color-danger-trans-13: color-mix(in srgb, var(--color-danger-light-100) 30%, transparent);
 
@@ -89,6 +92,7 @@
    --color-warning-bg: var(--color-warning-light-50);
    --color-warning-text: var(--color-warning-light-900);
    --color-warning-trans-33: color-mix(in srgb, var(--color-warning-light-300) 30%, transparent);
+   --color-warning-trans-82: color-mix(in srgb, var(--color-warning-light-800) 20%, transparent);
 
    /* Info */
    --color-info: var(--color-info-light-500);
