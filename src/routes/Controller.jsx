@@ -17,6 +17,15 @@ const ViewArea = React.lazy(() => import('../pages/controller/view-area/ViewArea
 const Customers = React.lazy(() => import('../pages/controller/customers/Customers'))
 const CustomerMiniReport = React.lazy(() => import('../components/charts/customer-mini-report/CustomerMiniReport'))
 const SearchCustomer = React.lazy(() => import('../components/modules/controller/search-customer/SearchCustomer'))
+const FormResources = React.lazy(() => import('../pages/controller/form-resources/FormResources'))
+const ResourceStretcher = React.lazy(() => import('../pages/controller/form-resources/ResourceStretcher'))
+const ArrayElem = React.lazy(() => import('../pages/controller/form-resources/ArrayElem'))
+
+
+
+
+
+
 
 
 
@@ -44,6 +53,8 @@ const Controller = () => {
                         <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
                         <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
                         <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
+                        <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
+                        <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
                     </>}
 
                     {/* Customer list */}

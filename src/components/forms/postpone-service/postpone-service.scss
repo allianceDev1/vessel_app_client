@@ -1,0 +1,38 @@
+.postpone-service-load {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+.postpone-service-comp {
+
+    ul {
+        padding: 0 0 0 20px;
+        margin-bottom: 40px;
+
+        li {
+            font-size: 13px;
+            text-align: justify;
+            color: var(--text-secondary-1);
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+
+        .products {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+
+            h4 {
+                font-weight: 500;
+                color: var(--text-secondary-1);
+            }
+        }
+    }
+}

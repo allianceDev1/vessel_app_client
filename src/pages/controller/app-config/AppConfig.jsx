@@ -59,7 +59,7 @@ const AppConfig = () => {
                                 <TbArrowLeft className='arrow' />
                             </div>
                         </div>
-                        <div className="list-item">
+                        <div className="list-item" onClick={() => navigate('/controller/app-config/form-resources')}>
                             <div className="l">
                                 <p>Form Resources</p>
                             </div>
@@ -103,7 +103,7 @@ const AppConfig = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

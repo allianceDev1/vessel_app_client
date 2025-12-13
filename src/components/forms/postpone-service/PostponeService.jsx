@@ -1,0 +1,145 @@
+import React, { useEffect, useState } from 'react'
+import './postpone-service.scss';
+import Checkbox from '../../UI_Primitives/inputs/Checkbox';
+import InputText from '../../UI_Primitives/inputs/InputText';
+import Button from '../../UI_Primitives/buttons/Button';
+import Select from '../../UI_Primitives/inputs/Select';
+import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid';
+import { useDispatch } from 'react-redux';
+import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { api } from '../../../api';
+
+
+const PostponeService = ({ customerId, products, setUpServices, isController = false }) => {
+    const dispatch = useDispatch();
+    const [selectedProducts, setSelectedProducts] = useState(products?.map((p) => ({ product_id: p.product_id, type: p.type })) || [])
+    const [form, setForm] = useState({ postpone_date: null, reason: null })
+    const [loading, setLoading] = useState('fetch')
+    const [postponeReasons, setPostponeReasons] = useState([])
+
+
+    const handleProductSelect = (product) => {
+        const isSelected = selectedProducts.filter((p) => p.product_id === product.product_id).length > 0
+
+        if (isSelected) {
+            setSelectedProducts(selectedProducts.filter((p) => p.product_id !== product.product_id))
+        } else {
+            setSelectedProducts([...selectedProducts, { product_id: product.product_id, type: product.type }])
+        }
+    }
+
+    const handelChangeInputs = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value })
+    }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            setLoading('submit')
+
+            if (isController) {
+
+            } else {
+                await api.vfTv2Axios.post(`/service/${customerId}/postpone`, {
+                    postpone_date: form?.postpone_date,
+                    products: selectedProducts,
+                    reason: form?.reason
+                })
+
+                setUpServices((prev) => ({
+                    ...prev,
+                    products: prev?.products?.map(p => {
+                        if (p.service?.service_type === 'SERVICE' && selectedProducts.filter((s) => s.product_id === p.product_id).length > 0) {
+                            return {
+                                ...p,
+                                service: {
+                                    ...p.service,
+                                    service_date: form?.postpone_date
+                                }
+                            }
+                        }
+                        return p
+                    })
+                }))
+
+                dispatch(modal.pull.all())
+            }
+
+
+        } catch (error) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: 'Postpone failed',
+                message: error.message,
+            }))
+        } finally {
+            setLoading('')
+        }
+    }
+
+    const fetchApi = async () => {
+        try {
+            setLoading('fetch')
+
+            const res = await api.vfTv2Axios.get(`/service/form-resources?titles=service_postpone_reasons`)
+            const postponeList = res?.[0] || {}
+            setPostponeReasons(postponeList?.values?.map(v => v.data?.[0]) || [])
+
+        } catch (error) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: 'Something went wrong',
+                message: error.message,
+            }))
+            dispatch(modal.pull.all())
+        } finally {
+            setLoading('')
+        }
+    }
+
+    useEffect(() => {
+        fetchApi()
+
+        // eslint-disable-next-line
+    }, [])
+
+
+
+    if (loading === 'fetch') return (
+        <div className="postpone-service-load">
+            <SkeletonGrid height={'150px'} />
+            <SkeletonGrid height={'50px'} rows={'4'} />
+        </div>
+    )
+
+    return (
+        <div className="postpone-service-comp">
+            <ul>
+                <li>Only service products are listed here; renewal products are not included.</li>
+                <li>If a product is unchecked, it will continue to appear in the service list without being postponed.</li>
+                <li>When the postponed date is within 30 days, the product will not be hidden from the service list.</li>
+                <li>Postponing a service does not affect other products.</li>
+                <li>The maximum allowed postpone date is limited to the earliest renewal date among the selected vessels.</li>
+            </ul>
+
+            <form action="" onSubmit={handleSubmit}>
+                <div className="products">
+                    <h4>Products</h4>
+                    {products?.map((product) => (<Checkbox key={product?.product_id} label={`${product?.product_id} - ${product?.product_name}`}
+                        name={'product'} onChange={() => handleProductSelect(product)}
+                        checked={selectedProducts.filter((p) => p.product_id === product.product_id).length ? true : false} />))}
+                </div>
+                <InputText label={'Postpone date'} name={'postpone_date'} value={form?.postpone_date} onChange={handelChangeInputs}
+                    type='date' required={true} />
+                <Select label={'Postpone reason'} name={'reason'} options={[{ value: '', label: '' }, ...postponeReasons.map(r => ({ value: r, label: r })), { value: '_input_write_', label: 'Other' },]}
+                    value={form?.reason} onChange={handelChangeInputs} required={true} />
+                <Button label={'Postpone'} rounded severity={'danger'} disabled={selectedProducts.length === 0 || !form?.postpone_date || !form?.reason}
+                    style={{ width: '100%' }} spinIcon={loading === 'submit'} />
+            </form>
+        </div>
+    )
+}
+
+export default PostponeService

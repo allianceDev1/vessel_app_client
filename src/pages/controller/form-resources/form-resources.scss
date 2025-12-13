@@ -1,0 +1,58 @@
+@import '../../../assets/scss/mixins/mixin.scss';
+
+.form-resources-page-load {
+    margin-top: 20px;
+}
+
+.form-resources-page {
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .folder-section {
+        margin-bottom: 30px;
+
+        h3 {
+            @include subTitleSmall();
+
+            &:hover {
+                background-color: var(--color-natural-trans-73);
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        .folders-border {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+
+            .folder {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: var(--text-c1);
+                width: 120px;
+                height: 150px;
+                cursor: pointer;
+                border-radius: 5px;
+
+                &:hover {
+                    color: var(--text-primary);
+                    background-color: var(--color-natural-trans-73);
+                    backdrop-filter: blur(5px);
+                }
+
+                svg {
+                    font-size: 110px;
+                    color: var(--color-primary);
+                }
+
+                p {
+                    font-size: 13px;
+                    @include threeDots(2);
+                    text-align: center;
+                }
+            }
+        }
+    }
+}

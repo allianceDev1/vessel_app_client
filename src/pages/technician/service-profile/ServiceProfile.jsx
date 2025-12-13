@@ -1,33 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import './service-profile.scss';
-import { useDispatch } from 'react-redux';
-import { page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import NameCard from '../../../components/modules/tech/customer-profile/NameCard';
 import Contacts from '../../../components/modules/tech/customer-profile/Contacts';
 import TextAddress from '../../../components/modules/tech/customer-profile/TextAddress';
 import RegistrationInfo from '../../../components/modules/tech/customer-profile/RegistrationInfo';
 import ServiceInfo from '../../../components/modules/tech/customer-profile/ServiceInfo';
 import Button from '../../../components/UI_Primitives/buttons/Button';
-import { TbBorderAll, TbCalendarTime, TbCornerUpRightDouble, TbMessage2Plus } from 'react-icons/tb';
 import CallLogs from '../../../components/modules/tech/customer-profile/CallLogs';
 import Message from '../../../components/UI_Primitives/message/Message';
-import { api } from '../../../api';
-import { useParams, useSearchParams } from 'react-router-dom';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
+import PostponeService from '../../../components/forms/postpone-service/PostponeService';
+import AddCallLog from '../../../components/forms/add-call-log/AddCallLog';
+import { useDispatch } from 'react-redux';
+import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbBorderAll, TbCalendarTime, TbCornerUpRightDouble, TbMessage2Plus } from 'react-icons/tb';
+import { api } from '../../../api';
+import { useParams, useSearchParams } from 'react-router-dom';
+import TechScheduleService from '../../../components/forms/schedule-service/TechScheduleService';
 
 
 const ServiceProfile = () => {
     const dispatch = useDispatch();
-    const { customer_id } = useParams();
-    const [searchParams, setSearchParams] = useSearchParams()
+    const { customer_id, service_type } = useParams();
+    const [searchParams] = useSearchParams()
     const [loading, setLoading] = useState('fetch')
     const [error, setError] = useState({ error: false, title: null, message: null })
     const [customer, setCustomer] = useState({})
     const [upServices, setUpServices] = useState([])
     const [callLogs, setCallLogs] = useState([])
     const [regService, setRegService] = useState({})
-
 
     const fetchApi = async () => {
         try {
@@ -58,13 +60,37 @@ const ServiceProfile = () => {
         }
     }
 
+    const postponeService = () => {
+        dispatch(modal.push({
+            title: 'Postpone Service',
+            body: <PostponeService customerId={customer_id} products={upServices?.products?.filter(p => p.service.service_type === 'SERVICE') || []}
+                setUpServices={setUpServices} />
+        }))
+    }
+
+    const addCallLog = () => {
+        dispatch(modal.push({
+            title: 'Add Call Log',
+            body: <AddCallLog customerId={customer_id} setCallLogs={setCallLogs} />
+        }))
+    }
+
+    const handleSchedule = () => {
+        dispatch(modal.push({
+            title: 'Schedule service',
+            body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id}
+                serviceType={service_type === 'renewals' ? 'RENEWAL' : service_type === 'services' ? 'SERVICE' : 'COMPLAINT'} />
+        }))
+    }
+
     useEffect(() => {
         dispatch(page.setTitle({}))
 
         // initial fetch
         fetchApi()
-    }, [])
 
+        // eslint-disable-next-line
+    }, [])
 
     // Loading
     if (loading === 'fetch') {
@@ -141,9 +167,11 @@ const ServiceProfile = () => {
                 : ''}
 
             <div className="action-buttons">
-                <Button icon={<TbCornerUpRightDouble />} rounded severity={'danger'} />
-                <Button icon={<TbMessage2Plus />} rounded />
-                <Button icon={<TbCalendarTime />} label={'Schedule'} rounded severity={'primary'} style={{ width: '100%' }} />
+                <Button icon={<TbCornerUpRightDouble />} rounded severity={'danger'} onClick={postponeService}
+                    disabled={(regService?.registration_id || service_type === 'renewals') ? true : false} />
+                <Button icon={<TbMessage2Plus />} rounded onClick={addCallLog} />
+                <Button icon={<TbCalendarTime />} label={'Schedule'} rounded severity={'primary'} style={{ width: '100%' }}
+                    onClick={handleSchedule} />
             </div>
         </div>
     )
