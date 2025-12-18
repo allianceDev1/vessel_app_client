@@ -40,5 +40,52 @@ export const getIsoDayDifference = (iso1, iso2) => {
     return Math.floor(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
 };
 
+export const formatRelativeIsoDate = (isoDate) => {
+
+    if (!isoDate) return null;
+
+    const input = new Date(isoDate);
+    const now = new Date();
+
+    // Normalize to start of day (local timezone)
+    const startOfInput = new Date(
+        input.getFullYear(),
+        input.getMonth(),
+        input.getDate()
+    );
+
+    const startOfToday = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+    const dayDiff = (startOfInput - startOfToday) / (1000 * 60 * 60 * 24);
+
+    if (dayDiff === 0) return "Today";
+    if (dayDiff === -1) return "Yesterday";
+    if (dayDiff === 1) return "Tomorrow";
+
+    return isoToDDMonYYYY(input);
+}
+
+export const convertIsoToAmPm = (isoString) => {
+    if (!isoString) return null;
+
+    const date = new Date(isoString);
+
+    if (isNaN(date.getTime())) return null;
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    const minutesStr = String(minutes).padStart(2, "0");
+
+    return `${hours}:${minutesStr} ${ampm}`;
+}
+
 
 

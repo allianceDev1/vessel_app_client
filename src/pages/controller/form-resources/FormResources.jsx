@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../../../api';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
-import { TbCarouselHorizontal, TbFolderFilled } from 'react-icons/tb';
+import { TbFolderFilled } from 'react-icons/tb';
 
 const FormResources = () => {
     const dispatch = useDispatch();

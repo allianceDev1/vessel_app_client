@@ -1,0 +1,133 @@
+@use '../../../assets/scss/mixins/mixin.scss' as mixin;
+
+.tech-schedules-container-page {
+    margin-bottom: 35px;
+
+    .top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .section-two {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding-right: 10px;
+
+            span {
+                cursor: pointer;
+
+                svg {
+                    font-size: 20px;
+                }
+
+                &.active {
+                    svg {
+                        color: var(--color-primary);
+                    }
+                }
+            }
+        }
+    }
+
+    .service-section {
+        margin: 15px 0;
+        margin-bottom: 20px;
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+
+            h4 {
+                @include mixin.subTitleSmall();
+            }
+
+            svg {
+                font-size: 25px;
+                color: var(--text-secondary-2);
+            }
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .content-active {
+            max-height: 2000px;
+        }
+
+        .section-inner {
+            padding: 10px 0px;
+
+            .no-data {
+                background-color: var(--color-natural-trans-53);
+                backdrop-filter: blur(5px);
+                border-radius: 15px;
+                padding: 50px 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                span {
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: center;
+                    color: var(--text-secondary-2);
+                }
+            }
+
+            .date-section {
+                padding-bottom: 15px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 10px;
+
+                .divider {
+                    display: flex;
+                    align-items: center;
+                    text-align: center;
+                    color: var(--text-secondary-3);
+                    padding: 10px 0;
+
+                    &::after,
+                    &::before {
+                        content: "";
+                        flex: 1;
+                        border-bottom: 1px solid var(--text-secondary-4);
+                    }
+
+                    &::after {
+                        margin-left: 12px;
+                    }
+
+                    &::before {
+                        margin-right: 12px;
+                    }
+
+                    p {
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: var(--text-secondary-2);
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+
+    .pickup-section {
+
+        .section-inner {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+    }
+}

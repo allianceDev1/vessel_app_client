@@ -19,7 +19,7 @@ import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
 const SearchCustomer = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user)
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState('fetch')
     const [customerList, setCustomerList] = useState([])
     const [tableColumns, setTableColumns] = useState([])
@@ -58,6 +58,7 @@ const SearchCustomer = () => {
 
     useEffect(() => {
         fetchApi()
+        // eslint-disable-next-line
     }, [searchParams.get('key'), searchParams.get('city_id'), searchParams.get('post')])
 
     useEffect(() => {
@@ -164,6 +165,7 @@ const SearchCustomer = () => {
 
         setTableColumns(tempColumns)
 
+        // eslint-disable-next-line
     }, [customerList, viewType])
 
     // loading

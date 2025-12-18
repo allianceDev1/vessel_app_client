@@ -19,7 +19,7 @@ const CustomerMiniReport = React.lazy(() => import('../components/charts/custome
 const SearchCustomer = React.lazy(() => import('../components/modules/controller/search-customer/SearchCustomer'))
 const FormResources = React.lazy(() => import('../pages/controller/form-resources/FormResources'))
 const ResourceStretcher = React.lazy(() => import('../pages/controller/form-resources/ResourceStretcher'))
-const ArrayElem = React.lazy(() => import('../pages/controller/form-resources/ArrayElem'))
+
 
 
 

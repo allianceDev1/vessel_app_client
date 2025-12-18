@@ -12,12 +12,12 @@ import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGri
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import PostponeService from '../../../components/forms/postpone-service/PostponeService';
 import AddCallLog from '../../../components/forms/add-call-log/AddCallLog';
+import TechScheduleService from '../../../components/forms/tech/schedule-service/TechScheduleService';
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbBorderAll, TbCalendarTime, TbCornerUpRightDouble, TbMessage2Plus } from 'react-icons/tb';
 import { api } from '../../../api';
 import { useParams, useSearchParams } from 'react-router-dom';
-import TechScheduleService from '../../../components/forms/schedule-service/TechScheduleService';
 
 
 const ServiceProfile = () => {
@@ -101,7 +101,12 @@ const ServiceProfile = () => {
                 height={80}
             />
             <SkeletonGrid
-                rows={5}
+                rows={1}
+                columns={4}
+                height={80}
+            />
+            <SkeletonGrid
+                rows={4}
                 columns={1}
                 height={150}
             />
@@ -147,9 +152,10 @@ const ServiceProfile = () => {
             />
             {customer?.note ? <Message message={customer?.note} type={'info'} /> : ''}
 
-            {regService?.reg_uuid
+            {regService?.registration_id
                 ? <RegistrationInfo
                     regId={regService?.registration_id}
+                    regStatus={regService?.status?.status_text}
                     regType={regService?.about?.service_type}
                     regTime={new Date(regService?.registered_at).toDateString()}
                     priority={regService?.about?.priority || 0}
@@ -160,7 +166,7 @@ const ServiceProfile = () => {
             <ServiceInfo serviceProducts={upServices?.products || []}
                 totalVessels={customer?.total_vessels || 0}
                 totalAddOns={customer?.total_add_ons || 0}
-                regType={regService?.about?.service_type}
+                serviceType={service_type}
             />
             {callLogs?.length > 0
                 ? <CallLogs data={callLogs} />

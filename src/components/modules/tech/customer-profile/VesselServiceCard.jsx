@@ -5,7 +5,7 @@ import { TbCircleCheck, TbCircleX } from 'react-icons/tb'
 import { getContrastText } from '../../../../utils/color-utils'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 
-const VesselServiceCard = ({ vessel, product, regType }) => {
+const VesselServiceCard = ({ product, serviceType }) => {
 
     const serviceGap = getIsoDayDifference(new Date(product?.service?.service_date), new Date())
 
@@ -26,7 +26,7 @@ const VesselServiceCard = ({ vessel, product, regType }) => {
                         style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} /> : ''}
                 </div>
                 <div className="header__right">
-                    <p className="item__text" style={{ color: product?.service?.service_type === regType ? 'var(--color-info)' : '' }}>
+                    <p className="item__text" style={{ color: `${(product?.service?.service_type || '').toLowerCase()}s` === (serviceType || '').toLowerCase() ? 'var(--color-info)' : '' }}>
                         {product?.service?.service_type}
                     </p>
                 </div>

@@ -55,7 +55,7 @@ const TechLayout = ({ children }) => {
                         <TbHome />
                         <p>Home</p>
                     </div>
-                    <div className={`item ${activeSegment === 'a' && 'active'}`} onClick={() => navigate('/tech')}>
+                    <div className={`item ${activeSegment === 'schedules' && 'active'}`} onClick={() => navigate('/tech/schedules')}>
                         <TbCalendarStats />
                         <p>Schedules</p>
                     </div>

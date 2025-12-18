@@ -117,6 +117,8 @@ const SearchCustomerByKey = () => {
 
     useEffect(() => {
         fetchApi()
+
+        // eslint-disable-next-line
     }, [])
 
     // loading

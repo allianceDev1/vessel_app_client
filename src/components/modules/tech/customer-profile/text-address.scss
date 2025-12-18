@@ -23,6 +23,12 @@
         }
     }
 
+    .buttons-div {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+    }
+
     button {
         margin: 15px 0 10px 0;
     }

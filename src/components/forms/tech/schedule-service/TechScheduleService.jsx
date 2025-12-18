@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import InputText from '../../UI_Primitives/inputs/InputText'
-import Button from '../../UI_Primitives/buttons/Button'
-import { api } from '../../../api'
+import InputText from '../../../UI_Primitives/inputs/InputText'
+import Button from '../../../UI_Primitives/buttons/Button'
+import { api } from '../../../../api'
 import { useDispatch } from 'react-redux'
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useNavigate } from 'react-router-dom'
-import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers'
+import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 
 const TechScheduleService = ({ registrationId, customerId, serviceType }) => {
     const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const TechScheduleService = ({ registrationId, customerId, serviceType }) => {
                     <InputText label={'End Time'} type='time' value={form?.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })}
                         required min={form?.fromTime} />
                 </div>
-                <Button label={'Schedule work'} loading={loading} severity={'primary'} rounded
+                <Button label={'Schedule work'} spinIcon={loading} severity={'primary'} rounded
                     disabled={!form?.date || !form?.fromTime || !form?.endTime} />
             </form>
         </div>

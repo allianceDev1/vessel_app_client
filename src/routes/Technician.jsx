@@ -11,6 +11,8 @@ import env from '../config/env'
 const Home = React.lazy(() => import('../pages/technician/home/Home'))
 const Service = React.lazy(() => import('../pages/technician/services/Services'))
 const ServiceProfile = React.lazy(() => import('../pages/technician/service-profile/ServiceProfile'))
+const Schedules = React.lazy(() => import('../pages/technician/schedules/Schedules'))
+const ScheduleProfile = React.lazy(() => import('../pages/technician/schedule-profile/ScheduleProfile'))
 
 
 
@@ -33,6 +35,12 @@ const Technician = () => {
           <Route path='/services' element={<PrivateRoute element={<Service />} isAuthenticated={isAuthenticated} />} />
           <Route path='/services/:service_type/:customer_id' element={<PrivateRoute element={<ServiceProfile />} isAuthenticated={isAuthenticated} />} />
 
+          {/* Schedules */}
+          <Route path='/schedules' element={<PrivateRoute element={<Schedules />} isAuthenticated={isAuthenticated} />} />
+          <Route path='/schedules/:customer_id/:registration_id' element={<PrivateRoute element={<ScheduleProfile />} isAuthenticated={isAuthenticated} />} />
+
+          {/* Service */}
+          <Route path='/service/attend-work' element={<PrivateRoute element={<Home />} isAuthenticated={isAuthenticated} />} />
 
           {/* 404 */}
           <Route path="/*" element={<Page404 />} />

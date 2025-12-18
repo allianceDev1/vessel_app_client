@@ -88,12 +88,14 @@
     @media screen and (max-width : 560px) {
         align-items: flex-end;
         padding: 0;
+       
 
         .modal-border {
             border-radius: 0;
             border-top-left-radius: 35px;
             border-top-right-radius: 35px;
             width: 500px;
+            padding-bottom: 60px;
         }
     }
 }

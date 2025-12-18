@@ -21,6 +21,8 @@ const Carousel = ({ elements, style, autoAnimation = false, interval = 3000, hid
         intervalRef.current = setInterval(nextSlide, interval);
 
         return () => clearInterval(intervalRef.current);
+
+        // eslint-disable-next-line
     }, [autoAnimation, interval, elements.length]);
 
     /** Pause auto slide on interaction */

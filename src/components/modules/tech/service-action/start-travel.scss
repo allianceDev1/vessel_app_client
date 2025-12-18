@@ -1,0 +1,27 @@
+.tech-start-travel-container {
+    .image-section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        img {
+            width: 300px;
+            opacity: .8;
+        }
+    }
+
+    .text-section {
+        margin: 20px 0;
+        text-align: center;
+
+        h2 {
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--text-secondary-2);
+            margin-top: 10px;
+        }
+    }
+}

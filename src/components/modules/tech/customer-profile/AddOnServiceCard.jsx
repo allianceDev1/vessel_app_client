@@ -3,7 +3,7 @@ import './service-card.scss'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState';
 
-const AddOnServiceCard = ({ product, regType }) => {
+const AddOnServiceCard = ({ product, serviceType }) => {
 
     const serviceGap = getIsoDayDifference(new Date(product?.service?.service_date), new Date())
 
@@ -22,7 +22,7 @@ const AddOnServiceCard = ({ product, regType }) => {
                     <p className="item__text">Add-On</p>
                 </div>
                 <div className="header__right">
-                    <p className="item__text" style={{ color: product?.service?.service_type === regType ? 'var(--color-info)' : '' }}>
+                    <p className="item__text" style={{ color: `${(product?.service?.service_type || '').toLowerCase()}s` === (serviceType || '').toLowerCase() ? 'var(--color-info)' : '' }}>
                         {product?.service?.service_type}
                     </p>
                 </div>
