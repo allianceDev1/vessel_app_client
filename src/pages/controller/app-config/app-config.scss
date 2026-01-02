@@ -1,4 +1,4 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../assets/scss/mixins/mixin.scss' as *;
 
 .app-config-page {
     display: flex;
@@ -22,16 +22,31 @@
             }
 
             .content {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
                 .list-item {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     padding: 5px 10px;
-                    height: 50px;
+                    min-height: 50px;
                     border-radius: 8px;
 
                     &:last-child {
                         border: none;
+                    }
+
+                    h4 {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+
+                    .description {
+                        font-size: 13px;
+                        color: var(--text-secondary-2);
+                        margin-top: 3px;
                     }
 
                     p {

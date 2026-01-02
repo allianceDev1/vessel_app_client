@@ -1,4 +1,4 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../assets/scss/mixins/mixin.scss'as *;
 
 .ui-input-text-container {
     position: relative;
@@ -28,7 +28,7 @@
         }
 
         &:disabled {
-            background-color: var(--color-natural-3);
+            background-color: var(--color-natural-5);
             cursor: not-allowed;
         }
 
@@ -48,7 +48,7 @@
         height: 45px;
         left: 15px;
         top: 1px;
-        color: var(--text-secondary);
+        color: var(--text-secondary-1);
         padding: 13px 0px;
         font-size: 16px;
         font-weight: 500;

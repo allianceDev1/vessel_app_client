@@ -13,6 +13,9 @@ const Service = React.lazy(() => import('../pages/technician/services/Services')
 const ServiceProfile = React.lazy(() => import('../pages/technician/service-profile/ServiceProfile'))
 const Schedules = React.lazy(() => import('../pages/technician/schedules/Schedules'))
 const ScheduleProfile = React.lazy(() => import('../pages/technician/schedule-profile/ScheduleProfile'))
+const ServiceForm = React.lazy(() => import('../pages/technician/service-form/ServiceForm'))
+
+
 
 
 
@@ -40,7 +43,7 @@ const Technician = () => {
           <Route path='/schedules/:customer_id/:registration_id' element={<PrivateRoute element={<ScheduleProfile />} isAuthenticated={isAuthenticated} />} />
 
           {/* Service */}
-          <Route path='/service/attend-work' element={<PrivateRoute element={<Home />} isAuthenticated={isAuthenticated} />} />
+          <Route path='/service/attend-work' element={<PrivateRoute element={<ServiceForm />} isAuthenticated={isAuthenticated} />} />
 
           {/* 404 */}
           <Route path="/*" element={<Page404 />} />

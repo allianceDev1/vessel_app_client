@@ -1,0 +1,98 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-service-form-subpage {
+    margin-bottom: 40px;
+
+    .title-section {
+        margin-top: 10px;
+        margin-bottom: 25px;
+
+
+        h3 {
+            font-size: 22px;
+            font-weight: 700;
+            @include threeDots();
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary-2);
+        }
+    }
+
+    .form-section {
+        margin-bottom: 20px;
+
+        .subtitle {
+            @include subTitleSmall();
+            margin-bottom: 10px;
+        }
+
+        .box-col1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .box-col2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+    }
+
+    .submit-section {
+        margin-top: 35px;
+    }
+
+    .note {
+        margin: 35px 0px 25px 0px;
+    }
+}
+
+.sf-subpage-two {
+    .nature-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        tr {
+
+            td,
+            th {
+                border: 1px dashed var(--border-medium);
+                padding: 5px 5px;
+                font-size: 13px;
+                font-weight: 400;
+                text-align: start;
+            }
+
+            .trash {
+                color: var(--color-danger);
+                font-size: 16px;
+
+                svg {
+                    cursor: pointer;
+                }
+            }
+
+            th {
+                color: var(--color-primary-text);
+                font-weight: 500;
+                text-align: center;
+            }
+        }
+    }
+
+    .sub-form {
+        padding: 10px 10px;
+        border-radius: 15px;
+        border: 1px dashed var(--border-light);
+        display: flex !important;
+        flex-direction: column;
+        align-items: flex-end;
+
+    }
+}

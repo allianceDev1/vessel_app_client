@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { api } from '../../../../api';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { getLocation } from '../../../../utils/services/location_services';
-import { startServiceWork } from '../../../../redux/features/persisted/applicationSlice';
+import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
 import { useNavigate } from 'react-router-dom';
 
 const StartWork = ({ registrationId, visitId }) => {
@@ -24,7 +24,7 @@ const StartWork = ({ registrationId, visitId }) => {
             const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
 
             const work = await api.vfTv2Axios.post(`/registered-service/${registrationId}/${visitId}/start-work`, { location })
-            dispatch(startServiceWork(work))
+            dispatch(sfActions.startWork(work))
 
             dispatch(modal.pull.all())
 

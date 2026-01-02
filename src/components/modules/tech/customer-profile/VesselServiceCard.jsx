@@ -2,7 +2,7 @@ import React from 'react'
 import './service-card.scss'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { TbCircleCheck, TbCircleX } from 'react-icons/tb'
-import { getContrastText } from '../../../../utils/color-utils'
+import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 
 const VesselServiceCard = ({ product, serviceType }) => {

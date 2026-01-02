@@ -1,4 +1,4 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../assets/scss/mixins/mixin.scss'as *;
 
 .view-area-page {
     padding: 20px 0 40px 0;

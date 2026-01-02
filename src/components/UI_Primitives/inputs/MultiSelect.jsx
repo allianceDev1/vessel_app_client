@@ -21,6 +21,10 @@ function MultiSelectInput({
   const [selectedValues, setSelectedValues] = useState(selected || []);
   const wrapperRef = useRef(null);
 
+  useEffect(() => {
+    setSelectedValues(selected || []);
+  }, [selected]);
+
   const handleToggle = () => {
     if (disabled) return;
     setIsOpen(!isOpen)

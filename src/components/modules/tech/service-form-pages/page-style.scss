@@ -1,0 +1,25 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-service-form-page {
+    margin-bottom: 40px;
+
+    .title-section {
+        margin-top: 10px;
+        margin-bottom: 25px;
+
+
+        h3 {
+            font-size: 22px;
+            font-weight: 700;
+            @include threeDots();
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary-2);
+        }
+
+
+    }
+}

@@ -1,4 +1,4 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../assets/scss/mixins/mixin.scss'as *;
 
 .ui-multiselect-container {
   position: relative;
@@ -37,7 +37,7 @@
 
 
     &.disabled {
-      background-color: var(--color-natural-4);
+      background-color: var(--color-natural-5);
       cursor: not-allowed;
       border: 1px solid var(--color-natural-4);
     }
@@ -45,7 +45,7 @@
     .multiselect-label {
       position: absolute;
       user-select: none;
-      color: var(--text-secondary);
+      color: var(--text-secondary-1);
       font-weight: 500;
       @include threeDots();
       transition: all 0.2s ease-in-out;

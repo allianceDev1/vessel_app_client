@@ -50,7 +50,7 @@
 
         input:disabled+.checkbox-custom {
             border-color: var(--color-natural-5);
-            background-color: var(--color-natural-4);
+            background-color: var(--color-natural-5);
             cursor: not-allowed;
 
             svg {
@@ -63,7 +63,7 @@
         }
 
         .label-text {
-            color: var(--text-secondary);
+            color: var(--text-secondary-1);
             font-size: 16px;
             font-weight: 500;
         }

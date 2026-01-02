@@ -6,3 +6,4 @@ export const copyToClipboard = async (text) => {
         return { success: false }
     }
 }
+

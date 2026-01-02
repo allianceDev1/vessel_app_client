@@ -1,0 +1,139 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.service-category-page-load {
+    margin-top: 20px;
+}
+
+.service-category-page-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .items-container {
+        display: flex;
+        gap: 15px;
+        overflow-y: auto;
+        width: 100%;
+        padding-bottom: 15px;
+        @include scrollBar();
+
+        .item {
+            width: 350px;
+            min-width: 350px;
+            max-width: 350px;
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(10px);
+            padding: 20px 10px;
+            border-radius: 20px;
+            border: solid 1px var(--border-light);
+            position: relative;
+
+            .head {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-bottom: 25px;
+
+                h3 {
+                    font-weight: 500;
+                    color: var(--color-primary-text);
+                }
+
+                >div {
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+                    color: var(--text-secondary-1);
+                    margin-top: 5px;
+
+                    p {
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .list-section {
+                margin-bottom: 15px;
+
+                .section-title {
+                    @include subTitleSmall();
+                    font-size: 16px !important;
+                    margin-bottom: 5px;
+                }
+
+                .list-item {
+                    display: grid;
+                    grid-template-columns: auto 50px 60px;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 10px 0;
+
+                    .part {
+                        p {
+                            font-size: 14px;
+                        }
+
+                        svg {
+                            font-size: 20px;
+                        }
+                    }
+
+                    .part-three {
+                        display: flex;
+                        justify-content: flex-end;
+
+
+                        p {
+                            font-size: 13px;
+                            color: var(--text-secondary-2);
+                        }
+
+                        &.success {
+                            color: var(--color-success);
+                        }
+
+                        &.danger {
+                            color: var(--color-danger);
+                        }
+                    }
+
+                    .part-two {
+                        display: flex;
+                        justify-content: flex-end;
+                        color: var(--text-secondary-2);
+
+                        p {
+                            font-size: 13px;
+                        }
+                    }
+                }
+            }
+
+            .info-note {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 13px;
+                text-align: end;
+                color: var(--color-warning-text);
+
+                svg {
+                    font-size: 20px;
+                }
+            }
+
+            .buttons {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    }
+
+    .info-text {
+        font-size: 12px;
+        text-align: start;
+        font-weight: 300;
+        color: var(--text-secondary-2);
+        margin-top: 25px;
+    }
+}

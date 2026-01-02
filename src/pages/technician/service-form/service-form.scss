@@ -1,0 +1,44 @@
+.tech-service-form-loader-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: calc(100vh - 100px);
+
+
+    svg {
+        font-size: 50px;
+        animation: iconLoading 2s linear infinite;
+        margin-bottom: 20px;
+    }
+}
+
+.tech-service-form-container {
+    padding: 0 !important;
+
+    .top-bar-container {
+        position: sticky;
+        top: 55px;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+
+    }
+
+    .service-form-page-container {
+        padding: 10px 15px 0 15px;
+    }
+}
+
+
+
+@keyframes iconLoading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

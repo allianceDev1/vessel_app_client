@@ -1,4 +1,4 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../assets/scss/mixins/mixin.scss' as *;
 
 .ui-modal {
     position: fixed;
@@ -88,7 +88,7 @@
     @media screen and (max-width : 560px) {
         align-items: flex-end;
         padding: 0;
-       
+
 
         .modal-border {
             border-radius: 0;

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import { api } from '../../../api';
-import { hexToRgba } from '../../../utils/color-utils';
+import { hexToRgba } from '../../../utils/helpers/color-utils';
 
 
 const ServicePackages = () => {
@@ -25,7 +25,7 @@ const ServicePackages = () => {
             const res = await api.vfCv2Axios.get('/package/list?product_type=Vessel&hidden=Yes')
             setData(res)
         } catch (error) {
-            setError({ error: true, title: 'Data fecting failed', message: error.message })
+            setError({ error: true, title: 'Data fetching failed', message: error.message })
         } finally {
             setLoading('')
         }

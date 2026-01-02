@@ -13,6 +13,7 @@ const TechLayout = ({ children }) => {
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('')
     const { pageTitle } = useSelector((state) => state.miniSystem)
+   
 
     useEffect(() => {
         const firstSegment = location?.pathname?.split("/")[2] || ''

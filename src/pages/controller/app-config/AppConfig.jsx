@@ -28,7 +28,7 @@ const AppConfig = () => {
                     <div className="content">
                         <div className="list-item">
                             <div className="l">
-                                <p>Current Version</p>
+                                <h4>Software Version</h4>
                             </div>
                             <div className="r">
                                 <p>{ui_version}</p>
@@ -43,9 +43,19 @@ const AppConfig = () => {
                         <h3>System Essentials</h3>
                     </div>
                     <div className="content">
+                        <div className="list-item" onClick={() => navigate('/controller/app-config/service-categories')}>
+                            <div className="l">
+                                <h4>Service categories</h4>
+                                <p className='description'>Categorize services workflows</p>
+                            </div>
+                            <div className="r">
+                                <TbArrowLeft className='arrow' />
+                            </div>
+                        </div>
                         <div className="list-item" onClick={() => navigate('/controller/app-config/service-packages')}>
                             <div className="l">
-                                <p>View Available Packages</p>
+                                <h4>Service packages</h4>
+                                <p className='description'>Manage service packages, validity, pricing, and included benefits</p>
                             </div>
                             <div className="r">
                                 <TbArrowLeft className='arrow' />
@@ -53,7 +63,8 @@ const AppConfig = () => {
                         </div>
                         <div className="list-item">
                             <div className="l">
-                                <p>Manage Service Solutions</p>
+                                <h4>Service Solutions</h4>
+                                <p className='description'>Configure the actions carried out as part of a service.</p>
                             </div>
                             <div className="r">
                                 <TbArrowLeft className='arrow' />
@@ -61,7 +72,8 @@ const AppConfig = () => {
                         </div>
                         <div className="list-item" onClick={() => navigate('/controller/app-config/form-resources')}>
                             <div className="l">
-                                <p>Form Resources</p>
+                                <h4>Form Resources</h4>
+                                <p className='description'>Maintain reusable form data and configurations used across the application</p>
                             </div>
                             <div className="r">
                                 <TbArrowLeft className='arrow' />
@@ -78,7 +90,7 @@ const AppConfig = () => {
                     <div className="content">
                         <div className="list-item">
                             <div className="l">
-                                <p>Shibily Muhamemd</p>
+                                <h4>Shibily Muhamemd</h4>
                             </div>
                             <div className="r">
                                 <p>Editor</p>
@@ -86,7 +98,7 @@ const AppConfig = () => {
                         </div>
                         <div className="list-item">
                             <div className="l">
-                                <p>Shibily Muhamemd</p>
+                                <h4>Shibily Muhamemd</h4>
                             </div>
                             <div className="r">
                                 <p>Viewer</p>
@@ -94,7 +106,7 @@ const AppConfig = () => {
                         </div>
                         <div className="list-item">
                             <div className="l">
-                                <p>Shibily Muhamemd</p>
+                                <h4>Shibily Muhamemd</h4>
                             </div>
                             <div className="r">
                                 <p>Administrator</p>

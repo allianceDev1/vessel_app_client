@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './contacts.scss';
-import { copyToClipboard } from '../../../../utils/services/event-service';
-import Button from '../../../UI_Primitives/buttons/Button';
 import { TbBrandWhatsapp, TbPhone } from 'react-icons/tb';
 // import { useLongPress } from '../../../hooks/useLongPress';
 
 const Contacts = ({ contacts: { primary, secondary, whatsapp, additional } }) => {
-    const [copied, setCopied] = useState(null);
+    // const [copied, setCopied] = useState(null);
 
     const handleCallClick = (number) => {
         if ((number?.length || 0) < 5) return;

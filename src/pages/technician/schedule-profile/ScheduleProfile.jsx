@@ -14,7 +14,7 @@ import { TbBorderAll, } from 'react-icons/tb';
 import { api } from '../../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import ActionButtons from './ActionButtons';
-import { clearServiceForm } from '../../../redux/features/persisted/applicationSlice';
+import { sfActions } from '../../../redux/features/persisted/applicationSlice';
 
 
 const ScheduleProfile = () => {
@@ -63,7 +63,7 @@ const ScheduleProfile = () => {
   const handleResetForm = () => {
 
     const resetServiceForm = () => {
-      dispatch(clearServiceForm())
+      dispatch(sfActions.clearAll())
     }
 
     dispatch(doDialog.confirm({
@@ -163,12 +163,12 @@ const ScheduleProfile = () => {
 
       {/* Reset Warning */}
       {((regService?.status?.status === 4 && regService?.last_visit?.visit_status === 1 && serviceForm?.registration_id)
-        || (regService?.status?.status === 4 && regService?.last_visit?.visit_status === 2 && serviceForm?.visit_uuid !== regService?.last_visit?.visit_id))
+        || (regService?.status?.status === 4 && regService?.last_visit?.visit_status === 2 && (serviceForm?.visit_uuid && serviceForm?.visit_uuid !== regService?.last_visit?.visit_id)))
         ? <Message head={'Data Conflict Detected'} message={<>
           <p style={{ textAlign: 'justify' }}>We found existing service data stored in your cache that may conflict with this action.
             To continue safely, you need to clear the cached data first.</p>
           <p style={{ textAlign: 'justify', marginTop: '10px' }}>
-            Please <span onClick={handleResetForm} style={{ textDecoration: "underline", color: 'var(--color-primary)', cursor: 'pointer' }}>Reset</span> to
+            Please click <span onClick={handleResetForm} style={{ textDecoration: "underline", color: 'var(--color-primary)', cursor: 'pointer' }}>Reset</span> to
             clear the cache and proceed with the service without issues.</p>
         </>} type={'warning'} />
         : ''}

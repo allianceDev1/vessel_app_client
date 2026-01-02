@@ -1,14 +1,32 @@
-@import '../../../assets/scss/mixins/mixin.scss';
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
 
 .update-pack-modal {
     form {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+
+        }
+
+        h3 {
+            @include subTitleSmall();
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
 
         button {
             margin-top: 10px;
         }
+
+
+        @media screen and (max-width:500px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
     }
 }
 
@@ -17,13 +35,19 @@
     form {
         .inputs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 10px;
 
             .section {
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+
+                .input-group {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                    margin-bottom: 10px;
+                }
 
                 .radio-input-label {
                     font-size: 14px;
@@ -39,10 +63,6 @@
             .sub-title {
                 @include subTitleSmall();
                 margin-top: 8px;
-            }
-
-            @media screen and (max-width:500px) {
-                grid-template-columns: 1fr;
             }
         }
 

@@ -2,18 +2,11 @@ import React from 'react'
 import './schedule-service-card.scss'
 import { TbBrandWhatsapp, TbPhone, TbPhonePlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
-import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { convertIsoToAmPm } from '../../../../utils/helpers/date-helpers'
+import { useNavigate } from 'react-router-dom'
 
 const ScheduleServiceCard = ({ data, pickup = false }) => {
     const navigate = useNavigate();
-    const today = new Date();
-    const [searchParams,] = useSearchParams();
-    const target = new Date(data?.expire_date || data?.service_date);
-    const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-    const severity = diff <= 10 ? "danger" : diff <= 20 ? "warning" : null;
-    const text = diff < 0 ? `${Math.abs(diff)} Days Ago` : diff === 0 ? "Today" : null;
-
 
     const handleCallClick = (e, number) => {
         e.stopPropagation();

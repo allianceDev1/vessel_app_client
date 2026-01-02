@@ -1,16 +1,21 @@
 import React, { useState } from 'react'
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbBike, TbBikeOff, TbCalendarUp, TbCalendarX, TbPlayerPlay } from 'react-icons/tb'
+import { TbBike, TbBikeOff, TbCalendarUp, TbCalendarX, TbPlayerPlay, TbPlayerStop } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
-import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
 import RescheduleService from '../../../components/forms/tech/schedule-service/RescheduleService'
 import UnscheduleService from '../../../components/forms/tech/schedule-service/UnscheduleService'
 import StartTravel from '../../../components/modules/tech/service-action/StartTravel'
 import StopTravel from '../../../components/forms/tech/service-action/StopTravel'
 import StartWork from '../../../components/modules/tech/service-action/StartWork'
+import StopWork from '../../../components/modules/tech/service-action/StopWork'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../../api'
+import { sfActions } from '../../../redux/features/persisted/applicationSlice'
 
 const ActionButtons = ({ regData, setRegData }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { serviceForm } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
 
@@ -66,16 +71,59 @@ const ActionButtons = ({ regData, setRegData }) => {
         }))
     }
 
-    const handleContinueWork = () => {
-        setLoading('continue')
+    const handleContinueAction = async () => {
 
-        // two type continue, 1. continue with data, 2. continue without data
-        // continue with data : redirect to service form
-        // continue without data : retrieve the data and store , then redirect 
-        // if bug the show the reset alert , the reset fix error the apply continue
+        try {
+
+            setLoading('continue')
+
+            if (serviceForm?.service_form_uuid && serviceForm?.customer_id && serviceForm?.registration_id && serviceForm?.visit_uuid
+                && serviceForm?.technician_uuid && serviceForm?.in_time && !serviceForm?.out_time
+            ) {
+                navigate('/tech/service/attend-work')
+                return;
+            }
+
+            const work = await api.vfTv2Axios.get(`/registered-service/${regData?.registration_id}/${regData?.last_visit?.visit_id}/retrieve-start-work`)
+            dispatch(sfActions.startWork(work))
+            navigate('/tech/service/attend-work')
+
+        } catch (error) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: 'Something wrong',
+                message: error.message,
+            }))
+        } finally {
+            setLoading('')
+        }
+    }
+
+    const handleContinueWork = async () => {
+
+        const activeVisitId = serviceForm?.visit_uuid || null;
+
+        // continue cases : 
+        // 1. the reg data and catch data is same visit id (check the required elements is available or not)
+        // if available then continue or not the fetch data form data and continue
+        // 2. the reg data on the started work. but the cache not available then fetch data form data and continue
+
+        if ((regData?.last_visit?.visit_id === activeVisitId) || (regData?.status?.status === 4 && regData?.last_visit?.visit_status === 2 && !activeVisitId)) {
+            await handleContinueAction()
+        }
+
+        return;
 
     }
 
+    const handleStopWork = () => {
+        dispatch(modal.push({
+            title: 'Stop Current Work',
+            body: <StopWork serviceFormUuid={serviceForm?.service_form_uuid} registrationId={regData?.registration_id}
+                visitId={regData?.last_visit?.visit_id} setRegData={setRegData}
+            />
+        }))
+    }
 
     return (
         <div className="schedule-profile-action-buttons">
@@ -100,8 +148,12 @@ const ActionButtons = ({ regData, setRegData }) => {
 
                 {/* On Attend */}
                 {regData?.status?.status === 4 && regData?.last_visit?.visit_status === 2 ?
-                    <Button icon={<TbPlayerPlay />} label={'Continue work'} rounded severity={'primary'} style={{ width: '100%' }}
-                        onClick={handleContinueWork} spinIcon={loading === 'continue'} disabled={regData?.last_visit?.visit_id !== serviceForm?.visit_uuid} />
+                    <>
+                        <Button icon={<TbPlayerStop />} label={'Stop work'} rounded severity={'danger'} style={{ width: '100%' }}
+                            onClick={handleStopWork} spinIcon={loading === 'stop'} />
+                        <Button icon={<TbPlayerPlay />} label={'Continue work'} rounded severity={'primary'} style={{ width: '100%' }}
+                            onClick={handleContinueWork} spinIcon={loading === 'continue'} disabled={serviceForm?.visit_uuid && regData?.last_visit?.visit_id !== serviceForm?.visit_uuid} />
+                    </>
                     : ""}
 
             </div>

@@ -87,5 +87,10 @@ export const convertIsoToAmPm = (isoString) => {
     return `${hours}:${minutesStr} ${ampm}`;
 }
 
-
+export const normalizeDate = (date) => {
+    if (!date) return null;
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return isNaN(d) ? null : d;
+}
 
