@@ -29,7 +29,7 @@ const AddOnServiceCard = ({ product, serviceType }) => {
             </div>
             <div className="service-card__item">
                 <div className="header__left">
-                    <p className="item__text">{serviceGap > 0 ? `${serviceGap} Day(s)` : 'Date left'}</p>
+                    <p className="item__text">{serviceGap > 0 ? `${serviceGap} Day(s)` : 'Time over'}</p>
                 </div>
                 <div className="header__right">
                     <p className="item__text">{isoToDDMonYYYY(new Date(product?.service?.service_date))}</p>

@@ -18,7 +18,6 @@ import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
 const Services = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [activeTab, setActiveTab] = useState(searchParams.get("tab") || 'Complaints')
     const [loading, setLoading] = useState('fetch')
     const [error, setError] = useState({ error: false, title: null, message: null })
     const [data, setData] = useState({ complaints: [], services: [], renewals: [], blacklist: [] })
@@ -26,8 +25,10 @@ const Services = () => {
 
 
     const tabData = useMemo(() => {
-        return data[activeTab.toLowerCase()] || [];
-    }, [data, activeTab]);
+        const valid = searchParams.get("tab") || 'Complaints';
+        return data[valid.toLowerCase()] || [];
+        // eslint-disable-next-line
+    }, [data, searchParams.get("tab")]);
 
     const finalData = useMemo(() => {
         let result = [...tabData];
@@ -96,7 +97,6 @@ const Services = () => {
         const newSearchParams = new URLSearchParams(searchParams)
         newSearchParams.set('tab', value)
         setSearchParams(newSearchParams)
-        setActiveTab(value)
     }
 
     const handleOpenFilter = () => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './style.scss'
 import { useDispatch } from 'react-redux'
-import { credit_amount_type, price_unit_objects } from '../../../../assets/javascript/pre_data/units';
-import { TbCash, TbPlus, TbTrash, TbMoodAnnoyed } from 'react-icons/tb';
+import { price_unit_objects } from '../../../../assets/javascript/pre_data/units';
+import { TbMoodAnnoyed } from 'react-icons/tb';
 import { toast, modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
@@ -10,18 +10,15 @@ import InputText from '../../../UI_Primitives/inputs/InputText';
 import Select from '../../../UI_Primitives/inputs/Select';
 import Radio from '../../../UI_Primitives/inputs/Radio';
 import Button from '../../../UI_Primitives/buttons/Button';
-import EmptyState from '../../../UI_Primitives/ui-states/EmptyState';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 
 
 
-const UpdatePackageService = ({ packageId, serviceData, setServiceList, mode, setData }) => {
+const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState('')
-  const [vErr, setVErr] = useState({})
   const [packages, setPackages] = useState([])
   const [form, setForm] = useState({})
-  const [serviceCharge, setServiceCharge] = useState({})
   const [error, setError] = useState({ error: false, title: null, message: null })
 
   const fetchApi = async () => {

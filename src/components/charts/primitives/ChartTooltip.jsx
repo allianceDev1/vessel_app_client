@@ -3,6 +3,7 @@ import { Tooltip } from 'recharts'
 
 const ChartTooltip = () => {
     return <Tooltip
+        cursor={false}
         contentStyle={{
             backgroundColor: 'var(--background)',
             border: '1px solid var(--border-light)',

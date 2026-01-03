@@ -3,7 +3,7 @@ import './service-category.scss'
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../api';
-import { TbCarouselHorizontal, TbCheck, TbEdit, TbInfoCircle, TbInfoCircleFilled, TbPointFilled, TbX } from 'react-icons/tb';
+import { TbCarouselHorizontal, TbCheck, TbEdit, TbInfoCircle, TbPointFilled, TbX } from 'react-icons/tb';
 import { serviceChargeSort, toStandardText } from '../../../utils/helpers/text-formatting';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';

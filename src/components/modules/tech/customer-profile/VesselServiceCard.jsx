@@ -33,7 +33,7 @@ const VesselServiceCard = ({ product, serviceType }) => {
             </div>
             <div className="service-card__item">
                 <div className="header__left">
-                    <p className="item__text">S{product?.service?.total_services + 1 || 1} | {serviceGap > 0 ? `${serviceGap} Day(s)` : 'Date left'}</p>
+                    <p className="item__text">S{product?.service?.total_services + 1 || 1} | {serviceGap > 0 ? `${serviceGap} Day(s)` : 'Time over'}</p>
                 </div>
                 <div className="header__right">
                     <p className="item__text">{isoToDDMonYYYY(new Date(product?.service?.service_date))}</p>

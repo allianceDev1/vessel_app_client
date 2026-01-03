@@ -37,7 +37,11 @@ export const getIsoDayDifference = (iso1, iso2) => {
     const d1 = new Date(iso1);
     const d2 = new Date(iso2);
 
-    return Math.floor(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24));
+    if (isNaN(d1) || isNaN(d2)) return null;
+
+    const diff = Math.ceil((d1 - d2) / (1000 * 60 * 60 * 24))
+
+    return diff || 0;
 };
 
 export const formatRelativeIsoDate = (isoDate) => {

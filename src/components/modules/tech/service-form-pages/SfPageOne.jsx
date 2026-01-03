@@ -58,12 +58,12 @@ const SfPageOne = ({ page, custPG, customerProducts, customerPackages }) => {
                                         <div className="id-status">
                                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                                 <p>{product?.product_id}</p>
-                                                {productPackage?.package_type && <Badge value={'I/W'}
+                                                {productPackage?.package_id && <Badge value={'I/W'}
                                                     style={{ backgroundColor: productPackage?.color_code, color: getContrastText(productPackage?.color_code) }} />}
                                             </div>
                                             <p>
                                                 {upcomingServiceType}
-                                                {(productPackage?.package_type && upcomingServiceType) && ` - S${productPackage?.service_count + 1 || 1}`}
+                                                {(productPackage?.package_id && upcomingServiceType) && ` - S${productPackage?.service_count + 1 || 1}`}
                                             </p>
                                         </div>
                                         <div className="name">

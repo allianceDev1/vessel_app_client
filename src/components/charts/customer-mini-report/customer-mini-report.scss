@@ -68,6 +68,10 @@
                 gap: 30px;
 
                 .number-chart {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+
                     .section-one {
                         display: grid;
                         grid-template-columns: 1fr 1fr 1fr;

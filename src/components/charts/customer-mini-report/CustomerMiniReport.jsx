@@ -5,7 +5,6 @@ import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis }
 import { renderCustomChartLabel } from '../../../utils/services/chart_service'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { api } from '../../../api'
-import { calculatePercentage } from '../../../utils/helpers/math-equations';
 import ChartTooltip from '../primitives/ChartTooltip';
 import ChartLegend from '../primitives/ChartLegend';
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
@@ -38,6 +37,21 @@ const CustomerMiniReport = () => {
             setError({ error: false, title: null, message: null })
 
             const reports = await api.vfCv2Axios.get('/product/mini-report')
+
+            // Vessel
+            const totalPackageProducts = reports?.vessel_report?.packages_counts?.reduce((t, p) => t + p.count, 0) || 0
+            const packageProducts = {}
+            reports?.vessel_report?.packages_counts?.map((p) => {
+                packageProducts[p.package_name] = Number(((p.count / totalPackageProducts) * 100).toFixed(2))
+                return p;
+            })
+
+            // Add-on
+            const addOnProductTypes = {
+                in_house: Number((((reports?.addOn_report?.inHouse_products || 0) / (reports?.addOn_report?.products || 0)) * 100).toFixed(2)),
+                out_side: Number((((reports?.addOn_report?.outSide_products || 0) / (reports?.addOn_report?.products || 0)) * 100).toFixed(2))
+            }
+
             setProductChart([
                 { name: 'In-house', value: reports?.vessel_report?.inHouse_products || 0 },
                 { name: 'Outside', value: reports?.vessel_report?.outSide_products || 0 }
@@ -48,8 +62,8 @@ const CustomerMiniReport = () => {
                 new_product_in_30_days: reports?.vessel_report?.new_product_in_30_days || 0,
                 iw_products: reports?.vessel_report?.iw_products || 0,
                 ssp_products: reports?.vessel_report?.ssp_products || 0,
-                iw_percentage: calculatePercentage(reports?.vessel_report?.iw_products, reports?.vessel_report?.products) || 0,
-                ssp_percentage: calculatePercentage(reports?.vessel_report?.ssp_products, reports?.vessel_report?.products) || 0
+                package_products: packageProducts,
+                total_package_products: totalPackageProducts
             })
             setCustomerCount([
                 { name: 'Vessel Users', value: reports?.customer_report?.vessel_customers || 0 },
@@ -59,12 +73,12 @@ const CustomerMiniReport = () => {
                 products: reports?.addOn_report?.products || 0,
                 inactive_products: reports?.addOn_report?.inactive_products || 0,
                 new_product_in_30_days: reports?.addOn_report?.new_product_in_30_days || 0,
-                in_house_products: reports?.addOn_report?.inHouse_products || 0,
-                out_side_products: reports?.addOn_report?.outSide_products || 0,
+                in_house_products: addOnProductTypes.in_house,
+                out_side_products: addOnProductTypes.out_side,
                 rental_products: reports?.addOn_report?.rental_products || 0,
             })
         } catch (error) {
-            setError({ error: true, title: 'Data fecting failed', message: error.message })
+            setError({ error: true, title: 'Data fetching failed', message: error.message })
         } finally {
             setLoading('')
         }
@@ -131,35 +145,31 @@ const CustomerMiniReport = () => {
 
                             <div className="section-two">
                                 <div className="bar-border">
-                                    <p>I/W Products : {productReport?.iw_products}</p>
-                                    <ResponsiveContainer width="100%" height="18">
-                                        <BarChart layout="vertical" data={[{ name: "", percentage: productReport?.iw_percentage, remaining: 100 - productReport?.iw_percentage }]} stackOffset="none">
+                                    <p>Package Products : {productReport?.total_package_products || 0}</p>
+                                    <ResponsiveContainer width="100%" height="35">
+                                        <BarChart
+                                            layout="vertical"
+                                            data={[{ name: 'Percentage (%)', ...productReport?.package_products }]}
+                                            stackOffset="none"
+                                        >
                                             <XAxis type="number" domain={[0, 100]} hide />
                                             <YAxis type="category" dataKey="name" hide />
-                                            <Bar dataKey="percentage" stackId="a" fill={chartLabelColors[0]} barSize={10} radius={[6, 6, 6, 6]}
-                                                background={{
-                                                    fill: "var(--color-natural-trans-73)",
-                                                    radius: 6,
-                                                    pointerEvents: "none"
-                                                }} >
-                                                <ChartTooltip />
-                                            </Bar>
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </div>
-                                <div className="bar-border">
-                                    <p>SSP Products : {productReport?.ssp_products}</p>
-                                    <ResponsiveContainer width="100%" height="18">
-                                        <BarChart layout="vertical" data={[{ name: "", percentage: productReport?.ssp_percentage }]} stackOffset="none">
-                                            <XAxis type="number" domain={[0, 100]} hide />
-                                            <YAxis type="category" dataKey="name" hide />
-                                            <Bar dataKey="percentage" stackId="a" fill={chartLabelColors[1]} barSize={10} radius={[6, 6, 6, 6]}
-                                                background={{
-                                                    fill: "var(--color-natural-trans-73)",
-                                                    radius: 6
-                                                }} >
-                                                <ChartTooltip />
-                                            </Bar>
+                                            {Object.entries(productReport?.package_products || {}).map(([key, value], index) => (
+                                                <Bar
+                                                    dataKey={key}
+                                                    stackId="a"
+                                                    fill={chartLabelColors[index + 1]}
+                                                    barSize={15}
+                                                    radius={[15, 15, 15, 15]}
+                                                    barGap={15}
+                                                // background={{
+                                                //     fill: "var(--color-natural-trans-73)",
+                                                //     radius: 6
+                                                // }}
+                                                >
+                                                    <ChartTooltip />
+                                                </Bar>
+                                            ))}
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -243,9 +253,9 @@ const CustomerMiniReport = () => {
                     <div className="content">
                         <div className="section-two">
                             <div className="bar-border">
-                                <p>Product Types</p>
+                                <p>Product Types (In House & Outside)</p>
                                 <ResponsiveContainer width="100%" height="18">
-                                    <BarChart layout="vertical" data={[{ name: "Product Types", 'In house': productReport?.iw_percentage, Outside: 100 - productReport?.iw_percentage }]} stackOffset="none">
+                                    <BarChart layout="vertical" data={[{ name: "Percentage (%)", 'In house': addOnReport?.in_house_products, Outside: addOnReport?.out_side_products }]} stackOffset="none">
                                         <XAxis type="number" domain={[0, 100]} hide />
                                         <YAxis type="category" dataKey="name" hide />
                                         <Bar dataKey="In house" stackId="a" fill={chartLabelColors[0]} barSize={10} radius={[6, 6, 6, 6]}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './style.scss'
 import { useDispatch } from 'react-redux'
-import { credit_amount_type, price_unit_objects } from '../../../../assets/javascript/pre_data/units';
+import { price_unit_objects } from '../../../../assets/javascript/pre_data/units';
 import { TbCash, TbPlus, TbTrash, TbMoodAnnoyed } from 'react-icons/tb';
 import { toast, modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../../api'
