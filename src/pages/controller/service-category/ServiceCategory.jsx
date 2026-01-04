@@ -30,7 +30,7 @@ const ServiceCategory = () => {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
             const fields = 'service_name,service_charges,package_charge_applied,target_package,spare_policies,service_charge_applied,extra_charge_applied,is_active,package_product_only'
-            const res = await api.vfCv2Axios.get(`/service/categories/list?hidden=Yes&fields=${fields}`)
+            const res = await api.vfCv2Axios.get(`/config/service-categories/list?hidden=Yes&fields=${fields}`)
             setData(res)
         } catch (error) {
             setError({ error: true, title: 'Data fetching failed', message: error.message })
@@ -108,17 +108,6 @@ const ServiceCategory = () => {
                                     </div>
                                     <div className={`part part-three ${item?.spare_policies?.bag?.access ? 'success' : 'danger'}`}>
                                         {item?.spare_policies?.bag?.access ? <TbCheck /> : <TbX />}
-                                    </div>
-                                </div>
-                                <div className="list-item">
-                                    <div className={`part part-one`}>
-                                        <p>Vessel Charge & Access</p>
-                                    </div>
-                                    <div className={`part part-two`}>
-                                        {item?.spare_policies?.vessel?.access ? <p>{serviceChargeSort(item?.spare_policies?.vessel?.price_type)}</p> : ''}
-                                    </div>
-                                    <div className={`part part-three ${item?.spare_policies?.vessel?.access ? 'success' : 'danger'}`}>
-                                        {item?.spare_policies?.vessel?.access ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                                 <div className="list-item">

@@ -41,8 +41,8 @@ const ViewServicePackage = () => {
             setError({ error: false, title: null, message: null })
 
             const [packageRes, serviceRes] = await Promise.all([
-                api.vfCv2Axios.get(`/package/${package_id}`),
-                api.vfCv2Axios.get(`/package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,spare_policies,package_charge_applied,target_package,service_charge_applied,extra_charge_applied,service_charges,service_limit`)
+                api.vfCv2Axios.get(`/config/service-package/${package_id}`),
+                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,spare_policies,package_charge_applied,target_package,service_charge_applied,extra_charge_applied,service_charges,service_limit`)
             ]);
 
             const { pricing_config, ...pInfo } = packageRes;
@@ -70,7 +70,7 @@ const ViewServicePackage = () => {
                 onClick: async () => {
                     try {
                         setLoading('update')
-                        await api.vfCv2Axios.patch(`/package/${package_id}/active-status`, { is_active })
+                        await api.vfCv2Axios.patch(`/config/service-package/${package_id}/active-status`, { is_active })
                         setPackageInfo({ ...packageInfo, is_active })
                     } catch (error) {
                         dispatch(toast.push({
@@ -225,17 +225,6 @@ const ViewServicePackage = () => {
                                             </div>
                                             <div className={`part part-three ${item?.spare_policies?.bag?.access ? 'success' : 'danger'}`}>
                                                 {item?.spare_policies?.bag?.access ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Vessel Charge & Access</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.spare_policies?.vessel?.access ? <p>{serviceChargeSort(item?.spare_policies?.vessel?.price_type)}</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.spare_policies?.vessel?.access ? 'success' : 'danger'}`}>
-                                                {item?.spare_policies?.vessel?.access ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">

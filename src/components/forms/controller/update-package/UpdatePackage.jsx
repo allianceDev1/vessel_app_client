@@ -69,7 +69,7 @@ const UpdatePackage = ({ data, setData }) => {
     // Update data
     setLoading('submit')
     try {
-      await api.vfCv2Axios.put(`/package/${form.package_id}`, form)
+      await api.vfCv2Axios.put(`/config/service-package/${form.package_id}`, form)
       setData((state) => ({
         ...state,
         package_name: form?.package_name || '',

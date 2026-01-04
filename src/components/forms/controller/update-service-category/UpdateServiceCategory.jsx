@@ -16,7 +16,7 @@ import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 
 
 
-const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, setData }) => {
+const UpdateServiceCategory = ({ serviceCategory, setData }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('')
     const [vErr, setVErr] = useState({})
@@ -30,7 +30,7 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
 
-            const packageRes = await api.vfCv2Axios.get(`/package/list?product_type=Vessel&fields=package_name`)
+            const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?product_type=Vessel&fields=package_name`)
             setPackages(packageRes?.map(i => ({ label: i.package_name, value: i.package_id })))
 
         } catch (err) {
@@ -54,9 +54,6 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
                     break;
                 case 'bag_price_type':
                     setForm({ ...form, bag_access: true, bag_price_type: e.target.value })
-                    break;
-                case 'vessel_price_type':
-                    setForm({ ...form, vessel_access: true, vessel_price_type: e.target.value })
                     break;
                 case 'primary_spare_price_type':
                     setForm({ ...form, primary_spare_access: true, primary_spare_price_type: e.target.value })
@@ -129,7 +126,7 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
         // Update data
         setLoading('submit')
         try {
-            await api.vfCv2Axios.put(`/service/categories/${serviceCategory?.category_id}`, form)
+            await api.vfCv2Axios.put(`/config/service-categories/${serviceCategory?.category_id}`, form)
 
             setData((state) => state.map((s) => {
                 if (s.category_id === serviceCategory?.category_id) {
@@ -143,10 +140,6 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
                             bag: {
                                 access: form?.bag_access,
                                 price_type: form?.bag_price_type
-                            },
-                            vessel: {
-                                access: form?.vessel_access,
-                                price_type: form?.vessel_price_type
                             },
                             materials: {
                                 access: form?.materials_access,
@@ -189,11 +182,9 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
             package_product_only: serviceCategory?.package_product_only || false,
             target_package: serviceCategory?.target_package || null,
             bag_access: serviceCategory?.spare_policies?.bag?.access || false,
-            vessel_access: serviceCategory?.spare_policies?.vessel?.access || false,
             primary_spare_access: serviceCategory?.spare_policies?.primary_spare?.access || false,
             materials_access: serviceCategory?.spare_policies?.materials?.access || false,
             bag_price_type: serviceCategory?.spare_policies?.bag?.price_type || null,
-            vessel_price_type: serviceCategory?.spare_policies?.vessel?.price_type || null,
             primary_spare_price_type: serviceCategory?.spare_policies?.primary_spare?.price_type || null,
             materials_price_type: serviceCategory?.spare_policies?.materials?.price_type || null,
             service_charge_applied: serviceCategory?.service_charge_applied || false,
@@ -242,11 +233,14 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
                             onChange={handleChangeServiceCard} value={form.materials_price_type} />
                         <Select label={'Price of Material bag'} name={'bag_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.bag_price_type} />
-                        <Select label={'Price of Vessel spare'} name={'vessel_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
-                            onChange={handleChangeServiceCard} value={form.vessel_price_type} />
                         <Select label={'Price of Spares'} name={'primary_spare_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
 
+                        <h4 className='radio-input-label'> Only for packages <span className={'required-span'}>*</span></h4>
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                            <Radio label={'Yes'} name={'package_product_only'} required radioValue={true} onChange={handleChangeForm} checked={form?.package_product_only === true} />
+                            <Radio label={'No'} name={'package_product_only'} radioValue={false} onChange={handleChangeForm} checked={form?.package_product_only === false} />
+                        </div>
                     </div>
                     <div className="section">
                         <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>
@@ -259,11 +253,7 @@ const UpdateServiceCategory = ({ serviceCategory, packageId, serviceId, mode, se
                             <Radio label={'Yes'} name={'extra_charge_applied'} required radioValue={true} onChange={handleChangeForm} checked={form?.extra_charge_applied === true} />
                             <Radio label={'No'} name={'extra_charge_applied'} radioValue={false} onChange={handleChangeForm} checked={form?.extra_charge_applied === false} />
                         </div>
-                        <h4 className='radio-input-label'> Only for packages <span className={'required-span'}>*</span></h4>
-                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                            <Radio label={'Yes'} name={'package_product_only'} required radioValue={true} onChange={handleChangeForm} checked={form?.package_product_only === true} />
-                            <Radio label={'No'} name={'package_product_only'} radioValue={false} onChange={handleChangeForm} checked={form?.package_product_only === false} />
-                        </div>
+
 
                         <h3 className='sub-title'>Default service charges <span className={'required-span'}>*</span></h3>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>

@@ -23,7 +23,6 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.3",
     "react-scripts": "^5.0.1",
-    "react-select": "^5.10.2",
     "recharts": "^3.5.0",
     "redux-persist": "^6.0.0",
     "sass": "^1.93.2",
