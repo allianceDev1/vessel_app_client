@@ -20,6 +20,9 @@ const SearchCustomer = React.lazy(() => import('../components/modules/controller
 const FormResources = React.lazy(() => import('../pages/controller/form-resources/FormResources'))
 const ResourceStretcher = React.lazy(() => import('../pages/controller/form-resources/ResourceStretcher'))
 const ServiceCategory = React.lazy(() => import('../pages/controller/service-category/ServiceCategory'))
+const ServiceWorks = React.lazy(() => import('../pages/controller/service-works/ServiceWorks'))
+
+
 
 
 
@@ -55,11 +58,17 @@ const Controller = () => {
                     {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>
                         <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
 
+                        {/* Package */}
                         <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
                         <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
 
+                        {/* Category */}
                         <Route path='/app-config/service-categories' element={<PrivateRoute element={<ServiceCategory />} isAuthenticated={isAuthenticated} />} />
 
+                        {/* Service works */}
+                        <Route path='/app-config/service-works' element={<PrivateRoute element={<ServiceWorks />} isAuthenticated={isAuthenticated} />} />
+
+                        {/* Form Resources */}
                         <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
                         <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
                     </>}

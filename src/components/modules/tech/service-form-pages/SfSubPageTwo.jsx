@@ -3,7 +3,6 @@ import './sub-page-style.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { serviceFormSubPageRoute } from '../../../../assets/javascript/pre_data/service'
 import Select from '../../../UI_Primitives/inputs/Select'
-import InputText from '../../../UI_Primitives/inputs/InputText'
 import Radio from '../../../UI_Primitives/inputs/Radio'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Button from '../../../UI_Primitives/buttons/Button'
@@ -20,7 +19,7 @@ const SfSubPageTwo = ({ page, resources }) => {
     const [solutions, setSolutions] = useState([])
     const [form, setForm] = useState({ nature: null, reasons: [], solutions: [] })
 
-    const product = useMemo(() => {
+    const productInForm = useMemo(() => {
         const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
         return current || {}
     }, [serviceForm?.service_products]);
@@ -32,7 +31,8 @@ const SfSubPageTwo = ({ page, resources }) => {
         if (name === 'condition' && value === 'Good') {
             dispatch(sfActions.updateProduct({
                 inspection_report: {
-                    [name]: value || null
+                    [name]: value || null,
+                    tech_analyze: null
                 }
             }))
 
@@ -54,7 +54,7 @@ const SfSubPageTwo = ({ page, resources }) => {
         }
 
         const chosenNature = natures?.filter(n => n?.[0] === e.target.value)?.[0] || []
-       
+
         setReasons(chosenNature?.[1]?.map(r => ({ label: r, value: r })) || [])
         setSolutions(chosenNature?.[2]?.map(s => ({ label: s, value: s })) || [])
 
@@ -71,7 +71,7 @@ const SfSubPageTwo = ({ page, resources }) => {
             return;
         }
 
-        const existed = product?.inspection_report?.tech_analyze?.filter(t => t.nature === form?.nature)
+        const existed = productInForm?.inspection_report?.tech_analyze?.filter(t => t.nature === form?.nature)
         if (existed?.length) {
             dispatch(toast.push({
                 type: 'danger',
@@ -84,7 +84,7 @@ const SfSubPageTwo = ({ page, resources }) => {
         dispatch(sfActions.updateProduct({
             inspection_report: {
                 tech_analyze: [
-                    ...(product?.inspection_report?.tech_analyze || []),
+                    ...(productInForm?.inspection_report?.tech_analyze || []),
                     form
                 ]
             }
@@ -99,7 +99,7 @@ const SfSubPageTwo = ({ page, resources }) => {
     const handleDelete = (nature) => {
         dispatch(sfActions.updateProduct({
             inspection_report: {
-                tech_analyze: product?.inspection_report?.tech_analyze?.filter(t => t.nature !== nature)
+                tech_analyze: productInForm?.inspection_report?.tech_analyze?.filter(t => t.nature !== nature)
             }
         }))
     }
@@ -107,7 +107,7 @@ const SfSubPageTwo = ({ page, resources }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (product?.inspection_report?.condition === 'Bad' && !product?.inspection_report?.tech_analyze?.length) {
+        if (productInForm?.inspection_report?.condition === 'Bad' && !productInForm?.inspection_report?.tech_analyze?.length) {
             dispatch(toast.push({
                 type: 'danger',
                 head: 'Add at least one analyze'
@@ -142,18 +142,18 @@ const SfSubPageTwo = ({ page, resources }) => {
                     <h3 className='subtitle'>Product condition</h3>
                     <div className="box-col1">
                         <Radio label={"Ok, it's normal"} name={'condition'} radioValue={'Good'} onChange={updateProductCondition}
-                            checked={product?.inspection_report?.condition === 'Good'} />
+                            checked={productInForm?.inspection_report?.condition === 'Good'} />
                         <Radio label={"Not ok, Have a problem"} name={'condition'} radioValue={'Bad'} onChange={updateProductCondition}
-                            checked={product?.inspection_report?.condition === 'Bad'} />
+                            checked={productInForm?.inspection_report?.condition === 'Bad'} />
                     </div>
                 </div>
 
                 {/* Tech Analyze */}
-                {product?.inspection_report?.condition === 'Bad' &&
+                {productInForm?.inspection_report?.condition === 'Bad' &&
                     <div className="form-section">
                         <h3 className='subtitle'>Tech analyze</h3>
 
-                        {product?.inspection_report?.tech_analyze?.length > 0 &&
+                        {productInForm?.inspection_report?.tech_analyze?.length > 0 &&
                             <table className='nature-table'>
                                 <tbody>
                                     <tr>
@@ -162,7 +162,7 @@ const SfSubPageTwo = ({ page, resources }) => {
                                         <th>Solutions</th>
                                         <th></th>
                                     </tr>
-                                    {product?.inspection_report?.tech_analyze?.map((data, index) => (
+                                    {productInForm?.inspection_report?.tech_analyze?.map((data, index) => (
                                         <tr key={`${data?.nature}${index}`}>
                                             <td>{data?.nature}</td>
                                             <td>{data?.reasons?.join(', ')}</td>
@@ -172,7 +172,7 @@ const SfSubPageTwo = ({ page, resources }) => {
                                             </td>
                                         </tr>
                                     ))}
-
+                                    
                                 </tbody>
                             </table>}
 

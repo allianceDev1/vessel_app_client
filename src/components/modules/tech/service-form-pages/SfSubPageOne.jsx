@@ -16,6 +16,11 @@ const SfSubPageOne = ({ page, resources }) => {
     const [waterOdors, setWaterOdors] = useState([])
 
 
+    const productInForm = useMemo(() => {
+        const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
+        return current || {}
+    }, [serviceForm?.service_products]);
+
     const handleAdditionalTankStatus = (e) => {
         dispatch(sfSetting.update({
             storageTankAvailable: !serviceFormSettings?.storageTankAvailable
@@ -36,7 +41,7 @@ const SfSubPageOne = ({ page, resources }) => {
         dispatch(sfActions.updateProduct({
             current_condition: {
                 [subKey]: {
-                    ...(product?.current_condition?.[subKey] || {}),
+                    ...(productInForm?.current_condition?.[subKey] || {}),
                     [name]: value || null
                 }
             }
@@ -48,11 +53,6 @@ const SfSubPageOne = ({ page, resources }) => {
 
         dispatch(sfSetting.setActiveSubPage(201))
     }
-
-    const product = useMemo(() => {
-        const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
-        return current || {}
-    }, [serviceForm?.service_products]);
 
     useEffect(() => {
         let colorOptions = resources?.filter(r => r.title === 'water_color_variants')?.[0]?.values || []
@@ -81,21 +81,21 @@ const SfSubPageOne = ({ page, resources }) => {
                 <div className="form-section direct-water-section">
                     <h3 className='subtitle'>Direct Water</h3>
                     <div className="box-col2">
-                        <Select label={'Color'} id={'dw_color'} name={'color'} required value={product?.current_condition?.direct_water?.color}
+                        <Select label={'Color'} id={'dw_color'} name={'color'} required value={productInForm?.current_condition?.direct_water?.color}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} options={[{}, ...waterColors]} />
-                        <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={product?.current_condition?.direct_water?.odor}
+                        <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={productInForm?.current_condition?.direct_water?.odor}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} options={[{}, ...waterOdors]} />
-                        <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={product?.current_condition?.direct_water?.i_ferrous}
+                        <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={productInForm?.current_condition?.direct_water?.i_ferrous}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={product?.current_condition?.direct_water?.i_ferric}
+                        <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={productInForm?.current_condition?.direct_water?.i_ferric}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={product?.current_condition?.direct_water?.ph}
+                        <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={productInForm?.current_condition?.direct_water?.ph}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={product?.current_condition?.direct_water?.tds}
+                        <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={productInForm?.current_condition?.direct_water?.tds}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={product?.current_condition?.direct_water?.flow}
+                        <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={productInForm?.current_condition?.direct_water?.flow}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={product?.current_condition?.direct_water?.contaminants}
+                        <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={productInForm?.current_condition?.direct_water?.contaminants}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} />
                     </div>
                 </div>
@@ -104,21 +104,21 @@ const SfSubPageOne = ({ page, resources }) => {
                 <div className="form-section filtered-water-section">
                     <h3 className='subtitle'>Filtered Water</h3>
                     <div className="box-col2">
-                        <Select label={'Color'} id={'dw_color'} name={'color'} required value={product?.current_condition?.filtered_water?.color}
+                        <Select label={'Color'} id={'dw_color'} name={'color'} required value={productInForm?.current_condition?.filtered_water?.color}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} options={[{}, ...waterColors]} />
-                        <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={product?.current_condition?.filtered_water?.odor}
+                        <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={productInForm?.current_condition?.filtered_water?.odor}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} options={[{}, ...waterOdors]} />
-                        <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={product?.current_condition?.filtered_water?.i_ferrous}
+                        <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={productInForm?.current_condition?.filtered_water?.i_ferrous}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={product?.current_condition?.filtered_water?.i_ferric}
+                        <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={productInForm?.current_condition?.filtered_water?.i_ferric}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={product?.current_condition?.filtered_water?.ph}
+                        <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={productInForm?.current_condition?.filtered_water?.ph}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={product?.current_condition?.filtered_water?.tds}
+                        <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={productInForm?.current_condition?.filtered_water?.tds}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={product?.current_condition?.filtered_water?.flow}
+                        <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={productInForm?.current_condition?.filtered_water?.flow}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} type='number' step={0.1} min={0} />
-                        <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={product?.current_condition?.filtered_water?.contaminants}
+                        <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={productInForm?.current_condition?.filtered_water?.contaminants}
                             onChange={(e) => updateCurrentCondition(e, 'filtered_water')} />
                     </div>
                 </div>
@@ -134,21 +134,21 @@ const SfSubPageOne = ({ page, resources }) => {
                     <div className="form-section storage-tank-water-section">
                         <h3 className='subtitle'>Storage Tank Water</h3>
                         <div className="box-col2">
-                            <Select label={'Color'} id={'dw_color'} name={'color'} required value={product?.current_condition?.storage_tank?.color}
+                            <Select label={'Color'} id={'dw_color'} name={'color'} required value={productInForm?.current_condition?.storage_tank?.color}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} options={[{}, ...waterColors]} />
-                            <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={product?.current_condition?.storage_tank?.odor}
+                            <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={productInForm?.current_condition?.storage_tank?.odor}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} options={[{}, ...waterOdors]} />
-                            <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={product?.current_condition?.storage_tank?.i_ferrous}
+                            <InputText label={'Iron ferrous'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={productInForm?.current_condition?.storage_tank?.i_ferrous}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} type='number' step={0.1} min={0} />
-                            <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={product?.current_condition?.storage_tank?.i_ferric}
+                            <InputText label={'Iron ferric'} id={'dw_i_ferric'} name={'i_ferric'} required value={productInForm?.current_condition?.storage_tank?.i_ferric}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} type='number' step={0.1} min={0} />
-                            <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={product?.current_condition?.storage_tank?.ph}
+                            <InputText label={'PH'} id={'dw_ph'} name={'ph'} required value={productInForm?.current_condition?.storage_tank?.ph}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} type='number' step={0.1} min={0} />
-                            <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={product?.current_condition?.storage_tank?.tds}
+                            <InputText label={'TDS'} id={'dw_tds'} name={'tds'} required value={productInForm?.current_condition?.storage_tank?.tds}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} type='number' step={0.1} min={0} />
-                            <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={product?.current_condition?.storage_tank?.flow}
+                            <InputText label={'Flow'} id={'dw_flow'} name={'flow'} required value={productInForm?.current_condition?.storage_tank?.flow}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} type='number' step={0.1} min={0} />
-                            <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={product?.current_condition?.storage_tank?.contaminants}
+                            <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={productInForm?.current_condition?.storage_tank?.contaminants}
                                 onChange={(e) => updateCurrentCondition(e, 'storage_tank')} />
                         </div>
                     </div>}

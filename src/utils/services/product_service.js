@@ -1,4 +1,7 @@
-import { normalizeDate } from "../helpers/date-helpers";
+import { packageExpireTypes } from "../../assets/javascript/pre_data/package.js";
+import { normalizeDate } from "../helpers/date-helpers.js";
+import { TbDropletCog, TbDropletHeart, TbDropletStar } from "react-icons/tb";
+
 
 export const buildCustomerPGStretcher = (products = []) => {
     const vessels = products.filter(p => p.product_type === 'Vessel');
@@ -62,4 +65,73 @@ export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) =
 
     return null;
 
+}
+
+export const setupAvailableServiceCategories = (categories, product) => {
+    const arrangedCategories = categories?.map((c) => {
+
+        let is_disable = false, disable_reason = null, icon = null;
+
+        const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
+        const categoryServiceLimit = c?.service_limit || 0;
+        const tokenBaseProduct = product?.package?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS)
+        const remainingTokens = tokenBaseProduct ? (product?.package?.remaining_tokens || 0) : 0;
+
+
+        switch (c?.mode) {
+            case 'COMPLAINT':
+                icon = <TbDropletCog />
+                if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
+                    is_disable = true
+                    disable_reason = 'The service limit reached'
+                } else if (tokenBaseProduct && !remainingTokens) {
+                    is_disable = true
+                    disable_reason = 'No remaining tokens'
+                }
+
+
+                break;
+
+            case 'SERVICE':
+                icon = <TbDropletHeart />
+                if (!['SERVICE', 'RENEWAL']?.includes(upcomingServiceType)) {
+                    is_disable = true
+                    disable_reason = 'This time not service time'
+                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_services) {
+                    is_disable = true
+                    disable_reason = 'The service limit reached'
+                } else if (tokenBaseProduct && !remainingTokens) {
+                    is_disable = true
+                    disable_reason = 'No remaining tokens'
+                }
+
+                break;
+
+            case 'RENEWAL':
+                icon = <TbDropletStar />
+                if (!c?.target_package?.package_id) {
+                    is_disable = true
+                    disable_reason = 'The renewal target package is not active'
+                } else if (upcomingServiceType !== 'RENEWAL') {
+                    is_disable = true
+                    disable_reason = 'This time not renewal time'
+                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_renewals) {
+                    is_disable = true
+                    disable_reason = 'The service limit reached'
+                } else if (tokenBaseProduct && !remainingTokens) {
+                    is_disable = true
+                    disable_reason = 'No remaining tokens'
+                }
+
+                break;
+
+            default:
+                break;
+        }
+
+        return { ...c, icon, is_disable, disable_reason }
+    })
+
+    console.log(arrangedCategories)
+    return arrangedCategories
 }

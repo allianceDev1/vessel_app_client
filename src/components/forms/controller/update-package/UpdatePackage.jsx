@@ -9,6 +9,7 @@ import { validateUpdatePackageForm } from '../../../../utils/validators/package_
 import { api } from '../../../../api'
 import { useDispatch } from 'react-redux'
 import { toast, modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
 
 
 const UpdatePackage = ({ data, setData }) => {
@@ -20,7 +21,7 @@ const UpdatePackage = ({ data, setData }) => {
     color_code: data?.color_code || '',
     package_duration_months: data?.package_duration_months || 0,
     number_of_services: data?.number_of_services || 0,
-    work_limit: data?.work_limit || 0,
+    tokens_count: data?.tokens_count || 0,
     expire_types: data?.expire_types || [],
     et_query_operator: data?.et_query_operator || null,
     package_fund: String(data?.package_fund ?? 0),
@@ -33,8 +34,8 @@ const UpdatePackage = ({ data, setData }) => {
 
 
   const expireTypeList = [
-    { label: 'Package duration', value: 'package_duration_months' },
-    { label: 'Work limit', value: 'work_limit' },
+    { label: 'Package duration', value: packageExpireTypes?.PACKAGE_DURATION },
+    { label: 'Remaining tokens', value: packageExpireTypes?.REMAINING_TOKENS },
   ]
 
   const etQueryOpretors = [
@@ -77,7 +78,7 @@ const UpdatePackage = ({ data, setData }) => {
         color_code: form?.color_code || '',
         package_duration_months: Number(form?.package_duration_months) || 0,
         number_of_services: Number(form?.number_of_services) || 0,
-        work_limit: Number(form?.work_limit) || 0,
+        tokens_count: Number(form?.tokens_count) || 0,
         expire_types: form?.expire_types || [],
         et_query_operator: form?.et_query_operator || null,
         package_fund: form?.package_fund || 0,
@@ -112,8 +113,8 @@ const UpdatePackage = ({ data, setData }) => {
             onChange={handleChangeForm} required min={1} max={600} error={vErr.package_duration_months} helperText={'Valid 1 to 600 numbers'} />
           <InputText label={'SR in Duration'} type='number' name='number_of_services' value={(form.number_of_services).toString()}
             onChange={handleChangeForm} required min={0} error={vErr.number_of_services} helperText={'Service count includes both Service mode and Renewal mode.'} />
-          <InputText label={'Work limit (Total work in package)'} type='number' name='work_limit' value={(form.work_limit).toString()}
-            onChange={handleChangeForm} required min={0} error={vErr.work_limit} helperText={'Every modes count as a work.'} />
+          <InputText label={'Tokens count (Total tokens for service work)'} type='number' name='tokens_count' value={(form.tokens_count).toString()}
+            onChange={handleChangeForm} required min={0} error={vErr.tokens_count} helperText={'Every modes count as a work.'} />
           <MultiSelectInput label={'Package expire types'} name={'expire_types'} options={expireTypeList} onChange={handleChangeMultiSelect}
             selected={expireTypeList.filter(item => form.expire_types.includes(item.value))} error={vErr.expire_types} />
           <Select label={'Expire types action'} name={'et_query_operator'} options={[{ label: '', value: '' }, ...etQueryOpretors]}

@@ -5,3 +5,7 @@ export const reg_priority = [
     ['Urgent', 'warning'],
     ['High', 'danger']
 ]
+export const packageExpireTypes = {
+    PACKAGE_DURATION: 'package_duration_months',
+    REMAINING_TOKENS: 'remaining_tokens'
+}

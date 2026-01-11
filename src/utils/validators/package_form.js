@@ -23,8 +23,8 @@ export const validateUpdatePackageForm = (form) => {
     }
 
     // work limit (0 allowed, -1 not allowed)
-    if (Number(form.work_limit) < 0) {
-        errors.work_limit = "Invalid work limit value"
+    if (Number(form.tokens_count) < 0) {
+        errors.tokens_count = "Invalid tokens value"
     }
 
     // if more than one expire type => query operator required

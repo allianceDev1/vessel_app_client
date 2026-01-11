@@ -162,8 +162,8 @@ const ViewServicePackage = () => {
                         <p>Duration</p>
                     </div>
                     <div className="sub-item">
-                        <h4>{packageInfo?.work_limit ? `${packageInfo?.work_limit}` : 'Nil'}</h4>
-                        <p>Work limit</p>
+                        <h4>{packageInfo?.tokens_count ? `${packageInfo?.tokens_count}` : 'Nil'}</h4>
+                        <p>Tokens</p>
                     </div>
                     <div className="sub-item">
                         <h4>{packageInfo?.number_of_services ? `${packageInfo?.number_of_services}` : '0'}</h4>

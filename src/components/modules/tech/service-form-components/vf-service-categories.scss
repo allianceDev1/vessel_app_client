@@ -1,0 +1,55 @@
+.sf-sub-vf-service-categories {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    .category-border {
+        background-color: var(--color-natural-trans-53);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 15px 10px;
+        display: grid;
+        grid-template-columns: 60px auto;
+        align-items: center;
+        gap: 15px;
+        height: 80px;
+        min-height: fit-content;
+        max-width: auto;
+        cursor: pointer;
+
+        .icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+        }
+
+        .content {
+            h3 {
+                font-size: 18px;
+                font-weight: 500;
+            }
+
+            p {
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--text-secondary-2);
+                margin-top: 7px;
+            }
+        }
+    }
+
+    .disable-category {
+        background-color: var(--color-natural-trans-53);
+        border-color:var(--border-light);
+        backdrop-filter: blur(10px);
+        color: var(--text-secondary-4);
+        cursor: not-allowed;
+
+        .content {
+            p {
+                color: var(--color-danger-text);
+            }
+        }
+    }
+}

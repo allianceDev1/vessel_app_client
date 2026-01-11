@@ -96,8 +96,8 @@ const ServicePackages = () => {
                                 <p>Duration</p>
                             </div>
                             <div className="box">
-                                <h3>{p?.work_limit ? `${p?.work_limit}` : 'Nil'}</h3>
-                                <p>Work limit</p>
+                                <h3>{p?.tokens_count ? `${p?.tokens_count}` : 'Nil'}</h3>
+                                <p>Tokens</p>
                             </div>
                         </div>
                         <div className={`status-fold ${p.is_active ? 'active' : 'inactive'}`}>

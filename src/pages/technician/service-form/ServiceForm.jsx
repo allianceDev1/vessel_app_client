@@ -20,12 +20,13 @@ const ServiceForm = () => {
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('preparation')
     const [customerProducts, setCustomerProducts] = useState([])
-    const [custPG, setCustPG] = useState({})
-    const [productPackages, SetProductPackages] = useState([])
+    const [customer, setCustomer] = useState({})
+    const [regData, setRegData] = useState({})
     const [productEligibility, setProductEligibility] = useState([])
     const [availableProducts, setAvailableProducts] = useState([])
     const [availablePackages, setAvailablePackages] = useState([])
     const [resources, setResources] = useState([])
+    const [serviceCategories, setServiceCategories] = useState([])
     const [error, setError] = useState({ error: false, title: '', message: '' })
 
 
@@ -35,26 +36,31 @@ const ServiceForm = () => {
             setLoading('preparation')
 
             const apis = [
-                api.vfTv2Axios.get(`/customer/${serviceForm?.customer_id}/product-group/products`),
-                api.vfTv2Axios.get(`/customer/${serviceForm?.customer_id}/product-group/packages`),
-                api.vfTv2Axios.get('/service/form-resources?titles=water_color_variants,water_odor_variants,service_analyze_natures')
+                api.vfTv2Axios.get(`/service/service-form/resources`),
+                api.vfTv2Axios.get(`/service/service-form/init?customer_id=${serviceForm?.customer_id}&registration_id=${serviceForm?.registration_id}`),
             ]
 
-            // Customer products
-            const [resCusProducts, resCusPackages, resResources] = await Promise.all(apis);
-            const { vessels, add_ons, customer_id, ...restPG } = resCusProducts;
-            const ownProducts = [...(vessels || []), ...(add_ons || [])]
-            setCustomerProducts(ownProducts)
+            const [resResources, resInit,] = await Promise.all(apis);
+
+            // Form Resources
+            setResources(resResources?.form_resources || [])
+
+            // Customer products and packages
+            const customerOwnProducts = [...(resInit?.products?.vessels || []), ...(resInit?.products?.add_ons || [])]
+            setCustomerProducts(customerOwnProducts)
 
             // Product Group
-            const pgStretcher = buildCustomerPGStretcher(ownProducts)
-            setCustPG({ ...restPG, productStretcher: pgStretcher })
+            const pgStretcher = buildCustomerPGStretcher(customerOwnProducts)
+            setCustomer({ ...resInit?.customer, productStretcher: pgStretcher })
 
-            // Customer package
-            SetProductPackages(resCusPackages)
+            // Service Categories
+            setServiceCategories(resInit?.service_categories || [])
 
-            // Resources
-            setResources(resResources)
+            // Registration form
+            setRegData(resInit?.registration || {})
+
+
+
 
 
         } catch (error) {
@@ -108,16 +114,17 @@ const ServiceForm = () => {
             <div className="service-form-page-container">
                 {/* Pages */}
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
-                    <SfPageOne page={{ index: 100, type: 'page' }} custPG={custPG} customerProducts={customerProducts}
-                        customerPackages={productPackages} />}
+                    <SfPageOne page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
+                    />}
 
-                {/* Sub Pages */}
+                {/* Vessel : Sub Pages  */}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 &&
                     <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 &&
                     <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 &&
-                    <SfSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} />}
+                    <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
+                        customerProducts={customerProducts} regData={regData} />}
             </div>
         </div>
     )

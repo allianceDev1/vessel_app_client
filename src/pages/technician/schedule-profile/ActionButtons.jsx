@@ -85,7 +85,7 @@ const ActionButtons = ({ regData, setRegData }) => {
             }
 
             const work = await api.vfTv2Axios.get(`/registered-service/${regData?.registration_id}/${regData?.last_visit?.visit_id}/retrieve-start-work`)
-            dispatch(sfActions.startWork(work))
+            dispatch(sfActions.startWork(work));
             navigate('/tech/service/attend-work')
 
         } catch (error) {

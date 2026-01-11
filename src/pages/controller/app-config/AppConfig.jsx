@@ -62,8 +62,8 @@ const AppConfig = () => {
                             </div>
                         </div>
                         <div className="list-item">
-                            <div className="l">
-                                <h4>Service Solutions</h4>
+                            <div className="l" onClick={() => navigate('/controller/app-config/service-works')}>
+                                <h4>Service Works</h4>
                                 <p className='description'>Configure the actions carried out as part of a service.</p>
                             </div>
                             <div className="r">
