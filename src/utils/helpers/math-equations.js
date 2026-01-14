@@ -18,3 +18,136 @@ export const calculatePercentage = (partValue, totalValue, decimals = 2) => {
     // Round to specified decimal places
     return Number(percentage.toFixed(decimals));
 };
+
+
+/**
+ * Calculate tax amount based on tax type
+ * @param {number} baseAmount
+ * @param {number} taxRate - percentage (e.g. 18 for 18%)
+ * @param {string} taxType
+ * @returns {{
+ *   totalTax: number,
+ *   breakup: Record<string, number>,
+ *   totalAmount: number
+ * }}
+ */
+
+export const calculateTaxAmount = (baseAmount = 0, taxRate = 0, taxType = '') => {
+
+    const amount = Number(baseAmount) || 0;
+    const rate = Number(taxRate) || 0;
+    const type = taxType.toUpperCase();
+
+    const percentValue = (amount * rate) / 100;
+    const round = (value) => Number(value.toFixed(2));
+
+    const result = {
+        total_tax: 0,
+        breakup: {}
+    };
+
+    switch (type) {
+        case 'CGST_SGST': {
+            const half = percentValue / 2;
+            result.breakup = {
+                CGST: round(half),
+                SGST: round(half)
+            };
+            result.total_tax = round(percentValue);
+            break;
+        }
+
+        case 'CGST': {
+            result.breakup = { CGST: round(percentValue) };
+            result.total_tax = round(percentValue);
+            break;
+        }
+
+        case 'SGST': {
+            result.breakup = { SGST: round(percentValue) };
+            result.total_tax = round(percentValue);
+            break;
+        }
+
+        case 'IGST': {
+            result.breakup = { IGST: round(percentValue) };
+            result.total_tax = round(percentValue);
+            break;
+        }
+
+        case 'VAT': {
+            result.breakup = { VAT: round(percentValue) };
+            result.total_tax = round(percentValue);
+            break;
+        }
+
+        default:
+            return result;
+    }
+
+    return result;
+}
+
+
+/**
+ * Convert any input into a safe decimal number
+ * @param {any} value
+ * @param {object} options
+ * @param {number} options.precision - decimal places (default: 2)
+ * @param {number} options.fallback - value returned if conversion fails
+ * @param {boolean} options.allowNegative
+ * @returns {number}
+ */
+export const toDecimal = (
+    value,
+    {
+        precision = 2,
+        fallback = 0,
+        allowNegative = true
+    } = {}
+) => {
+    if (value === null || value === undefined) return fallback;
+
+    // Convert to string & clean
+    let cleaned = String(value)
+        .trim()
+        .replace(/,/g, '')               // remove commas
+        .replace(/[^\d.-]/g, '');        // remove currency & text
+
+    if (!cleaned || cleaned === '-' || cleaned === '.') {
+        return fallback;
+    }
+
+    let number = Number(cleaned);
+
+    // Handle NaN & Infinity
+    if (!Number.isFinite(number)) {
+        return fallback;
+    }
+
+    // Negative handling
+    if (!allowNegative && number < 0) {
+        return fallback;
+    }
+
+    // Fix floating precision issue
+    const factor = 10 ** precision;
+    return Math.round((number + Number.EPSILON) * factor) / factor;
+};
+
+export const normalizeMoney = (value, options) => {
+    if (value == null) return toDecimal(0, options);
+
+    // Case 1: Real Decimal128 (non-lean)
+    if (value._bsontype === 'Decimal128') {
+        return toDecimal(value.toString(), options);
+    }
+
+    // Case 2: Lean / Aggregate Decimal128 (Extended JSON)
+    if (typeof value === 'object' && '$numberDecimal' in value) {
+        return toDecimal(value.$numberDecimal, options);
+    }
+
+    // Case 3: number or string
+    return toDecimal(value, options);
+};

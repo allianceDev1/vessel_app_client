@@ -1,0 +1,122 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.vf-components-list-comp-container {
+    position: relative;
+
+    .components-list-border {
+
+        .title {
+            margin: 15px 0;
+
+            h3 {
+                @include subTitleSmall();
+            }
+        }
+
+        .components-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 100px;
+
+            .item {
+                background-color: var(--color-natural-2);
+                border: 1px solid var(--color-natural-2);
+                border-radius: 15px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 10px;
+
+                .item-content {
+                    text-align: center;
+
+                    .id {
+                        font-size: 13px;
+                        color: var(--text-secondary-2);
+                        margin-bottom: 5px;
+                    }
+
+                    h4 {
+                        font-size: 15px;
+                        font-weight: 500;
+                        @include threeDots(2);
+                        margin-bottom: 10px;
+                    }
+
+                    .price {
+                        display: flex;
+                        gap: 10px;
+                        justify-content: center;
+
+                        p {
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+
+                        .hash-price {
+                            color: var(--text-secondary-2);
+                            font-weight: 400;
+                            text-decoration: line-through;
+                        }
+
+
+                    }
+
+                }
+
+                .dual-buttons {
+                    display: flex;
+                    gap: 10px;
+                    justify-content: center;
+                    align-items: center;
+
+                    p {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+                }
+
+                .single-button {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                &.select-box {
+                    border: 1px solid var(--color-natural-8);
+
+                }
+
+            }
+
+            .blue-box {
+                background-color: var(--color-info-trans-33);
+
+                &.select-box {
+                    border: 1px solid var(--color-info-text);
+
+                }
+            }
+        }
+    }
+
+    .fixed-section {
+        position: fixed;
+        width: 100%;
+        bottom: 55px;
+        left: 0;
+        padding: 5px 0;
+        display: flex;
+        justify-content: center;
+        background-color: var(--background);
+        z-index: 5;
+
+        .submit-button {
+            max-width: 500px;
+            width: 500px;
+            padding: 0 10px;
+        }
+    }
+
+}

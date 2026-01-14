@@ -22,9 +22,11 @@ const ServiceForm = () => {
     const [customerProducts, setCustomerProducts] = useState([])
     const [customer, setCustomer] = useState({})
     const [regData, setRegData] = useState({})
-    const [productEligibility, setProductEligibility] = useState([])
-    const [availableProducts, setAvailableProducts] = useState([])
-    const [availablePackages, setAvailablePackages] = useState([])
+    const [vesselsEligibilities, setVesselsEligibilities] = useState([])
+    const [materialsList, setMaterialsList] = useState([])
+    const [bagList, setBagList] = useState([])
+    const [spareList, setSpareList] = useState([])
+    const [vesselServiceList, setVesselServiceList] = useState([])
     const [resources, setResources] = useState([])
     const [serviceCategories, setServiceCategories] = useState([])
     const [error, setError] = useState({ error: false, title: '', message: '' })
@@ -36,7 +38,7 @@ const ServiceForm = () => {
             setLoading('preparation')
 
             const apis = [
-                api.vfTv2Axios.get(`/service/service-form/resources`),
+                api.vfTv2Axios.get(`/service/service-form/resources?customer_id=${serviceForm?.customer_id}`),
                 api.vfTv2Axios.get(`/service/service-form/init?customer_id=${serviceForm?.customer_id}&registration_id=${serviceForm?.registration_id}`),
             ]
 
@@ -44,6 +46,10 @@ const ServiceForm = () => {
 
             // Form Resources
             setResources(resResources?.form_resources || [])
+            setMaterialsList(resResources?.materials || [])
+            setBagList(resResources?.bags || [])
+            setSpareList(resResources?.spares || [])
+            setVesselServiceList(resResources?.vessel_services || [])
 
             // Customer products and packages
             const customerOwnProducts = [...(resInit?.products?.vessels || []), ...(resInit?.products?.add_ons || [])]
@@ -52,6 +58,9 @@ const ServiceForm = () => {
             // Product Group
             const pgStretcher = buildCustomerPGStretcher(customerOwnProducts)
             setCustomer({ ...resInit?.customer, productStretcher: pgStretcher })
+
+            // Vessel eligibility
+            setVesselsEligibilities(resInit?.products?.vessel_eligibility || [])
 
             // Service Categories
             setServiceCategories(resInit?.service_categories || [])
@@ -124,7 +133,9 @@ const ServiceForm = () => {
                     <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 &&
                     <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
-                        customerProducts={customerProducts} regData={regData} />}
+                        customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
+                        materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
+                    />}
             </div>
         </div>
     )

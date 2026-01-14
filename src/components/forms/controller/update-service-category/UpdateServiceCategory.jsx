@@ -97,7 +97,8 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
             return;
         }
 
-        if (form?.service_charges?.map((c) => c.charge_amount).includes(serviceCharge?.charge_amount)) {
+
+        if (form?.service_charges?.map((c) => c.charge_amount).includes(Number(serviceCharge?.charge_amount))) {
             dispatch(toast.push({
                 type: 'danger',
                 message: 'The service charge existed.'

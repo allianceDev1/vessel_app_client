@@ -1,32 +1,77 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './vf-service-categories.scss'
-import { useDispatch, useSelector } from 'react-redux'
-import { serviceFormSubPageRoute } from '../../../../assets/javascript/pre_data/service'
-import Select from '../../../UI_Primitives/inputs/Select'
-import Radio from '../../../UI_Primitives/inputs/Radio'
+import { useDispatch } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import Button from '../../../UI_Primitives/buttons/Button'
-import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
-import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { TbPlayerSkipForwardFilled, TbTrash } from 'react-icons/tb'
+import { TbPlayerSkipForwardFilled } from 'react-icons/tb'
 import { setupAvailableServiceCategories } from '../../../../utils/services/product_service'
+import { calculateTaxAmount, toDecimal } from '../../../../utils/helpers/math-equations'
 
 
 
-const VfServiceCategories = ({ categories, product }) => {
+const VfServiceCategories = ({ categories, product, productEligibility, regData }) => {
     const dispatch = useDispatch();
-    const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
-    const orderId = serviceFormSettings?.activeProduct?.[1] || null
-    const [natures, setNatures] = useState([])
-    const [reasons, setReasons] = useState([])
-    const [solutions, setSolutions] = useState([])
-    const [form, setForm] = useState({ nature: null, reasons: [], solutions: [] })
     const [serviceCategories, setServiceCategories] = useState([])
 
+    const skipPage = () => {
+        dispatch(sfSetting.setActiveSubPage(203))
+    }
+
+    const selectCategory = (category) => {
+        if (category?.is_disable) {
+            return;
+        }
+
+        const updateData = {
+            service_data: {
+                service_id: category?.service_id || null,
+                category_id: category?.category_id,
+                mode: category?.mode
+            }
+        }
+
+        // service charge
+        if (category?.service_charges?.length) {
+            updateData.service_data.service_charge = {
+                estimate: category?.service_charges?.[0]?.charge_amount || 0,
+                applied: category?.service_charge_applied ? category?.service_charges?.[0]?.charge_amount : 0,
+                call: category?.service_charges?.[0]?.call_count || 0,
+                remark: null
+            }
+        }
+
+        // Renewal
+        if (category?.mode === 'RENEWAL') {
+            let baseRate = 0, tax = 0, totalRate = 0;
+
+            // this can renewal apply without any package charge
+            if (category?.package_charge_applied) {
+                baseRate = category?.target_package?.pricing_config?.base_price;
+                const taxRate = category?.target_package?.pricing_config?.gst?.rate || 0
+                const taxType = category?.target_package?.pricing_config?.gst?.type || null
+                tax = taxRate ? calculateTaxAmount(baseRate, taxRate, taxType) : 0
+                totalRate = toDecimal(baseRate + (tax?.total_tax || 0), { precision: 2 })
+            }
+
+            updateData.service_data.renewed_package = {
+                is_renewed: true,
+                package_id: category?.target_package?.package_id,
+                package_name: category?.target_package?.name,
+                price: {
+                    base_rate: baseRate,
+                    tax,
+                    total_rate: totalRate
+                }
+            }
+
+            // The package fund_distribution not handled, currently not allow th distribution. 
+        }
+
+        dispatch(sfActions.updateProduct(updateData))
+    }
 
     useEffect(() => {
         let list = []
-        
+
         const packageId = product?.package?.package_id || null
 
         if (packageId) {
@@ -34,16 +79,16 @@ const VfServiceCategories = ({ categories, product }) => {
         } else {
             list = categories?.filter(c => !c?.package_id)?.sort((a, b) => a.mode - b.mode)
         }
-        console.log(product,'a')
-        list = setupAvailableServiceCategories(list, product)
-      
+
+        list = setupAvailableServiceCategories(list, product, productEligibility, regData)
+
         setServiceCategories(list)
 
     }, [product])
 
     return (
         <div className="sf-sub-vf-service-categories">
-            <div className="category-border">
+            <div className="category-border" onClick={skipPage}>
                 <div className="icon">
                     <TbPlayerSkipForwardFilled />
                 </div>
@@ -53,7 +98,8 @@ const VfServiceCategories = ({ categories, product }) => {
                 </div>
             </div>
             {serviceCategories?.map((c, index) => {
-                return <div className={`category-border ${c?.is_disable ? 'disable-category' : ''}`} key={c?.service_name + index}>
+                return <div className={`category-border ${c?.is_disable ? 'disable-category' : ''}`} key={c?.service_name + index}
+                    onClick={() => selectCategory(c)}>
                     <div className="icon">
                         {c?.icon}
                     </div>

@@ -67,60 +67,58 @@ export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) =
 
 }
 
-export const setupAvailableServiceCategories = (categories, product) => {
+export const setupAvailableServiceCategories = (categories, product, productEligibility, regData) => {
     const arrangedCategories = categories?.map((c) => {
 
         let is_disable = false, disable_reason = null, icon = null;
 
-        const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
         const categoryServiceLimit = c?.service_limit || 0;
-        const tokenBaseProduct = product?.package?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS)
-        const remainingTokens = tokenBaseProduct ? (product?.package?.remaining_tokens || 0) : 0;
-
 
         switch (c?.mode) {
             case 'COMPLAINT':
                 icon = <TbDropletCog />
-                if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
+
+                if (!productEligibility?.complaint) {
+                    is_disable = true
+                    disable_reason = productEligibility?.complaint_note
+                } else if (regData?.service_type !== 'COMPLAINT') {
+                    is_disable = true
+                    disable_reason = "It is not complaint registration."
+                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
-                } else if (tokenBaseProduct && !remainingTokens) {
-                    is_disable = true
-                    disable_reason = 'No remaining tokens'
                 }
-
 
                 break;
 
             case 'SERVICE':
                 icon = <TbDropletHeart />
-                if (!['SERVICE', 'RENEWAL']?.includes(upcomingServiceType)) {
+
+                if (!productEligibility?.service) {
                     is_disable = true
-                    disable_reason = 'This time not service time'
+                    disable_reason = productEligibility?.service_note
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_services) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
-                } else if (tokenBaseProduct && !remainingTokens) {
-                    is_disable = true
-                    disable_reason = 'No remaining tokens'
                 }
 
                 break;
 
             case 'RENEWAL':
                 icon = <TbDropletStar />
-                if (!c?.target_package?.package_id) {
+
+                if (!productEligibility?.renewal) {
+                    is_disable = true
+                    disable_reason = productEligibility?.renewal_note
+                } else if (!productEligibility?.ssp_renewal && c?.category_id === 'ssp_renewal') {
+                    is_disable = true
+                    disable_reason = productEligibility?.ssp_renewal_note
+                } else if (!c?.target_package?.package_id) {
                     is_disable = true
                     disable_reason = 'The renewal target package is not active'
-                } else if (upcomingServiceType !== 'RENEWAL') {
-                    is_disable = true
-                    disable_reason = 'This time not renewal time'
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_renewals) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
-                } else if (tokenBaseProduct && !remainingTokens) {
-                    is_disable = true
-                    disable_reason = 'No remaining tokens'
                 }
 
                 break;
@@ -132,6 +130,5 @@ export const setupAvailableServiceCategories = (categories, product) => {
         return { ...c, icon, is_disable, disable_reason }
     })
 
-    console.log(arrangedCategories)
     return arrangedCategories
 }
