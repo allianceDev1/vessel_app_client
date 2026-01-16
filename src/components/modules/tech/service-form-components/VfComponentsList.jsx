@@ -7,7 +7,7 @@ import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 
-const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, productInForm }) => {
+const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, productInForm, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState('')
     const [data, setData] = useState([])
@@ -49,6 +49,8 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
             ];
         }
 
+        changeSubmitStatus(false)
+
         dispatch(sfActions.updateProduct({
             work: {
                 ...productInForm?.work,
@@ -75,6 +77,8 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
             //  Remove item if qty becomes 0
             .filter((comp) => comp.qty > 0);
 
+        changeSubmitStatus(false)
+
         dispatch(
             sfActions.updateProduct({
                 work: {
@@ -87,6 +91,8 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
 
     const removeSpare = (item) => {
         if (!item?.is_customer_product || item?.is_removed || item?.qty) return;
+
+        changeSubmitStatus(false)
 
         dispatch(sfActions.updateProduct({
             work: {
@@ -103,6 +109,7 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
     }
 
     const undoRemove = (item) => {
+        changeSubmitStatus(false)
         dispatch(sfActions.updateProduct({
             work: {
                 ...productInForm?.work,

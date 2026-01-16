@@ -8,7 +8,7 @@ import { calculateTaxAmount, toDecimal } from '../../../../utils/helpers/math-eq
 
 
 
-const VfServiceCategories = ({ categories, product, productEligibility, regData }) => {
+const VfServiceCategories = ({ categories, product, productEligibility, regData, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const [serviceCategories, setServiceCategories] = useState([])
 
@@ -66,6 +66,8 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData 
             // The package fund_distribution not handled, currently not allow th distribution. 
         }
 
+        changeSubmitStatus(false)
+
         dispatch(sfActions.updateProduct(updateData))
     }
 
@@ -83,7 +85,7 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData 
         list = setupAvailableServiceCategories(list, product, productEligibility, regData)
 
         setServiceCategories(list)
-
+        // eslint-disable-next-line
     }, [product])
 
     return (

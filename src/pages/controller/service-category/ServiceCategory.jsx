@@ -29,7 +29,7 @@ const ServiceCategory = () => {
         try {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
-            const fields = 'service_name,service_charges,package_charge_applied,target_package,spare_policies,service_charge_applied,extra_charge_applied,is_active,package_product_only'
+            const fields = 'service_name,service_charges,package_charge_applied,target_package,spare_policies,service_policy,service_charge_applied,is_active,package_product_only'
             const res = await api.vfCv2Axios.get(`/config/service-categories/list?hidden=Yes&fields=${fields}`)
             setData(res)
         } catch (error) {
@@ -123,6 +123,17 @@ const ServiceCategory = () => {
                                 </div>
                                 <div className="list-item">
                                     <div className={`part part-one`}>
+                                        <p>Service Work & Access</p>
+                                    </div>
+                                    <div className={`part part-two`}>
+                                        {item?.service_policy?.access ? <p>{serviceChargeSort(item?.service_policy?.price_type)}</p> : ''}
+                                    </div>
+                                    <div className={`part part-three ${item?.service_policy?.access ? 'success' : 'danger'}`}>
+                                        {item?.service_policy?.access ? <TbCheck /> : <TbX />}
+                                    </div>
+                                </div>
+                                <div className="list-item">
+                                    <div className={`part part-one`}>
                                         <p>Package Fund</p>
                                     </div>
                                     <div className={`part part-two`}>
@@ -139,15 +150,6 @@ const ServiceCategory = () => {
                                     <div className={`part part-two`}></div>
                                     <div className={`part part-three ${item?.service_charge_applied ? 'success' : 'danger'}`}>
                                         {item?.service_charge_applied ? <TbCheck /> : <TbX />}
-                                    </div>
-                                </div>
-                                <div className="list-item">
-                                    <div className={`part part-one`}>
-                                        <p>Extra Service Charge</p>
-                                    </div>
-                                    <div className={`part part-two`}></div>
-                                    <div className={`part part-three ${item?.extra_charge_applied ? 'success' : 'danger'}`}>
-                                        {item?.extra_charge_applied ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                             </div>

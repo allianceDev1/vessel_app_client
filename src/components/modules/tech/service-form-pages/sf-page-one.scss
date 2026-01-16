@@ -51,6 +51,11 @@
                             font-size: 16px;
                             font-weight: 600;
                         }
+
+                        &.submitted {
+                            background-color: var(--color-primary-bg);
+                            color: var(--color-primary-text);
+                        }
                     }
 
                     .order-line {

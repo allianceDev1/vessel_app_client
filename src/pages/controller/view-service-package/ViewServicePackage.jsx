@@ -42,11 +42,11 @@ const ViewServicePackage = () => {
 
             const [packageRes, serviceRes] = await Promise.all([
                 api.vfCv2Axios.get(`/config/service-package/${package_id}`),
-                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,spare_policies,package_charge_applied,target_package,service_charge_applied,extra_charge_applied,service_charges,service_limit`)
+                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,spare_policies,service_policy,package_charge_applied,target_package,service_charge_applied,service_charges,service_limit`)
             ]);
 
             const { pricing_config, ...pInfo } = packageRes;
-           
+
             setPackageInfo({
                 ...pInfo,
                 package_fund: pricing_config?.base_price || 0,
@@ -240,6 +240,17 @@ const ViewServicePackage = () => {
                                         </div>
                                         <div className="list-item">
                                             <div className={`part part-one`}>
+                                                <p>Service Work & Access</p>
+                                            </div>
+                                            <div className={`part part-two`}>
+                                                {item?.service_policy?.access ? <p>{serviceChargeSort(item?.service_policy?.price_type)}</p> : ''}
+                                            </div>
+                                            <div className={`part part-three ${item?.service_policy?.access ? 'success' : 'danger'}`}>
+                                                {item?.service_policy?.access ? <TbCheck /> : <TbX />}
+                                            </div>
+                                        </div>
+                                        <div className="list-item">
+                                            <div className={`part part-one`}>
                                                 <p>Package Fund</p>
                                             </div>
                                             <div className={`part part-two`}>
@@ -256,15 +267,6 @@ const ViewServicePackage = () => {
                                             <div className={`part part-two`}></div>
                                             <div className={`part part-three ${item?.service_charge_applied ? 'success' : 'danger'}`}>
                                                 {item?.service_charge_applied ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Extra Service Charge</p>
-                                            </div>
-                                            <div className={`part part-two`}></div>
-                                            <div className={`part part-three ${item?.extra_charge_applied ? 'success' : 'danger'}`}>
-                                                {item?.extra_charge_applied ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">

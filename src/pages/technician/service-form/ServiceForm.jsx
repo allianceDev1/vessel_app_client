@@ -13,6 +13,7 @@ import SfPageOne from '../../../components/modules/tech/service-form-pages/SfPag
 import SfSubPageOne from '../../../components/modules/tech/service-form-pages/SfSubPageOne'
 import SfSubPageTwo from '../../../components/modules/tech/service-form-pages/SfSubPageTwo'
 import SfSubPageThree from '../../../components/modules/tech/service-form-pages/SfSubPageThree'
+import SfSubPageFour from '../../../components/modules/tech/service-form-pages/SfSubPageFour'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -79,6 +80,14 @@ const ServiceForm = () => {
         }
     }
 
+    const changeProductSubmitStatus = (submitStatus) => {
+        if (!serviceFormSettings?.activeProduct?.[0]) return;
+
+        if (!serviceFormSettings?.products?.[serviceFormSettings?.activeProduct?.[0]]?.is_submitted) return;
+
+        dispatch(sfSetting.updateSubmitStatus({ product_id: serviceFormSettings?.activeProduct?.[0], is_submitted: submitStatus }))
+    }
+
 
     useEffect(() => {
 
@@ -124,18 +133,21 @@ const ServiceForm = () => {
                 {/* Pages */}
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
                     <SfPageOne page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
+                        changeSubmitStatus={changeProductSubmitStatus}
                     />}
 
                 {/* Vessel : Sub Pages  */}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 &&
-                    <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} />}
+                    <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 &&
-                    <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} />}
+                    <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 &&
                     <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
                         customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
                         materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
-                    />}
+                        changeSubmitStatus={changeProductSubmitStatus} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 &&
+                    <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
             </div>
         </div>
     )

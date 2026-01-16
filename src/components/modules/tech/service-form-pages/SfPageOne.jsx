@@ -33,7 +33,7 @@ const SfPageOne = ({ page, customer, customerProducts }) => {
                 <div className="images-list">
                     {customer?.images?.map((image, index) => {
                         return <div className="image" key={index}>
-                            <img alt='product image' src={image?.thump?.url} />
+                            <img alt='product ' src={image?.thump?.url} />
                         </div>
                     })}
                 </div>
@@ -55,10 +55,12 @@ const SfPageOne = ({ page, customer, customerProducts }) => {
                                     : packageExpire ? "The current product package is expired"
                                         : productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? 'May be chance to expire the product package on this service'
                                             : ''
+                                const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
+
 
                                 return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id)}>
                                     <div className={`order-box`}>
-                                        <div className="order-index">
+                                        <div className={`order-index ${isSubmitted ? 'submitted' : ''}`}>
                                             <p>{product?.product_type === 'Vessel' ? (product?.order_id || "UN") : 'AD'}</p>
                                         </div>
                                         {pg?.length !== productIndex + 1 && <div className="order-line"></div>}

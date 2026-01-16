@@ -1,0 +1,108 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.vf-service-list-comp-container {
+    position: relative;
+
+    .service-list-border {
+
+        .title {
+            margin: 15px 0;
+
+            h3 {
+                @include subTitleSmall();
+            }
+        }
+
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 100px;
+
+            .item {
+                display: grid;
+                grid-template-columns: 40px auto;
+                align-items: center;
+                background-color: var(--color-natural-2);
+                padding: 12px;
+                border-radius: 15px;
+                gap: 10px;
+                cursor: pointer;
+
+
+                .checkbox-section {
+                    .checkbox {
+                        border: 3px solid var(--border-medium);
+                        border-radius: 5px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 27px;
+                        height: 27px;
+                        cursor: pointer;
+
+
+                        svg {
+                            font-size: 24px;
+                            color: var(--color-natural-2);
+                        }
+
+
+                        &.active {
+                            border: 3px solid var(--color-primary-text);
+                            background-color: var(--color-primary-bg);
+
+                            svg {
+                                color: var(--color-primary-text);
+                            }
+                        }
+                    }
+                }
+
+                .item-content {
+                    h4 {
+                        font-size: 16px;
+                        font-weight: 500;
+                        @include threeDots(2);
+                        margin-bottom: 5px;
+                    }
+
+                    .price {
+                        display: flex;
+                        gap: 10px;
+
+                        p {
+                            font-size: 14px;
+                            font-weight: 500;
+                        }
+
+                        .hash-price {
+                            color: var(--text-secondary-2);
+                            font-weight: 400;
+                            text-decoration: line-through;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .fixed-section {
+        position: fixed;
+        width: 100%;
+        bottom: 55px;
+        left: 0;
+        padding: 5px 0;
+        display: flex;
+        justify-content: center;
+        background-color: var(--background);
+        z-index: 5;
+
+        .submit-button {
+            max-width: 500px;
+            width: 500px;
+            padding: 0 10px;
+        }
+    }
+
+}

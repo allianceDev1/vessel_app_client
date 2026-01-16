@@ -58,6 +58,9 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                 case 'primary_spare_price_type':
                     setForm({ ...form, primary_spare_access: true, primary_spare_price_type: e.target.value })
                     break;
+                case 'service_price_type':
+                    setForm({ ...form, service_access: true, service_price_type: e.target.value })
+                    break;
 
                 default:
                     break;
@@ -75,6 +78,9 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                     break;
                 case 'primary_spare_price_type':
                     setForm({ ...form, primary_spare_access: false, primary_spare_price_type: null })
+                    break;
+                case 'service_price_type':
+                    setForm({ ...form, service_access: false, service_price_type: null })
                     break;
 
                 default:
@@ -151,6 +157,10 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                                 price_type: form?.primary_spare_price_type
                             }
                         },
+                        service_policy: {
+                            access: form?.service_access,
+                            price_type: form?.service_price_type
+                        },
                         service_charge_applied: form?.service_charge_applied,
                         extra_charge_applied: form?.extra_charge_applied
                     }
@@ -185,11 +195,12 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
             bag_access: serviceCategory?.spare_policies?.bag?.access || false,
             primary_spare_access: serviceCategory?.spare_policies?.primary_spare?.access || false,
             materials_access: serviceCategory?.spare_policies?.materials?.access || false,
+            service_access: serviceCategory?.service_policy?.access || false,
             bag_price_type: serviceCategory?.spare_policies?.bag?.price_type || null,
             primary_spare_price_type: serviceCategory?.spare_policies?.primary_spare?.price_type || null,
             materials_price_type: serviceCategory?.spare_policies?.materials?.price_type || null,
+            service_price_type: serviceCategory?.service_policy?.price_type || null,
             service_charge_applied: serviceCategory?.service_charge_applied || false,
-            extra_charge_applied: serviceCategory?.extra_charge_applied || false,
             service_charges: serviceCategory?.service_charges || []
         })
 
@@ -236,12 +247,10 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                             onChange={handleChangeServiceCard} value={form.bag_price_type} />
                         <Select label={'Price of Spares'} name={'primary_spare_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
+                        <Select label={'Price of service work'} name={'service_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+                            onChange={handleChangeServiceCard} value={form.service_price_type} />
 
-                        <h4 className='radio-input-label'> Only for packages <span className={'required-span'}>*</span></h4>
-                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                            <Radio label={'Yes'} name={'package_product_only'} required radioValue={true} onChange={handleChangeForm} checked={form?.package_product_only === true} />
-                            <Radio label={'No'} name={'package_product_only'} radioValue={false} onChange={handleChangeForm} checked={form?.package_product_only === false} />
-                        </div>
+
                     </div>
                     <div className="section">
                         <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>
@@ -249,10 +258,10 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                             <Radio label={'Yes'} name={'service_charge_applied'} required radioValue={true} onChange={handleChangeForm} checked={form?.service_charge_applied === true} />
                             <Radio label={'No'} name={'service_charge_applied'} radioValue={false} onChange={handleChangeForm} checked={form?.service_charge_applied === false} />
                         </div>
-                        <h4 className='radio-input-label'>Extra charge applied <span className={'required-span'}>*</span></h4>
+                        <h4 className='radio-input-label'> Only for packages <span className={'required-span'}>*</span></h4>
                         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                            <Radio label={'Yes'} name={'extra_charge_applied'} required radioValue={true} onChange={handleChangeForm} checked={form?.extra_charge_applied === true} />
-                            <Radio label={'No'} name={'extra_charge_applied'} radioValue={false} onChange={handleChangeForm} checked={form?.extra_charge_applied === false} />
+                            <Radio label={'Yes'} name={'package_product_only'} required radioValue={true} onChange={handleChangeForm} checked={form?.package_product_only === true} />
+                            <Radio label={'No'} name={'package_product_only'} radioValue={false} onChange={handleChangeForm} checked={form?.package_product_only === false} />
                         </div>
 
 

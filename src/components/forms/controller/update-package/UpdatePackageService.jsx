@@ -56,6 +56,9 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
         case 'primary_spare_price_type':
           setForm({ ...form, primary_spare_access: true, primary_spare_price_type: e.target.value })
           break;
+        case 'service_price_type':
+          setForm({ ...form, service_access: true, service_price_type: e.target.value })
+          break;
 
         default:
           break;
@@ -73,6 +76,9 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
           break;
         case 'primary_spare_price_type':
           setForm({ ...form, primary_spare_access: false, primary_spare_price_type: null })
+          break;
+        case 'service_price_type':
+          setForm({ ...form, service_access: false, service_price_type: null })
           break;
 
         default:
@@ -113,8 +119,11 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
                 price_type: form?.primary_spare_price_type
               }
             },
-            service_charge_applied: form?.service_charge_applied,
-            extra_charge_applied: form?.extra_charge_applied
+            service_policy: {
+              access: form?.service_access,
+              price_type: form?.service_price_type
+            },
+            service_charge_applied: form?.service_charge_applied
           }
         }
         return s
@@ -146,11 +155,12 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
       bag_access: serviceData?.spare_policies?.bag?.access || false,
       primary_spare_access: serviceData?.spare_policies?.primary_spare?.access || false,
       materials_access: serviceData?.spare_policies?.materials?.access || false,
+      service_access: serviceData?.service_policy?.access || false,
       bag_price_type: serviceData?.spare_policies?.bag?.price_type || null,
       primary_spare_price_type: serviceData?.spare_policies?.primary_spare?.price_type || null,
       materials_price_type: serviceData?.spare_policies?.materials?.price_type || null,
-      service_charge_applied: serviceData?.service_charge_applied || false,
-      extra_charge_applied: serviceData?.extra_charge_applied || false
+      service_price_type: serviceData?.service_policy?.price_type || null,
+      service_charge_applied: serviceData?.service_charge_applied || false
     })
 
     //eslint-disable-next-line
@@ -197,17 +207,14 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
               onChange={handleChangeServiceCard} value={form.bag_price_type} />
             <Select label={'Price of spares'} name={'primary_spare_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
+            <Select label={'Price of spares'} name={'service_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+              onChange={handleChangeServiceCard} value={form.service_price_type} />
 
 
             <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
               <Radio label={'Yes'} name={'service_charge_applied'} required radioValue={true} onChange={handleChangeForm} checked={form?.service_charge_applied === true} />
               <Radio label={'No'} name={'service_charge_applied'} radioValue={false} onChange={handleChangeForm} checked={form?.service_charge_applied === false} />
-            </div>
-            <h4 className='radio-input-label'>Extra charge applied <span className={'required-span'}>*</span></h4>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-              <Radio label={'Yes'} name={'extra_charge_applied'} required radioValue={true} onChange={handleChangeForm} checked={form?.extra_charge_applied === true} />
-              <Radio label={'No'} name={'extra_charge_applied'} radioValue={false} onChange={handleChangeForm} checked={form?.extra_charge_applied === false} />
             </div>
           </div>
         </div>

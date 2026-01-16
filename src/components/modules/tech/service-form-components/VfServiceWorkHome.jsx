@@ -1,16 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {  useMemo, useState } from 'react'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import './vf-service-work-home.scss'
 import Select from '../../../UI_Primitives/inputs/Select'
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Button from '../../../UI_Primitives/buttons/Button'
+import { doDialog } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
-const VfServiceWorkHome = ({ category, setWorkMenu }) => {
+const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus}) => {
   const dispatch = useDispatch();
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
   const [form, setForm] = useState({ estimate: 0, applied: 0, call: 0, remark: null })
-  const [menuMeta, setMenuMeta] = useState()
+  const [menuMeta, setMenuMeta] = useState({ materials: 0, bags: 0, spares: 0, services: 0 })
 
   const productInForm = useMemo(() => {
     const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
@@ -26,12 +27,13 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
       materials: current?.work?.components_list?.filter(s => s.spare_type === 'materials')?.length,
       bags: current?.work?.components_list?.filter(s => s.spare_type === 'bags')?.length,
       spares: current?.work?.components_list?.filter(s => s.spare_type === 'spares')?.length,
-      services: 0
+      services: current?.work?.services_list?.length
     })
 
     return current || {}
-  }, [serviceForm?.service_products]);
 
+    // eslint-disable-next-line
+  }, [serviceForm?.service_products]);
 
 
   const handelChange = (e) => {
@@ -51,6 +53,18 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const resetWorkCategory = () => {
+
+    const resetAction = () => {
+      dispatch(sfActions.resetService({ product_id: serviceFormSettings?.activeProduct?.[0] }))
+    }
+
+    dispatch(doDialog.confirm({
+      message: 'Are you sure to reset work category?',
+      accept: { onClick: () => resetAction() }
+    }))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -68,7 +82,20 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
 
     dispatch(sfActions.updateProduct(updateData))
 
-    // Next
+    // If choose any work or components , then show the warming alert
+    if (!menuMeta?.materials && !menuMeta?.bags && !menuMeta?.spares && !menuMeta?.services) {
+      dispatch(doDialog.confirm({
+        message: 'You have not selected any work or components, Are you sure to continue without work or components?',
+        accept: {
+          onClick: () => {
+            dispatch(sfSetting.setActiveSubPage(203))
+          }
+        }
+      }))
+
+      return;
+    }
+
     dispatch(sfSetting.setActiveSubPage(203))
   }
 
@@ -79,9 +106,6 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
   const clickServicesMenu = () => {
     setWorkMenu({ type: 'services' })
   }
-
-
-
 
 
   return (
@@ -106,9 +130,10 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
           <p>{menuMeta?.spares ? `${menuMeta?.spares} items selected` : !category?.spare_policies?.primary_spare?.access ? "No access" : "Choose component items"}</p>
         </div>
 
-        <div className={`menu-item `} onClick={clickServicesMenu} >
+        <div className={`menu-item ${menuMeta?.services ? 'item-selected' : ''} ${!category?.service_policy?.access ? 'item-disable' : ''}`}
+          onClick={() => category?.service_policy?.access ? clickServicesMenu() : null} >
           <h3>Services</h3>
-          <p>Choose service items</p>
+          <p>{menuMeta?.services ? `${menuMeta?.services} items selected` : !category?.service_policy?.access ? "No access" : "Choose service works"}</p>
         </div>
 
       </div>
@@ -125,7 +150,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
           <InputText label={'Extra Charge Reason'} name={'remark'} value={form?.remark} onChange={handelChange} required />}
 
         <div className="buttons">
-          <Button label={'Reset Work'} rounded severity={'danger'} />
+          <Button type='button' label={'Reset Work'} rounded severity={'danger'} onClick={resetWorkCategory} />
           <Button label={'Next'} rounded />
         </div>
       </form>

@@ -10,7 +10,7 @@ import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
 import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { TbTrash } from 'react-icons/tb'
 
-const SfSubPageTwo = ({ page, resources }) => {
+const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
     const orderId = serviceFormSettings?.activeProduct?.[1] || null
@@ -22,10 +22,15 @@ const SfSubPageTwo = ({ page, resources }) => {
     const productInForm = useMemo(() => {
         const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
         return current || {}
+
+        // eslint-disable-next-line
     }, [serviceForm?.service_products]);
 
 
     const updateProductCondition = (e) => {
+
+        changeSubmitStatus(false)
+
         const { name, value } = e.target;
 
         if (name === 'condition' && value === 'Good') {
@@ -81,6 +86,8 @@ const SfSubPageTwo = ({ page, resources }) => {
             return;
         }
 
+        changeSubmitStatus(false)
+
         dispatch(sfActions.updateProduct({
             inspection_report: {
                 tech_analyze: [
@@ -97,6 +104,7 @@ const SfSubPageTwo = ({ page, resources }) => {
     }
 
     const handleDelete = (nature) => {
+        changeSubmitStatus(false)
         dispatch(sfActions.updateProduct({
             inspection_report: {
                 tech_analyze: productInForm?.inspection_report?.tech_analyze?.filter(t => t.nature !== nature)
@@ -172,7 +180,7 @@ const SfSubPageTwo = ({ page, resources }) => {
                                             </td>
                                         </tr>
                                     ))}
-                                    
+
                                 </tbody>
                             </table>}
 

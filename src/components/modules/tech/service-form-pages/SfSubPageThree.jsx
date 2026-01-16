@@ -1,27 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './sub-page-style.scss'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { serviceFormSubPageRoute } from '../../../../assets/javascript/pre_data/service'
-import Select from '../../../UI_Primitives/inputs/Select'
-import Radio from '../../../UI_Primitives/inputs/Radio'
-import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import Button from '../../../UI_Primitives/buttons/Button'
-import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
-import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { TbTrash } from 'react-icons/tb'
 import VfServiceCategories from '../service-form-components/VfServiceCategories'
 import VfServiceWorkHome from '../service-form-components/VfServiceWorkHome'
 import VfComponentsList from '../service-form-components/VfComponentsList'
 import { findSpareTypeAmount } from '../../../../utils/flows/service_form_utils'
 import { normalizeDate } from '../../../../utils/helpers/date-helpers'
-import { min } from 'moment'
 import VfServiceList from '../service-form-components/VfServiceList'
 
 
 const SfSubPageThree = ({
-  page, categories, customerProducts, regData, vesselsEligibilities, materialsList, bagList, spareList, vesselServiceList
+  page, categories, customerProducts, regData, vesselsEligibilities,
+  materialsList, bagList, spareList, vesselServiceList, changeSubmitStatus
 }) => {
-  const dispatch = useDispatch();
+
   const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
   const orderId = serviceFormSettings?.activeProduct?.[1] || null
   const [workMenu, setWorkMenu] = useState({ type: null, id: null })
@@ -30,10 +23,11 @@ const SfSubPageThree = ({
   const [componentsPage, setComponentsPage] = useState({ title: null, id: null, max: 0, deleteItem: false })
 
 
-
   const productInForm = useMemo(() => {
     const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
     return current || {}
+
+    // eslint-disable-next-line
   }, [serviceForm?.service_products]);
 
   const product = useMemo(() => {
@@ -42,6 +36,8 @@ const SfSubPageThree = ({
     return customerProducts.find(
       p => p.product_id === serviceFormSettings?.activeProduct?.[0]
     ) || null;
+
+    // eslint-disable-next-line
   }, [customerProducts, serviceFormSettings?.activeProduct?.[0]]);
 
   const productEligibility = useMemo(() => {
@@ -50,6 +46,8 @@ const SfSubPageThree = ({
     return vesselsEligibilities.find(
       e => e.product_id === serviceFormSettings?.activeProduct?.[0]
     ) || null;
+
+    // eslint-disable-next-line
   }, [vesselsEligibilities, serviceFormSettings?.activeProduct?.[0]]);
 
   const category = useMemo(() => {
@@ -61,6 +59,8 @@ const SfSubPageThree = ({
     const currentCategory = categories?.filter(c => (c?.service_id || null) === workServiceId && c?.category_id === workCategoryId)?.[0]
 
     return currentCategory
+
+    // eslint-disable-next-line
   }, [categories, productInForm])
 
 
@@ -161,48 +161,21 @@ const SfSubPageThree = ({
     if (workMenu?.type === 'services') {
       setServicesList(vesselServiceList?.map(i => {
         const inForm = productInForm?.work?.services_list?.filter(s => s?.service_id === i?.work_uuid)?.[0]
-        if (inForm) return inForm
 
         const warrantyBag = product?.product?.bag_warranty_expire_date &&
           normalizeDate(new Date(product?.product?.bag_warranty_expire_date)) >= normalizeDate(new Date()) ? true : false
-
-
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-
-        // The spare policies not included the service work access and price type 
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-        // ? Start Here
-
+        const warrantyEnabled = !i?.refill_included && !i?.reinstallation_included && warrantyBag
 
         let obj = {
           service_id: i?.work_uuid,
           service_name: i?.work_name,
-          pricing: findSpareTypeAmount(i, category?.spare_policies?.primary_spare?.price_type, warrantySpare)
+          pricing: findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
             || { list_price: 0, charged: 0, ledger_cost: 0 },
-          qty: 0,
-          qty_type: i?.qty_type,
-          under_warranty: warrantySpare,
-          warranty_period_months: 0,
-          is_customer_product: i?.spare_uuid === spareInCustomer?.spare_uuid,
-          is_removed: spareInRemoveList
+          call_rate: i?.call_rate,
+          refill_included: i?.refill_included,
+          reinstallation_included: i?.reinstallation_included,
+          selected: inForm ? true : false,
+          under_warranty: warrantyEnabled
         }
 
         return obj
@@ -210,6 +183,8 @@ const SfSubPageThree = ({
 
       setComponentsPage({ title: 'Service Works', id: 'services', max: 0, deleteItem: false })
     }
+
+    // eslint-disable-next-line
   }, [workMenu, productInForm])
 
 
@@ -224,22 +199,20 @@ const SfSubPageThree = ({
       {/* Service Categories */}
       {(!productInForm?.service_data?.category_id || !productInForm?.service_data?.mode) &&
         <VfServiceCategories categories={categories} product={product} productEligibility={productEligibility}
-          regData={regData} />
+          regData={regData} changeSubmitStatus={changeSubmitStatus} />
       }
-
-      <VfServiceList />
 
       {(productInForm?.service_data?.category_id && productInForm?.service_data?.mode) &&
         <>{workMenu?.type
           ? <>
             {workMenu?.type === 'components' &&
               <VfComponentsList setWorkMenu={setWorkMenu} componentsList={componentsList} componentsPage={componentsPage}
-                productInForm={productInForm} />}
+                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
             {workMenu?.type === 'services' &&
-              <VfServiceList setWorkMenu={setWorkMenu} componentsList={componentsList} componentsPage={componentsPage}
-                productInForm={productInForm} />}
+              <VfServiceList setWorkMenu={setWorkMenu} componentsPage={componentsPage} servicesList={servicesList}
+                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
           </>
-          : <VfServiceWorkHome category={category} setWorkMenu={setWorkMenu} />}
+          : <VfServiceWorkHome category={category} setWorkMenu={setWorkMenu} changeSubmitStatus={changeSubmitStatus} />}
         </>
       }
 

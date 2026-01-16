@@ -8,7 +8,7 @@ import Checkbox from '../../../UI_Primitives/inputs/Checkbox'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Button from '../../../UI_Primitives/buttons/Button'
 
-const SfSubPageOne = ({ page, resources }) => {
+const SfSubPageOne = ({ page, resources, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
     const orderId = serviceFormSettings?.activeProduct?.[1] || null
@@ -19,9 +19,14 @@ const SfSubPageOne = ({ page, resources }) => {
     const productInForm = useMemo(() => {
         const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
         return current || {}
+
+        // eslint-disable-next-line
     }, [serviceForm?.service_products]);
 
-    const handleAdditionalTankStatus = (e) => {
+    const handleAdditionalTankStatus = () => {
+
+        changeSubmitStatus(false)
+
         dispatch(sfSetting.update({
             storageTankAvailable: !serviceFormSettings?.storageTankAvailable
         }))
@@ -37,6 +42,8 @@ const SfSubPageOne = ({ page, resources }) => {
 
     const updateCurrentCondition = (e, subKey) => {
         const { name, value } = e.target;
+
+        changeSubmitStatus(false)
 
         dispatch(sfActions.updateProduct({
             current_condition: {

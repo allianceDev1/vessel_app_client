@@ -7,7 +7,8 @@ const initialState = {
         activePage: null,
         activeSubPage: null,
         activeProduct: null,
-        storageTankAvailable: false
+        storageTankAvailable: false,
+        products: {}
     }
 }
 
@@ -55,6 +56,16 @@ export const appDataSlice = createSlice({
                 };
             });
         },
+        resetServiceCategory: (state, action) => {
+            const productId = action?.payload?.product_id;
+
+            state.serviceForm.service_products[productId] = {
+                ...(state.serviceForm.service_products[productId] || {}),
+                service_data: {},
+                work: {}
+            };
+
+        },
 
         // service form settings
         setSfActivePage: (state, action) => {
@@ -75,15 +86,21 @@ export const appDataSlice = createSlice({
                 activeProduct: action.payload
             }
         },
-        setFormSettings: (state, action) => {
-            state.serviceFormSettings = {
-                ...(state.serviceFormSettings || {}),
-                ...action.payload
-            }
-        },
         clearServiceFormSettings: (state) => {
             state.serviceFormSettings = {}
-        }
+        },
+        updateSubmitStatus: (state, action) => {
+            const { product_id, is_submitted = false } = action.payload;
+
+            if (!state.serviceFormSettings.products) {
+                state.serviceFormSettings.products = {};
+            }
+
+            state.serviceFormSettings.products[product_id] = {
+                ...(state.serviceFormSettings.products[product_id] || {}),
+                is_submitted
+            };
+        },
 
 
     }
@@ -92,7 +109,7 @@ export const appDataSlice = createSlice({
 
 const {
     clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    setFormSettings
+    resetServiceCategory, updateSubmitStatus
 } = appDataSlice.actions;
 
 
@@ -100,13 +117,14 @@ const sfSetting = {
     setActivePage: setSfActivePage,
     setActiveSubPage: setActiveSubPage,
     setActiveProduct: setActiveProduct,
-    update: setFormSettings,
     clearAll: clearServiceFormSettings,
+    updateSubmitStatus: updateSubmitStatus
 }
 const sfActions = {
     clearAll: clearServiceForm,
     startWork: startServiceWork,
-    updateProduct: updateServiceProduct
+    updateProduct: updateServiceProduct,
+    resetService: resetServiceCategory
 }
 
 export { sfSetting, sfActions }
