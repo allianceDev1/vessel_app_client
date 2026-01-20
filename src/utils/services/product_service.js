@@ -132,3 +132,32 @@ export const setupAvailableServiceCategories = (categories, product, productElig
 
     return arrangedCategories
 }
+
+export const setupAddOnServiceCategories = (categories, regData) => {
+    const arrangedCategories = categories?.map((c) => {
+
+        let is_disable = false, disable_reason = null, icon = null;
+
+        switch (c?.mode) {
+            case 'COMPLAINT':
+                icon = <TbDropletCog />
+
+                if (regData?.service_type !== 'COMPLAINT') {
+                    is_disable = true
+                    disable_reason = "It is not complaint registration."
+                }
+                break;
+
+            case 'SERVICE':
+                icon = <TbDropletHeart />
+                break;
+
+            default:
+                break;
+        }
+
+        return { ...c, icon, is_disable, disable_reason }
+    })
+
+    return arrangedCategories
+}

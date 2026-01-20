@@ -1,13 +1,13 @@
-import React, {  useMemo, useState } from 'react'
-import InputText from '../../../UI_Primitives/inputs/InputText'
+import React, { useMemo, useState } from 'react'
 import './vf-service-work-home.scss'
+import InputText from '../../../UI_Primitives/inputs/InputText'
 import Select from '../../../UI_Primitives/inputs/Select'
+import Button from '../../../UI_Primitives/buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import Button from '../../../UI_Primitives/buttons/Button'
 import { doDialog } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
-const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus}) => {
+const VfServiceWorkHome = ({ category, setWorkMenu }) => {
   const dispatch = useDispatch();
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
   const [form, setForm] = useState({ estimate: 0, applied: 0, call: 0, remark: null })

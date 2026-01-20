@@ -11,3 +11,9 @@ export const serviceFormSubPageRoute = [
     { key: 202, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
     { key: 203, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
 ]
+
+export const serviceFormAddOnSubPageRoute = [
+    { key: 200, title: 'Current Condition', description: "Record the current condition of the product before service" },
+    { key: 201, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
+    { key: 202, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
+]

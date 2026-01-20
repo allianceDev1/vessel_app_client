@@ -1,0 +1,56 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-new-add-on-select-comp {
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .product-amount-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--surface-2);
+            padding: 15px 15px;
+            border-radius: 10px;
+
+
+            .side-one {
+                p {
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+            }
+
+            .side-two {
+                text-align: end;
+
+                p {
+                    font-size: 22px;
+                    font-weight: 600;
+                    color: var(--color-primary-text);
+                }
+            }
+        }
+
+        .radio-group {
+            h4 {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary-1);
+                margin-bottom: 5px;
+
+                span{
+                    color: var(--color-danger);
+                }
+            }
+
+            >div {
+                display: flex;
+                gap: 10px;
+            }
+        }
+    }
+}

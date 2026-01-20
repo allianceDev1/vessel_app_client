@@ -14,6 +14,10 @@ import SfSubPageOne from '../../../components/modules/tech/service-form-pages/Sf
 import SfSubPageTwo from '../../../components/modules/tech/service-form-pages/SfSubPageTwo'
 import SfSubPageThree from '../../../components/modules/tech/service-form-pages/SfSubPageThree'
 import SfSubPageFour from '../../../components/modules/tech/service-form-pages/SfSubPageFour'
+import SfAdSubPageOne from '../../../components/modules/tech/service-form-pages/SfAdSubPageOne'
+import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
+import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
+import InputColor from '../../../components/UI_Primitives/inputs/InputColor'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -30,6 +34,10 @@ const ServiceForm = () => {
     const [vesselServiceList, setVesselServiceList] = useState([])
     const [resources, setResources] = useState([])
     const [serviceCategories, setServiceCategories] = useState([])
+    const [addOnServiceCategories, setAddOnServiceCategories] = useState([])
+    const [addOnServiceList, setAddOnServiceList] = useState([])
+    const [addOnSpareList, setAddOnSpareList] = useState([])
+    const [availableAddOns, setAvailableAddOns] = useState([])
     const [error, setError] = useState({ error: false, title: '', message: '' })
 
 
@@ -51,6 +59,12 @@ const ServiceForm = () => {
             setBagList(resResources?.bags || [])
             setSpareList(resResources?.spares || [])
             setVesselServiceList(resResources?.vessel_services || [])
+            setAddOnServiceList(resResources?.add_on_services || [])
+            setAddOnSpareList(resResources?.add_on_spares || [])
+            setAvailableAddOns(resResources?.add_ons_list || [])
+
+
+
 
             // Customer products and packages
             const customerOwnProducts = [...(resInit?.products?.vessels || []), ...(resInit?.products?.add_ons || [])]
@@ -65,6 +79,8 @@ const ServiceForm = () => {
 
             // Service Categories
             setServiceCategories(resInit?.service_categories || [])
+            setAddOnServiceCategories(resInit?.addOn_service_categories || [])
+
 
             // Registration form
             setRegData(resInit?.registration || {})
@@ -80,12 +96,16 @@ const ServiceForm = () => {
         }
     }
 
-    const changeProductSubmitStatus = (submitStatus) => {
+    const changeSubmitStatusIsFalse = () => {
         if (!serviceFormSettings?.activeProduct?.[0]) return;
 
         if (!serviceFormSettings?.products?.[serviceFormSettings?.activeProduct?.[0]]?.is_submitted) return;
 
-        dispatch(sfSetting.updateSubmitStatus({ product_id: serviceFormSettings?.activeProduct?.[0], is_submitted: submitStatus }))
+        dispatch(sfSetting.updateSubmitStatus({
+            product_id: serviceFormSettings?.activeProduct?.[0],
+            is_submitted: false,
+            is_saved: false
+        }))
     }
 
 
@@ -125,6 +145,7 @@ const ServiceForm = () => {
     }
     return (
         <div className="tech-service-form-container">
+
             <div className="top-bar-container">
                 <FormTopBar refresh={fetchApi} />
             </div>
@@ -133,21 +154,34 @@ const ServiceForm = () => {
                 {/* Pages */}
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
                     <SfPageOne page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
-                        changeSubmitStatus={changeProductSubmitStatus}
+                        changeSubmitStatus={changeSubmitStatusIsFalse} availableAddOns={availableAddOns} addOnSpareList={addOnSpareList}
+                        resources={resources}
                     />}
 
                 {/* Vessel : Sub Pages  */}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 &&
-                    <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 &&
-                    <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 &&
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
+                    <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
+                    <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
                     <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
                         customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
                         materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
-                        changeSubmitStatus={changeProductSubmitStatus} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 &&
-                    <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeProductSubmitStatus} />}
+                        changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
+                    <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+
+                {/* Add-On : Sub Pages  */}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'Add-On' &&
+                    <SfAdSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'Add-On' &&
+                    <SfAdSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse}
+                        categories={addOnServiceCategories} customerProducts={customerProducts} regData={regData} serviceList={addOnServiceList}
+                        spareList={addOnSpareList} />}
+                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'Add-On' &&
+                    <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+
+
             </div>
         </div>
     )

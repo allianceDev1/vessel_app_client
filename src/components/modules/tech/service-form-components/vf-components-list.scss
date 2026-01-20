@@ -25,6 +25,7 @@
                 border-radius: 15px;
                 padding: 10px;
                 display: flex;
+                align-items: center;
                 flex-direction: column;
                 justify-content: space-between;
                 gap: 10px;
@@ -85,7 +86,20 @@
 
                 &.select-box {
                     border: 1px solid var(--color-natural-8);
+                }
 
+                .warranty-badge {
+                    background-color: var(--color-info-trans-33);
+                    padding: 3px 13px;
+                    border-radius: 15px;
+                    margin-top: 5px;
+                    width: fit-content;
+
+                    p {
+                        font-size: 11px;
+                        font-weight: 500;
+                        color: var(--color-info-text);
+                    }
                 }
 
             }

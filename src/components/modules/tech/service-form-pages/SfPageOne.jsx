@@ -1,24 +1,105 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './page-style.scss'
 import './sf-page-one.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
-import { TbAlertCircle, TbSitemap } from 'react-icons/tb'
+import { TbAlertCircle, TbPlus, TbSitemap, TbTrash } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUpcomingServiceType } from '../../../../utils/services/product_service'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
+import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
+import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import EmptyState from '../../../../components/UI_Primitives/ui-states/EmptyState'
 import Badge from '../../../../components/UI_Primitives/badge/Badge'
-import { sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
+import Button from '../../../UI_Primitives/buttons/Button'
+import AddNewAddOn from '../service-form-components/AddNewAddOn'
+import Select from '../../../UI_Primitives/inputs/Select'
+import InputText from '../../../UI_Primitives/inputs/InputText'
+import SFormSaveAndReview from '../service-form-components/SFormSaveAndReview'
 
-const SfPageOne = ({ page, customer, customerProducts }) => {
+
+
+const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources }) => {
     const dispatch = useDispatch();
-    const { serviceFormSettings } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const [workSites, setWorkSites] = useState([])
+    const [waterSources, setWaterSources] = useState([])
 
-    const selectProduct = (productId, orderId = null) => {
+
+    const selectProduct = (productId, orderId = null, productType) => {
         dispatch(sfSetting.setActiveSubPage(200))
-        dispatch(sfSetting.setActiveProduct([productId, orderId]))
+        dispatch(sfSetting.setActiveProduct([productId, orderId, productType]))
     }
+
+    const clickNewAddOnButton = () => {
+        dispatch(modal.push({
+            title: 'Select New Add-On',
+            body: <AddNewAddOn availableAddOns={availableAddOns} addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'refill_element')} />
+        }))
+    }
+
+    const handleDeleteNewAddOn = (uniqueId) => {
+        dispatch(sfActions.updateForm({
+            new_add_ons: serviceForm?.new_add_ons?.filter(e => e?.unique_id !== uniqueId)
+        }))
+    }
+
+    const handleChangeForm = (e) => {
+        const { name, value } = e.target;
+
+        dispatch(sfActions.updateForm({
+            [name]: value || null
+        }))
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Validation
+        dispatch(modal.push({
+            title: "Save & Review",
+            body: <SFormSaveAndReview />
+        }))
+
+    }
+
+    useEffect(() => {
+        if (!customer) return;
+
+        const fields = [
+            'work_site',
+            'source',
+            'tank_capacity_ltr',
+            'floor_hight',
+            't_hight',
+        ];
+
+        const payload = fields.reduce((acc, key) => {
+            if (!serviceForm?.[key] && customer?.[key]) {
+                acc[key] = customer[key];
+            }
+            return acc;
+        }, {});
+
+        if (Object.keys(payload).length > 0) {
+            dispatch(sfActions.updateForm(payload));
+        }
+
+    }, [customer])
+
+
+    useEffect(() => {
+        let colorOptions = resources?.filter(r => r.title === 'site_categories')?.[0]?.values || []
+        colorOptions = colorOptions.sort((a, b) => a.order - b.order)
+        colorOptions = colorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
+        setWorkSites(colorOptions)
+
+        let odorOptions = resources?.filter(r => r.title === 'water_sources')?.[0]?.values || []
+        odorOptions = odorOptions.sort((a, b) => a.order - b.order)
+        odorOptions = odorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
+        setWaterSources(odorOptions)
+
+    }, [resources])
 
     return (
         <div className="tech-service-form-page sf-page-one">
@@ -51,14 +132,16 @@ const SfPageOne = ({ page, customer, customerProducts }) => {
                                 const packageFreeze = product?.package?.package_status === 'FROZEN' ? true : false
                                 const packageExpire = product?.package?.package_status === 'EXPIRED' ? true : false
                                 const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
+                                const lowTokens = productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? true : false
+                                const isWorked = serviceForm?.service_products?.[item?.product_id]?.service_data?.category_id ? true : false
                                 const alertText = packageFreeze ? "The current product package is frozen"
                                     : packageExpire ? "The current product package is expired"
-                                        : productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? 'May be chance to expire the product package on this service'
-                                            : ''
+                                        : lowTokens ? 'May be chance to expire the product package on this service'
+                                            : (lowTokens && isWorked) ? 'Must complete the token Top-up process' : ''
                                 const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
 
 
-                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id)}>
+                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type)}>
                                     <div className={`order-box`}>
                                         <div className={`order-index ${isSubmitted ? 'submitted' : ''}`}>
                                             <p>{product?.product_type === 'Vessel' ? (product?.order_id || "UN") : 'AD'}</p>
@@ -96,6 +179,60 @@ const SfPageOne = ({ page, customer, customerProducts }) => {
                     />}
             </div >
 
+            {/* New Add-On */}
+            {serviceForm?.new_add_ons?.length === 0 && <div className="new-product-initial-box">
+                <h4>Add New Add-On</h4>
+                <p>To add a new add-on, click the button below. After submitting the form, the product will be added to
+                    the customer’s list. You can add the product as either a rental or a new item.</p>
+                <Button label={'Select Add-On'} severity={'warning'} outlined rounded style={{ width: '100%' }} size='small'
+                    icon={<TbPlus />} onClick={clickNewAddOnButton} />
+            </div>}
+
+            {serviceForm?.new_add_ons?.length ? <div className="new-product-list">
+                <h3>New Add-On</h3>
+
+                <div className="addon-list">
+                    {serviceForm?.new_add_ons?.map((item) =>
+                        <div className="addon-item-border" key={item?.unique_id}>
+                            <div className="product-name">
+                                <h4>{item?.product_name}</h4>
+                                <p>₹{item?.total_amount?.charged || 0}</p>
+                            </div>
+                            <div className="action-section">
+                                <Button icon={<TbTrash />} rounded size='small' outlined severity={'danger'}
+                                    onClick={() => handleDeleteNewAddOn(item?.unique_id)} />
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <Button label={'Select Add-On'} outlined rounded style={{ width: '100%' }} size='small'
+                    icon={<TbPlus />} onClick={clickNewAddOnButton} />
+            </div> : ''}
+
+            {/* Common Data */}
+            <div className="site-data-form">
+                <form action="" onSubmit={handleSubmit}>
+                    <h3>Site Information</h3>
+                    <div className="form-section">
+                        <Select label={'Work Site'} name={'work_site'} value={serviceForm?.work_site} required
+                            options={[{}, ...workSites]} onChange={handleChangeForm} />
+                        <Select label={'Water Source'} name={'source'} value={serviceForm?.source} required
+                            options={[{}, ...waterSources]} onChange={handleChangeForm} />
+                        <InputText label={'Storage Capacity (Ltr)'} name={'tank_capacity_ltr'} value={String(serviceForm?.tank_capacity_ltr)} required
+                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                        <InputText label={'Floor Hight (Feet)'} name={'floor_hight'} value={String(serviceForm?.floor_hight)} required
+                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                        <InputText label={'T Hight (Feet)'} name={'t_hight'} value={String(serviceForm?.t_hight)} required
+                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                    </div>
+
+                    <div className="submit-section">
+                        <Button label={'Save & Review'} rounded severity={'primary'} style={{ width: '100%' }} />
+                    </div>
+
+                </form>
+            </div>
 
         </div >
     )

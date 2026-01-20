@@ -12,6 +12,7 @@ const SUB_PAGE_BACK_MAP = new Map([
     [200, null]
 ]);
 
+
 export const getPreviousServicePageKey = (mainPageKey = null, subPageKey = null) => {
     // 1️⃣ Sub page flow
     if (subPageKey !== null) {
@@ -49,7 +50,7 @@ export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
     if (!spare || !amountType) {
         throw new Error('Invalid arguments');
     }
-  
+
     const {
         selling_rate = 0,
         discount_rate = 0,
@@ -57,6 +58,7 @@ export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
     } = spare;
 
     let pricing;
+    let reason = null;
 
     switch (amountType) {
         case 'selling_rate':
@@ -81,6 +83,7 @@ export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
                 charged: 0,
                 ledger_cost: purchase_rate
             };
+            reason = 'Zero fee category'
             break;
 
         default:
@@ -92,5 +95,5 @@ export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
         pricing.charged = 0;
     }
 
-    return pricing;
+    return { ...pricing, reason };
 };

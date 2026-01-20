@@ -105,16 +105,19 @@ const SfSubPageThree = ({
           const inForm = productInForm?.work?.components_list?.filter(s => s?.spare_id === i?.bag_uuid)?.[0]
           if (inForm) return inForm
 
+          const { reason, ...amountObj } = findSpareTypeAmount(i, category?.spare_policies?.bag?.price_type, warrantyBag)
+            || { list_price: 0, charged: 0, ledger_cost: 0 }
+          console.log(reason)
           let obj = {
             spare_id: i?.bag_uuid,
             spare_name: i?.bag_name,
             spare_type: 'bags',
-            pricing: findSpareTypeAmount(i, category?.spare_policies?.bag?.price_type, warrantyBag)
-              || { list_price: 0, charged: 0, ledger_cost: 0 },
+            pricing: amountObj,
             qty: 0,
             qty_type: 'nos',
             under_warranty: warrantyBag,
-            warranty_period_months: 0,
+            non_receivable_reason: (!amountObj?.charged && warrantyBag) ? 'Bag warranty override' : reason,
+            warranty_period_months: amountObj?.charged > 0 ? (i?.warranty_period_months || 0) : 0,
             is_customer_product: i?.bag_uuid === product?.product?.bag_uuid,
             is_removed: false
           }
@@ -137,16 +140,19 @@ const SfSubPageThree = ({
           const warrantySpare = spareInCustomer?.wr_expire_date &&
             normalizeDate(new Date(spareInCustomer?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
 
+          const { reason, ...amountObj } = findSpareTypeAmount(i, category?.spare_policies?.primary_spare?.price_type, warrantySpare)
+            || { list_price: 0, charged: 0, ledger_cost: 0 }
+
           let obj = {
             spare_id: i?.spare_uuid,
             spare_name: i?.brand_name ? `${i?.spare_name} - ${i?.brand_name}` : i?.spare_name,
             spare_type: 'spares',
-            pricing: findSpareTypeAmount(i, category?.spare_policies?.primary_spare?.price_type, warrantySpare)
-              || { list_price: 0, charged: 0, ledger_cost: 0 },
+            pricing: amountObj,
             qty: 0,
             qty_type: i?.qty_type,
             under_warranty: warrantySpare,
-            warranty_period_months: 0,
+            non_receivable_reason: (!amountObj?.charged && warrantySpare) ? 'Spare warranty override' : reason,
+            warranty_period_months: amountObj?.charged > 0 ? (i?.warranty_period_months || 0) : 0,
             is_customer_product: i?.spare_uuid === spareInCustomer?.spare_uuid,
             is_removed: spareInRemoveList
           }
@@ -164,18 +170,21 @@ const SfSubPageThree = ({
 
         const warrantyBag = product?.product?.bag_warranty_expire_date &&
           normalizeDate(new Date(product?.product?.bag_warranty_expire_date)) >= normalizeDate(new Date()) ? true : false
-        const warrantyEnabled = !i?.refill_included && !i?.reinstallation_included && warrantyBag
+        const warrantyEnabled = !i?.reinstallation_included && warrantyBag
+
+        const { reason, ...amountObj } = findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
+          || { list_price: 0, charged: 0, ledger_cost: 0 }
 
         let obj = {
           service_id: i?.work_uuid,
           service_name: i?.work_name,
-          pricing: findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
-            || { list_price: 0, charged: 0, ledger_cost: 0 },
+          pricing: amountObj,
           call_rate: i?.call_rate,
           refill_included: i?.refill_included,
           reinstallation_included: i?.reinstallation_included,
           selected: inForm ? true : false,
-          under_warranty: warrantyEnabled
+          under_warranty: warrantyEnabled,
+          non_receivable_reason: (!amountObj?.charged && warrantyEnabled) ? 'Bag warranty override' : reason
         }
 
         return obj

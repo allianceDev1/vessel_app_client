@@ -67,7 +67,7 @@ const SfSubPageFour = ({ page, resources, changeSubmitStatus }) => {
 
         dispatch(sfSetting.updateSubmitStatus({ product_id: productId, is_submitted: true }))
         dispatch(sfSetting.setActiveSubPage(null))
-        dispatch(sfSetting.setActiveProduct([]))
+        dispatch(sfSetting.setActiveProduct(null))
     }
 
     useEffect(() => {

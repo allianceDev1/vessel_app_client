@@ -1,3 +1,5 @@
+@use '../../.././../assets/scss/mixins/mixin.scss' as *;
+
 .sf-page-one {
     .images-list {
         display: grid;
@@ -116,6 +118,88 @@
                     }
                 }
             }
+        }
+    }
+
+    .new-product-initial-box {
+        background-color: var(--color-warning-trans-13);
+        padding: 15px 15px;
+        border-radius: 15px;
+
+        h4 {
+            text-align: center;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            color: var(--text-secondary-2);
+            margin-bottom: 10px;
+        }
+    }
+
+    .new-product-list {
+        h3 {
+            @include subTitleSmall();
+            margin-bottom: 10px;
+        }
+
+        .addon-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            background-color: var(--surface-2);
+
+
+            .addon-item-border {
+                display: grid;
+                grid-template-columns: auto 50px;
+                gap: 10px;
+
+                h4 {
+                    font-size: 14px;
+                    font-weight: 600;
+
+                }
+
+                p {
+                    font-size: 13px;
+                    color: var(--text-secondary-2);
+                    font-weight: 500;
+                }
+
+                .action-section {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-end;
+                    gap: 10px;
+                }
+            }
+        }
+    }
+
+    .site-data-form {
+        margin-top: 25px;
+
+        h3 {
+            @include subTitleSmall();
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .submit-section {
+            margin-top: 30px;
         }
     }
 }

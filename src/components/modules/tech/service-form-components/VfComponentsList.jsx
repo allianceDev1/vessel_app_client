@@ -42,6 +42,7 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
                     qty: 1,
                     qty_type: item?.qty_type,
                     under_warranty: item?.under_warranty,
+                    non_receivable_reason: item?.non_receivable_reason,
                     warranty_period_months: item?.warranty_period_months,
                     is_customer_product: item?.is_customer_product,
                     is_removed: item?.is_removed
@@ -118,8 +119,6 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
         }))
     }
 
-
-
     useEffect(() => {
         let preData = componentsList
 
@@ -166,6 +165,9 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
                                         {item?.pricing?.list_price !== item?.pricing?.charged && <p className="hash-price">₹{item?.pricing?.list_price}</p>}
                                         <p className="real-price">₹{item?.pricing?.charged}</p>
                                     </div>
+                                    {item?.warranty_period_months ? <div className="warranty-badge">
+                                        <p>{item?.warranty_period_months} months warranty</p>
+                                    </div> : ''}
                                 </div>
                                 {item?.is_removed
                                     ? <div className="single-button">

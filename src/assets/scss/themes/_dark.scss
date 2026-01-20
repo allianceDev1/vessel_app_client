@@ -95,6 +95,7 @@
     --color-warning-text: var(--color-warning-dark-100);
     --color-warning-trans-33: color-mix(in srgb, var(--color-warning-dark-300) 30%, transparent);
     --color-warning-trans-82: color-mix(in srgb, var(--color-warning-dark-800) 20%, transparent);
+    --color-warning-trans-13: color-mix(in srgb, var(--color-warning-dark-500) 30%, transparent);
 
     /* Info */
     --color-info: var(--color-info-dark-500);

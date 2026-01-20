@@ -66,6 +66,13 @@ export const appDataSlice = createSlice({
             };
 
         },
+        updateServiceForm: (state, action) => {
+            const payload = action?.payload;
+            state.serviceForm = {
+                ...state.serviceForm,
+                ...payload
+            }
+        },
 
         // service form settings
         setSfActivePage: (state, action) => {
@@ -90,7 +97,7 @@ export const appDataSlice = createSlice({
             state.serviceFormSettings = {}
         },
         updateSubmitStatus: (state, action) => {
-            const { product_id, is_submitted = false } = action.payload;
+            const { product_id, ...status } = action.payload;
 
             if (!state.serviceFormSettings.products) {
                 state.serviceFormSettings.products = {};
@@ -98,7 +105,7 @@ export const appDataSlice = createSlice({
 
             state.serviceFormSettings.products[product_id] = {
                 ...(state.serviceFormSettings.products[product_id] || {}),
-                is_submitted
+                ...status
             };
         },
 
@@ -109,7 +116,7 @@ export const appDataSlice = createSlice({
 
 const {
     clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    resetServiceCategory, updateSubmitStatus
+    resetServiceCategory, updateSubmitStatus, updateServiceForm
 } = appDataSlice.actions;
 
 
@@ -124,6 +131,7 @@ const sfActions = {
     clearAll: clearServiceForm,
     startWork: startServiceWork,
     updateProduct: updateServiceProduct,
+    updateForm: updateServiceForm,
     resetService: resetServiceCategory
 }
 
