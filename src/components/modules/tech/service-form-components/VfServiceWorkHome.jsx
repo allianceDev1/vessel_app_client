@@ -44,7 +44,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu }) => {
         estimate: chargeDetail?.charge_amount || 0,
         applied: category?.service_charge_applied ? chargeDetail?.charge_amount : 0,
         call: chargeDetail?.call_count || 0,
-        remark: ''
+        remark: ''   
       })
 
       return;

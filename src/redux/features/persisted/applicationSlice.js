@@ -93,6 +93,12 @@ export const appDataSlice = createSlice({
                 activeProduct: action.payload
             }
         },
+        setFormSettings: (state, action) => {
+            state.serviceFormSettings = {
+                ...(state.serviceFormSettings || {}),
+                ...action.payload
+            }
+        },
         clearServiceFormSettings: (state) => {
             state.serviceFormSettings = {}
         },
@@ -116,7 +122,7 @@ export const appDataSlice = createSlice({
 
 const {
     clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    resetServiceCategory, updateSubmitStatus, updateServiceForm
+    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings
 } = appDataSlice.actions;
 
 
@@ -125,7 +131,8 @@ const sfSetting = {
     setActiveSubPage: setActiveSubPage,
     setActiveProduct: setActiveProduct,
     clearAll: clearServiceFormSettings,
-    updateSubmitStatus: updateSubmitStatus
+    updateSubmitStatus: updateSubmitStatus,
+    update: setFormSettings
 }
 const sfActions = {
     clearAll: clearServiceForm,

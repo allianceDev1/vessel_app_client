@@ -6,7 +6,7 @@ import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 
-const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInForm, changeSubmitStatus, product }) => {
+const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInForm, changeSubmitStatus }) => {
     const dispatch = useDispatch();
 
     const selectService = (item) => {
@@ -18,15 +18,26 @@ const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInFor
 
         changeSubmitStatus(false)
 
+        let updateData = {}
+
         if (isExisted) {
-            dispatch(sfActions.updateProduct({
+            updateData = {
                 work: {
                     ...productInForm?.work,
                     services_list: productInForm?.work?.services_list?.filter(s => s?.service_id !== item?.service_id)
                 }
-            }))
+            }
+
+            if (item?.rent_renewal_included) {
+                updateData.service_data = {
+                    is_rent_renewed: false
+                }
+            }
+
+            dispatch(sfActions.updateProduct(updateData))
         } else {
-            dispatch(sfActions.updateProduct({
+
+            updateData = {
                 work: {
                     ...productInForm?.work,
                     services_list: [
@@ -37,58 +48,18 @@ const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInFor
                         }
                     ]
                 }
-            }))
-        }
+            }
 
-    }
-
-    const selectRentRenewal = () => {
-
-        const item = {
-            service_id: 'rent_renewal',
-            service_name: 'Rent Renewal',
-            pricing: {
-                list_price: product?.rental?.renewal_charge,
-                charged: product?.rental?.renewal_charge,
-                ledger_cost: product?.rental?.renewal_charge
-            },
-            call_rate: 0,
-            refill_included: false,
-            reinstallation_included: false,
-            under_warranty: false,
-            non_receivable_reason: ''
-        }
-
-        const isExisted = productInForm?.work?.services_list?.filter(s => s?.service_id === 'rent_renewal')?.[0]
-        changeSubmitStatus(false)
-
-        if (isExisted) {
-            dispatch(sfActions.updateProduct({
-                work: {
-                    services_list: productInForm?.work?.services_list?.filter(s => s?.service_id !== 'rent_renewal')
-                },
-                service_data: {
-                    is_rent_renewed: false
-                }
-            }))
-        } else {
-            dispatch(sfActions.updateProduct({
-                work: {
-                    services_list: [
-                        ...(productInForm?.work?.services_list || []),
-                        {
-                            ...item,
-                            selected: true
-                        }
-                    ]
-                },
-                service_data: {
+            if (item?.rent_renewal_included) {
+                updateData.service_data = {
                     is_rent_renewed: true
                 }
-            }))
-        }
-    }
+            }
 
+            dispatch(sfActions.updateProduct(updateData))
+        }
+
+    }
     return (
         <div className="vf-service-list-comp-container">
             <div className="service-list-border">
@@ -97,20 +68,6 @@ const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInFor
                 </div>
 
                 <div className="service-list">
-                    {product?.rental?.has_rental && <div className="item" onClick={() => selectRentRenewal()}>
-                        <div className="checkbox-section">
-                            <div className={productInForm?.work?.services_list?.filter((s => s.service_id === 'rent_renewal'))?.[0] ? "checkbox active" : "checkbox"}>
-                                <TbCheck />
-                            </div>
-                        </div>
-                        <div className="item-content">
-                            <h4>Rent Renewal</h4>
-                            <div className="price">
-                                <p className="real-price">₹{product?.rental?.renewal_charge}</p>
-                            </div>
-                        </div>
-                    </div>}
-
                     {servicesList?.map((item) => {
                         return <div className="item" key={item?.service_id} onClick={() => selectService(item)}>
                             <div className="checkbox-section">

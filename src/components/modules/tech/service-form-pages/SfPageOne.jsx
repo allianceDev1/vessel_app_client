@@ -16,10 +16,12 @@ import AddNewAddOn from '../service-form-components/AddNewAddOn'
 import Select from '../../../UI_Primitives/inputs/Select'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import SFormSaveAndReview from '../service-form-components/SFormSaveAndReview'
+import Radio from '../../../UI_Primitives/inputs/Radio'
+import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 
 
 
-const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources }) => {
+const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork }) => {
     const dispatch = useDispatch();
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workSites, setWorkSites] = useState([])
@@ -52,13 +54,65 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
         }))
     }
 
+    const handleChangeRepeat = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'repeat_status') {
+            dispatch(sfActions.updateForm({
+                repeat: {
+                    ...(serviceForm?.repeat || {}),
+                    tech_say: value === 'Yes',
+                    comment: ''
+                }
+            }))
+
+            return;
+        }
+
+        if (name === 'repeat_comment') {
+            dispatch(sfActions.updateForm({
+                repeat: {
+                    ...(serviceForm?.repeat || {}),
+                    comment: e.target.value || ""
+                }
+            }))
+        }
+    }
+
+    const handleChangeWorkStatus = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'work_status') {
+            dispatch(sfActions.updateForm({
+                work_status: {
+                    ...(serviceForm?.work_status || {}),
+                    closed: value === 'Yes',
+                    schedule_date: '',
+                    start_time: '',
+                    end_time: ''
+                }
+            }))
+
+            return;
+        }
+
+        dispatch(sfActions.updateForm({
+            work_status: {
+                ...(serviceForm?.work_status || {}),
+                [name]: value || ''
+            }
+        }))
+
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // Validation
         dispatch(modal.push({
-            title: "Save & Review",
+            title: " ",
             body: <SFormSaveAndReview />
+
         }))
 
     }
@@ -87,6 +141,20 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
 
     }, [customer])
 
+    useEffect(() => {
+        if (!repeatWork) return;
+
+        if (!serviceForm?.repeat) {
+            dispatch(sfActions.updateForm({
+                repeat: {
+                    system_say: repeatWork?.is_repeat,
+                    tech_say: repeatWork?.is_repeat,
+                    comment: null
+                }
+            }));
+        }
+
+    }, [repeatWork])
 
     useEffect(() => {
         let colorOptions = resources?.filter(r => r.title === 'site_categories')?.[0]?.values || []
@@ -226,6 +294,41 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                         <InputText label={'T Hight (Feet)'} name={'t_hight'} value={String(serviceForm?.t_hight)} required
                             onChange={handleChangeForm} type='number' step={0.1} min={0} />
                     </div>
+
+                    {/* Repeat */}
+                    {serviceForm?.repeat?.system_say && <>
+                        <h3 style={{ marginTop: '20px' }}>Repeat Work</h3>
+                        <div className="form-section">
+                            <Radio label={"It is repeat work"} name={'repeat_status'} radioValue={'Yes'} onChange={handleChangeRepeat}
+                                checked={serviceForm?.repeat?.tech_say} required />
+                            <Radio label={"Not repeat work"} name={'repeat_status'} radioValue={'No'} onChange={handleChangeRepeat}
+                                checked={!serviceForm?.repeat?.tech_say} required />
+
+                            {!serviceForm?.repeat?.tech_say && <InputText label={'Comments'} id={'comment'} name={'repeat_comment'} value={serviceForm?.repeat?.comment}
+                                onChange={handleChangeRepeat} required />}
+                        </div>
+                    </>}
+
+                    {/* Work Status */}
+                    <h3 style={{ marginTop: '20px' }}>Work Status</h3>
+                    <div className="form-section">
+                        <Radio label={'Work Closed'} name={'work_status'} radioValue={'Yes'} onChange={handleChangeWorkStatus}
+                            checked={serviceForm?.work_status?.closed === true} required />
+                        <Radio label={'Not Closed'} name={'work_status'} radioValue={'No'} onChange={handleChangeWorkStatus}
+                            checked={serviceForm?.work_status?.closed === false} required />
+                       
+                        {serviceForm?.work_status?.closed === false && <>
+                            <InputText label={'Next Schedule Date'} name={'schedule_date'} value={serviceForm?.work_status?.schedule_date} required
+                                onChange={handleChangeWorkStatus} type='date' min={isoToYYYYMMDD(new Date())} />
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                <InputText label={'Start Time'} name={'start_time'} value={serviceForm?.work_status?.start_time} required
+                                    onChange={handleChangeWorkStatus} type='time' max={serviceForm?.work_status?.end_time} />
+                                <InputText label={'End Time'} name={'end_time'} value={serviceForm?.work_status?.end_time} required
+                                    onChange={handleChangeWorkStatus} type='time' min={serviceForm?.work_status?.start_time} />
+                            </div>
+                        </>}
+                    </div>
+
 
                     <div className="submit-section">
                         <Button label={'Save & Review'} rounded severity={'primary'} style={{ width: '100%' }} />

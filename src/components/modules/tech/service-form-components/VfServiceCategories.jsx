@@ -58,7 +58,7 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData,
                 package_name: category?.target_package?.name,
                 price: {
                     base_rate: baseRate,
-                    tax,
+                    tax: tax?.total_tax,
                     total_rate: totalRate
                 }
             }

@@ -38,6 +38,7 @@ const ServiceForm = () => {
     const [addOnServiceList, setAddOnServiceList] = useState([])
     const [addOnSpareList, setAddOnSpareList] = useState([])
     const [availableAddOns, setAvailableAddOns] = useState([])
+    const [repeatWork, setRepeatWork] = useState(false)
     const [error, setError] = useState({ error: false, title: '', message: '' })
 
 
@@ -65,7 +66,6 @@ const ServiceForm = () => {
 
 
 
-
             // Customer products and packages
             const customerOwnProducts = [...(resInit?.products?.vessels || []), ...(resInit?.products?.add_ons || [])]
             setCustomerProducts(customerOwnProducts)
@@ -81,9 +81,13 @@ const ServiceForm = () => {
             setServiceCategories(resInit?.service_categories || [])
             setAddOnServiceCategories(resInit?.addOn_service_categories || [])
 
-
             // Registration form
             setRegData(resInit?.registration || {})
+
+            // Repeat
+            setRepeatWork(resInit?.repeat || { is_repeat: false, repeat_work: {} })
+
+
 
 
 
@@ -155,7 +159,7 @@ const ServiceForm = () => {
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
                     <SfPageOne page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
                         changeSubmitStatus={changeSubmitStatusIsFalse} availableAddOns={availableAddOns} addOnSpareList={addOnSpareList}
-                        resources={resources}
+                        resources={resources} repeatWork={repeatWork}
                     />}
 
                 {/* Vessel : Sub Pages  */}

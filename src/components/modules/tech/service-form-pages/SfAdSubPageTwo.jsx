@@ -92,25 +92,48 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
         }
 
         if (workMenu?.type === 'services') {
-            setServicesList(serviceList?.map(i => {
+            setServicesList(serviceList?.filter(s => !(s?.rent_renewal_included && !product?.rental?.has_rental))?.map(i => {
                 const inForm = productInForm?.work?.services_list?.filter(s => s?.service_id === i?.work_uuid)?.[0]
 
                 const warrantyItem = product?.product?.wr_expire_date &&
                     normalizeDate(new Date(product?.product?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
                 const warrantyEnabled = !i?.reinstallation_included && warrantyItem
-                const { reason, ...amountObj } = findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
-                    || { list_price: 0, charged: 0, ledger_cost: 0 }
+                let itemPrice = {};
+
+                switch (i.pricing_source) {
+                    case 'SERVICE_WORK':
+                        itemPrice = findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
+                            || { list_price: 0, charged: 0, ledger_cost: 0, reason: null }
+                        break;
+
+                    case 'PRODUCT_RENTAL':
+                        itemPrice = {
+                            list_price: product?.rental?.renewal_charge,
+                            charged: product?.rental?.renewal_charge,
+                            ledger_cost: product?.rental?.renewal_charge,
+                            reason: !product?.rental?.renewal_charge ? 'Zero free renewal charge' : null
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
 
                 let obj = {
                     service_id: i?.work_uuid,
                     service_name: i?.work_name,
-                    pricing: amountObj,
+                    pricing: {
+                        list_price: itemPrice?.list_price,
+                        charged: itemPrice?.charged,
+                        ledger_cost: itemPrice?.ledger_cost,
+                    },
                     call_rate: i?.call_rate,
+                    rent_renewal_included: i?.rent_renewal_included,
                     refill_included: i?.refill_included,
                     reinstallation_included: i?.reinstallation_included,
                     selected: inForm ? true : false,
                     under_warranty: warrantyEnabled,
-                    non_receivable_reason: (!amountObj?.charged && warrantyEnabled) ? 'Product warranty override' : reason,
+                    non_receivable_reason: (!itemPrice?.charged && warrantyEnabled) ? 'Product warranty override' : itemPrice?.reason,
                 }
 
                 return obj
@@ -143,7 +166,7 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
                         {workMenu?.type === 'services' &&
                             <AdServiceList setWorkMenu={setWorkMenu} componentsPage={componentsPage} servicesList={servicesList}
-                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} product={product} />}
+                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
                     </>
                     : <AdServiceWorkHome category={category} setWorkMenu={setWorkMenu} product={product} changeSubmitStatus={changeSubmitStatus} />}
                 </>

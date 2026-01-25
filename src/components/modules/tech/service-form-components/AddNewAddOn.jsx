@@ -175,7 +175,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
             total = totalElemCharged + unitProductCharged
         }
 
-        if (form?.purchase_type === 'rent') {
+        if (form?.purchase_type === 'rental') {
             // Element
             const unitElemSellingRate = form?.element?.selling_rate || 0
             const unitElemQty = form?.element?.qty || 0
@@ -216,8 +216,8 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
                     <div>
                         <Radio label={'In Warranty'} name={'purchase_type'} radioValue={'in_warranty'}
                             checked={form?.purchase_type === 'in_warranty'} onChange={handleChange} required />
-                        <Radio label={'Rent'} name={'purchase_type'} radioValue={'rent'} required
-                            checked={form?.purchase_type === 'rent'} onChange={handleChange} />
+                        <Radio label={'Rent'} name={'purchase_type'} radioValue={'rental'} required
+                            checked={form?.purchase_type === 'rental'} onChange={handleChange} />
                     </div>
                 </div>
                 <Select label={'Product'} name={'product'} options={[{}, ...(availableAddOns?.map(a => ({ label: `${a?.item_id} - ${a?.product_name}`, value: a?.item_uuid })) || [])]}
