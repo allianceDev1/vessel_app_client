@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './start-travel.scss'
-import RunningImage from '../../../../assets/images/illustrations/running-scooter.png';
+import RunningImage from '../../../../assets/images/illustrations/running-scooter.webp';
 import Button from '../../../UI_Primitives/buttons/Button';
 import { useDispatch } from 'react-redux';
 import { api } from '../../../../api';
@@ -48,7 +48,7 @@ const StartTravel = ({ registrationId, proceedTravel }) => {
                     <div className="text-section">
                         <h2>Start Your Travel</h2>
                         <p>
-                            By proceeding, your travel for the water purifier service will start immediately and a
+                            By proceeding, your travel for the service will start immediately and a
                             verification OTP will be sent to the customer’s registered mobile number for service completion.
                             <br></br>
                             <br></br>

@@ -10,6 +10,7 @@ const RotateToken = () => {
             const refreshToken = Cookies.get('_rfs_tkn'); // Retrieve the refresh token
 
             api.ttSv2Axios.post('/auth/rotate-token', { refresh_token: refreshToken }).then((response) => {
+                console.log(response);
 
                 const cookieOptions = {
                     secure: false,
@@ -18,13 +19,15 @@ const RotateToken = () => {
                     expires: 40
                 };
 
-                Cookies.set('_acc_tkn', response?.data?.access_token, cookieOptions);
+                Cookies.set('_acc_tkn', response?.access_token, cookieOptions);
 
             })
         }, 4 * 60 * 60 * 1000);
 
         return () => clearInterval(interval); // Cleanup interval on unmount
     }, [])
+
+    // 4 * 60 * 60 * 1000
 
     return;
 }

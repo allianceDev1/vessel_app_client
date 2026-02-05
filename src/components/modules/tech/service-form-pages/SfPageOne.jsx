@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUpcomingServiceType } from '../../../../utils/services/product_service'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
+import { PACKAGE_STATUSES, packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import EmptyState from '../../../../components/UI_Primitives/ui-states/EmptyState'
 import Badge from '../../../../components/UI_Primitives/badge/Badge'
@@ -15,13 +15,14 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import AddNewAddOn from '../service-form-components/AddNewAddOn'
 import Select from '../../../UI_Primitives/inputs/Select'
 import InputText from '../../../UI_Primitives/inputs/InputText'
-import SFormSaveAndReview from '../service-form-components/SFormSaveAndReview'
+import SFormSave from '../service-form-components/SFormSave'
 import Radio from '../../../UI_Primitives/inputs/Radio'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { generateUniqueId } from '../../../../utils/helpers/generate_Id'
 
 
 
-const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork }) => {
+const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
     const dispatch = useDispatch();
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workSites, setWorkSites] = useState([])
@@ -36,13 +37,19 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
     const clickNewAddOnButton = () => {
         dispatch(modal.push({
             title: 'Select New Add-On',
-            body: <AddNewAddOn availableAddOns={availableAddOns} addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'refill_element')} />
+            body: <AddNewAddOn availableAddOns={availableAddOns} serviceCharges={serviceCharges}
+                addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'refill_element')} />
         }))
     }
 
     const handleDeleteNewAddOn = (uniqueId) => {
         dispatch(sfActions.updateForm({
             new_add_ons: serviceForm?.new_add_ons?.filter(e => e?.unique_id !== uniqueId)
+        }))
+
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time: null
         }))
     }
 
@@ -51,6 +58,11 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
 
         dispatch(sfActions.updateForm({
             [name]: value || null
+        }))
+
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time: null
         }))
     }
 
@@ -77,10 +89,20 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                 }
             }))
         }
+
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time: null
+        }))
     }
 
     const handleChangeWorkStatus = (e) => {
         const { name, value } = e.target;
+
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time: null
+        }))
 
         if (name === 'work_status') {
             dispatch(sfActions.updateForm({
@@ -102,16 +124,30 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                 [name]: value || ''
             }
         }))
-
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validation
+        const formProductCount = Object.keys(serviceForm?.service_products || {}).length || 0
+        const saveProductCount = Object.values(
+            serviceFormSettings?.products ?? {}
+        ).filter(product => product?.is_saved === true).length || 0;
+
+        if (formProductCount === saveProductCount && serviceFormSettings?.form_saved) {
+
+            // redirect to next page
+            dispatch(sfSetting.setActivePage(101))
+            return;
+        }
+
+        // Save popup
+        const modalId = generateUniqueId(6)
         dispatch(modal.push({
+            id: modalId,
             title: " ",
-            body: <SFormSaveAndReview />
+            body: <SFormSave modalId={modalId} />,
+            freezeClose: true
 
         }))
 
@@ -196,22 +232,22 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                             {pg?.map((item, productIndex) => {
 
                                 const product = customerProducts?.filter(p => p.product_id === item?.product_id)?.[0]
-                                const productPackage = product?.package?.package_status === 'ACTIVE' ? product?.package : null
-                                const packageFreeze = product?.package?.package_status === 'FROZEN' ? true : false
-                                const packageExpire = product?.package?.package_status === 'EXPIRED' ? true : false
+                                const productPackage = product?.package?.package_status === PACKAGE_STATUSES.ACTIVE ? product?.package : null
+                                const packageFreeze = product?.package?.package_status === PACKAGE_STATUSES.FROZEN ? true : false
+                                const packageExpire = product?.package?.package_status === PACKAGE_STATUSES.EXPIRED ? true : false
                                 const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
                                 const lowTokens = productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? true : false
                                 const isWorked = serviceForm?.service_products?.[item?.product_id]?.service_data?.category_id ? true : false
                                 const alertText = packageFreeze ? "The current product package is frozen"
                                     : packageExpire ? "The current product package is expired"
                                         : lowTokens ? 'May be chance to expire the product package on this service'
-                                            : (lowTokens && isWorked) ? 'Must complete the token Top-up process' : ''
+                                            : (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens' : ''
                                 const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
-
+                                const isSaved = serviceFormSettings?.products?.[product?.product_id]?.is_saved || false
 
                                 return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type)}>
                                     <div className={`order-box`}>
-                                        <div className={`order-index ${isSubmitted ? 'submitted' : ''}`}>
+                                        <div className={`order-index ${isSaved ? 'saved' : isSubmitted ? 'submitted' : ''}`}>
                                             <p>{product?.product_type === 'Vessel' ? (product?.order_id || "UN") : 'AD'}</p>
                                         </div>
                                         {pg?.length !== productIndex + 1 && <div className="order-line"></div>}
@@ -248,7 +284,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
             </div >
 
             {/* New Add-On */}
-            {serviceForm?.new_add_ons?.length === 0 && <div className="new-product-initial-box">
+            {!serviceForm?.new_add_ons?.length && <div className="new-product-initial-box">
                 <h4>Add New Add-On</h4>
                 <p>To add a new add-on, click the button below. After submitting the form, the product will be added to
                     the customer’s list. You can add the product as either a rental or a new item.</p>
@@ -287,11 +323,11 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                             options={[{}, ...workSites]} onChange={handleChangeForm} />
                         <Select label={'Water Source'} name={'source'} value={serviceForm?.source} required
                             options={[{}, ...waterSources]} onChange={handleChangeForm} />
-                        <InputText label={'Storage Capacity (Ltr)'} name={'tank_capacity_ltr'} value={String(serviceForm?.tank_capacity_ltr)} required
+                        <InputText label={'Storage Capacity (Ltr)'} name={'tank_capacity_ltr'} value={(serviceForm?.tank_capacity_ltr)} required
                             onChange={handleChangeForm} type='number' step={0.1} min={0} />
-                        <InputText label={'Floor Hight (Feet)'} name={'floor_hight'} value={String(serviceForm?.floor_hight)} required
+                        <InputText label={'Floor Hight (Feet)'} name={'floor_hight'} value={(serviceForm?.floor_hight)} required
                             onChange={handleChangeForm} type='number' step={0.1} min={0} />
-                        <InputText label={'T Hight (Feet)'} name={'t_hight'} value={String(serviceForm?.t_hight)} required
+                        <InputText label={'T Hight (Feet)'} name={'t_hight'} value={(serviceForm?.t_hight)} required
                             onChange={handleChangeForm} type='number' step={0.1} min={0} />
                     </div>
 
@@ -316,7 +352,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                             checked={serviceForm?.work_status?.closed === true} required />
                         <Radio label={'Not Closed'} name={'work_status'} radioValue={'No'} onChange={handleChangeWorkStatus}
                             checked={serviceForm?.work_status?.closed === false} required />
-                       
+
                         {serviceForm?.work_status?.closed === false && <>
                             <InputText label={'Next Schedule Date'} name={'schedule_date'} value={serviceForm?.work_status?.schedule_date} required
                                 onChange={handleChangeWorkStatus} type='date' min={isoToYYYYMMDD(new Date())} />

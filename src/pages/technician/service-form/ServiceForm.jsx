@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
 import FormTopBar from '../../../components/modules/tech/service-form-components/FormTopBar'
-import { sfSetting } from '../../../redux/features/persisted/applicationSlice'
-import { serviceFormPageRoute, serviceFormSubPageRoute } from '../../../assets/javascript/pre_data/service'
+import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice'
 import { api } from '../../../api'
 import { buildCustomerPGStretcher } from '../../../utils/services/product_service'
 import SfPageOne from '../../../components/modules/tech/service-form-pages/SfPageOne'
@@ -17,7 +16,9 @@ import SfSubPageFour from '../../../components/modules/tech/service-form-pages/S
 import SfAdSubPageOne from '../../../components/modules/tech/service-form-pages/SfAdSubPageOne'
 import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
 import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
-import InputColor from '../../../components/UI_Primitives/inputs/InputColor'
+import SfPageTwo from '../../../components/modules/tech/service-form-pages/SfPageTwo'
+import SfPageThree from '../../../components/modules/tech/service-form-pages/SfPageThree'
+import SfPageFour from '../../../components/modules/tech/service-form-pages/SfPageFour'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -39,6 +40,7 @@ const ServiceForm = () => {
     const [addOnSpareList, setAddOnSpareList] = useState([])
     const [availableAddOns, setAvailableAddOns] = useState([])
     const [repeatWork, setRepeatWork] = useState(false)
+    const [serviceCharges, setServiceCharges] = useState([])
     const [error, setError] = useState({ error: false, title: '', message: '' })
 
 
@@ -63,6 +65,7 @@ const ServiceForm = () => {
             setAddOnServiceList(resResources?.add_on_services || [])
             setAddOnSpareList(resResources?.add_on_spares || [])
             setAvailableAddOns(resResources?.add_ons_list || [])
+            setServiceCharges(resResources?.new_product_service_charges || [])
 
 
 
@@ -87,9 +90,10 @@ const ServiceForm = () => {
             // Repeat
             setRepeatWork(resInit?.repeat || { is_repeat: false, repeat_work: {} })
 
-
-
-
+            // Call Log
+            dispatch(sfActions.updateVerification({
+                otpLogs: resInit?.otp_logs || []
+            }))
 
 
 
@@ -109,6 +113,10 @@ const ServiceForm = () => {
             product_id: serviceFormSettings?.activeProduct?.[0],
             is_submitted: false,
             is_saved: false
+        }))
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time: null
         }))
     }
 
@@ -159,8 +167,15 @@ const ServiceForm = () => {
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
                     <SfPageOne page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
                         changeSubmitStatus={changeSubmitStatusIsFalse} availableAddOns={availableAddOns} addOnSpareList={addOnSpareList}
-                        resources={resources} repeatWork={repeatWork}
-                    />}
+                        resources={resources} repeatWork={repeatWork} serviceCharges={serviceCharges} />}
+                {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
+                    <SfPageTwo page={{ index: 101, type: 'page' }} />}
+                {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
+                    <SfPageThree page={{ index: 102, type: 'page' }} />}
+                {serviceFormSettings?.activePage === 103 && !serviceFormSettings?.activeSubPage &&
+                    <SfPageFour page={{ index: 103, type: 'page' }} />}
+
+
 
                 {/* Vessel : Sub Pages  */}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
@@ -174,6 +189,7 @@ const ServiceForm = () => {
                         changeSubmitStatus={changeSubmitStatusIsFalse} />}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 && serviceFormSettings?.activeProduct?.[2] === 'Vessel' &&
                     <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+
 
                 {/* Add-On : Sub Pages  */}
                 {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'Add-On' &&

@@ -7,12 +7,14 @@ import Checkbox from '../../../UI_Primitives/inputs/Checkbox'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 import { useDispatch, useSelector } from 'react-redux'
-import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
-const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
+const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
     const dispatch = useDispatch();
-    const [form, setForm] = useState({})
+    const [form, setForm] = useState({
+        service_charge: serviceCharges?.[0]?.charge_amount || 0,
+    })
     const [totalAmount, setTotalAmount] = useState({})
     const { serviceForm } = useSelector((state) => state.application)
 
@@ -111,6 +113,11 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
                 charged: totalAmount?.product?.charged || 0,
                 ledger_cost: totalAmount?.product?.ledger_cost || 0
             },
+            service_charge: {
+                list_price: form?.service_charge || 0,
+                charged: totalAmount?.service_charge || 0,
+                ledger_cost: totalAmount?.service_charge || 0
+            },
             total_amount: {
                 list_price: totalAmount?.total || 0,
                 charged: totalAmount?.total || 0,
@@ -122,13 +129,18 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
             new_add_ons: [...(serviceForm?.new_add_ons || []), obj]
         }))
 
+        dispatch(sfSetting.update({
+            form_saved: false,
+            form_saved_time : null
+        }))
+
         dispatch(modal.pull.all())
 
     }
 
     useEffect(() => {
         const element = {}, product = {}
-        let total = 0
+        let service_charge = 0, total = 0
 
         if (form?.purchase_type === 'in_warranty' && form?.is_zero_fee === true) {
             // Element
@@ -195,7 +207,13 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
             total = totalElemCharged + unitProductCharged
         }
 
-        setTotalAmount({ element, product, total })
+        if (form?.service_charge && !form?.is_zero_fee) {
+            service_charge = Number(form?.service_charge) || 0
+        }
+
+        total += service_charge
+
+        setTotalAmount({ element, product, service_charge, total })
 
     }, [form])
 
@@ -228,10 +246,16 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList }) => {
                     onChange={handleChangeElementQty} required value={form?.element?.qty} disabled={!form?.element?.spare_uuid} />
                 {form?.purchase_type === 'in_warranty' && <Checkbox label={'It is zero fee item.'} name={'is_zero_fee'} value={'Yes'}
                     isChecked={form?.is_zero_fee === true} onChange={handleChange} />}
-                <InputText label={'Expire Date'} name={'expire_date'} value={form?.expire_date} onChange={handleChange}
+                {form?.purchase_type === 'in_warranty' && <p><b>Zero Fee:</b> The filter element expiry date is set to match the product expiry date.
+                    This ensures that any refilling done during the warranty period is provided at no cost to the customer.</p>}
+                <InputText label={'Product Expire Date'} name={'expire_date'} value={form?.expire_date} onChange={handleChange}
                     type='date' required min={isoToYYYYMMDD(new Date())} />
+                <Select label={'Service Charge'} name={'service_charge'} options={[{}, ...(serviceCharges?.map(a => ({ label: a.charge_amount, value: a?.charge_amount })) || [])]}
+                    onChange={handleChange} required value={form?.service_charge} />
+
 
                 <Button label={'Add Product'} rounded style={{ marginTop: '20px' }} />
+
             </form>
         </div>
     )

@@ -58,6 +58,11 @@
                             background-color: var(--color-primary-bg);
                             color: var(--color-primary-text);
                         }
+
+                        &.saved {
+                            background-color: var(--color-success-bg);
+                            color: var(--color-success-text);
+                        }
                     }
 
                     .order-line {

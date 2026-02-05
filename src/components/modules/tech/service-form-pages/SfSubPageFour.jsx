@@ -120,9 +120,9 @@ const SfSubPageFour = ({ page, resources, changeSubmitStatus }) => {
                     <h3 className='subtitle'>Water Quality</h3>
                     <div className="box-col1">
                         <Radio label={"Good Quality"} name={'status'} radioValue={'Good'} onChange={updateWaterQuality}
-                            checked={productInForm?.evaluation?.water_quality?.status === 'Good'} />
+                            checked={productInForm?.evaluation?.water_quality?.status === 'Good'} required />
                         <Radio label={"Poor Quality"} name={'status'} radioValue={'Bad'} onChange={updateWaterQuality}
-                            checked={productInForm?.evaluation?.water_quality?.status === 'Bad'} />
+                            checked={productInForm?.evaluation?.water_quality?.status === 'Bad'} required />
                         {productInForm?.evaluation?.water_quality?.status === 'Bad' &&
                             <InputText label={'Comments'} id={'comment'} name={'comment'} value={productInForm?.evaluation?.water_quality?.comment}
                                 onChange={updateWaterQuality} required />}

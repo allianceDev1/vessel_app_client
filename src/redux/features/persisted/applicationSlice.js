@@ -9,7 +9,10 @@ const initialState = {
         activeProduct: null,
         storageTankAvailable: false,
         products: {}
-    }
+    },
+    verification: {},
+    review: {},
+    payment: {}
 }
 
 export const appDataSlice = createSlice({
@@ -101,6 +104,8 @@ export const appDataSlice = createSlice({
         },
         clearServiceFormSettings: (state) => {
             state.serviceFormSettings = {}
+            state.verification = {}
+            state.review = {}
         },
         updateSubmitStatus: (state, action) => {
             const { product_id, ...status } = action.payload;
@@ -114,15 +119,25 @@ export const appDataSlice = createSlice({
                 ...status
             };
         },
-
-
+        setVerification: (state, action) => {
+            state.verification = {
+                ...(state.verification || {}),
+                ...action.payload
+            }
+        },
+        setReview: (state, action) => {
+            state.review = action.payload
+        },
+        setPayment: (state, action) => {
+            state.payment = action.payload
+        }
     }
 })
 
 
 const {
     clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings
+    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment
 } = appDataSlice.actions;
 
 
@@ -139,7 +154,10 @@ const sfActions = {
     startWork: startServiceWork,
     updateProduct: updateServiceProduct,
     updateForm: updateServiceForm,
-    resetService: resetServiceCategory
+    resetService: resetServiceCategory,
+    updateVerification: setVerification,
+    updateReview: setReview,
+    updatePayment: setPayment
 }
 
 export { sfSetting, sfActions }

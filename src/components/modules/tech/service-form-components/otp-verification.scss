@@ -1,0 +1,161 @@
+@use '../../.././../assets/scss/mixins/mixin.scss' as *;
+
+.tech-service-form-otp-verification-comp {
+
+    .info-box {
+        p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary-2);
+        }
+
+        dl {
+            padding-left: 20px;
+            margin-top: 10px;
+
+            li {
+                font-size: 13px;
+                font-weight: 400;
+                color: var(--text-secondary-2);
+            }
+        }
+    }
+
+    .status-section {
+        background-color: var(--color-natural-trans-53);
+        padding: 15px 15px;
+        border-radius: 20px;
+        margin-top: 30px;
+
+        >.head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            h3 {
+                font-size: 17px;
+                font-weight: 600;
+                @include threeDots();
+                color: var(--text-secondary-2);
+            }
+        }
+
+        .number-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+
+            .item {
+                display: grid;
+                grid-template-columns: 30px auto auto;
+                align-items: center;
+                gap: 10px;
+                margin-top: 10px;
+
+                >.icon {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+
+                    svg {
+                        font-size: 25px;
+                    }
+                }
+
+                >div {
+                    h4 {
+                        font-size: 15px;
+                        font-weight: 600;
+                        @include threeDots();
+                    }
+
+                    p {
+                        font-size: 13px;
+                        color: var(--text-secondary-2);
+                        @include threeDots();
+                    }
+                }
+
+                >p {
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: end;
+                    @include threeDots();
+                }
+
+            }
+        }
+
+        .action {
+            margin-top: 25px;
+
+            .buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+    }
+
+    .verify-section {
+        margin-top: 25px;
+
+        .head {
+            h3 {
+                font-size: 17px;
+                font-weight: 600;
+                @include threeDots();
+                color: var(--text-secondary-2);
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary-2);
+                margin-top: 5px;
+            }
+        }
+
+        form {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+
+
+            input {
+                width: 100%;
+                font-size: 25px;
+                font-weight: 600;
+                text-align: center;
+                letter-spacing: 20px;
+                padding: 10px;
+                border: 1px solid var(--color-natural-4);
+                border-radius: 10px;
+                background-color: var(--color-natural-trans-53);
+                backdrop-filter: blur(5px);
+                transition: border-color 0.2s ease-in-out;
+                outline: none;
+                color: var(--text-primary);
+
+                &:focus {
+                    border-color: var(--color-primary);
+                }
+
+                &:focus~label {
+                    color: var(--color-primary);
+                }
+            }
+
+            .reset-type {
+                margin-top: 15px;
+                color: var(--color-primary);
+                font-size: 15px;
+                font-weight: 500;
+                cursor: pointer;
+
+            }
+        }
+    }
+
+}

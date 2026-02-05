@@ -1,0 +1,93 @@
+@use '../../.././../assets/scss/mixins/mixin.scss' as *;
+
+.sf-page-four {
+    .title {
+        @include subTitleSmall();
+    }
+
+    .advance-amount-container,
+    .payment-container {
+        margin-top: 20px;
+
+
+        .payment-choose {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            cursor: pointer;
+            background-color: var(--surface-1);
+            border: 1px solid var(--border-medium);
+            padding: 15px 15px;
+            border-radius: 15px;
+
+            h3 {
+                font-size: 15px;
+                font-weight: 500;
+            }
+
+            svg {
+                font-size: 28px;
+                color: var(--color-primary);
+            }
+        }
+
+        .payments-list {
+            margin-top: 15px;
+
+            .payment-item {
+                display: grid;
+                grid-template-columns: 40px 1fr 40px;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+                background-color: var(--surface-1);
+                padding: 10px 15px;
+                border-radius: 15px;
+
+                .action,
+                .icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    svg {
+                        font-size: 28px;
+                    }
+                }
+
+                .text {
+                    h4 {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: var(--text-secondary-2);
+                        margin-top: 3px;
+                    }
+                }
+
+                .action {
+                    color: var(--color-danger);
+                    cursor: pointer;
+                }
+
+
+            }
+        }
+
+        .info-note {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-secondary-2);
+            margin-top: 10px;
+        }
+    }
+
+    // .advance-amount-container {
+    //     margin-top: 20px;
+    // }
+}

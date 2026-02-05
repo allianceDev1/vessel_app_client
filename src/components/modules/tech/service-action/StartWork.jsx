@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './start-travel.scss'
-import WorkerImage from '../../../../assets/images/illustrations/service-worker.png';
+import WorkerImage from '../../../../assets/images/illustrations/service-worker.webp';
 import Button from '../../../UI_Primitives/buttons/Button';
 import { useDispatch } from 'react-redux';
 import { api } from '../../../../api';
