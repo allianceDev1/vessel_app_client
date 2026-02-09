@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './bill-summery.scss'
 import { useSelector } from 'react-redux'
 
-const BillSummery = ({ fill = false }) => {
+const BillSummery = ({ expand = true }) => {
     const { payment } = useSelector((state) => state.application)
     const [grandTotal, setGrandTotal] = useState(0)
 
@@ -13,8 +13,8 @@ const BillSummery = ({ fill = false }) => {
     }, [payment])
 
     return (
-        <div className={`tech-bill-summery-comp-container ${fill ? 'fill-container' : ''}`}>
-            {!fill && <>
+        <div className={`tech-bill-summery-comp-container ${!expand ? 'fill-container' : ''}`}>
+            {expand && <>
                 <div className="item">
                     <p className="label">Sub Total</p>
                     <p className='value'>₹{payment?.bill_summery?.sub_total || 0}</p>
@@ -27,16 +27,14 @@ const BillSummery = ({ fill = false }) => {
                     <p className="label">Discount (Less)</p>
                     <p className='value'>₹{payment?.bill_summery?.discount || 0}</p>
                 </div> : ''}
-                <div className="item" style={{ marginBottom: '10px' }}>
+                <div className="item">
                     <p className="label">Complement (Less)</p>
                     <p className='value'>₹{payment?.complement_amount || 0}</p>
                 </div>
             </>}
-            <div className="amount-section">
-                <h3>Total Amount</h3>
-                <div>
-                    {grandTotal ? <h2>₹{grandTotal || 0}</h2> : <h2>___</h2>}
-                </div>
+            <div className="item item-total">
+                <p>Total Amount</p>
+                {grandTotal ? <p>₹{grandTotal || 0}</p> : <p>___</p>}
             </div>
         </div>
     )

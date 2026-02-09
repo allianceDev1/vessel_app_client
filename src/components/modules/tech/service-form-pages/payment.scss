@@ -1,14 +1,9 @@
 @use '../../.././../assets/scss/mixins/mixin.scss' as *;
 
 .sf-page-four {
-    .title {
-        @include subTitleSmall();
-    }
 
-    .advance-amount-container,
     .payment-container {
         margin-top: 20px;
-
 
         .payment-choose {
             display: flex;
@@ -79,15 +74,28 @@
             }
         }
 
+    }
+
+    .balance-amount-container {
+        margin-top: 20px;
+
+        .balance-form-div {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+    }
+
+    .advance-amount-container {
+        margin-top: 20px;
+
         .info-note {
             font-size: 13px;
             font-weight: 400;
             color: var(--text-secondary-2);
-            margin-top: 10px;
+            text-align: justify;
         }
     }
 
-    // .advance-amount-container {
-    //     margin-top: 20px;
-    // }
 }

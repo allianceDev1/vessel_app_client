@@ -1,0 +1,32 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+
+.verification {
+
+    .verification-type-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+
+        .type-border {
+            background-color: var(--surface-1);
+            padding: 15px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+
+            h3 {
+                font-weight: 500;
+                font-size: 18px;
+                @include threeDots();
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--text-secondary-2);
+                margin-top: 5px;
+            }
+        }
+    }
+
+}

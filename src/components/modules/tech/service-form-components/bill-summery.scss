@@ -1,53 +1,34 @@
 .tech-bill-summery-comp-container {
-    background-color: var(--color-success-trans-33);
+    background-color: var(--color-natural-trans-53);
+    border: solid 1px var(--border-medium);
     border-radius: 15px;
-    padding: 15px 20px;
-    border: 3px solid var(--color-success);
+    padding: 10px 20px;
 
     .item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px dashed var(--border-medium);
+        border-bottom: 1px dashed var(--border-light);
         padding: 6px 0;
 
         p {
-            font-size: 14px;
-            font-weight: 400;
+            font-size: 13px;
+            font-weight: 500;
         }
     }
 
-    .amount-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .item-total {
+        border-bottom: none;
 
-
-        h3 {
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--color-success-text);
-        }
-
-        >div {
-            text-align: end;
-
-            h2 {
-                font-size: 20px;
-                font-weight: 600;
-                color: var(--color-success);
-            }
+        p {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--color-primary);
         }
     }
-
 
     &.fill-container {
-        background-color: var(--color-success);
-        border: 3px solid var(--color-success);
-
-        h3,
-        h2 {
-            color: white !important;
-        }
+        padding: 10px 20px;
+        border: solid 1px var(--border-dark);
     }
 }

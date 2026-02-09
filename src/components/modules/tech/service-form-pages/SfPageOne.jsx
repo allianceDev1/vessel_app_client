@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import './page-style.scss'
 import './sf-page-one.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
 import { TbAlertCircle, TbPlus, TbSitemap, TbTrash } from 'react-icons/tb'

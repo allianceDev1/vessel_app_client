@@ -16,9 +16,8 @@ import SfSubPageFour from '../../../components/modules/tech/service-form-pages/S
 import SfAdSubPageOne from '../../../components/modules/tech/service-form-pages/SfAdSubPageOne'
 import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
 import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
-import SfPageTwo from '../../../components/modules/tech/service-form-pages/SfPageTwo'
-import SfPageThree from '../../../components/modules/tech/service-form-pages/SfPageThree'
-import SfPageFour from '../../../components/modules/tech/service-form-pages/SfPageFour'
+import Review from '../../../components/modules/tech/service-form-pages/Review'
+import Payment from '../../../components/modules/tech/service-form-pages/Payment'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -169,11 +168,9 @@ const ServiceForm = () => {
                         changeSubmitStatus={changeSubmitStatusIsFalse} availableAddOns={availableAddOns} addOnSpareList={addOnSpareList}
                         resources={resources} repeatWork={repeatWork} serviceCharges={serviceCharges} />}
                 {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
-                    <SfPageTwo page={{ index: 101, type: 'page' }} />}
+                    <Review page={{ index: 101, type: 'page' }} />}
                 {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
-                    <SfPageThree page={{ index: 102, type: 'page' }} />}
-                {serviceFormSettings?.activePage === 103 && !serviceFormSettings?.activeSubPage &&
-                    <SfPageFour page={{ index: 103, type: 'page' }} />}
+                    <Payment page={{ index: 102, type: 'page' }} />}
 
 
 

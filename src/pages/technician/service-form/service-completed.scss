@@ -1,0 +1,33 @@
+.tech-service-completed-page {
+
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+
+    /* Footer */
+    .footer {
+        width: 400px;
+        max-width: 400px;
+        margin-top: 15px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-light);
+    }
+
+    .confirmation-text {
+        text-align: center;
+        font-size: 13px;
+        color: var(--text-secondary-3);
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+}

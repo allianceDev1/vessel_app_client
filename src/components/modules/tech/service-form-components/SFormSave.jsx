@@ -6,7 +6,6 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { api } from '../../../../api'
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { type } from '@testing-library/user-event/dist/type'
 
 
 const SFormSave = ({ modalId }) => {

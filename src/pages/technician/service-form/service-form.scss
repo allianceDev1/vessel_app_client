@@ -1,3 +1,5 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
 .tech-service-form-loader-container {
     display: flex;
     flex-direction: column;
@@ -27,7 +29,31 @@
     }
 
     .service-form-page-container {
-        padding: 10px 15px 0 15px;
+        padding: 10px 15px 50px 15px;
+
+        .title-section {
+            margin-top: 10px;
+            margin-bottom: 25px;
+
+            h3 {
+                font-size: 22px;
+                font-weight: 700;
+                @include threeDots();
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary-2);
+            }
+
+
+        }
+
+        .sub-title {
+            @include subTitleSmall();
+            margin-bottom: 12px;
+        }
     }
 }
 

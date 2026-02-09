@@ -22,6 +22,7 @@ const ServiceForm = React.lazy(() => import('../pages/technician/service-form/Se
 
 
 
+
 const Technician = () => {
   const { user } = useSelector((state) => state.user)
   const isAuthenticated = user?.allowed_origins?.includes("vftc_default_write");
