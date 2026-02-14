@@ -2,21 +2,22 @@ import React, { useEffect, useState } from 'react'
 import './payment.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service';
-import BillSummery from '../service-form-components/BillSummery';
 import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbWallet, TbX } from 'react-icons/tb';
-import { doDialog, modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import PaymentMethods from '../service-form-components/PaymentMethods';
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
+import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
+import { generateUniqueId } from '../../../../utils/helpers/generate_Id';
+import { calculateBillsSummery } from '../../../../utils/helpers/math-equations';
+import BillSummery from '../service-form-components/BillSummery';
+import PaymentMethods from '../service-form-components/PaymentMethods';
 import Message from '../../../UI_Primitives/message/Message'
 import InputText from '../../../UI_Primitives/inputs/InputText';
 import TextArea from '../../../UI_Primitives/inputs/TextArea';
-import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
 import Button from '../../../UI_Primitives/buttons/Button';
 import SubmitForm from '../service-form-components/payment/SubmitForm';
-import { generateUniqueId } from '../../../../utils/helpers/generate_Id';
 
 
-const Payment = ({ page, unlockAudio }) => {
+const Payment = ({ page }) => {
     const dispatch = useDispatch();
     const { review, payment } = useSelector((state) => state.application)
     const [grandTotal, setGrandTotal] = useState(0)
@@ -49,27 +50,37 @@ const Payment = ({ page, unlockAudio }) => {
 
         // Validation
         if (review?.is_ready_to_pay) {
-            if (balanceAmount && (!payment?.balance_payment_date || !payment?.balance_payment_reason)) {
+
+            if (grandTotal < paidAmount) {
                 dispatch(toast.push({
-                    type: "danger",
-                    head: "Validation Error",
-                    message: 'Enter balance payment date and reason'
+                    type: 'danger',
+                    head: 'Amount not correct',
+                    message: 'Entered amount must not exceed the total amount'
                 }))
+
                 return;
             }
 
             if (grandTotal !== (balanceAmount + paidAmount)) {
                 dispatch(toast.push({
                     type: 'danger',
-                    head: 'Validation Error',
+                    head: 'Amount not correct',
                     message: 'Entered amount must not exceed the total amount'
                 }))
 
                 return;
             }
-        }
 
-        unlockAudio();
+            if (balanceAmount && (!payment?.balance_payment_date || !payment?.balance_payment_reason)) {
+                dispatch(toast.push({
+                    type: "danger",
+                    head: "Something Missing",
+                    message: 'Enter balance payment date and reason'
+                }))
+                return;
+            }
+
+        }
 
         // Confirm
         const modalId = generateUniqueId(6)
@@ -82,18 +93,21 @@ const Payment = ({ page, unlockAudio }) => {
     }
 
     useEffect(() => {
-        const totalAmount = payment?.bill_summery?.grand_total || 0
-        const compliment = payment?.complement_amount || 0
-        const grandAmount = totalAmount - compliment
-        setGrandTotal(grandAmount)
+        const summery = calculateBillsSummery(
+            review?.bills ?? [],
+            review?.zero_free_items ?? [],
+            payment?.complement_amount ?? 0
+        )
 
-        const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0)
-        const balance = grandAmount - enteredAmount
+        setGrandTotal(summery?.grandTotal || 0)
 
+        const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+        const balance = summery?.grandTotal - enteredAmount
         setPaidAmount(enteredAmount)
         setBalanceAmount(balance)
 
-    }, [payment])
+
+    }, [payment, review])
 
 
     return (
@@ -108,9 +122,9 @@ const Payment = ({ page, unlockAudio }) => {
             <BillSummery expand={false} />
 
             {/* Payment methods */}
-            <div className="payment-container">
+            {(grandTotal > 0 || payment?.payment_methods?.length) ? <div className="payment-container">
                 <h3 className='sub-title'>Payment Methods</h3>
-                {payment?.payment_methods?.length ? <div className="payments-list">
+                <div className="payments-list">
                     {payment?.payment_methods?.map((pay) => {
                         return <div className="payment-item" key={pay?.unique_id}>
                             <div className="icon">
@@ -131,8 +145,7 @@ const Payment = ({ page, unlockAudio }) => {
                             </div>
                         </div>
                     })}
-
-                </div> : ''}
+                </div>
 
                 {balanceAmount > 0 && <div className="payment-choose" onClick={handleOpenPaymentMethods}>
                     <h3>Select Payment Method</h3>
@@ -143,7 +156,7 @@ const Payment = ({ page, unlockAudio }) => {
                     {paidAmount > grandTotal && <Message type={'warning'} head={'Alert'}
                         message={'Entered amount must not exceed the total amount.'} style={{ marginTop: '10px' }} />}
                 </>}
-            </div>
+            </div> : ''}
 
             {/* Balance Amount */}
             {balanceAmount > 0 ? <div className="balance-amount-container">

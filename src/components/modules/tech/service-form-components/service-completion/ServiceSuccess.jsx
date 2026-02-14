@@ -1,29 +1,39 @@
 import React, { forwardRef, useImperativeHandle, useRef, } from 'react'
-import Badge from '../../../../UI_Primitives/badge/Badge'
 import './service-success.scss'
-import { TbId, TbUser } from 'react-icons/tb';
 import * as htmlToImage from "html-to-image";
+import { TbId, TbUser } from 'react-icons/tb';
+import Badge from '../../../../UI_Primitives/badge/Badge'
+import BrandLogo from '../../../../../assets/images/icons/alliance-logo.png';
 
 const ServiceSuccess = forwardRef(({ data }, ref) => {
     const containerRef = useRef(null);
 
     const formatCurrency = (value) => {
-        return `₹${value.toFixed(2)}`;
+        return `₹${Number(value || 0).toFixed(2)}`;
     };
 
-   
     const shareAsImage = async () => {
+        if (!containerRef.current) return;
 
-        const dataUrl = await htmlToImage.toJpeg(containerRef.current, {
+        const node = containerRef.current;
+        const clonedNode = node.cloneNode(true);
+
+        clonedNode.className = "tech-service-success-screen"
+
+        document.body.appendChild(clonedNode);
+
+        const dataUrl = await htmlToImage.toJpeg(clonedNode, {
             quality: 0.95,
             backgroundColor: "var(--background)",
-            pixelRatio: 2, 
+            pixelRatio: 2,
         });
 
         const blob = await (await fetch(dataUrl)).blob();
         const file = new File([blob], "service-success.jpg", {
             type: "image/jpeg",
         });
+
+        document.body.removeChild(clonedNode);
 
         if (navigator.share && navigator.canShare({ files: [file] })) {
             await navigator.share({
@@ -38,20 +48,20 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
             link.click();
         }
     };
-    
-    
+
     useImperativeHandle(ref, () => ({
         shareAsImage,
     }));
 
 
     return (
-        <div ref={containerRef} className="tech-service-success-screen">
+        <div ref={containerRef} className="tech-service-success-screen view-animation-mode">
             {/* Success icon */}
             <div className="success-icon-container">
                 <div className="success-icon">
                     <svg className="checkmark" viewBox="0 0 52 52" width="50" height="50">
-                        <path d="M14 27l10 10 20-20"
+                        <path
+                            d="M14 27l10 10 20-20"
                             fill="none"
                             stroke="#ffffff"
                             strokeWidth="7"
@@ -66,7 +76,9 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
             {/* Title */}
             <div className="title-section">
                 <div className="title">Service Completed</div>
-                <div className="subtitle">The service has been successfully closed</div>
+                <div className="subtitle">The service has been successfully closed
+                    <br></br> on {data?.date}
+                </div>
             </div>
 
             {/* Service Serial Number Card */}
@@ -81,20 +93,23 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
             <div className="card">
                 <div className="payment-header">
                     <div className="card-title" style={{ marginBottom: 0 }}>Payment Status</div>
-                    {/* <span className={`status-badge ${data?.paymentStatus === 'completed' ? 'status-completed' : 'status-pending'}`}>
-                        {data?.paymentStatus === 'completed' ? 'Completed' : 'Pending'}
-                    </span> */}
-                    <Badge value={'Completed'} severity={'success'} size={'md'} />
+                    {Number(data?.amount) > 0 && < Badge
+                        value={data?.paymentStatus === 'completed' ? 'Completed' : "Pending"}
+                        severity={data?.paymentStatus === 'completed' ? 'success' : 'danger'}
+                        size={'md'} />}
                 </div>
 
                 <div className="amount-section">
                     <div className="amount">{formatCurrency(data?.amount)}</div>
-                    {data?.paymentStatus === 'pending' && (
+                    {data?.paymentStatus === 'pending' && Number(data?.amount) > 0 && (
                         <div className="amount-subtitle">Payment will be collected later</div>
+                    )}
+                    {Number(data?.amount) === 0 && (
+                        <div className="amount-subtitle">No charges applied for this service</div>
                     )}
                 </div>
 
-                {data?.paymentStatus === 'completed' && data?.paymentId && (
+                {data?.paymentStatus === 'completed' && Number(data?.amount) > 0 && data?.paymentId && (
                     <div className="payment-id-section">
                         <span className="payment-id-label">Payment ID</span>
                         <span className="payment-id-value">{data?.paymentId}</span>
@@ -127,6 +142,11 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
                 </div>
             </div>
 
+            {/* Footer */}
+            <div className="bottom-section">
+                <p>This screen confirms the service completion. It is not a bill or receipt.</p>
+                <img src={BrandLogo} alt='brand-logo' />
+            </div>
 
         </div>
     )

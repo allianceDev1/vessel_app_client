@@ -151,3 +151,40 @@ export const normalizeMoney = (value, options) => {
     // Case 3: number or string
     return toDecimal(value, options);
 };
+
+export const calculateBillTotalAmount = (items, zeroFeeItems = []) => {
+    let total = 0;
+
+    items?.map((item) => {
+        if (!zeroFeeItems?.includes(item?.uuid)) {
+            total = total + Number(item?.total || 0)
+        }
+
+        return item
+    })
+
+    return total;
+}
+
+export const calculateBillsSummery = (bills = [], zeroFeeItems = [], maxDiscount = 0) => {
+
+    const allBillTotal = bills.reduce(
+        (sum, bill) =>
+            sum +
+            calculateBillTotalAmount(
+                bill?.items ?? [],
+                zeroFeeItems
+            ),
+        0
+    );
+
+    const compliment = maxDiscount > allBillTotal ? allBillTotal : maxDiscount
+    const grandTotal = allBillTotal - compliment
+
+    return {
+        subTotal: allBillTotal,
+        discount: compliment,
+        grandTotal: grandTotal
+    }
+
+}

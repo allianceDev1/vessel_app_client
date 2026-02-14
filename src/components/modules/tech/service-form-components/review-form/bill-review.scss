@@ -1,0 +1,112 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-bill-review-page-container {
+    .bill-border {
+        margin-bottom: 30px;
+
+        .item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-medium);
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 15px;
+            cursor: pointer;
+
+            .checkbox-section {
+                display: flex;
+                align-items: center;
+
+                .item-checkbox {
+                    width: 25px;
+                    height: 25px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 2px solid var(--border-medium);
+                    border-radius: 100%;
+                    cursor: pointer;
+
+                    svg {
+                        font-size: 22px;
+                        color: var(--text-primary);
+                        display: none;
+                    }
+                }
+
+                .checked {
+                    border-color: var(--text-primary);
+
+                    svg {
+                        display: block;
+                    }
+                }
+
+                .disabled {
+                    border-color: var(--text-muted);
+
+                    svg {
+                        color: var(--text-muted);
+                    }
+                }
+
+
+            }
+
+            .name-section {
+                h3 {
+                    font-size: 17px;
+                    font-weight: 600;
+                    @include threeDots();
+                }
+            }
+
+            .detail-section {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+
+                .single-price {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+
+                .qty {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                }
+
+                .price {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    text-align: end;
+                }
+
+                .estimate {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                    text-align: end;
+                }
+            }
+        }
+
+        .grand-total {
+            padding: 10px;
+            text-align: end;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+
+    }
+}

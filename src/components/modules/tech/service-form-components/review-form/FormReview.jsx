@@ -11,11 +11,12 @@ import BillSummery from '../BillSummery';
 import Badge from '../../../../UI_Primitives/badge/Badge';
 import Button from '../../../../UI_Primitives/buttons/Button';
 import { toStandardText } from '../../../../../utils/helpers/text-formatting';
+import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
 
 
-const ReviewForm = ({ page, resetVerificationType }) => {
+const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
     const dispatch = useDispatch();
-    const { verification, serviceForm, serviceFormSettings, review, } = useSelector((state) => state.application)
+    const { verification, serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
     const [error, setError] = useState({ error: false, title: null, message: null })
 
@@ -39,7 +40,6 @@ const ReviewForm = ({ page, resetVerificationType }) => {
             }))
 
             dispatch(sfActions.updatePayment({
-                bill_summery: resReview?.bills_summery,
                 complement_amount: resReview?.wallet?.amount || 0
             }))
 
@@ -101,14 +101,14 @@ const ReviewForm = ({ page, resetVerificationType }) => {
                 <div className="bills-container">
                     <h3 className='sub-title'>Bills</h3>
                     {review?.bills?.map((bill, index) => (
-                        <div className='bill-item'>
+                        <div className='bill-item' onClick={() => setOpenedBill(bill)}>
                             <div className="s-1">
                                 <h4>{bill?.service_srl_no}</h4>
                                 {bill?.this_work_bill && <Badge severity={'info'} value={'Current Work'} />}
                             </div>
                             <div className="s-2">
                                 <p>Bill Amount</p>
-                                <h3>₹{bill?.pricing?.grand_total || 0}</h3>
+                                <h3>₹{calculateBillTotalAmount(bill?.items, review?.zero_free_items || [])}</h3>
                             </div>
                         </div>
                     ))}

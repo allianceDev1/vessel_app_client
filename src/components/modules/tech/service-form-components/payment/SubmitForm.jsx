@@ -3,16 +3,18 @@ import './submit-form.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../../../api'
 import { sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
-import { modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
+import { audio, modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import Button from '../../../../UI_Primitives/buttons/Button'
 import { getLocation } from '../../../../../utils/services/location_services'
-
+import { initAudio, unlockAudio } from '../../../../../utils/services/success_audio_services'
+import { useNavigate } from 'react-router-dom'
 
 
 
 const SubmitForm = ({ modalId }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { internet } = useSelector((state) => state.system)
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
@@ -20,7 +22,7 @@ const SubmitForm = ({ modalId }) => {
     const [error, setError] = useState({ error: false, message: "" })
     const [apiProgress, setApiProgress] = useState(0);
     const [apiStatus, setApiStatus] = useState("");
-    const [isSubmitted, setSubmitted] = useState(true)
+    const [isSubmitted, setSubmitted] = useState(false)
 
     const handleProceed = async () => {
 
@@ -40,6 +42,8 @@ const SubmitForm = ({ modalId }) => {
             return;
         }
 
+        await unlockAudio();
+        dispatch(audio.setUnlocked());
 
         try {
             setLoading(true)
@@ -47,191 +51,188 @@ const SubmitForm = ({ modalId }) => {
             // collect location
             const locationData = await getLocation()
             const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
-
-            console.log(location, 'submit-location')
+       
             // setup Body
-            const body = {
-                service_form_uuid: serviceForm?.service_form_uuid,
-                customer_id: serviceForm?.customer_id,
-                registration_id: serviceForm?.registration_id,
-                visit_uuid: serviceForm?.visit_uuid,
-                technician_uuid: serviceForm?.technician_uuid,
-                site_info: {
-                    work_site: serviceForm?.work_site,
-                    source: serviceForm?.source,
-                    tank_capacity_ltr: serviceForm?.tank_capacity_ltr,
-                    floor_hight: serviceForm?.floor_hight,
-                    t_hight: serviceForm?.t_hight
-                },
-                service_products: [],
-                new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
-                    return {
-                        unique_id: value?.unique_id,
-                        item_id: value?.item_id,
-                        item_uuid: value?.item_uuid,
-                        purchase_type: value?.purchase_type,
-                        is_zero_fee: value?.is_zero_fee || false,
-                        expire_date: value?.expire_date,
-                        element: {
-                            spare_uuid: value?.element?.spare_uuid,
-                            qty: value?.element?.qty
-                        },
-                        service_charge_estimate: value?.service_charge?.list_price || 0
-                    }
-                }),
-                repeat: {
-                    system_say: serviceForm?.repeat?.system_say || false,
-                    tech_say: serviceForm?.repeat?.tech_say || false,
-                    comment: serviceForm?.repeat?.comment || null
-                },
-                work_status: {
-                    closed: serviceForm?.work_status?.closed || false,
-                    schedule_date: serviceForm?.work_status?.schedule_date || null,
-                    start_time: serviceForm?.work_status?.start_time || null,
-                    end_time: serviceForm?.work_status?.end_time || null
-                }
-            }
+            // const body = {
+            //     service_form_uuid: serviceForm?.service_form_uuid,
+            //     customer_id: serviceForm?.customer_id,
+            //     registration_id: serviceForm?.registration_id,
+            //     visit_uuid: serviceForm?.visit_uuid,
+            //     technician_uuid: serviceForm?.technician_uuid,
+            //     site_info: {
+            //         work_site: serviceForm?.work_site,
+            //         source: serviceForm?.source,
+            //         tank_capacity_ltr: serviceForm?.tank_capacity_ltr,
+            //         floor_hight: serviceForm?.floor_hight,
+            //         t_hight: serviceForm?.t_hight
+            //     },
+            //     service_products: [],
+            //     new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
+            //         return {
+            //             unique_id: value?.unique_id,
+            //             item_id: value?.item_id,
+            //             item_uuid: value?.item_uuid,
+            //             purchase_type: value?.purchase_type,
+            //             is_zero_fee: value?.is_zero_fee || false,
+            //             expire_date: value?.expire_date,
+            //             element: {
+            //                 spare_uuid: value?.element?.spare_uuid,
+            //                 qty: value?.element?.qty
+            //             },
+            //             service_charge_estimate: value?.service_charge?.list_price || 0
+            //         }
+            //     }),
+            //     repeat: {
+            //         system_say: serviceForm?.repeat?.system_say || false,
+            //         tech_say: serviceForm?.repeat?.tech_say || false,
+            //         comment: serviceForm?.repeat?.comment || null
+            //     },
+            //     work_status: {
+            //         closed: serviceForm?.work_status?.closed || false,
+            //         schedule_date: serviceForm?.work_status?.schedule_date || null,
+            //         start_time: serviceForm?.work_status?.start_time || null,
+            //         end_time: serviceForm?.work_status?.end_time || null
+            //     }
+            // }
 
-            Object.entries(serviceForm?.service_products || {}).forEach(([key, value]) => {
-                const isVessel = key.startsWith("V") ? true : false;
+            // Object.entries(serviceForm?.service_products || {}).forEach(([key, value]) => {
+            //     const isVessel = key.startsWith("V") ? true : false;
 
-                if (!serviceFormSettings?.products?.[key]?.is_submitted) {
-                    return;
-                }
+            //     if (!serviceFormSettings?.products?.[key]?.is_submitted) {
+            //         return;
+            //     }
 
-                if (isVessel) {
-                    body?.service_products?.push({
-                        product_id: key,
-                        current_condition: value?.current_condition,
-                        inspection_report: {
-                            condition_status: value?.inspection_report?.condition === "Good",
-                            tech_analyze: value?.inspection_report?.tech_analyze || null
-                        },
-                        service_data: {
-                            is_skipped: !value?.service_data?.category_id || false,
-                            service_id: value?.service_data?.service_id || null,
-                            category_id: value?.service_data?.category_id || null,
-                            mode: value?.service_data?.mode || null,
-                            service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
-                            renewed_package: value?.service_data?.renewed_package?.is_renewed ? {
-                                is_renewed: true,
-                                package_id: value?.service_data?.renewed_package?.package_id
-                            } : null
-                        },
-                        work: {
-                            service_list: (value?.work?.services_list || [])?.map(s => ({
-                                service_uuid: s?.service_id
-                            })),
-                            components_list: (value?.work?.components_list || [])?.map(c => ({
-                                spare_uuid: c?.spare_id,
-                                spare_type: c?.spare_type,
-                                qty: c?.qty
-                            })),
-                            removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-                                spare_uuid: c?.spare_id,
-                                spare_type: c?.spare_type
-                            }))
-                        },
-                        evaluation: {
-                            filtered_water: value?.evaluation?.filtered_water,
-                            water_quality: {
-                                status: value?.evaluation?.water_quality?.status === 'Good',
-                                comment: value?.evaluation?.water_quality?.comment
-                            }
-                        }
-                    })
-                } else {
-                    body?.service_products?.push({
-                        product_id: key,
-                        current_condition: {
-                            working: {
-                                status: value?.current_condition?.working?.status === 'Good',
-                                comment: value?.current_condition?.working?.comment || null
-                            },
-                            lead_crack: {
-                                status: value?.current_condition?.lead_crack?.status === 'Yes',
-                                comment: value?.current_condition?.lead_crack?.comment || null
-                            },
-                        },
-                        service_data: {
-                            is_skipped: !value?.service_data?.category_id || false,
-                            category_id: value?.service_data?.category_id || null,
-                            mode: value?.service_data?.mode || null,
-                            service_charge_estimate: value?.service_data?.service_charge?.estimate || null
-                        },
-                        work: {
-                            service_list: (value?.work?.services_list || [])?.map(s => ({
-                                service_uuid: s?.service_id
-                            })),
-                            components_list: (value?.work?.components_list || [])?.map(c => ({
-                                spare_uuid: c?.spare_id,
-                                spare_type: c?.spare_type,
-                                qty: c?.qty
-                            })),
-                            removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-                                spare_uuid: c?.spare_id,
-                                spare_type: c?.spare_type
-                            }))
-                        },
-                        evaluation: {
-                            working: {
-                                status: value?.evaluation?.working?.status === 'Good',
-                                comment: value?.evaluation?.working?.comment || null
-                            },
-                            lead_crack: {
-                                status: value?.evaluation?.lead_crack?.status === 'Yes',
-                                comment: value?.evaluation?.lead_crack?.comment || null
-                            }
-                        }
-                    })
-                }
+            //     if (isVessel) {
+            //         body?.service_products?.push({
+            //             product_id: key,
+            //             current_condition: value?.current_condition,
+            //             inspection_report: {
+            //                 condition_status: value?.inspection_report?.condition === "Good",
+            //                 tech_analyze: value?.inspection_report?.tech_analyze || null
+            //             },
+            //             service_data: {
+            //                 is_skipped: !value?.service_data?.category_id || false,
+            //                 service_id: value?.service_data?.service_id || null,
+            //                 category_id: value?.service_data?.category_id || null,
+            //                 mode: value?.service_data?.mode || null,
+            //                 service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
+            //                 renewed_package: value?.service_data?.renewed_package?.is_renewed ? {
+            //                     is_renewed: true,
+            //                     package_id: value?.service_data?.renewed_package?.package_id
+            //                 } : null
+            //             },
+            //             work: {
+            //                 service_list: (value?.work?.services_list || [])?.map(s => ({
+            //                     service_uuid: s?.service_id
+            //                 })),
+            //                 components_list: (value?.work?.components_list || [])?.map(c => ({
+            //                     spare_uuid: c?.spare_id,
+            //                     spare_type: c?.spare_type,
+            //                     qty: c?.qty
+            //                 })),
+            //                 removed_components_list: (value?.removed_components_list || [])?.map(c => ({
+            //                     spare_uuid: c?.spare_id,
+            //                     spare_type: c?.spare_type
+            //                 }))
+            //             },
+            //             evaluation: {
+            //                 filtered_water: value?.evaluation?.filtered_water,
+            //                 water_quality: {
+            //                     status: value?.evaluation?.water_quality?.status === 'Good',
+            //                     comment: value?.evaluation?.water_quality?.comment
+            //                 }
+            //             }
+            //         })
+            //     } else {
+            //         body?.service_products?.push({
+            //             product_id: key,
+            //             current_condition: {
+            //                 working: {
+            //                     status: value?.current_condition?.working?.status === 'Good',
+            //                     comment: value?.current_condition?.working?.comment || null
+            //                 },
+            //                 lead_crack: {
+            //                     status: value?.current_condition?.lead_crack?.status === 'Yes',
+            //                     comment: value?.current_condition?.lead_crack?.comment || null
+            //                 },
+            //             },
+            //             service_data: {
+            //                 is_skipped: !value?.service_data?.category_id || false,
+            //                 category_id: value?.service_data?.category_id || null,
+            //                 mode: value?.service_data?.mode || null,
+            //                 service_charge_estimate: value?.service_data?.service_charge?.estimate || null
+            //             },
+            //             work: {
+            //                 service_list: (value?.work?.services_list || [])?.map(s => ({
+            //                     service_uuid: s?.service_id
+            //                 })),
+            //                 components_list: (value?.work?.components_list || [])?.map(c => ({
+            //                     spare_uuid: c?.spare_id,
+            //                     spare_type: c?.spare_type,
+            //                     qty: c?.qty
+            //                 })),
+            //                 removed_components_list: (value?.removed_components_list || [])?.map(c => ({
+            //                     spare_uuid: c?.spare_id,
+            //                     spare_type: c?.spare_type
+            //                 }))
+            //             },
+            //             evaluation: {
+            //                 working: {
+            //                     status: value?.evaluation?.working?.status === 'Good',
+            //                     comment: value?.evaluation?.working?.comment || null
+            //                 },
+            //                 lead_crack: {
+            //                     status: value?.evaluation?.lead_crack?.status === 'Yes',
+            //                     comment: value?.evaluation?.lead_crack?.comment || null
+            //                 }
+            //             }
+            //         })
+            //     }
 
-            })
-
-
+            // })
 
 
-            const result = await api.vfTv2Axios.post('/service/service-form/.....', body, {
-                timeout: 5 * 60 * 1000,
-                onUploadProgress: (progressEvent) => {
-                    if (!progressEvent.total) return;
+            // const result = await api.vfTv2Axios.post('/service/service-form/.....', body, {
+            //     timeout: 5 * 60 * 1000,
+            //     onUploadProgress: (progressEvent) => {
+            //         if (!progressEvent.total) return;
 
-                    const percent = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
+            //         const percent = Math.round(
+            //             (progressEvent.loaded * 100) / progressEvent.total
+            //         );
 
-                    setApiProgress(percent);
+            //         setApiProgress(percent);
 
-                    if (percent < 100) {
-                        setApiStatus(`Uploading data...`);
-                    } else {
-                        setApiStatus("Processing...");
-                    }
-                }
-            })
+            //         if (percent < 100) {
+            //             setApiStatus(`Uploading data...`);
+            //         } else {
+            //             setApiStatus("Processing...");
+            //         }
+            //     }
+            // })
 
-            // Update save and navigate
-            const savedProducts = Array.isArray(result?.products)
-                ? new Set(result.products)
-                : new Set();
+            // // Update save and navigate
+            // const savedProducts = Array.isArray(result?.products)
+            //     ? new Set(result.products)
+            //     : new Set();
 
-            const updatedProducts = Object.entries(serviceFormSettings?.products ?? {})
-                .reduce((acc, [key, value]) => {
-                    acc[key] = {
-                        ...value,
-                        is_saved: savedProducts.has(key)
-                    };
-                    return acc;
-                }, {});
+            // const updatedProducts = Object.entries(serviceFormSettings?.products ?? {})
+            //     .reduce((acc, [key, value]) => {
+            //         acc[key] = {
+            //             ...value,
+            //             is_saved: savedProducts.has(key)
+            //         };
+            //         return acc;
+            //     }, {});
 
-            dispatch(
-                sfSetting.update({
-                    form_saved: true,
-                    form_saved_time: new Date(result?.save_time).toISOString(),
-                    activePage: 101,
-                    products: updatedProducts
-                })
-            );
+            // dispatch(
+            //     sfSetting.update({
+            //         form_saved: true,
+            //         form_saved_time: new Date(result?.save_time).toISOString(),
+            //         activePage: 101,
+            //         products: updatedProducts
+            //     })
+            // );
 
             dispatch(modal.pull.single(modalId))
 
@@ -246,7 +247,19 @@ const SubmitForm = ({ modalId }) => {
             setApiStatus("");
         }
 
-
+        navigate("/tech/service/work-success", {
+            replace: true,
+            state: {
+                serviceStatus: "SUCCESS",
+                date: '09 Feb 2026, 04:00 PM',
+                serviceNumber: 'SRV-2026-001245',
+                paymentStatus: 'completed', // 'completed' or 'pending'
+                amount: '110',
+                paymentId: 'UPI202602051234567',
+                customerName: 'Rahul Kumar',
+                customerId: 'CUST-10982'
+            }
+        });
     }
 
     const closeModal = () => {
@@ -311,6 +324,11 @@ const SubmitForm = ({ modalId }) => {
 
     }, [serviceForm, serviceFormSettings])
 
+    useEffect(() => {
+        initAudio(); // prepare audio early
+    }, []);
+
+
 
     return (
         <div className="s-form-close-service-container">
@@ -362,7 +380,7 @@ const SubmitForm = ({ modalId }) => {
 
             </div>}
 
-           
+
         </div>
     )
 }
