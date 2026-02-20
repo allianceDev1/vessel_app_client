@@ -30,7 +30,7 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
 
-            const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?product_type=Vessel&fields=package_name`)
+            const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?product_type=VESSEL_FILTER&fields=package_name`)
             setPackages(packageRes?.map(i => ({ label: i.package_name, value: i.package_id })))
 
         } catch (err) {
@@ -133,7 +133,38 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
         // Update data
         setLoading('submit')
         try {
-            await api.vfCv2Axios.put(`/config/service-categories/${serviceCategory?.category_id}`, form)
+
+            const body = {
+                service_name: form?.service_name,
+                target_package: form?.target_package,
+                package_product_only: form?.package_product_only,
+                coverage: [
+                    {
+                        coverage_id: "MATERIAL",
+                        access: form?.materials_access || false,
+                        price_type: form?.materials_price_type || null
+                    },
+                    {
+                        coverage_id: "MATERIALS_BAG",
+                        access: form?.bag_access || false,
+                        price_type: form?.bag_price_type || null
+                    },
+                    {
+                        coverage_id: "PRIMARY_SPARES",
+                        access: form?.primary_spare_access || false,
+                        price_type: form?.primary_spare_price_type || null
+                    },
+                    {
+                        coverage_id: "SERVICE_WORK",
+                        access: form?.service_access || false,
+                        price_type: form?.service_price_type || null
+                    }
+                ],
+                service_charge_applied: form?.service_charge_applied || false,
+                service_charges: form?.service_charges || []
+            }
+
+            await api.vfCv2Axios.put(`/config/service-categories/${serviceCategory?.category_id}`, body)
 
             setData((state) => state.map((s) => {
                 if (s.category_id === serviceCategory?.category_id) {
@@ -143,26 +174,25 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                         service_charges: form?.service_charges || [],
                         target_package: form?.target_package,
                         package_product_only: form?.package_product_only,
-                        spare_policies: {
-                            bag: {
-                                access: form?.bag_access,
-                                price_type: form?.bag_price_type
-                            },
-                            materials: {
+                        coverage: {
+                            MATERIAL: {
                                 access: form?.materials_access,
                                 price_type: form?.materials_price_type
                             },
-                            primary_spare: {
+                            MATERIALS_BAG: {
+                                access: form?.bag_access,
+                                price_type: form?.bag_price_type
+                            },
+                            PRIMARY_SPARES: {
                                 access: form?.primary_spare_access,
                                 price_type: form?.primary_spare_price_type
+                            },
+                            SERVICE_WORK: {
+                                access: form?.service_access,
+                                price_type: form?.service_price_type
                             }
                         },
-                        service_policy: {
-                            access: form?.service_access,
-                            price_type: form?.service_price_type
-                        },
-                        service_charge_applied: form?.service_charge_applied,
-                        extra_charge_applied: form?.extra_charge_applied
+                        service_charge_applied: form?.service_charge_applied
                     }
                 }
                 return s
@@ -192,14 +222,14 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
             service_name: serviceCategory?.service_name || null,
             package_product_only: serviceCategory?.package_product_only || false,
             target_package: serviceCategory?.target_package || null,
-            bag_access: serviceCategory?.spare_policies?.bag?.access || false,
-            primary_spare_access: serviceCategory?.spare_policies?.primary_spare?.access || false,
-            materials_access: serviceCategory?.spare_policies?.materials?.access || false,
-            service_access: serviceCategory?.service_policy?.access || false,
-            bag_price_type: serviceCategory?.spare_policies?.bag?.price_type || null,
-            primary_spare_price_type: serviceCategory?.spare_policies?.primary_spare?.price_type || null,
-            materials_price_type: serviceCategory?.spare_policies?.materials?.price_type || null,
-            service_price_type: serviceCategory?.service_policy?.price_type || null,
+            bag_access: serviceCategory?.coverage?.MATERIALS_BAG?.access || false,
+            primary_spare_access: serviceCategory?.coverage?.PRIMARY_SPARES?.access || false,
+            materials_access: serviceCategory?.coverage?.MATERIAL?.access || false,
+            service_access: serviceCategory?.coverage?.SERVICE_WORK?.access || false,
+            bag_price_type: serviceCategory?.coverage?.MATERIALS_BAG?.price_type || null,
+            primary_spare_price_type: serviceCategory?.coverage?.PRIMARY_SPARES?.price_type || null,
+            materials_price_type: serviceCategory?.coverage?.MATERIAL?.price_type || null,
+            service_price_type: serviceCategory?.coverage?.SERVICE_WORK?.price_type || null,
             service_charge_applied: serviceCategory?.service_charge_applied || false,
             service_charges: serviceCategory?.service_charges || []
         })
@@ -234,6 +264,7 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
         <div className="update-service-category-modal">
             <form action="" onSubmit={handleSubmit} >
                 <div className="inputs">
+
                     <div className="section">
                         <InputText label={'Service name'} name='service_name' value={form.service_name} onChange={handleChangeForm} required error={vErr.service_name} />
                         {serviceCategory?.mode === "RENEWAL" &&
@@ -241,17 +272,16 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
                                 onChange={handleChangeForm} value={form.target_package} />}
 
                         <h3 className='sub-title'>Price types</h3>
-                        <Select label={'Price of Materials'} name={'materials_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+                        <Select label={'Price of Materials'} name={'materials_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.materials_price_type} />
-                        <Select label={'Price of Material bag'} name={'bag_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+                        <Select label={'Price of Material bag'} name={'bag_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.bag_price_type} />
-                        <Select label={'Price of Spares'} name={'primary_spare_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+                        <Select label={'Price of Spares'} name={'primary_spare_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
-                        <Select label={'Price of service work'} name={'service_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+                        <Select label={'Price of service work'} name={'service_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
                             onChange={handleChangeServiceCard} value={form.service_price_type} />
-
-
                     </div>
+
                     <div className="section">
                         <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>
                         <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>

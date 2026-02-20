@@ -1,7 +1,7 @@
 export const credit_amount_type = ['Amount', 'Percentage']
-export const price_units = ['purchase_rate', 'discount_rate', 'selling_rate']
+export const price_units = ['PURCHASE_COST', 'PACKAGE_PRICE', 'SELLING_RATE']
 export const price_unit_objects = [
-    { label: 'Purchase Rate', value: 'purchase_rate' },
-    { label: 'Discount Rate', value: 'discount_rate' },
-    { label: 'Selling Rate', value: 'selling_rate' }
+    { label: 'Purchase Cost (PC)', value: 'PURCHASE_COST' },
+    { label: 'Package Price (P2)', value: 'PACKAGE_PRICE' },
+    { label: 'Selling Rate (SR)', value: 'SELLING_RATE' }
 ]

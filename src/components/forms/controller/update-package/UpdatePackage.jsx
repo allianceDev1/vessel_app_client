@@ -23,19 +23,19 @@ const UpdatePackage = ({ data, setData }) => {
     number_of_services: data?.number_of_services || 0,
     tokens_count: data?.tokens_count || 0,
     expire_types: data?.expire_types || [],
-    et_query_operator: data?.et_query_operator || null,
+    et_query_operator: data?.et_query_operator || "",
     package_fund: String(data?.package_fund ?? 0),
     gst_rate: String(data?.gst_rate ?? 0),
-    service_fund: String(data?.service_fund ?? 0),
-    spare_fund: String(data?.spare_fund ?? 0)
+    service_work_fund: String(data?.service_work_fund ?? 0),
+    spare_parts_fund: String(data?.spare_parts_fund ?? 0)
   })
   const [vErr, setVErr] = useState({})
   const [loading, setLoading] = useState('')
 
 
   const expireTypeList = [
-    { label: 'Package duration', value: packageExpireTypes?.PACKAGE_DURATION },
-    { label: 'Remaining tokens', value: packageExpireTypes?.REMAINING_TOKENS },
+    { label: 'Package Duration', value: packageExpireTypes?.PACKAGE_DURATION },
+    { label: 'Remaining Tokens', value: packageExpireTypes?.REMAINING_TOKENS },
   ]
 
   const etQueryOpretors = [
@@ -83,8 +83,8 @@ const UpdatePackage = ({ data, setData }) => {
         et_query_operator: form?.et_query_operator || null,
         package_fund: form?.package_fund || 0,
         gst_rate: form?.gst_rate || null,
-        service_fund: form?.service_fund || null,
-        spare_fund: form?.spare_fund || null
+        service_work_fund: form?.service_work_fund || null,
+        spare_parts_fund: form?.spare_parts_fund || null
       }))
       dispatch(modal.pull.all())
     } catch (error) {
@@ -126,10 +126,10 @@ const UpdatePackage = ({ data, setData }) => {
             error={vErr.package_fund} type='number' />
           <InputText label={'Tax ( Percentage )'} name='gst_rate' value={form.gst_rate} onChange={handleChangeForm} required min={0} max={100}
             error={vErr.gst_rate} type='number' helperText={'Zero means is non tax package'} disabled={Number(form.package_fund || 0) === 0} />
-          <InputText label={'Service Fund'} name='service_fund' value={form.service_fund} onChange={handleChangeForm} min={0}
-            error={vErr.service_fund} type='number' disabled={Number(form.package_fund || 0) === 0} />
-          <InputText label={'Spare Fund'} name='spare_fund' value={form.spare_fund} onChange={handleChangeForm} min={0}
-            error={vErr.spare_fund} type='number' disabled={Number(form.package_fund || 0) === 0} />
+          <InputText label={'Service Work Fund'} name='service_work_fund' value={form.service_work_fund} onChange={handleChangeForm} min={0}
+            error={vErr.service_work_fund} type='number' disabled={Number(form.package_fund || 0) === 0} />
+          <InputText label={'Spare Parts Fund'} name='spare_parts_fund' value={form.spare_parts_fund} onChange={handleChangeForm} min={0}
+            error={vErr.spare_parts_fund} type='number' disabled={Number(form.package_fund || 0) === 0} />
 
         </div>
 

@@ -8,8 +8,8 @@ export const reg_priority = [
     ['High', 'danger']
 ]
 export const packageExpireTypes = {
-    PACKAGE_DURATION: 'package_duration_months',
-    REMAINING_TOKENS: 'remaining_tokens'
+    PACKAGE_DURATION: 'PACKAGE_DURATION',
+    REMAINING_TOKENS: 'REMAINING_TOKENS'
 }
 
 // Package Status

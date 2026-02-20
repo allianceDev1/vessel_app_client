@@ -10,12 +10,14 @@ import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import UpdateServiceCategory from '../../../components/forms/controller/update-service-category/UpdateServiceCategory';
+import { serviceCategoryListStretcher } from '../../../utils/services/package_service';
 
 const ServiceCategory = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('fetch')
     const [data, setData] = useState([])
     const [error, setError] = useState({ error: false, title: null, message: null })
+
 
     const handelEditCategory = (item) => {
         dispatch(modal.push({
@@ -29,9 +31,9 @@ const ServiceCategory = () => {
         try {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
-            const fields = 'service_name,service_charges,package_charge_applied,target_package,spare_policies,service_policy,service_charge_applied,is_active,package_product_only'
+            const fields = 'service_name,service_charges,package_charge_applied,target_package,coverage,service_charge_applied,is_active,package_product_only'
             const res = await api.vfCv2Axios.get(`/config/service-categories/list?hidden=Yes&fields=${fields}`)
-            setData(res)
+            setData(serviceCategoryListStretcher(res))
         } catch (error) {
             setError({ error: true, title: 'Data fetching failed', message: error.message })
         } finally {
@@ -75,7 +77,7 @@ const ServiceCategory = () => {
         <div className="service-category-page-container">
             {!data?.length && <EmptyState
                 hight='80vh' title={'No Categories'} description={'Category data not found.'} icon={<TbCarouselHorizontal />} />}
-            {data?.length && <div className="items-container">
+            {data?.length > 0 && <div className="items-container">
                 {data?.map((item) => {
                     return (
                         <div className="item" key={item?.category_uuid}>
@@ -93,10 +95,10 @@ const ServiceCategory = () => {
                                         <p>Materials Charge & Access</p>
                                     </div>
                                     <div className={`part part-two`}>
-                                        {item?.spare_policies?.materials?.access ? <p>{serviceChargeSort(item?.spare_policies?.materials?.price_type)}</p> : ''}
+                                        {item?.coverage?.MATERIAL?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIAL?.price_type)}</p> : ''}
                                     </div>
-                                    <div className={`part part-three ${item?.spare_policies?.materials?.access ? 'success' : 'danger'}`}>
-                                        {item?.spare_policies?.materials?.access ? <TbCheck /> : <TbX />}
+                                    <div className={`part part-three ${item?.coverage?.MATERIAL?.access ? 'success' : 'danger'}`}>
+                                        {item?.coverage?.MATERIAL?.access ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                                 <div className="list-item">
@@ -104,10 +106,10 @@ const ServiceCategory = () => {
                                         <p>Bag Charge & Access</p>
                                     </div>
                                     <div className={`part part-two`}>
-                                        {item?.spare_policies?.bag?.access ? <p>{serviceChargeSort(item?.spare_policies?.bag?.price_type)}</p> : ''}
+                                        {item?.coverage?.MATERIALS_BAG?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIALS_BAG?.price_type)}</p> : ''}
                                     </div>
-                                    <div className={`part part-three ${item?.spare_policies?.bag?.access ? 'success' : 'danger'}`}>
-                                        {item?.spare_policies?.bag?.access ? <TbCheck /> : <TbX />}
+                                    <div className={`part part-three ${item?.coverage?.MATERIALS_BAG?.access ? 'success' : 'danger'}`}>
+                                        {item?.coverage?.MATERIALS_BAG?.access ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                                 <div className="list-item">
@@ -115,10 +117,10 @@ const ServiceCategory = () => {
                                         <p>Spare Charge & Access</p>
                                     </div>
                                     <div className={`part part-two`}>
-                                        {item?.spare_policies?.primary_spare?.access ? <p>{serviceChargeSort(item?.spare_policies?.primary_spare?.price_type)}</p> : ''}
+                                        {item?.coverage?.PRIMARY_SPARES?.access ? <p>{serviceChargeSort(item?.coverage?.PRIMARY_SPARES?.price_type)}</p> : ''}
                                     </div>
-                                    <div className={`part part-three ${item?.spare_policies?.primary_spare?.access ? 'success' : 'danger'}`}>
-                                        {item?.spare_policies?.primary_spare?.access ? <TbCheck /> : <TbX />}
+                                    <div className={`part part-three ${item?.coverage?.PRIMARY_SPARES?.access ? 'success' : 'danger'}`}>
+                                        {item?.coverage?.PRIMARY_SPARES?.access ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                                 <div className="list-item">
@@ -126,10 +128,10 @@ const ServiceCategory = () => {
                                         <p>Service Work & Access</p>
                                     </div>
                                     <div className={`part part-two`}>
-                                        {item?.service_policy?.access ? <p>{serviceChargeSort(item?.service_policy?.price_type)}</p> : ''}
+                                        {item?.coverage?.SERVICE_WORK?.access ? <p>{serviceChargeSort(item?.coverage?.SERVICE_WORK?.price_type)}</p> : ''}
                                     </div>
-                                    <div className={`part part-three ${item?.service_policy?.access ? 'success' : 'danger'}`}>
-                                        {item?.service_policy?.access ? <TbCheck /> : <TbX />}
+                                    <div className={`part part-three ${item?.coverage?.SERVICE_WORK?.access ? 'success' : 'danger'}`}>
+                                        {item?.coverage?.SERVICE_WORK?.access ? <TbCheck /> : <TbX />}
                                     </div>
                                 </div>
                                 <div className="list-item">
@@ -180,8 +182,8 @@ const ServiceCategory = () => {
             </div>}
 
             <p className='info-text'>
-                PR (Purchase Rate): The customer pays nothing. The company covers the product’s purchase cost. <br></br>
-                DR (Discount Rate): A predefined discount is applied. Both the customer and the company follow the configured discounted price. <br></br>
+                PC (Purchase Cost): The customer pays nothing. The company covers the product’s purchase cost. <br></br>
+                P2 (Package Price): A predefined package base rate is applied. Both the customer and the company follow the configured package price. <br></br>
                 SR (Selling Rate): The actual selling price of the product. Both the customer and the company use the same rate. <br></br> <br></br>
                 * This is package id not package name.<br></br>
             </p>

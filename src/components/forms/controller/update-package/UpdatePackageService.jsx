@@ -21,23 +21,6 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
   const [form, setForm] = useState({})
   const [error, setError] = useState({ error: false, title: null, message: null })
 
-  const fetchApi = async () => {
-    try {
-      setLoading('fetch')
-      setError({ error: false, title: null, message: null })
-
-      const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?product_type=Vessel&fields=package_name`)
-      setPackages(packageRes?.map(i => ({ label: i.package_name, value: i.package_id })))
-
-    } catch (err) {
-      setError({ error: true, title: 'Data fetching failed', message: err.message })
-    } finally {
-      setLoading('')
-    }
-
-
-  }
-
   const handleChangeForm = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -93,35 +76,58 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
     // Update
     setLoading('submit')
     try {
-      await api.vfCv2Axios.put(`/config/service-package/${packageId}/${serviceData?.service_id}`, form)
+
+      const body = {
+        coverage: [
+          {
+            coverage_id: "MATERIAL",
+            access: form?.materials_access || false,
+            price_type: form?.materials_price_type || null
+          },
+          {
+            coverage_id: "MATERIALS_BAG",
+            access: form?.bag_access || false,
+            price_type: form?.bag_price_type || null
+          },
+          {
+            coverage_id: "PRIMARY_SPARES",
+            access: form?.primary_spare_access || false,
+            price_type: form?.primary_spare_price_type || null
+          },
+          {
+            coverage_id: "SERVICE_WORK",
+            access: form?.service_access || false,
+            price_type: form?.service_price_type || null
+          }
+        ],
+        service_limit: form?.service_limit || 0,
+        service_charge_applied: form?.service_charge_applied || false,
+      }
+
+      await api.vfCv2Axios.put(`/config/service-package/${packageId}/${serviceData?.service_id}`, body)
 
       setServiceList((state) => state.map((s) => {
         if (s.service_id === serviceData?.service_id) {
           return {
             ...s,
             service_limit: Number(form?.service_limit || 0),
-            target_package: form?.target_package,
-            spare_policies: {
-              bag: {
-                access: form?.bag_access,
-                price_type: form?.bag_price_type
-              },
-              vessel: {
-                access: form?.vessel_access,
-                price_type: form?.vessel_price_type
-              },
-              materials: {
+            coverage: {
+              MATERIAL: {
                 access: form?.materials_access,
                 price_type: form?.materials_price_type
               },
-              primary_spare: {
+              MATERIALS_BAG: {
+                access: form?.bag_access,
+                price_type: form?.bag_price_type
+              },
+              PRIMARY_SPARES: {
                 access: form?.primary_spare_access,
                 price_type: form?.primary_spare_price_type
+              },
+              SERVICE_WORK: {
+                access: form?.service_access,
+                price_type: form?.service_price_type
               }
-            },
-            service_policy: {
-              access: form?.service_access,
-              price_type: form?.service_price_type
             },
             service_charge_applied: form?.service_charge_applied
           }
@@ -143,40 +149,23 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
   }
 
   useEffect(() => {
-    if (serviceData?.mode === "RENEWAL") {
-      // Initial fetch
-      fetchApi();
-    }
 
     // Set Form
     setForm({
       service_limit: serviceData?.service_limit || '0',
-      target_package: serviceData?.target_package || null,
-      bag_access: serviceData?.spare_policies?.bag?.access || false,
-      primary_spare_access: serviceData?.spare_policies?.primary_spare?.access || false,
-      materials_access: serviceData?.spare_policies?.materials?.access || false,
-      service_access: serviceData?.service_policy?.access || false,
-      bag_price_type: serviceData?.spare_policies?.bag?.price_type || null,
-      primary_spare_price_type: serviceData?.spare_policies?.primary_spare?.price_type || null,
-      materials_price_type: serviceData?.spare_policies?.materials?.price_type || null,
-      service_price_type: serviceData?.service_policy?.price_type || null,
+      bag_access: serviceData?.coverage?.MATERIALS_BAG?.access || false,
+      primary_spare_access: serviceData?.coverage?.PRIMARY_SPARES?.access || false,
+      materials_access: serviceData?.coverage?.MATERIAL?.access || false,
+      service_access: serviceData?.coverage?.SERVICE_WORK?.access || false,
+      bag_price_type: serviceData?.coverage?.MATERIALS_BAG?.price_type || null,
+      primary_spare_price_type: serviceData?.coverage?.PRIMARY_SPARES?.price_type || null,
+      materials_price_type: serviceData?.coverage?.MATERIAL?.price_type || null,
+      service_price_type: serviceData?.coverage?.SERVICE_WORK?.price_type || null,
       service_charge_applied: serviceData?.service_charge_applied || false
     })
 
     //eslint-disable-next-line
   }, [packageId, serviceData])
-
-
-  // Loading
-  if (loading === 'fetch') {
-    return <div className="update-pack-service-modal-load">
-      <SkeletonGrid
-        rows={8}
-        columns={2}
-        height={48}
-      />
-    </div>
-  }
 
   // Error
   if (error?.error) {
@@ -196,20 +185,15 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
             <InputText label={'Service limit'} name='service_limit' type='number' value={form.service_limit} onChange={handleChangeForm} required min={0}
               helperText={'Enter the service limit. Set 0 for unlimited services.'} />
 
-            {serviceData?.mode === "RENEWAL" &&
-              <Select label={'Package to be renewed'} name={'target_package'} options={[{}, ...packages]} required
-                onChange={handleChangeForm} value={form.target_package} />}
-
             <h3 className='sub-title'>Price types</h3>
-            <Select label={'Price of Materials'} name={'materials_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+            <Select label={'Price of Materials'} name={'materials_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.materials_price_type} />
-            <Select label={'Price of material bag'} name={'bag_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+            <Select label={'Price of material bag'} name={'bag_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.bag_price_type} />
-            <Select label={'Price of spares'} name={'primary_spare_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+            <Select label={'Price of spares'} name={'primary_spare_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
-            <Select label={'Price of spares'} name={'service_price_type'} options={[{ label: 'No Rate', value: '' }, ...price_unit_objects]}
+            <Select label={'Price of spares'} name={'service_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.service_price_type} />
-
 
             <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>

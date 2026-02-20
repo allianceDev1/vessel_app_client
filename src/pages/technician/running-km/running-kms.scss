@@ -1,0 +1,131 @@
+.tech-running-kms-container {
+    margin-bottom: 40px;
+
+    .content-section {
+        margin-top: 15px;
+
+        .km-calender {
+
+            .week,
+            .week-head {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                justify-content: center;
+                text-align: center;
+
+                .day {
+                    padding: 5px;
+                    border-radius: 7px;
+                    user-select: none;
+
+                    &:first-child {
+                        span {
+                            color: var(--color-danger);
+                        }
+                    }
+                }
+            }
+
+            .week-head {
+                .day {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: var(--text-secondary-2);
+
+                    &:first-child {
+                        color: var(--color-danger);
+                    }
+                }
+            }
+
+            .week {
+                .day {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    min-height: 50px;
+                    cursor: pointer;
+                    border-radius: 10px;
+
+                    span {
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+
+                    small {
+                        font-size: 12px;
+                        font-weight: 600;
+                        background-color: var(--color-primary-bg);
+                        padding: 2px 6px;
+                        border-radius: 100px;
+                    }
+
+                    &:hover {
+                        background-color: var(--surface-1);
+                    }
+
+                    &.disabled {
+
+                        span,
+                        small {
+                            display: none;
+                        }
+                    }
+
+                    &.today {
+                        background-color: var(--color-primary-trans-53);
+
+                        small {
+                            background-color: var(--color-primary-trans-53);
+                        }
+                    }
+
+
+                    small {
+                        &.add {
+                            background-color: var(--color-success);
+                            color: white;
+                            font-weight: 400;
+                        }
+                    }
+
+                }
+            }
+
+
+        }
+
+        .km-report {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background-color: var(--surface-1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+
+            .report-item {
+                text-align: center;
+                border-right: 1px dashed var(--border-medium);
+
+                h4 {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                p {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+
+                &:last-child {
+                    border-right: none;
+                }
+
+
+            }
+        }
+    }
+}

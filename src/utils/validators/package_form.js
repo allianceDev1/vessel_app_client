@@ -36,14 +36,14 @@ export const validateUpdatePackageForm = (form) => {
     if (Number(form.package_fund) === 0 && Number(form?.gst_rate)) {
         errors.gst_rate = "Clear your gst rate to continue"
     }
-    if (Number(form.package_fund) === 0 && Number(form?.service_fund)) {
-        errors.service_fund = "Clear your service fund to continue"
+    if (Number(form.package_fund) === 0 && Number(form?.service_work_fund)) {
+        errors.service_work_fund = "Clear your service fund to continue"
     }
-    if (Number(form.package_fund) === 0 && Number(form?.spare_fund)) {
-        errors.spare_fund = "Clear your spare fund to continue"
+    if (Number(form.package_fund) === 0 && Number(form?.spare_parts_fund)) {
+        errors.spare_parts_fund = "Clear your spare fund to continue"
     }
 
-    const totalUsedFund = Number(form?.spare_fund ?? 0) + Number(form?.service_fund ?? 0);
+    const totalUsedFund = Number(form?.spare_parts_fund ?? 0) + Number(form?.service_work_fund ?? 0);
 
     if (totalUsedFund > Number(form?.package_fund ?? 0)) {
         errors.package_fund = "Package fund is smaller than service and spare fund"

@@ -13,7 +13,7 @@ const TechLayout = ({ children }) => {
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('')
     const { pageTitle } = useSelector((state) => state.miniSystem)
-   
+
 
     useEffect(() => {
         const firstSegment = location?.pathname?.split("/")[2] || ''
@@ -64,7 +64,7 @@ const TechLayout = ({ children }) => {
                         <TbCategory2 />
                         <p>Services</p>
                     </div>
-                    <div className={`item ${activeSegment === 'a' && 'active'}`} onClick={() => navigate('/tech/app-config')}>
+                    <div className={`item ${activeSegment === 'more' && 'active'}`} onClick={() => navigate('/tech/more')}>
                         <TbMenu2 />
                         <p>More</p>
                     </div>

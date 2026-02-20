@@ -19,7 +19,6 @@ export const unlockAudio = async () => {
         audioInstance.pause();
         audioInstance.currentTime = 0;
         audioInstance.volume = 0.7;
-        console.log(audioInstance, 'a')
     } catch {
         console.log("autoplay blocked");
     }

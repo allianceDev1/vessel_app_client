@@ -1,0 +1,55 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-service-area-list-container {
+    .list-item {
+        padding: 13px 10px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border-light);
+
+        .city-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .city-date {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-secondary-2);
+            margin-left: 17px;
+            margin-top: 3px;
+        }
+
+        &:hover {
+            background-color: var(--surface);
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+    }
+}
+
+
+.tech-city-view-container {
+    .list-border {
+        margin-bottom: 20px;
+
+        h4 {
+            @include subTitleSmall();
+        }
+
+        ol {
+            padding: 0px;
+            padding-left: 20px;
+            margin-top: 5px;
+            line-height: 1.8;
+
+            li {
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+        }
+    }
+}

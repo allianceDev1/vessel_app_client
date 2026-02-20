@@ -107,7 +107,7 @@ const SfSubPageThree = ({
 
           const { reason, ...amountObj } = findSpareTypeAmount(i, category?.spare_policies?.bag?.price_type, warrantyBag)
             || { list_price: 0, charged: 0, ledger_cost: 0 }
-          console.log(reason)
+
           let obj = {
             spare_id: i?.bag_uuid,
             spare_name: i?.bag_name,

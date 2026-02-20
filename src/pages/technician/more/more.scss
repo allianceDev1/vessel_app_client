@@ -1,0 +1,50 @@
+.tech-more-page-container {
+    .menu-list {
+        .menu {
+            display: grid;
+            grid-template-columns: 45px 1fr 40px;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+
+            .icon,
+            .label,
+            .action {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 50px;
+            }
+
+            .label {
+                justify-content: flex-start;
+            }
+
+            .icon {
+                svg {
+                    font-size: 22px;
+                }
+            }
+
+            .label {
+                .label-name {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+
+            .action {
+                svg {
+                    font-size: 20px;
+                }
+            }
+
+            &:hover {
+                background-color: var(--surface);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+}

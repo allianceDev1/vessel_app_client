@@ -16,6 +16,7 @@ import UpdatePackageService from '../../../components/forms/controller/update-pa
 import Message from '../../../components/UI_Primitives/message/Message'
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { serviceChargeSort, toStandardText } from '../../../utils/helpers/text-formatting';
+import { serviceCategoryListStretcher } from '../../../utils/services/package_service';
 
 
 const ViewServicePackage = () => {
@@ -42,7 +43,7 @@ const ViewServicePackage = () => {
 
             const [packageRes, serviceRes] = await Promise.all([
                 api.vfCv2Axios.get(`/config/service-package/${package_id}`),
-                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,spare_policies,service_policy,package_charge_applied,target_package,service_charge_applied,service_charges,service_limit`)
+                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,coverage,service_policy,package_charge_applied,target_package,service_charge_applied,service_charges,service_limit`)
             ]);
 
             const { pricing_config, ...pInfo } = packageRes;
@@ -51,10 +52,12 @@ const ViewServicePackage = () => {
                 ...pInfo,
                 package_fund: pricing_config?.base_price || 0,
                 gst_rate: pricing_config?.gst?.rate || null,
-                service_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE')?.[0]?.amount || null,
-                spare_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE')?.[0]?.amount || null
+                service_work_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value_type || null,
+                service_work_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value || null,
+                spare_parts_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value_type || null,
+                spare_parts_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value || null
             })
-            setServiceList(serviceRes)
+            setServiceList(serviceCategoryListStretcher(serviceRes))
 
         } catch (err) {
             setError({ error: true, title: 'Data fetching failed', message: err.message })
@@ -186,7 +189,6 @@ const ViewServicePackage = () => {
                 <Message type={'info'} head={'Zero-Fee Package'} message={`This package is configured as a Zero-Fee Package. 
                 The renewal charge is set to zero, and no amount will be collected at renewal time.`} />}
 
-
             <div className="service-section">
                 <h3 className='sub-title'>Package Service Categories</h3>
                 {serviceList?.length === 0
@@ -210,10 +212,10 @@ const ViewServicePackage = () => {
                                                 <p>Materials Charge & Access</p>
                                             </div>
                                             <div className={`part part-two`}>
-                                                {item?.spare_policies?.materials?.access ? <p>{serviceChargeSort(item?.spare_policies?.materials?.price_type)}</p> : ''}
+                                                {item?.coverage?.MATERIAL?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIAL?.price_type)}</p> : ''}
                                             </div>
-                                            <div className={`part part-three ${item?.spare_policies?.materials?.access ? 'success' : 'danger'}`}>
-                                                {item?.spare_policies?.materials?.access ? <TbCheck /> : <TbX />}
+                                            <div className={`part part-three ${item?.coverage?.MATERIAL?.access ? 'success' : 'danger'}`}>
+                                                {item?.coverage?.MATERIAL?.access ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">
@@ -221,10 +223,10 @@ const ViewServicePackage = () => {
                                                 <p>Bag Charge & Access</p>
                                             </div>
                                             <div className={`part part-two`}>
-                                                {item?.spare_policies?.bag?.access ? <p>{serviceChargeSort(item?.spare_policies?.bag?.price_type)}</p> : ''}
+                                                {item?.coverage?.MATERIALS_BAG?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIALS_BAG?.price_type)}</p> : ''}
                                             </div>
-                                            <div className={`part part-three ${item?.spare_policies?.bag?.access ? 'success' : 'danger'}`}>
-                                                {item?.spare_policies?.bag?.access ? <TbCheck /> : <TbX />}
+                                            <div className={`part part-three ${item?.coverage?.MATERIALS_BAG?.access ? 'success' : 'danger'}`}>
+                                                {item?.coverage?.MATERIALS_BAG?.access ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">
@@ -232,10 +234,10 @@ const ViewServicePackage = () => {
                                                 <p>Spare Charge & Access</p>
                                             </div>
                                             <div className={`part part-two`}>
-                                                {item?.spare_policies?.primary_spare?.access ? <p>{serviceChargeSort(item?.spare_policies?.primary_spare?.price_type)}</p> : ''}
+                                                {item?.coverage?.PRIMARY_SPARES?.access ? <p>{serviceChargeSort(item?.coverage?.PRIMARY_SPARES?.price_type)}</p> : ''}
                                             </div>
-                                            <div className={`part part-three ${item?.spare_policies?.primary_spare?.access ? 'success' : 'danger'}`}>
-                                                {item?.spare_policies?.primary_spare?.access ? <TbCheck /> : <TbX />}
+                                            <div className={`part part-three ${item?.coverage?.PRIMARY_SPARES?.access ? 'success' : 'danger'}`}>
+                                                {item?.coverage?.PRIMARY_SPARES?.access ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">
@@ -243,10 +245,10 @@ const ViewServicePackage = () => {
                                                 <p>Service Work & Access</p>
                                             </div>
                                             <div className={`part part-two`}>
-                                                {item?.service_policy?.access ? <p>{serviceChargeSort(item?.service_policy?.price_type)}</p> : ''}
+                                                {item?.coverage?.SERVICE_WORK?.access ? <p>{serviceChargeSort(item?.coverage?.SERVICE_WORK?.price_type)}</p> : ''}
                                             </div>
-                                            <div className={`part part-three ${item?.service_policy?.access ? 'success' : 'danger'}`}>
-                                                {item?.service_policy?.access ? <TbCheck /> : <TbX />}
+                                            <div className={`part part-three ${item?.coverage?.SERVICE_WORK?.access ? 'success' : 'danger'}`}>
+                                                {item?.coverage?.SERVICE_WORK?.access ? <TbCheck /> : <TbX />}
                                             </div>
                                         </div>
                                         <div className="list-item">

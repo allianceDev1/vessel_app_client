@@ -15,6 +15,12 @@ const Schedules = React.lazy(() => import('../pages/technician/schedules/Schedul
 const ScheduleProfile = React.lazy(() => import('../pages/technician/schedule-profile/ScheduleProfile'))
 const ServiceForm = React.lazy(() => import('../pages/technician/service-form/ServiceForm'))
 const ServiceCompleted = React.lazy(() => import('../pages/technician/service-form/ServiceCompleted'))
+const More = React.lazy(() => import('../pages/technician/more/More'))
+const ServiceAreaList = React.lazy(() => import('../pages/technician/service-area/ServiceAreaList'))
+const RunningKms = React.lazy(() => import('../pages/technician/running-km/RunningKms'))
+
+
+
 
 
 
@@ -46,6 +52,14 @@ const Technician = () => {
           {/* Service */}
           <Route path='/service/attend-work' element={<PrivateRoute element={<ServiceForm />} isAuthenticated={isAuthenticated} />} />
           <Route path='/service/work-success' element={<PrivateRoute element={<ServiceCompleted />} isAuthenticated={isAuthenticated} />} />
+
+          {/* More */}
+          <Route path='/more' element={<PrivateRoute element={<More />} isAuthenticated={isAuthenticated} />} />
+
+          {/* More Pages */}
+          <Route path='/service-area' element={<PrivateRoute element={<ServiceAreaList />} isAuthenticated={isAuthenticated} />} />
+          <Route path='/running-kms' element={<PrivateRoute element={<RunningKms />} isAuthenticated={isAuthenticated} />} />
+
 
           {/* 404 */}
           <Route path="/*" element={<Page404 />} />

@@ -10,7 +10,6 @@ const RotateToken = () => {
             const refreshToken = Cookies.get('_rfs_tkn'); // Retrieve the refresh token
 
             api.ttSv2Axios.post('/auth/rotate-token', { refresh_token: refreshToken }).then((response) => {
-                console.log(response);
 
                 const cookieOptions = {
                     secure: false,

@@ -16,15 +16,15 @@ export const serviceChargeSort = (chargeType) => {
     let short = null
 
     switch (chargeType) {
-        case 'purchase_rate':
-            short = 'PR'
+        case 'PURCHASE_COST':
+            short = 'PC'
             break;
 
-        case 'discount_rate':
-            short = 'DR'
+        case 'PACKAGE_PRICE':
+            short = 'P2'
             break;
 
-        case 'selling_rate':
+        case 'SELLING_RATE':
             short = 'SR'
             break;
 
