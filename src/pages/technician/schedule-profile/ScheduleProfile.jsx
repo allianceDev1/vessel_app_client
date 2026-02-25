@@ -107,6 +107,7 @@ const ScheduleProfile = () => {
   // Error
   if (error?.error) {
     return <ErrorState
+     size='sm'
       hight='400px'
       title={error?.title}
       message={error?.message}

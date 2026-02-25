@@ -5,7 +5,7 @@ import Checkbox from './Checkbox';
 function MultiSelectInput({
   label,
   name,
-  options = [], // Array of { value: string, label: string }
+  options = [], // Array of { value: string, label: string, disabled: false }
   rightIcon,
   rightIconAction,
   selectStyle,
@@ -80,7 +80,7 @@ function MultiSelectInput({
           {options.map((option) => (
             <span key={option.value} className='option-item'>
               <Checkbox label={option.label} name={name} value={option.value} onChange={(e) => handleCheckboxChange(e, { label: option.label, value: option.value })}
-                checked={selectedValues?.map((v) => v.value)?.includes(option.value)} />
+                checked={selectedValues?.map((v) => v.value)?.includes(option.value)} disabled={option.disabled} />
             </span>
           ))}
         </div>

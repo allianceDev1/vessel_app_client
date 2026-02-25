@@ -86,6 +86,7 @@ const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
 
             {/* Error */}
             {error?.error && <ErrorState
+                size='sm'
                 hight='400px'
                 title={error?.title}
                 message={error?.message}

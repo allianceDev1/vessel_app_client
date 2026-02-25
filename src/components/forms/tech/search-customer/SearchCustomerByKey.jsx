@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import './search-customer-by-key.scss'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { api } from '../../../api';
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import { api } from '../../../../api';
 import { TbGrid3X3, TbLetterCase, TbNumber123 } from 'react-icons/tb';
-import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid';
-import InputText from '../../UI_Primitives/inputs/InputText';
-import Select from '../../UI_Primitives/inputs/Select';
-import Button from '../../UI_Primitives/buttons/Button';
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
+import InputText from '../../../UI_Primitives/inputs/InputText';
+import Select from '../../../UI_Primitives/inputs/Select';
+import Button from '../../../UI_Primitives/buttons/Button';
 
 
 const SearchCustomerByKey = () => {
@@ -67,21 +67,16 @@ const SearchCustomerByKey = () => {
     }
 
     const toggleKeyType = () => {
-
-        if (form.key) return;
-
         const currentIndex = keyTypes.indexOf(keyType);
         const nextIndex = (currentIndex + 1) % keyTypes.length;
         setKeyType(keyTypes[nextIndex]);
+        setForm({
+            ...form,
+            key: ''
+        })
     };
 
     const handleChangeForm = e => {
-
-        // enter the key type id 
-        if (e.target.name === 'key' && keyType === 'id') {
-            setForm({ ...form, [e.target.name]: (e.target.value).toUpperCase() })
-            return;
-        }
 
         // choose cities 
         if (e.target.name === 'city_id') {
@@ -132,9 +127,9 @@ const SearchCustomerByKey = () => {
         <div className="search-customer-by-key-comp">
             <form action="" onSubmit={handleSubmit}>
                 <div className="key-search-input">
-                    <InputText label={`Enter ${keyType}`} name='key' type={keyType === 'number' ? 'number' : 'text'} value={form.key} onChange={handleChangeForm}
+                    <InputText label={`Enter ${keyType}`} name='key' type={keyType === 'letter' ? 'text' : 'number'} value={form.key} onChange={handleChangeForm}
                         className={keyType === 'id' ? 'key-upper-case' : ''} />
-                    <div className={`key-type-icon ${form?.key && 'key-type-disable'}`} onClick={toggleKeyType} title={keyType}>
+                    <div className={`key-type-icon`} onClick={toggleKeyType} title={keyType}>
                         {keyType === 'letter' ? <TbLetterCase />
                             : keyType === 'number' ? <TbNumber123 />
                                 : keyType === 'id' ? <TbGrid3X3 /> : ''}

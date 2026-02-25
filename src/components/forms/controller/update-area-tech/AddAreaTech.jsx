@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import InputText from '../../UI_Primitives/inputs/InputText'
-import Button from '../../UI_Primitives/buttons/Button'
-import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
-import Select from '../../UI_Primitives/inputs/Select'
-import { api } from '../../../api'
-import { listInactiveAreaWorker } from '../../../utils/services/area_service'
+import InputText from '../../../UI_Primitives/inputs/InputText'
+import Button from '../../../UI_Primitives/buttons/Button'
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
+import Select from '../../../UI_Primitives/inputs/Select'
+import { api } from '../../../../api'
+import { listInactiveAreaWorker } from '../../../../utils/services/area_service'
 import { useDispatch } from 'react-redux'
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
     const dispatch = useDispatch();

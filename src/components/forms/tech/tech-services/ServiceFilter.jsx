@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import './service-filter.scss'
 import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom'
-import { modal } from '../../../redux/features/non_persisted/miniSystemSlice';
-import Button from '../../UI_Primitives/buttons/Button';
-import ButtonGroup from '../../UI_Primitives/buttons/ButtonGroup';
-import InputText from '../../UI_Primitives/inputs/InputText';
-import MultiSelectInput from '../../UI_Primitives/inputs/MultiSelect';
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import Button from '../../../UI_Primitives/buttons/Button';
+import ButtonGroup from '../../../UI_Primitives/buttons/ButtonGroup';
+import InputText from '../../../UI_Primitives/inputs/InputText';
+import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect';
 
 const ServiceFilter = ({ filterFields: { cities, posts, packages } }) => {
     const dispatch = useDispatch();

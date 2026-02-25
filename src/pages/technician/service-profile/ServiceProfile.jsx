@@ -10,7 +10,7 @@ import CallLogs from '../../../components/modules/tech/customer-profile/CallLogs
 import Message from '../../../components/UI_Primitives/message/Message';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
-import PostponeService from '../../../components/forms/postpone-service/PostponeService';
+import PostponeService from '../../../components/forms/common/postpone-service/PostponeService';
 import AddCallLog from '../../../components/forms/add-call-log/AddCallLog';
 import TechScheduleService from '../../../components/forms/tech/schedule-service/TechScheduleService';
 import { useDispatch } from 'react-redux';
@@ -39,7 +39,7 @@ const ServiceProfile = () => {
             const apis = [
                 api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
                 api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
-                api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?page=1&limit=10`),
+                api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?page=1&limit=20`),
             ]
 
             if (searchParams.get('reg_id')) {
@@ -174,7 +174,7 @@ const ServiceProfile = () => {
 
             <div className="action-buttons">
                 <Button icon={<TbCornerUpRightDouble />} rounded severity={'danger'} onClick={postponeService}
-                    disabled={(regService?.registration_id || service_type === 'renewals') ? true : false} />
+                    disabled={(regService?.registration_id || service_type === 'renewals' || upServices?.products?.filter(p => p.service.service_type === 'SERVICE').length === 0) ? true : false} />
                 <Button icon={<TbMessage2Plus />} rounded onClick={addCallLog} />
                 <Button icon={<TbCalendarTime />} label={'Schedule'} rounded severity={'primary'} style={{ width: '100%' }}
                     onClick={handleSchedule} />

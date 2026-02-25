@@ -67,7 +67,7 @@ const ServiceAreaList = () => {
     return (
         <div className="tech-service-area-list-container">
             {!cities?.length ? <div>
-                <EmptyState hight='70vh' title={"No Service Area Found"} description={"The service area not assign for you"} icon={<TbMap />} />
+                <EmptyState  size='sm' hight='70vh' title={"No Service Area Found"} description={"The service area not assign for you"} icon={<TbMap />} />
             </div> : cities?.map((city, index) => {
                 return <div className='list-item' key={city?.city_id} onClick={() => openCity(city)}>
                     <p className="city-name">{index + 1}. {city?.city_name}</p>

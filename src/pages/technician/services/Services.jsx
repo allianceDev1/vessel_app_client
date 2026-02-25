@@ -10,8 +10,8 @@ import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import UpcomingServiceCard from '../../../components/modules/tech/service-card/UpcomingServiceCard';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
-import ServiceFilter from '../../../components/forms/tech-services/ServiceFilter';
-import ServiceSort from '../../../components/forms/tech-services/ServiceSort';
+import ServiceFilter from '../../../components/forms/tech/tech-services/ServiceFilter';
+import ServiceSort from '../../../components/forms/tech/tech-services/ServiceSort';
 import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
 
 

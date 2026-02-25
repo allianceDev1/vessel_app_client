@@ -134,3 +134,12 @@ export const generateMonthlyRunningReport = (data = []) => {
 }
 
 
+export const convertEligibilityToArray = (data) => {
+  return Object.entries(data)
+    .filter(([key]) => key !== "product_id") // skip product_id
+    .map(([key, value]) => {
+      const [status, note = null] = value; // note optional
+      return [key, status, note];
+    });
+};
+

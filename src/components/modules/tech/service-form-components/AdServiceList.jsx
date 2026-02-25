@@ -2,7 +2,6 @@ import React from 'react'
 import './vf-service-list.scss'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { TbCheck, TbComponents } from 'react-icons/tb'
-import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 

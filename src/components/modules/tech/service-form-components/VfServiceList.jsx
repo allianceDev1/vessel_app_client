@@ -52,6 +52,7 @@ const VfServiceList = ({ setWorkMenu, componentsPage, servicesList, productInFor
 
         {!servicesList?.length &&
           <EmptyState
+           size='sm'
             icon={<TbComponents />}
             title={'Services not available'}
             hight='250px'

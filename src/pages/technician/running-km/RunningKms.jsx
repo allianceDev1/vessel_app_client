@@ -97,6 +97,7 @@ const RunningKms = () => {
 
             {error?.error || (!loading && !data?.length)
                 ? <ErrorState
+                 size='sm'
                     hight='60vh'
                     title={error?.title || "You are tired."}
                     message={error?.message || "Running data not found"}

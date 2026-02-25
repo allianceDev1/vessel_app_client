@@ -11,7 +11,7 @@ import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
-import SearchCustomerByKey from '../../forms/search-customer/SearchCustomerByKey'
+import SearchCustomerByKey from '../../forms/tech/search-customer/SearchCustomerByKey'
 
 
 const CustomerMiniReport = () => {
@@ -291,7 +291,7 @@ const CustomerMiniReport = () => {
                                 <p>Rental</p>
                             </div>
                             <div className="item-div">
-                                <h2>{productReport?.new_product_in_30_days || 0}</h2>
+                                <h2>{addOnReport?.new_product_in_30_days || 0}</h2>
                                 <p>New in 30d</p>
                             </div>
                         </div>

@@ -32,13 +32,19 @@ export const cnPv2Axios = axios.create({
     headers: apiHeaders,
 });
 
+export const cnAv1Axios = axios.create({
+    baseURL: url(env.API.CONTROLNEX, "/"),
+    headers: apiHeaders,
+});
+
 const instances = [
     recallAxios,
     ttSv2Axios,
     ttPv2Axios,
     cnPv2Axios,
+    cnAv1Axios,
     vfCv2Axios,
-    vfTv2Axios
+    vfTv2Axios,
 ];
 
 instances.forEach((instance) => {
@@ -50,6 +56,7 @@ const axiosClients = {
     ttSv2Axios,
     ttPv2Axios,
     cnPv2Axios,
+    cnAv1Axios,
     vfCv2Axios,
     vfTv2Axios
 };

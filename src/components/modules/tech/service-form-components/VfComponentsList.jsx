@@ -145,6 +145,7 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
 
                 {(!componentsList?.length || !data?.length) &&
                     <EmptyState
+                        size='sm'
                         icon={<TbComponents />}
                         title={!componentsList?.length ? 'Components not available' : 'No matched components'}
                         hight='250px'

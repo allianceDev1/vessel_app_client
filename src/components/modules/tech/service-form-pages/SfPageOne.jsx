@@ -275,6 +275,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                         </div>
                     })} </>
                     : <EmptyState
+                     size='sm'
                         icon={<TbSitemap />}
                         title={'Customer products not listed'}
                         description={'Vessel filter products not available, please contact the administrator'}

@@ -23,9 +23,10 @@ const TechScheduleService = ({ registrationId, customerId, serviceType }) => {
         try {
             setLoading('submit')
 
-            await api.vfTv2Axios.post(`/registered-service/schedule`, {
+            await api.cnAv1Axios.post(`/customer/service/technician/schedule`, {
                 registration_id: registrationId || null,
                 customer_id: customerId,
+                product_type: "VESSEL_FILTER",
                 service_type: serviceType,
                 schedule_slot_start_at: startTime,
                 schedule_slot_finish_at: endTime

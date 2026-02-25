@@ -12,7 +12,7 @@ import ButtonGroup from '../../../components/UI_Primitives/buttons/ButtonGroup'
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
-import UpdateAreaTech from '../../../components/forms/update-area-tech/UpdateAreaTech';
+import UpdateAreaTech from '../../../components/forms/controller/update-area-tech/UpdateAreaTech';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 
 

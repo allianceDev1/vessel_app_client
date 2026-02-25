@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from 'react'
 import './postpone-service.scss';
-import Checkbox from '../../UI_Primitives/inputs/Checkbox';
-import InputText from '../../UI_Primitives/inputs/InputText';
-import Button from '../../UI_Primitives/buttons/Button';
-import Select from '../../UI_Primitives/inputs/Select';
-import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid';
+import Checkbox from '../../../UI_Primitives/inputs/Checkbox';
+import InputText from '../../../UI_Primitives/inputs/InputText';
+import Button from '../../../UI_Primitives/buttons/Button';
+import Select from '../../../UI_Primitives/inputs/Select';
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
 import { useDispatch } from 'react-redux';
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { api } from '../../../api';
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import { api } from '../../../../api';
 
 
 const PostponeService = ({ customerId, products, setUpServices, isController = false }) => {
     const dispatch = useDispatch();
-    const [selectedProducts, setSelectedProducts] = useState(products?.map((p) => ({ product_id: p.product_id, type: p.type })) || [])
+    const [selectedProducts, setSelectedProducts] = useState(products?.map((p) => p.product_id) || [])
     const [form, setForm] = useState({ postpone_date: null, reason: null })
     const [loading, setLoading] = useState('fetch')
     const [postponeReasons, setPostponeReasons] = useState([])
 
 
-    const handleProductSelect = (product) => {
-        const isSelected = selectedProducts.filter((p) => p.product_id === product.product_id).length > 0
+    const handleProductSelect = (productId) => {
+        const isSelected = selectedProducts.filter((pId) => pId === productId).length > 0
 
         if (isSelected) {
-            setSelectedProducts(selectedProducts.filter((p) => p.product_id !== product.product_id))
+            setSelectedProducts(selectedProducts.filter((pId) => pId !== productId))
         } else {
-            setSelectedProducts([...selectedProducts, { product_id: product.product_id, type: product.type }])
+            setSelectedProducts([...selectedProducts, productId])
         }
     }
 
     const handelChangeInputs = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -128,8 +127,8 @@ const PostponeService = ({ customerId, products, setUpServices, isController = f
                 <div className="products">
                     <h4>Products</h4>
                     {products?.map((product) => (<Checkbox key={product?.product_id} label={`${product?.product_id} - ${product?.product_name}`}
-                        name={'product'} onChange={() => handleProductSelect(product)}
-                        checked={selectedProducts.filter((p) => p.product_id === product.product_id).length ? true : false} />))}
+                        name={'product'} onChange={() => handleProductSelect(product.product_id)}
+                        checked={selectedProducts.filter((productId) => productId === product.product_id).length ? true : false} />))}
                 </div>
                 <InputText label={'Postpone date'} name={'postpone_date'} value={form?.postpone_date} onChange={handelChangeInputs}
                     type='date' required={true} />

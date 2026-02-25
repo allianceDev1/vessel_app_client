@@ -68,6 +68,7 @@ const Schedules = () => {
     // Error
     if (error?.error) {
         return <ErrorState
+         size='sm'
             hight='70vh'
             title={error?.title}
             message={error?.message}

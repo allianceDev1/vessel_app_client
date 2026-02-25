@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import Select from '../../UI_Primitives/inputs/Select'
-import ButtonGroup from '../../UI_Primitives/buttons/ButtonGroup'
-import Button from '../../UI_Primitives/buttons/Button'
+import Select from '../../../UI_Primitives/inputs/Select'
+import ButtonGroup from '../../../UI_Primitives/buttons/ButtonGroup'
+import Button from '../../../UI_Primitives/buttons/Button'
 import { useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
 const ServiceSort = () => {

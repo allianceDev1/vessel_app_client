@@ -13,20 +13,92 @@
 
         .icon {
             svg {
-                font-size: 50px;
+                font-size: 45px;
             }
         }
 
         .text {
             h2 {
-                font-size: 21px;
+                font-size: 19px;
                 font-weight: 600;
             }
 
             p {
-                font-size: 14;
+                font-size: 14px;
                 margin-top: 5px;
                 color: var(--text-secondary-2);
+            }
+        }
+    }
+
+    &.state-size-lg {
+        .content {
+            gap: 20px;
+
+            .icon {
+                svg {
+                    font-size: 50px;
+                }
+            }
+
+            .text {
+                h2 {
+                    font-size: 21px;
+                    font-weight: 600;
+                }
+
+                p {
+                    font-size: 16px;
+                    margin-top: 5px;
+                }
+            }
+        }
+    }
+
+    &.state-size-md {
+        .content {
+            gap: 20px;
+
+            .icon {
+                svg {
+                    font-size: 45px;
+                }
+            }
+
+            .text {
+                h2 {
+                    font-size: 19px;
+                    font-weight: 600;
+                }
+
+                p {
+                    font-size: 14px;
+                    margin-top: 5px;
+                }
+            }
+        }
+    }
+
+    &.state-size-sm {
+        .content {
+            gap: 20px;
+
+            .icon {
+                svg {
+                    font-size: 40px;
+                }
+            }
+
+            .text {
+                h2 {
+                    font-size: 17px;
+                    font-weight: 500;
+                }
+
+                p {
+                    font-size: 13px;
+                    margin-top: 5px;
+                }
             }
         }
     }

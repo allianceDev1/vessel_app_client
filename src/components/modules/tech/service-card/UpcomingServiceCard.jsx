@@ -12,7 +12,7 @@ const UpcomingServiceCard = ({ data }) => {
     const target = new Date(data?.expire_date || data?.service_date);
     const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
     const severity = diff <= 10 ? "danger" : diff <= 20 ? "warning" : null;
-    const text = diff < 0 ? `${Math.abs(diff)} Days Ago` : diff === 0 ? "Today" : `${Math.abs(diff)} Days Left`;
+    const text = diff < 0 ? `${Math.abs(diff)} Days Ago` : diff === 0 ? "Today" : diff === 1 ? "Tomorrow" : diff ? `${Math.abs(diff)} Days Left` : null;
 
 
     const handleCallClick = (e, number) => {

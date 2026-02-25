@@ -9,8 +9,8 @@ import { api } from '../../../api';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
-import AddAreaTech from '../../../components/forms/update-area-tech/AddAreaTech';
-import UpdateAreaTech from '../../../components/forms/update-area-tech/UpdateAreaTech';
+import AddAreaTech from '../../../components/forms/controller/update-area-tech/AddAreaTech';
+import UpdateAreaTech from '../../../components/forms/controller/update-area-tech/UpdateAreaTech';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 
 const ViewArea = () => {

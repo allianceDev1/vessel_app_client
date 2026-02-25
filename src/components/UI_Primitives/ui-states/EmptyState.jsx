@@ -2,9 +2,9 @@ import React from 'react'
 import './state-style.scss'
 
 
-const EmptyState = ({ width = '100%', hight = '100%', title, description, icon, footer }) => {
+const EmptyState = ({ width = '100%', hight = '100%', title, description, icon, footer, size = 'md' }) => {
     return (
-        <div className="ui-state-component" style={{ width, height: hight }}>
+        <div className={`ui-state-component state-size-${size}`} style={{ width, height: hight }}>
             <div className="content">
                 {icon && <div className="icon">
                     {icon}

@@ -2,11 +2,15 @@ import React from 'react'
 import './service-card.scss'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { TbCircleCheck, TbCircleX } from 'react-icons/tb'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
-import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
+import { getContrastText } from '../../../../utils/helpers/color-utils.js'
+import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers.js'
+import { convertEligibilityToArray } from '../../../../utils/services/work_services.js'
+import EmptyState from '../../../UI_Primitives/ui-states/EmptyState.jsx'
+import { toStandardText } from '../../../../utils/helpers/text-formatting.js'
 
 const VesselServiceCard = ({ product, serviceType }) => {
 
+    const eligibility = convertEligibilityToArray(product?.eligibility || {})
     const serviceGap = getIsoDayDifference(new Date(product?.service?.service_date), new Date())
 
     return (
@@ -21,7 +25,7 @@ const VesselServiceCard = ({ product, serviceType }) => {
             </div>
             <div className="service-card__item">
                 <div className="header__left">
-                    <p className="item__text">Vessel</p>
+                    <p className="item__text">VESSEL FILTER</p>
                     {product?.package?.package_id ? <Badge value={product?.package?.name}
                         style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} /> : ''}
                 </div>
@@ -40,38 +44,26 @@ const VesselServiceCard = ({ product, serviceType }) => {
                 </div>
             </div>
 
-            <div className="service-card__eligibility">
-                <h3 className="service-card__eligibility-title">Eligibility</h3>
-                <div className="service-card__eligibility-list">
-                    <div className="service-card__eligibility-item">
-                        {product?.eligibility?.renewal
-                            ? <TbCircleCheck className='service-card__icon service-card__icon--success' />
-                            : <TbCircleX className='service-card__icon service-card__icon--error' />}
-                        <div>
-                            <span>Renewal</span>
-                            {product?.eligibility?.renewal_note ? <span className="service-card__note">: {product?.eligibility?.renewal_note}</span> : ''}
-                        </div>
-                    </div>
-                    <div className="service-card__eligibility-item">
-                        {product?.eligibility?.ssp_renewal
-                            ? <TbCircleCheck className='service-card__icon service-card__icon--success' />
-                            : <TbCircleX className='service-card__icon service-card__icon--error' />}
-                        <div>
-                            <span>SSP Renewal</span>
-                            {product?.eligibility?.ssp_renewal_note ? <span className="service-card__note">: {product?.eligibility?.ssp_renewal_note}</span> : ''}
-                        </div>
-                    </div>
-                    <div className="service-card__eligibility-item">
-                        {product?.eligibility?.service
-                            ? <TbCircleCheck className='service-card__icon service-card__icon--success' />
-                            : <TbCircleX className='service-card__icon service-card__icon--error' />}
-                        <div>
-                            <span>Service</span>
-                            {product?.eligibility?.service_note ? <span className="service-card__note">: {product?.eligibility?.service_note}</span> : ''}
-                        </div>
+            {eligibility?.length
+                ? <div className="service-card__eligibility">
+                    <h3 className="service-card__eligibility-title">Eligibility</h3>
+                    <div className="service-card__eligibility-list">
+                        {eligibility?.map((e, index) => {
+                            return <div className="service-card__eligibility-item" key={index}>
+                                {e?.[1]
+                                    ? <TbCircleCheck className='service-card__icon service-card__icon--success' />
+                                    : <TbCircleX className='service-card__icon service-card__icon--error' />}
+                                <div>
+                                    <span>{toStandardText(e?.[0] || '')}</span>
+                                    {e?.[2] ? <span className="service-card__note">: {e?.[2]}</span> : ''}
+                                </div>
+                            </div>
+                        })}
                     </div>
                 </div>
-            </div>
+                : <EmptyState  size='sm' description={'No information'} hight={'120px'} />}
+
+
         </div>
     )
 }
