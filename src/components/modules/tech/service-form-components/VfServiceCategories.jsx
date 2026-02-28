@@ -62,8 +62,6 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData,
                     total_rate: totalRate
                 }
             }
-
-            // The package fund_distribution not handled, currently not allow th distribution. 
         }
 
         changeSubmitStatus(false)

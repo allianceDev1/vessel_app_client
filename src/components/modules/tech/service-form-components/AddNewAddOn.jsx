@@ -57,7 +57,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
             item_uuid: product?.item_uuid,
             product_name: product?.product_name,
             selling_rate: product?.selling_rate || 0,
-            purchase_rate: product?.purchase_rate || 0,
+            purchase_cost: product?.purchase_cost || 0,
             rent_renewal_charge: product?.rental?.renewal_charge || 0
         })
     }
@@ -70,10 +70,10 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
             ...form,
             element: {
                 spare_uuid: element?.spare_uuid,
-                qty_type: element?.qty_type,
+                unit: element?.unit,
                 qty: 1,
-                selling_rate: element?.selling_rate || 0,
-                purchase_rate: element?.purchase_rate || 0,
+                selling_rate: element?.pricing?.selling_rate || 0,
+                purchase_cost: element?.pricing?.purchase_cost || 0,
             }
         })
     }
@@ -142,10 +142,10 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
         const element = {}, product = {}
         let service_charge = 0, total = 0
 
-        if (form?.purchase_type === 'in_warranty' && form?.is_zero_fee === true) {
+        if (form?.purchase_type === 'IN_WARRANTY' && form?.is_zero_fee === true) {
             // Element
             const unitElemSellingRate = form?.element?.selling_rate || 0
-            const unitElemPurchaseRate = form?.element?.purchase_rate || 0
+            const unitElemPurchaseRate = form?.element?.purchase_cost || 0
             const unitElemQty = form?.element?.qty || 0
             const totalElemCharged = unitElemSellingRate * unitElemQty
             const totalLedgerCost = unitElemPurchaseRate * unitElemQty
@@ -157,7 +157,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
 
             // Product
             const unitProductCharged = form?.selling_rate || 0
-            const unitProductPurchaseRate = form?.purchase_rate || 0
+            const unitProductPurchaseRate = form?.purchase_cost || 0
 
 
             product.list_price = unitProductCharged
@@ -167,7 +167,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
             total = 0
         }
 
-        if (form?.purchase_type === 'in_warranty' && !form?.is_zero_fee) {
+        if (form?.purchase_type === 'IN_WARRANTY' && !form?.is_zero_fee) {
             // Element
             const unitElemSellingRate = form?.element?.selling_rate || 0
             const unitElemQty = form?.element?.qty || 0
@@ -187,7 +187,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
             total = totalElemCharged + unitProductCharged
         }
 
-        if (form?.purchase_type === 'rental') {
+        if (form?.purchase_type === 'RENTAL') {
             // Element
             const unitElemSellingRate = form?.element?.selling_rate || 0
             const unitElemQty = form?.element?.qty || 0
@@ -232,21 +232,21 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
                 <div className="radio-group">
                     <h4>Purchase Type <span>*</span></h4>
                     <div>
-                        <Radio label={'In Warranty'} name={'purchase_type'} radioValue={'in_warranty'}
-                            checked={form?.purchase_type === 'in_warranty'} onChange={handleChange} required />
-                        <Radio label={'Rent'} name={'purchase_type'} radioValue={'rental'} required
-                            checked={form?.purchase_type === 'rental'} onChange={handleChange} />
+                        <Radio label={'In Warranty'} name={'purchase_type'} radioValue={'IN_WARRANTY'}
+                            checked={form?.purchase_type === 'IN_WARRANTY'} onChange={handleChange} required />
+                        <Radio label={'Rent'} name={'purchase_type'} radioValue={'RENTAL'} required
+                            checked={form?.purchase_type === 'RENTAL'} onChange={handleChange} />
                     </div>
                 </div>
                 <Select label={'Product'} name={'product'} options={[{}, ...(availableAddOns?.map(a => ({ label: `${a?.item_id} - ${a?.product_name}`, value: a?.item_uuid })) || [])]}
                     onChange={handleChangeProduct} required value={form?.item_uuid} />
                 <Select label={'Filling element'} name={'spare'} options={[{}, ...(addOnSpareList?.map(a => ({ label: a.spare_name, value: a?.spare_uuid })) || [])]}
                     onChange={handleChangeElement} required value={form?.element?.spare_uuid} />
-                <Select label={'Filling element qty'} name={'spare_qty'} options={[...([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(a => ({ label: `${a} ${form?.element?.qty_type || ''}`, value: a })) || [])]}
+                <Select label={'Filling element qty'} name={'spare_qty'} options={[...([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(a => ({ label: `${a} ${form?.element?.unit || ''}`, value: a })) || [])]}
                     onChange={handleChangeElementQty} required value={form?.element?.qty} disabled={!form?.element?.spare_uuid} />
-                {form?.purchase_type === 'in_warranty' && <Checkbox label={'It is zero fee item.'} name={'is_zero_fee'} value={'Yes'}
+                {form?.purchase_type === 'IN_WARRANTY' && <Checkbox label={'It is zero fee item.'} name={'is_zero_fee'} value={'Yes'}
                     isChecked={form?.is_zero_fee === true} onChange={handleChange} />}
-                {form?.purchase_type === 'in_warranty' && <p><b>Zero Fee:</b> The filter element expiry date is set to match the product expiry date.
+                {form?.purchase_type === 'IN_WARRANTY' && <p><b>Zero Fee:</b> The filter element expiry date is set to match the product expiry date.
                     This ensures that any refilling done during the warranty period is provided at no cost to the customer.</p>}
                 <InputText label={'Product Expire Date'} name={'expire_date'} value={form?.expire_date} onChange={handleChange}
                     type='date' required min={isoToYYYYMMDD(new Date())} />

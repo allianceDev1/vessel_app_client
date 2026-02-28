@@ -18,7 +18,6 @@ const SfAdSubPageThree = ({ page, changeSubmitStatus }) => {
         // eslint-disable-next-line
     }, [serviceForm?.service_products]);
 
-
     const handleChange = (e, subKey) => {
         changeSubmitStatus(false)
         if (e.target.name === 'leak_status' || e.target.name === 'working_status') {

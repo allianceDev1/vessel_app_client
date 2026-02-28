@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux';
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import { TbPlayerSkipForwardFilled } from 'react-icons/tb';
 import { setupAddOnServiceCategories } from '../../../../utils/services/product_service';
-import { normalizeDate } from '../../../../utils/helpers/date-helpers';
 
-const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus }) => {
+const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus, productEligibility }) => {
     const dispatch = useDispatch();
     const [serviceCategories, setServiceCategories] = useState([])
 
@@ -27,29 +26,22 @@ const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus 
             }
         }
 
-        const isWarrantyProduct = product?.product?.wr_expire_date &&
-            normalizeDate(new Date(product?.product?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
-
         // service charge
         if (category?.service_charges?.length) {
             updateData.service_data.service_charge = {
                 estimate: category?.service_charges?.[0]?.charge_amount || 0,
-                applied: isWarrantyProduct ? 0 : category?.service_charges?.[0]?.charge_amount,
-                call: category?.service_charges?.[0]?.call_count || 0,
                 remark: null
             }
         }
 
         changeSubmitStatus(false)
-
         dispatch(sfActions.updateProduct(updateData))
     }
 
     useEffect(() => {
         let list = []
 
-        list = setupAddOnServiceCategories(categories, regData)
-
+        list = setupAddOnServiceCategories(categories, regData, productEligibility)
         setServiceCategories(list)
         // eslint-disable-next-line
     }, [product])

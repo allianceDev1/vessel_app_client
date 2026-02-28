@@ -22,7 +22,6 @@ const SFormSave = ({ modalId }) => {
 
         setError({ error: false, message: "" })
 
-
         if (!internet) {
             dispatch(toast.push({
                 type: 'warning',
@@ -107,16 +106,17 @@ const SFormSave = ({ modalId }) => {
                     },
                     work: {
                         service_list: (value?.work?.services_list || [])?.map(s => ({
-                            service_uuid: s?.service_id
+                            service_uuid: s?.service_uuid,
+                            service_type: s?.service_type
                         })),
                         components_list: (value?.work?.components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_id,
+                            spare_uuid: c?.spare_uuid,
                             spare_type: c?.spare_type,
                             qty: c?.qty
                         })),
                         removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_id,
-                            spare_type: c?.spare_type
+                            spare_uuid: c?.spare_uuid,
+                            spare_type: c?.spare_type,
                         }))
                     },
                     evaluation: {
@@ -148,16 +148,17 @@ const SFormSave = ({ modalId }) => {
                     },
                     work: {
                         service_list: (value?.work?.services_list || [])?.map(s => ({
-                            service_uuid: s?.service_id
+                            service_uuid: s?.service_uuid,
+                            service_type: s?.service_type
                         })),
                         components_list: (value?.work?.components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_id,
+                            spare_uuid: c?.spare_uuid,
                             spare_type: c?.spare_type,
                             qty: c?.qty
                         })),
                         removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_id,
-                            spare_type: c?.spare_type
+                            spare_uuid: c?.spare_uuid,
+                            spare_type: c?.spare_type,
                         }))
                     },
                     evaluation: {
@@ -172,7 +173,6 @@ const SFormSave = ({ modalId }) => {
                     }
                 })
             }
-
         })
 
         try {
@@ -261,8 +261,6 @@ const SFormSave = ({ modalId }) => {
             })
             return;
         }
-
-
 
         // Check all product saved.
         if (formProductCount !== saveProductCount) {

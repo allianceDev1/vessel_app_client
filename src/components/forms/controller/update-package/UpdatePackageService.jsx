@@ -192,7 +192,7 @@ const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
               onChange={handleChangeServiceCard} value={form.bag_price_type} />
             <Select label={'Price of spares'} name={'primary_spare_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.primary_spare_price_type} />
-            <Select label={'Price of spares'} name={'service_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
+            <Select label={'Price of Service work'} name={'service_price_type'} options={[{ label: 'No Access', value: '' }, ...price_unit_objects]}
               onChange={handleChangeServiceCard} value={form.service_price_type} />
 
             <h4 className='radio-input-label'>Service charge applied <span className={'required-span'}>*</span></h4>

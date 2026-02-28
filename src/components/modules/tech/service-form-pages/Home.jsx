@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import './sf-page-one.scss'
+import './home.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
 import { TbAlertCircle, TbPlus, TbSitemap, TbTrash } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,36 +8,36 @@ import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { PACKAGE_STATUSES, packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import EmptyState from '../../../../components/UI_Primitives/ui-states/EmptyState'
-import Badge from '../../../../components/UI_Primitives/badge/Badge'
+import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { generateUniqueId } from '../../../../utils/helpers/generate_Id'
+import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
+import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import AddNewAddOn from '../service-form-components/AddNewAddOn'
 import Select from '../../../UI_Primitives/inputs/Select'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import SFormSave from '../service-form-components/SFormSave'
 import Radio from '../../../UI_Primitives/inputs/Radio'
-import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
-import { generateUniqueId } from '../../../../utils/helpers/generate_Id'
 
 
 
-const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
+const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
     const dispatch = useDispatch();
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workSites, setWorkSites] = useState([])
     const [waterSources, setWaterSources] = useState([])
 
 
-    const selectProduct = (productId, orderId = null, productType) => {
+    const selectProduct = (productId, orderId = null, productType, packageName) => {
         dispatch(sfSetting.setActiveSubPage(200))
-        dispatch(sfSetting.setActiveProduct([productId, orderId, productType]))
+        dispatch(sfSetting.setActiveProduct([productId, orderId, productType, packageName]))
     }
 
     const clickNewAddOnButton = () => {
         dispatch(modal.push({
             title: 'Select New Add-On',
             body: <AddNewAddOn availableAddOns={availableAddOns} serviceCharges={serviceCharges}
-                addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'refill_element')} />
+                addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'CHEMICALS')} />
         }))
     }
 
@@ -192,7 +192,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
     }, [repeatWork])
 
     useEffect(() => {
-        let colorOptions = resources?.filter(r => r.title === 'site_categories')?.[0]?.values || []
+        let colorOptions = resources?.filter(r => r.title === 'work_sites')?.[0]?.values || []
         colorOptions = colorOptions.sort((a, b) => a.order - b.order)
         colorOptions = colorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
         setWorkSites(colorOptions)
@@ -213,7 +213,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
             </div>
 
             {/* Page Section */}
-            {customer?.images?.length > 0 ?
+            {/* {customer?.images?.length > 0 ?
                 <div className="images-list">
                     {customer?.images?.map((image, index) => {
                         return <div className="image" key={index}>
@@ -221,7 +221,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                         </div>
                     })}
                 </div>
-                : ''}
+                : ''} */}
 
             {/* Product list */}
             <div className="products-chart">
@@ -244,10 +244,10 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                                 const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
                                 const isSaved = serviceFormSettings?.products?.[product?.product_id]?.is_saved || false
 
-                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type)}>
+                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type, productPackage?.package_name)}>
                                     <div className={`order-box`}>
                                         <div className={`order-index ${isSaved ? 'saved' : isSubmitted ? 'submitted' : ''}`}>
-                                            <p>{product?.product_type === 'Vessel' ? (product?.order_id || "UN") : 'AD'}</p>
+                                            <p>{product?.product_type === 'VESSEL_FILTER' ? (product?.order_id || "UN") : 'AD'}</p>
                                         </div>
                                         {pg?.length !== productIndex + 1 && <div className="order-line"></div>}
                                     </div>
@@ -275,7 +275,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                         </div>
                     })} </>
                     : <EmptyState
-                     size='sm'
+                        size='sm'
                         icon={<TbSitemap />}
                         title={'Customer products not listed'}
                         description={'Vessel filter products not available, please contact the administrator'}
@@ -285,15 +285,15 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
 
             {/* New Add-On */}
             {!serviceForm?.new_add_ons?.length && <div className="new-product-initial-box">
-                <h4>Add New Add-On</h4>
+                <h4>Install Add-ons</h4>
                 <p>To add a new add-on, click the button below. After submitting the form, the product will be added to
                     the customer’s list. You can add the product as either a rental or a new item.</p>
-                <Button label={'Select Add-On'} severity={'warning'} outlined rounded style={{ width: '100%' }} size='small'
+                <Button label={'Select Add-on'} severity={'info'} outlined style={{ width: '150px' }} rounded size='small'
                     icon={<TbPlus />} onClick={clickNewAddOnButton} />
             </div>}
 
             {serviceForm?.new_add_ons?.length ? <div className="new-product-list">
-                <h3>New Add-On</h3>
+                <h3>Install Add-ons</h3>
 
                 <div className="addon-list">
                     {serviceForm?.new_add_ons?.map((item) =>
@@ -310,7 +310,7 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                     )}
                 </div>
 
-                <Button label={'Select Add-On'} outlined rounded style={{ width: '100%' }} size='small'
+                <Button label={'Select Add-on'} severity={'info'} outlined style={{ width: '150px' }} rounded size='small'
                     icon={<TbPlus />} onClick={clickNewAddOnButton} />
             </div> : ''}
 
@@ -365,7 +365,6 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
                         </>}
                     </div>
 
-
                     <div className="submit-section">
                         <Button label={'Save & Review'} rounded severity={'primary'} style={{ width: '100%' }} />
                     </div>
@@ -377,4 +376,4 @@ const SfPageOne = ({ page, customer, customerProducts, availableAddOns, addOnSpa
     )
 }
 
-export default SfPageOne
+export default Home

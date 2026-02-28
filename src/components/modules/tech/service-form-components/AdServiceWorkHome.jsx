@@ -4,30 +4,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from '../../../UI_Primitives/inputs/Select';
 import InputText from '../../../UI_Primitives/inputs/InputText';
 import Button from '../../../UI_Primitives/buttons/Button';
-import { isoToYYYYMMDD, normalizeDate } from '../../../../utils/helpers/date-helpers';
+import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import { doDialog } from '../../../../redux/features/non_persisted/miniSystemSlice';
 
-const AdServiceWorkHome = ({ category, setWorkMenu, product, changeSubmitStatus }) => {
+const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
-    const [form, setForm] = useState({ estimate: 0, applied: 0, call: 0, remark: null })
     const [menuMeta, setMenuMeta] = useState({ materials: 0, bags: 0, spares: 0, services: 0 })
-
 
     const productInForm = useMemo(() => {
         const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
 
-        setForm({
-            estimate: current?.service_data?.service_charge?.estimate,
-            applied: current?.service_data?.service_charge?.applied,
-            call: current?.service_data?.service_charge?.call,
-            remark: current?.service_data?.service_charge?.remark
-        })
-
         setMenuMeta({
-            spares: current?.work?.components_list?.filter(s => s.spare_type === 'spares')?.length,
-            services: current?.work?.services_list?.length
+            additional_spares: current?.work?.components_list?.filter(s => s.spare_type === 'ADDITIONAL_SPARE')?.length,
+            additional_services: current?.work?.services_list?.filter(s => s.service_type === 'ADDITIONAL_SERVICE')?.length
         })
 
         return current || {}
@@ -35,33 +26,15 @@ const AdServiceWorkHome = ({ category, setWorkMenu, product, changeSubmitStatus 
         // eslint-disable-next-line
     }, [serviceForm?.service_products]);
 
-    const clickComponentsMenu = (id) => {
-        setWorkMenu({ type: 'components', id })
-    }
-
-    const clickServicesMenu = () => {
-        setWorkMenu({ type: 'services' })
+    const clickWorkMenu = (type, id) => {
+        setWorkMenu({ type, id: id || null })
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const updateData = {
-            service_data: {
-                service_charge: {
-                    ...(productInForm?.service_data?.service_charge || {}),
-                    estimate: form?.estimate || 0,
-                    applied: form?.applied || 0,
-                    call: form?.call || 0,
-                    remark: form?.remark || ''
-                }
-            }
-        }
-
-        dispatch(sfActions.updateProduct(updateData))
-
         // If choose any work or components , then show the warming alert
-        if (!menuMeta?.spares && !menuMeta?.services) {
+        if (!menuMeta?.additional_spares && !menuMeta?.additional_services) {
             dispatch(doDialog.confirm({
                 message: 'You have not selected any work or components, Are you sure to continue without work or components?',
                 accept: {
@@ -79,23 +52,29 @@ const AdServiceWorkHome = ({ category, setWorkMenu, product, changeSubmitStatus 
 
     const handelChange = (e) => {
 
+        changeSubmitStatus(false)
+
         if (e.target.name === 'service_charge') {
-            const chargeDetail = category?.service_charges?.filter(c => c.charge_amount === Number(e.target.value))?.[0]
-
-            const isWarrantyProduct = product?.product?.wr_expire_date &&
-                normalizeDate(new Date(product?.product?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
-
-            setForm({
-                estimate: chargeDetail?.charge_amount || 0,
-                applied: isWarrantyProduct ? 0 : chargeDetail?.charge_amount,
-                call: chargeDetail?.call_count || 0,
-                remark: ''
-            })
+            dispatch(sfActions.updateProduct({
+                service_data: {
+                    service_charge: {
+                        estimate: Number(e.target.value),
+                        remark: ""
+                    }
+                }
+            }))
 
             return;
         }
 
-        setForm({ ...form, [e.target.name]: e.target.value })
+        dispatch(sfActions.updateProduct({
+            service_data: {
+                service_charge: {
+                    ...(productInForm?.service_data?.service_charge || {}),
+                    remark: e.target.value
+                }
+            }
+        }))
     }
 
     const handleChangeServiceData = (e) => {
@@ -126,17 +105,18 @@ const AdServiceWorkHome = ({ category, setWorkMenu, product, changeSubmitStatus 
     return (
         <div className="sf-sub-vf-service-work-home">
             <div className="menus">
+                <div className="menu-section">
+                    <div className={`menu-item ${menuMeta?.additional_spares ? 'item-selected' : ''}`}
+                        onClick={() => clickWorkMenu('ADDITIONAL_SPARE', "SPARE_SECTION")}>
+                        <h3>Additional<br></br>Components</h3>
+                        <p>{menuMeta?.additional_spares ? `${menuMeta?.additional_spares} items selected` : "Choose component items"}</p>
+                    </div>
 
-                <div className={`menu-item ${menuMeta?.spares ? 'item-selected' : ''} ${!category?.spare_policies?.primary_spare?.access ? 'item-disable' : ''}`}
-                    onClick={() => category?.spare_policies?.primary_spare?.access ? clickComponentsMenu('spares') : null}>
-                    <h3>Spares</h3>
-                    <p>{menuMeta?.spares ? `${menuMeta?.spares} items selected` : !category?.spare_policies?.primary_spare?.access ? "No access" : "Choose component items"}</p>
-                </div>
-
-                <div className={`menu-item ${menuMeta?.services ? 'item-selected' : ''} ${!category?.service_policy?.access ? 'item-disable' : ''}`}
-                    onClick={() => category?.service_policy?.access ? clickServicesMenu() : null} >
-                    <h3>Services</h3>
-                    <p>{menuMeta?.services ? `${menuMeta?.services} items selected` : !category?.service_policy?.access ? "No access" : "Choose service works"}</p>
+                    <div className={`menu-item ${menuMeta?.additional_services ? 'item-selected' : ''}`}
+                        onClick={() => clickWorkMenu('ADDITIONAL_SERVICE')} >
+                        <h3>Additional<br></br>Services</h3>
+                        <p>{menuMeta?.additional_services ? `${menuMeta?.additional_services} items selected` : "Choose service works"}</p>
+                    </div>
                 </div>
 
             </div>
@@ -144,12 +124,13 @@ const AdServiceWorkHome = ({ category, setWorkMenu, product, changeSubmitStatus 
             <form action="" onSubmit={handleSubmit}>
                 {/* Service charge */}
                 <h4>Service Charge</h4>
-                <Select label={'Service Charge'} name={'service_charge'} value={form?.estimate}
+                <Select label={'Service Charge'} name={'service_charge'} value={productInForm?.service_data?.service_charge?.estimate}
                     options={[{}, ...category?.service_charges?.map(s => ({ label: s?.charge_amount, value: s?.charge_amount }))]}
                     onChange={handelChange} required />
 
-                {category?.service_charges?.[0]?.charge_amount !== form?.estimate &&
-                    <InputText label={'Extra Charge Reason'} name={'remark'} value={form?.remark} onChange={handelChange} required />}
+                {category?.service_charges?.[0]?.charge_amount !== productInForm?.service_data?.service_charge?.estimate &&
+                    <InputText label={'Extra Charge Reason'} name={'remark'} value={productInForm?.service_data?.service_charge?.remark}
+                        onChange={handelChange} required />}
 
 
                 {/* Assign Visit Date */}

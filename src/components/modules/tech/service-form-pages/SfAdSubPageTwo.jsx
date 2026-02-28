@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './sub-page-style.scss'
-import { serviceFormAddOnSubPageRoute } from '../../../../assets/javascript/pre_data/service'
+import { SERVICE_SECTIONS, serviceFormAddOnSubPageRoute, SPARE_SECTIONS } from '../../../../assets/javascript/pre_data/service'
 import { useSelector } from 'react-redux'
 import { findSpareTypeAmount } from '../../../../utils/flows/service_form_utils'
 import { normalizeDate } from '../../../../utils/helpers/date-helpers'
@@ -10,12 +10,11 @@ import VfComponentsList from '../service-form-components/VfComponentsList'
 import AdServiceList from '../service-form-components/AdServiceList'
 
 
-const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList, serviceList, changeSubmitStatus }) => {
+const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList, serviceList, changeSubmitStatus, addOnsEligibilities }) => {
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workMenu, setWorkMenu] = useState({ type: null, id: null })
-    const [componentsList, setComponentsList] = useState([])
-    const [servicesList, setServicesList] = useState([])
-    const [componentsPage, setComponentsPage] = useState({ title: null, id: null, max: 0, deleteItem: false })
+    const [itemsList, setItemList] = useState([])
+    const [subPage, setSubPage] = useState({ title: null, id: null, max: 0, deleteItem: false })
 
     const productInForm = useMemo(() => {
         const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
@@ -34,6 +33,16 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
         // eslint-disable-next-line
     }, [customerProducts, serviceFormSettings?.activeProduct?.[0]]);
 
+    const productEligibility = useMemo(() => {
+        if (!addOnsEligibilities || !serviceFormSettings?.activeProduct?.[0]) return null;
+
+        return addOnsEligibilities.find(
+            e => e.product_id === serviceFormSettings?.activeProduct?.[0]
+        ) || null;
+
+        // eslint-disable-next-line
+    }, [addOnsEligibilities, serviceFormSettings?.activeProduct?.[0]]);
+
     const category = useMemo(() => {
         const workServiceId = productInForm?.service_data?.service_id || null
         const workCategoryId = productInForm?.service_data?.category_id
@@ -47,53 +56,52 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
         // eslint-disable-next-line
     }, [categories, productInForm])
 
-
-
     useEffect(() => {
         if (!workMenu?.type) return;
 
         // components 
-        if (workMenu?.type === 'components') {
+        if (workMenu?.type === 'ADDITIONAL_SPARE' && workMenu?.id === "SPARE_SECTION") {
 
-            if (workMenu?.id === 'spares') {
+            setItemList(spareList?.map(i => {
+                const inForm = productInForm?.work?.components_list?.filter(s => s?.spare_id === i?.spare_id && s?.spare_type === workMenu?.type)?.[0]
+                if (inForm) return inForm
 
-                setComponentsList(spareList?.map(i => {
-                    const inForm = productInForm?.work?.components_list?.filter(s => s?.spare_id === i?.spare_uuid)?.[0]
-                    if (inForm) return inForm
+                const spareInCustomer = product?.product?.spares?.filter(s => s?.spare_uuid === i?.spare_uuid)?.[0]
+                const spareInRemoveList = productInForm?.work?.removed_components_list?.filter(s => s?.spare_uuid === i?.spare_uuid && s?.spare_type === workMenu?.type)?.[0] ? true : false
 
-                    const spareInCustomer = product?.product?.spares?.filter(s => s?.spare_uuid === i?.spare_uuid)?.[0]
-                    const spareInRemoveList = productInForm?.work?.removed_components_list?.filter(s => s?.spare_id === i?.spare_uuid)?.[0] ? true : false
+                const warrantySpare = spareInCustomer?.wr_expire_date &&
+                    normalizeDate(new Date(spareInCustomer?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
 
-                    const warrantySpare = spareInCustomer?.wr_expire_date &&
-                        normalizeDate(new Date(spareInCustomer?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
+                const { reason, ...amountObj } = findSpareTypeAmount(i, "SELLING_RATE", warrantySpare)
+                    || { list_price: 0, charged: 0, ledger_cost: 0 }
 
-                    const { reason, ...amountObj } = findSpareTypeAmount(i, category?.spare_policies?.primary_spare?.price_type, warrantySpare)
-                        || { list_price: 0, charged: 0, ledger_cost: 0 }
+                let obj = {
+                    spare_id: i?.spare_id,
+                    spare_uuid: i?.spare_uuid,
+                    spare_name: i?.spare_name,
+                    spare_category: i?.spare_category,
+                    spare_section: 'SPARE_SECTION',
+                    spare_type: workMenu?.type,
+                    pricing: amountObj,
+                    qty: 0,
+                    unit: i?.unit,
+                    under_warranty: warrantySpare,
+                    non_receivable_reason: (!amountObj?.charged && warrantySpare) ? 'Spare warranty override' : reason,
+                    warranty_period_months: amountObj?.charged > 0 ? (i?.warranty_period_months || 0) : 0,
+                    is_customer_product: i?.spare_uuid === spareInCustomer?.spare_uuid,
+                    is_removed: spareInRemoveList
+                }
 
-                    let obj = {
-                        spare_id: i?.spare_uuid,
-                        spare_name: i?.brand_name ? `${i?.spare_name} - ${i?.brand_name}` : i?.spare_name,
-                        spare_type: 'spares',
-                        pricing: amountObj,
-                        qty: 0,
-                        qty_type: i?.qty_type,
-                        under_warranty: warrantySpare,
-                        non_receivable_reason: (!amountObj?.charged && warrantySpare) ? 'Spare warranty override' : reason,
-                        warranty_period_months: amountObj?.charged > 0 ? (i?.warranty_period_months || 0) : 0,
-                        is_customer_product: i?.spare_uuid === spareInCustomer?.spare_uuid,
-                        is_removed: spareInRemoveList
-                    }
+                return obj
+            }))
+            setSubPage({ title: 'Spares', id: 'SPARE_SECTION', max: 0, deleteItem: true })
+            return;
 
-                    return obj
-                }))
-                setComponentsPage({ title: 'Spares', id: 'spares', max: 0, deleteItem: true })
-                return;
-            }
         }
 
-        if (workMenu?.type === 'services') {
-            setServicesList(serviceList?.filter(s => !(s?.rent_renewal_included && !product?.rental?.has_rental))?.map(i => {
-                const inForm = productInForm?.work?.services_list?.filter(s => s?.service_id === i?.work_uuid)?.[0]
+        if (workMenu?.type === 'ADDITIONAL_SERVICE') {
+            setItemList(serviceList?.filter(s => !(s?.rent_renewal_included && !product?.rental?.has_rental))?.map(i => {
+                const inForm = productInForm?.work?.services_list?.filter(s => s?.service_id === i?.work_id && s?.service_type === workMenu?.type)?.[0]
 
                 const warrantyItem = product?.product?.wr_expire_date &&
                     normalizeDate(new Date(product?.product?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
@@ -102,7 +110,7 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
 
                 switch (i.pricing_source) {
                     case 'SERVICE_WORK':
-                        itemPrice = findSpareTypeAmount(i, category?.service_policy?.price_type, warrantyEnabled)
+                        itemPrice = findSpareTypeAmount(i, "SELLING_RATE", warrantyEnabled)
                             || { list_price: 0, charged: 0, ledger_cost: 0, reason: null }
                         break;
 
@@ -120,8 +128,10 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
                 }
 
                 let obj = {
-                    service_id: i?.work_uuid,
+                    service_id: i?.work_id,
+                    service_uuid: i?.work_uuid,
                     service_name: i?.work_name,
+                    service_type: workMenu?.type,
                     pricing: {
                         list_price: itemPrice?.list_price,
                         charged: itemPrice?.charged,
@@ -139,7 +149,7 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
                 return obj
             }))
 
-            setComponentsPage({ title: 'Service Works', id: 'services', max: 0, deleteItem: false })
+            setSubPage({ title: 'Service Works', id: 'SERVICE', max: 0, deleteItem: false })
         }
 
         // eslint-disable-next-line
@@ -155,17 +165,17 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
 
             {/* Service Categories */}
             {(!productInForm?.service_data?.category_id || !productInForm?.service_data?.mode) &&
-                <AdServiceCategories categories={categories} product={product} regData={regData} changeSubmitStatus={changeSubmitStatus} />
+                <AdServiceCategories categories={categories} product={product} regData={regData} changeSubmitStatus={changeSubmitStatus} productEligibility={productEligibility} />
             }
 
             {(productInForm?.service_data?.category_id && productInForm?.service_data?.mode) &&
                 <>{workMenu?.type
                     ? <>
-                        {workMenu?.type === 'components' &&
-                            <VfComponentsList setWorkMenu={setWorkMenu} componentsList={componentsList} componentsPage={componentsPage}
-                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
-                        {workMenu?.type === 'services' &&
-                            <AdServiceList setWorkMenu={setWorkMenu} componentsPage={componentsPage} servicesList={servicesList}
+                        {SPARE_SECTIONS.includes(workMenu?.type) &&
+                            <VfComponentsList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage} workMenu={workMenu}
+                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} category={category} />}
+                        {SERVICE_SECTIONS.includes(workMenu?.type) &&
+                            <AdServiceList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage}
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} />}
                     </>
                     : <AdServiceWorkHome category={category} setWorkMenu={setWorkMenu} product={product} changeSubmitStatus={changeSubmitStatus} />}

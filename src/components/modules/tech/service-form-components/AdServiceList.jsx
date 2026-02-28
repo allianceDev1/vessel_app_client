@@ -1,20 +1,18 @@
 import React from 'react'
 import './vf-service-list.scss'
 import Button from '../../../UI_Primitives/buttons/Button'
-import { TbCheck, TbComponents } from 'react-icons/tb'
+import { TbCheck } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 
-const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInForm, changeSubmitStatus }) => {
+const AdServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeSubmitStatus }) => {
     const dispatch = useDispatch();
 
     const selectService = (item) => {
 
         const isExisted = productInForm?.work?.services_list?.filter(s => s?.service_id === item?.service_id)?.[0]
 
-        // if existed then remove form service list
-        // if not existed then add to service list
-
+        // if existed then remove form service list,  if not existed then add to service list
         changeSubmitStatus(false)
 
         let updateData = {}
@@ -63,11 +61,11 @@ const AdServiceList = ({ setWorkMenu, componentsPage, servicesList, productInFor
         <div className="vf-service-list-comp-container">
             <div className="service-list-border">
                 <div className="title">
-                    <h3>{componentsPage?.title}</h3>
+                    <h3>{subPage?.title}</h3>
                 </div>
 
                 <div className="service-list">
-                    {servicesList?.map((item) => {
+                    {itemsList?.map((item) => {
                         return <div className="item" key={item?.service_id} onClick={() => selectService(item)}>
                             <div className="checkbox-section">
                                 <div className={item?.selected ? "checkbox active" : "checkbox"}>

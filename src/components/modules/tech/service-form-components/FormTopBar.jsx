@@ -74,7 +74,7 @@ const FormTopBar = ({ refresh }) => {
       </div>
       <div className="name-section">
         <p>Customer ID : {serviceForm?.customer_id || 'Error'} </p>
-        <p>{serviceFormSettings?.activeProduct?.[0] ? serviceFormSettings?.activeProduct?.[0] : ''}</p>
+        <p>{serviceFormSettings?.activeProduct?.[0] ? `${serviceFormSettings?.activeProduct?.[0]}${serviceFormSettings?.activeProduct?.[3] ? ' - ' + serviceFormSettings?.activeProduct?.[3] : ''}` : ''}</p>
       </div>
     </div>
   )

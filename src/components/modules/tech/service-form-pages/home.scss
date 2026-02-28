@@ -127,19 +127,12 @@
     }
 
     .new-product-initial-box {
-        background-color: var(--color-warning-trans-13);
-        padding: 15px 15px;
-        border-radius: 15px;
-
         h4 {
-            text-align: center;
-            font-size: 17px;
-            font-weight: 600;
+            @include subTitleSmall();
         }
 
         p {
             font-size: 13px;
-            text-align: center;
             margin-top: 10px;
             color: var(--text-secondary-2);
             margin-bottom: 10px;

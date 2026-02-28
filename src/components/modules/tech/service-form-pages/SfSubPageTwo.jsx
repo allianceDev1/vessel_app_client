@@ -187,18 +187,15 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
                         <div className="box-col1 sub-form">
                             <Select label={'Complaint nature'} name={'nature'} value={form?.nature} onChange={handleChangeNature}
                                 options={[{}, ...(natures?.map(n => ({ label: n?.[0], value: n?.[0] })) || [])]} />
-                            <MultiSelectInput label={'Complaint reasons'} name={'reasons'} options={reasons}
+                            <MultiSelectInput label={'Complaint reasons'} name={'reasons'} options={reasons} searchable
                                 onChange={handleMultiInputChange} selected={form?.reasons?.map((r) => ({ label: r, value: r })) || []} />
-                            <MultiSelectInput label={'Complaint solutions'} name={'solutions'} options={solutions}
+                            <MultiSelectInput label={'Complaint solutions'} name={'solutions'} options={solutions} searchable
                                 onChange={handleMultiInputChange} selected={form?.solutions?.map((r) => ({ label: r, value: r })) || []} />
 
                             <Button label={'Add to list'} rounded outlined style={{ width: '150px' }} type='button' size='small'
                                 onClick={handleSubmitSubForm} disabled={!form?.nature || !form?.reasons?.length || !form?.solutions?.length} />
                         </div>
                     </div>}
-
-
-
 
                 <div className="submit-section">
                     <Button label={'Next'} rounded style={{ width: '100%' }} />

@@ -2,21 +2,30 @@ import React, { useEffect, useState } from 'react'
 import './vf-components-list.scss'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import Button from '../../../UI_Primitives/buttons/Button'
-import { TbComponents, TbMinus, TbPlus, TbTrash } from 'react-icons/tb'
+import { TbComponents, TbMinus, TbPlus, TbSearch, TbTrash, TbX } from 'react-icons/tb'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 
-const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, productInForm, changeSubmitStatus }) => {
+const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, changeSubmitStatus, workMenu, category }) => {
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState('')
+    const [enableSearch, setEnableSearch] = useState(false)
     const [data, setData] = useState([])
 
+    const selectSection = (id) => {
+        setWorkMenu((state) => {
+            return {
+                ...state,
+                id
+            }
+        })
+    }
 
     const addToSpareList = (item) => {
         const existingList = productInForm?.work?.components_list || [];
 
-        const existingIndex = existingList?.findIndex((comp) => comp.spare_id === item.spare_id);
+        const existingIndex = existingList?.findIndex((comp) => comp.spare_id === item.spare_id && comp.spare_type === workMenu?.type);
 
         let updatedSpareList;
         //  If spare already exists → adjust qty
@@ -35,17 +44,8 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
             updatedSpareList = [
                 ...existingList,
                 {
-                    spare_id: item?.spare_id,
-                    spare_name: item?.spare_name,
-                    spare_type: item?.spare_type,
-                    pricing: item?.pricing,
-                    qty: 1,
-                    qty_type: item?.qty_type,
-                    under_warranty: item?.under_warranty,
-                    non_receivable_reason: item?.non_receivable_reason,
-                    warranty_period_months: item?.warranty_period_months,
-                    is_customer_product: item?.is_customer_product,
-                    is_removed: item?.is_removed
+                    ...item,
+                    qty: 1
                 }
             ];
         }
@@ -65,7 +65,7 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
 
         const updatedSpareList = existingList
             .map((comp) => {
-                if (comp.spare_id !== item.spare_id) return comp;
+                if (comp.spare_id !== item.spare_id || comp.spare_type !== workMenu?.type) return comp;
 
                 const updatedQty = Number(comp.qty || 0) - 1;
 
@@ -101,7 +101,7 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
                 removed_components_list: [
                     ...(productInForm?.work?.removed_components_list || []),
                     {
-                        spare_id: item?.spare_id,
+                        spare_uuid: item?.spare_uuid,
                         spare_type: item?.spare_type
                     }
                 ]
@@ -114,53 +114,72 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
         dispatch(sfActions.updateProduct({
             work: {
                 ...productInForm?.work,
-                removed_components_list: productInForm?.work?.removed_components_list?.filter(r => r?.spare_id !== item?.spare_id)
+                removed_components_list: productInForm?.work?.removed_components_list?.filter(r => r?.spare_uuid !== item?.spare_uuid || r?.spare_type !== item?.spare_type)
             }
         }))
     }
 
     useEffect(() => {
-        let preData = componentsList
+        let preData = [...itemsList]
 
         //filter
         if (searchText) {
             const regex = new RegExp(searchText, 'i');
-            preData = componentsList?.filter((i) => regex.test(i?.spare_id?.split('-')?.[2]) || regex.test(i?.spare_name))
+            preData = itemsList?.filter((i) => regex.test(i?.spare_id) || regex.test(i?.spare_name))
         }
 
         setData(preData)
-    }, [searchText, componentsList])
+    }, [searchText, itemsList])
 
 
     return (
         <div className="vf-components-list-comp-container">
-            <div className="search-section">
-                <InputText label={'Search components'} size='small' name={'key'} value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+
+            <div className="components-action">
+                {enableSearch
+                    ? <div className="search-section">
+                        <InputText label={`Search ${subPage?.title}`} size='small' name={'key'} value={searchText} onChange={(e) => setSearchText(e.target.value)}
+                            style={{ width: '100%', borderRadius: "50px" }} />
+                        <Button icon={<TbX />} size='small' rounded outlined onClick={() => {
+                            setEnableSearch(!enableSearch);
+                            setSearchText('');
+                        }} />
+                    </div>
+                    : <div className="menu-section">
+                        {category?.coverage?.find(c => c.coverage_id === 'PRIMARY_SPARES') &&
+                            <Button label={'Spares'} size='small' rounded outlined={workMenu?.id !== 'SPARE_SECTION'} style={{ width: '100%' }}
+                                onClick={() => selectSection('SPARE_SECTION')} />}
+                        {category?.coverage?.find(c => c.coverage_id === 'MATERIALS_BAG') &&
+                            <Button label={'Bags'} size='small' rounded outlined={workMenu?.id !== 'BAG_SECTION'} style={{ width: '100%' }}
+                                onClick={() => selectSection('BAG_SECTION')} />}
+                        {category?.coverage?.find(c => c.coverage_id === 'MATERIAL') &&
+                            <Button label={'Materials'} size='small' rounded outlined={workMenu?.id !== 'MATERIALS_SECTION'} style={{ width: '100%' }}
+                                onClick={() => selectSection('MATERIALS_SECTION')} />
+                        }
+
+                        <Button icon={<TbSearch />} size='small' rounded outlined onClick={() => setEnableSearch(!enableSearch)} />
+                    </div>}
             </div>
 
             <div className="components-list-border">
-                <div className="title">
-                    <h3>{componentsPage?.title}</h3>
-                </div>
-
-                {(!componentsList?.length || !data?.length) &&
+                {(!itemsList?.length || !data?.length) &&
                     <EmptyState
                         size='sm'
                         icon={<TbComponents />}
-                        title={!componentsList?.length ? 'Components not available' : 'No matched components'}
+                        title={!itemsList?.length ? 'No Access' : 'No matched components'}
                         hight='250px'
                     />}
                 {data?.length ?
                     <div className="components-list">
-                        {data?.map((item) => {
-                            const itemTempId = item?.spare_id?.split('-')?.[2]?.toUpperCase()
+                        {data?.sort((a, b) => Number(b?.is_customer_product) - Number(a?.is_customer_product))?.map((item) => {
+
                             const existedCount = productInForm?.work?.components_list?.filter(
-                                (c) => c?.spare_type === componentsPage?.id
+                                (c) => c?.spare_section === subPage?.id
                             ).length || 0;
 
                             return <div className={`item ${item?.is_customer_product ? 'blue-box' : ''} ${item?.qty ? 'select-box' : ''}`} key={item?.spare_id}>
                                 <div className="item-content">
-                                    <p className='id'>#{itemTempId}</p>
+                                    <p className='id'>{item?.spare_id}</p>
                                     <h4>{item?.spare_name}</h4>
                                     <div className="price">
                                         {item?.pricing?.list_price !== item?.pricing?.charged && <p className="hash-price">₹{item?.pricing?.list_price}</p>}
@@ -178,12 +197,12 @@ const VfComponentsList = ({ componentsList, componentsPage, setWorkMenu, product
                                         {item?.qty > 0
                                             ? <Button icon={<TbMinus />} rounded size='small' severity={'danger'} onClick={() => removeFromSpareList(item)} />
                                             : <Button icon={<TbTrash />} rounded size='small' severity={'danger'} onClick={() => removeSpare(item)}
-                                                disabled={!componentsPage?.deleteItem || !item?.is_customer_product} />}
+                                                disabled={!subPage?.deleteItem || !item?.is_customer_product} />}
 
-                                        <p>{item?.qty || 0} {item?.qty_type || ''}</p>
+                                        <p>{item?.qty || 0} {item?.unit || ''}</p>
 
                                         <Button icon={<TbPlus />} rounded size='small' severity={'success'} onClick={() => addToSpareList(item)}
-                                            disabled={componentsPage?.max && existedCount >= componentsPage.max} />
+                                            disabled={subPage?.max && existedCount >= subPage.max} />
                                     </div>}
                             </div>
                         })}

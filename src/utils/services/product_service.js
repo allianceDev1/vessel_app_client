@@ -4,8 +4,8 @@ import { TbDropletCog, TbDropletHeart, TbDropletStar } from "react-icons/tb";
 
 
 export const buildCustomerPGStretcher = (products = []) => {
-    const vessels = products.filter(p => p.product_type === 'Vessel');
-    const addOns = products.filter(p => p.product_type === 'Add-On');
+    const vessels = products.filter(p => p.product_type === 'VESSEL_FILTER');
+    const addOns = products.filter(p => p.product_type === 'ADD_ON');
 
     // Group vessels by order prefix (A, B, C, etc.)
     const vesselGroups = {};
@@ -16,8 +16,6 @@ export const buildCustomerPGStretcher = (products = []) => {
         }
         vesselGroups[prefix].push(vessel);
     });
-
-
 
     // Sort vessels within each group by their number
     Object.keys(vesselGroups).forEach(prefix => {
@@ -68,6 +66,7 @@ export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) =
 }
 
 export const setupAvailableServiceCategories = (categories, product, productEligibility, regData) => {
+
     const arrangedCategories = categories?.map((c) => {
 
         let is_disable = false, disable_reason = null, icon = null;
@@ -78,9 +77,9 @@ export const setupAvailableServiceCategories = (categories, product, productElig
             case 'COMPLAINT':
                 icon = <TbDropletCog />
 
-                if (!productEligibility?.complaint) {
+                if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
-                    disable_reason = productEligibility?.complaint_note
+                    disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
                 } else if (regData?.service_type !== 'COMPLAINT') {
                     is_disable = true
                     disable_reason = "It is not complaint registration."
@@ -94,9 +93,9 @@ export const setupAvailableServiceCategories = (categories, product, productElig
             case 'SERVICE':
                 icon = <TbDropletHeart />
 
-                if (!productEligibility?.service) {
+                if (!productEligibility?.service?.[0]) {
                     is_disable = true
-                    disable_reason = productEligibility?.service_note
+                    disable_reason = productEligibility?.service?.[1] || 'Not apply for eligibility'
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_services) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
@@ -107,15 +106,17 @@ export const setupAvailableServiceCategories = (categories, product, productElig
             case 'RENEWAL':
                 icon = <TbDropletStar />
 
-                if (!productEligibility?.renewal) {
-                    is_disable = true
-                    disable_reason = productEligibility?.renewal_note
-                } else if (!productEligibility?.ssp_renewal && c?.category_id === 'ssp_renewal') {
-                    is_disable = true
-                    disable_reason = productEligibility?.ssp_renewal_note
-                } else if (!c?.target_package?.package_id) {
+                const renewalEliKey = c?.target_package?.package_id?.toLowerCase().replace(/\s+/g, "_");
+
+                if (!c?.target_package?.package_id) {
                     is_disable = true
                     disable_reason = 'The renewal target package is not active'
+                } else if (!productEligibility?.renewal?.[0]) {
+                    is_disable = true
+                    disable_reason = productEligibility?.renewal?.[1] || 'Not apply for eligibility'
+                } else if (productEligibility?.[`${renewalEliKey}_renewal`] && !productEligibility?.[`${renewalEliKey}_renewal`]?.[0]) {
+                    is_disable = true
+                    disable_reason = productEligibility?.[`${renewalEliKey}_renewal`]?.[1] || 'Not apply for eligibility'
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_renewals) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
@@ -133,7 +134,7 @@ export const setupAvailableServiceCategories = (categories, product, productElig
     return arrangedCategories
 }
 
-export const setupAddOnServiceCategories = (categories, regData) => {
+export const setupAddOnServiceCategories = (categories, regData, productEligibility) => {
     const arrangedCategories = categories?.map((c) => {
 
         let is_disable = false, disable_reason = null, icon = null;
@@ -142,7 +143,10 @@ export const setupAddOnServiceCategories = (categories, regData) => {
             case 'COMPLAINT':
                 icon = <TbDropletCog />
 
-                if (regData?.service_type !== 'COMPLAINT') {
+                if (!productEligibility?.complaint?.[0]) {
+                    is_disable = true
+                    disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
+                } else if (regData?.service_type !== 'COMPLAINT') {
                     is_disable = true
                     disable_reason = "It is not complaint registration."
                 }
@@ -150,6 +154,12 @@ export const setupAddOnServiceCategories = (categories, regData) => {
 
             case 'SERVICE':
                 icon = <TbDropletHeart />
+
+                if (!productEligibility?.service?.[0]) {
+                    is_disable = true
+                    disable_reason = productEligibility?.service?.[1] || 'Not apply for eligibility'
+                }
+
                 break;
 
             default:

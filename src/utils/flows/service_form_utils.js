@@ -46,22 +46,22 @@ export const getPreviousServicePageKey = (mainPageKey = null, subPageKey = null)
  * @param {boolean} warranty
  * @returns {{ list_price: number, charged: number, ledger_cost: number }}
  */
-export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
+export const findSpareTypeAmount = (spare, amountType, servicePackageId, warranty = false) => {
     if (!spare || !amountType) {
         throw new Error('Invalid arguments');
     }
 
     const {
         selling_rate = 0,
-        discount_rate = 0,
-        purchase_rate = 0
-    } = spare;
+        purchase_cost = 0,
+        ...packagePricing
+    } = spare?.pricing ?? {};
 
     let pricing;
     let reason = null;
 
     switch (amountType) {
-        case 'selling_rate':
+        case 'SELLING_RATE':
             pricing = {
                 list_price: selling_rate,
                 charged: selling_rate,
@@ -69,21 +69,21 @@ export const findSpareTypeAmount = (spare, amountType, warranty = false) => {
             };
             break;
 
-        case 'discount_rate':
-            pricing = {
-                list_price: selling_rate,
-                charged: discount_rate,
-                ledger_cost: discount_rate
-            };
-            break;
-
-        case 'purchase_rate':
+        case 'PURCHASE_COST':
             pricing = {
                 list_price: selling_rate,
                 charged: 0,
-                ledger_cost: purchase_rate
+                ledger_cost: purchase_cost
             };
             reason = 'Zero fee category'
+            break;
+
+        case 'PACKAGE_PRICE':
+            pricing = {
+                list_price: selling_rate,
+                charged: packagePricing?.[servicePackageId] ?? selling_rate,
+                ledger_cost: packagePricing?.[servicePackageId] ?? selling_rate
+            };
             break;
 
         default:

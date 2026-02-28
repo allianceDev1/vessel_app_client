@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import './sub-page-style.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { serviceFormSubPageRoute } from '../../../../assets/javascript/pre_data/service'
+import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Select from '../../../UI_Primitives/inputs/Select'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import Checkbox from '../../../UI_Primitives/inputs/Checkbox'
-import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Button from '../../../UI_Primitives/buttons/Button'
 
 const SfSubPageOne = ({ page, resources, changeSubmitStatus }) => {

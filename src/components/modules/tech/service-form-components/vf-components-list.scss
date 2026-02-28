@@ -3,15 +3,21 @@
 .vf-components-list-comp-container {
     position: relative;
 
+    .components-action {
+        height: 45px;
+
+        .menu-section,
+        .search-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+    }
+
     .components-list-border {
 
-        .title {
-            margin: 15px 0;
-
-            h3 {
-                @include subTitleSmall();
-            }
-        }
+        margin-top: 10px;
 
         .components-list {
             display: grid;
@@ -34,7 +40,7 @@
                     text-align: center;
 
                     .id {
-                        font-size: 13px;
+                        font-size: 12px;
                         color: var(--text-secondary-2);
                         margin-bottom: 5px;
                     }
