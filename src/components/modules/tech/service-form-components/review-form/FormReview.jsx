@@ -26,7 +26,7 @@ const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
 
             const resReview = await api.vfTv2Axios.get(`/service/service-form/bill-reviews`, {
                 params: {
-                    service_form_uuid: serviceForm?.service_form_uuid,
+                    service_job_uuid: serviceForm?.service_form_uuid,
                     registration_id: serviceForm?.registration_id,
                     visit_uuid: serviceForm?.visit_uuid
                 }
@@ -68,7 +68,7 @@ const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
             <div className="verification-container">
                 <div>
                     <TbShieldCheckFilled />
-                    <p>Verified By {toStandardText(verification?.verification_type)}</p>
+                    <p>Service verified by {toStandardText(verification?.verification_type)}</p>
                 </div>
                 <div>
                     {verification?.verification_type !== 'OTP' &&
@@ -101,8 +101,8 @@ const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
                 {/* Bills */}
                 <div className="bills-container">
                     <h3 className='sub-title'>Bills</h3>
-                    {review?.bills?.map((bill, index) => (
-                        <div className='bill-item' onClick={() => setOpenedBill(bill)}>
+                    {review?.bills?.map((bill) => (
+                        <div className='bill-item' key={bill?.service_srl_no} onClick={() => setOpenedBill(bill)}>
                             <div className="s-1">
                                 <h4>{bill?.service_srl_no}</h4>
                                 {bill?.this_work_bill && <Badge severity={'info'} value={'Current Work'} />}

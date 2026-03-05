@@ -4,14 +4,14 @@ import Message from '../../../UI_Primitives/message/Message'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { api } from '../../../../api'
-import { sfSetting } from '../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
 const SFormSave = ({ modalId }) => {
     const dispatch = useDispatch();
     const { internet } = useSelector((state) => state.system)
-    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings, verification } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({ error: false, message: "" })
@@ -37,7 +37,7 @@ const SFormSave = ({ modalId }) => {
 
         // setup Body
         const body = {
-            service_form_uuid: serviceForm?.service_form_uuid,
+            service_job_uuid: serviceForm?.service_form_uuid,
             customer_id: serviceForm?.customer_id,
             registration_id: serviceForm?.registration_id,
             visit_uuid: serviceForm?.visit_uuid,
@@ -53,7 +53,6 @@ const SFormSave = ({ modalId }) => {
             new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
                 return {
                     unique_id: value?.unique_id,
-                    item_id: value?.item_id,
                     item_uuid: value?.item_uuid,
                     purchase_type: value?.purchase_type,
                     is_zero_fee: value?.is_zero_fee || false,
@@ -82,6 +81,10 @@ const SFormSave = ({ modalId }) => {
             const isVessel = key.startsWith("V") ? true : false;
 
             if (!serviceFormSettings?.products?.[key]?.is_submitted) {
+                return;
+            }
+
+            if (serviceFormSettings?.products?.[key]?.is_saved) {
                 return;
             }
 
@@ -204,21 +207,33 @@ const SFormSave = ({ modalId }) => {
 
             const updatedProducts = Object.entries(serviceFormSettings?.products ?? {})
                 .reduce((acc, [key, value]) => {
-                    acc[key] = {
-                        ...value,
-                        is_saved: savedProducts.has(key)
-                    };
+                    if (savedProducts.has(key)) {
+                        acc[key] = {
+                            ...value,
+                            is_saved: true
+                        };
+                    } else {
+                        acc[key] = value; // keep original object
+                    }
                     return acc;
                 }, {});
 
             dispatch(
                 sfSetting.update({
                     form_saved: true,
-                    form_saved_time: new Date(result?.save_time).toISOString(),
+                    form_saved_time: new Date(result?.saved_time).toISOString(),
                     activePage: 101,
                     products: updatedProducts
                 })
             );
+
+            if (!verification?.is_verified && !verification?.verification_type) {
+                dispatch(sfActions.updateVerification({
+                    verification_type: "OTP",
+                    is_verified: false,
+                    verification_at: null
+                }))
+            }
 
             dispatch(modal.pull.single(modalId))
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './payment.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service';
-import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbWallet, TbX } from 'react-icons/tb';
+import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbX } from 'react-icons/tb';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
@@ -105,8 +105,7 @@ const Payment = ({ page }) => {
         const balance = summery?.grandTotal - enteredAmount
         setPaidAmount(enteredAmount)
         setBalanceAmount(balance)
-
-
+        
     }, [payment, review])
 
 

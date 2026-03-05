@@ -173,7 +173,7 @@ const OtpVerification = ({ resetType }) => {
                         spinIcon={loading === 'verify'} />
 
 
-                    <p className='reset-type' onClick={resetType}>Reset Verification Type</p>
+                    <p className='reset-type' onClick={resetType}>Try Another Verification Type</p>
                 </form>
             </div>
 

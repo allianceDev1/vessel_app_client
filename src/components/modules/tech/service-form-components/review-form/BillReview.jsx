@@ -41,7 +41,7 @@ const BillReview = ({ bill, setOpenedBill }) => {
                 {bill?.items?.map((item) => {
 
                     const isDisabled = !review?.is_editable || ['INSTALLATION_CHARGE', 'SERVICE_CHARGE'].includes(item?.item_id) ||
-                        ['PACKAGE', 'TOKEN'].includes(item?.item_type) || Number(item?.total) === 0
+                        ['PACKAGE', 'SERVICE_TOKEN'].includes(item?.item_category) || Number(item?.total) === 0
 
                     return <div className="item" key={item?.uuid} onClick={() => clickCheckBox(item?.uuid, isDisabled)}>
                         <div className="checkbox-section">
@@ -55,14 +55,14 @@ const BillReview = ({ bill, setOpenedBill }) => {
                             </div>
                             <div className="detail-section">
                                 <div>
-                                    {item?.qty_type
+                                    {item?.unit
                                         ? <p className="single-price">1 item for Rs.{item?.pricing?.charged}</p>
                                         : <p className="single-price">This not spare or service</p>}
-                                    <p className="qty">Qty: {item?.qty} {item?.qty_type}</p>
+                                    <p className="qty">Qty: {item?.qty} {item?.unit}</p>
                                 </div>
                                 <div>
                                     <p className="estimate">Estimate ₹{Number(item?.pricing?.list || 0) * Number(item?.qty || 1)}</p>
-                                    <p className="price">₹{Number(item?.pricing?.charged || 0) * Number(item?.qty || 1)}</p>
+                                    <p className="price">₹{Number(item?.total || 0)}</p>
                                 </div>
                             </div>
                         </div>
