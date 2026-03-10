@@ -5,7 +5,7 @@ import Select from '../../../UI_Primitives/inputs/Select'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import { doDialog } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import { doDialog, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
   const dispatch = useDispatch();
@@ -28,7 +28,6 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
     // eslint-disable-next-line
   }, [serviceForm?.service_products]);
-
 
   const handelChangeServiceCharge = (e) => {
     changeSubmitStatus(false)
@@ -59,6 +58,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
     const resetAction = () => {
       dispatch(sfActions.resetService({ product_id: serviceFormSettings?.activeProduct?.[0] }))
+      changeSubmitStatus(false)
     }
 
     dispatch(doDialog.confirm({
@@ -69,6 +69,33 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // if renewal not select any fund distribution items : error
+    if (category?.mode === 'RENEWAL') {
+      if (!menuMeta?.renewal_spares && !menuMeta?.renewal_services) {
+        const FdInSpare = category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS')
+        const FdInWork = category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK')
+
+        if (FdInSpare && !menuMeta?.package_spares) {
+          dispatch(toast.push({
+            type: 'danger',
+            message: "You have not selected any renewal components"
+          }))
+
+          return;
+        }
+
+        if (FdInWork && !menuMeta?.package_services) {
+          dispatch(toast.push({
+            type: 'danger',
+            message: "You have not selected any renewal services"
+          }))
+
+          return;
+        }
+
+      }
+    }
 
     // If choose any work or components , then show the warming alert
     if (!menuMeta?.renewal_spares && !menuMeta?.package_spares && !menuMeta?.additional_spares && !menuMeta?.renewal_services && !menuMeta?.package_services && !menuMeta?.additional_services) {
@@ -99,17 +126,18 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         {/* Renewal */}
         {category?.mode === 'RENEWAL' &&
           <div className="menu-section">
-            <div className={`menu-item ${menuMeta?.renewal_spares ? 'item-selected' : ''}`}
-              onClick={() => clickWorkMenu('RENEWAL_SPARE', "SPARE_SECTION")}>
-              <h3>Package Renewal <br></br> Components</h3>
-              <p>{menuMeta?.renewal_spares ? `${menuMeta?.renewal_spares} items selected` : "Choose component items"}</p>
-            </div>
-
-            <div className={`menu-item ${menuMeta?.renewal_services ? 'item-selected' : ''}`}
-              onClick={() => clickWorkMenu('RENEWAL_SERVICE')}>
-              <h3>Package Renewal <br></br> Services</h3>
-              <p>{menuMeta?.renewal_services ? `${menuMeta?.renewal_services} items selected` : "Choose service works"}</p>
-            </div>
+            {category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS') &&
+              <div className={`menu-item ${menuMeta?.renewal_spares ? 'item-selected' : ''}`}
+                onClick={() => clickWorkMenu('RENEWAL_SPARE', "SPARE_SECTION")}>
+                <h3>Package Renewal <br></br> Components</h3>
+                <p>{menuMeta?.renewal_spares ? `${menuMeta?.renewal_spares} items selected` : "Choose component items"}</p>
+              </div>}
+            {category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK') &&
+              <div className={`menu-item ${menuMeta?.renewal_services ? 'item-selected' : ''}`}
+                onClick={() => clickWorkMenu('RENEWAL_SERVICE')}>
+                <h3>Package Renewal <br></br> Services</h3>
+                <p>{menuMeta?.renewal_services ? `${menuMeta?.renewal_services} items selected` : "Choose service works"}</p>
+              </div>}
           </div>}
 
         {/* Package */}

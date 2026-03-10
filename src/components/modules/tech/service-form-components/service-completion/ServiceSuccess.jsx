@@ -93,26 +93,24 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
             <div className="card">
                 <div className="payment-header">
                     <div className="card-title" style={{ marginBottom: 0 }}>Payment Status</div>
-                    {Number(data?.amount) > 0 && < Badge
-                        value={data?.paymentStatus === 'completed' ? 'Completed' : "Pending"}
-                        severity={data?.paymentStatus === 'completed' ? 'success' : 'danger'}
-                        size={'md'} />}
+                    {data?.paymentStatus && <Badge value={data?.paymentStatus || "Pending"}
+                        severity={data?.paymentColor} size={'md'} />}
                 </div>
 
                 <div className="amount-section">
-                    <div className="amount">{formatCurrency(data?.amount)}</div>
-                    {data?.paymentStatus === 'pending' && Number(data?.amount) > 0 && (
-                        <div className="amount-subtitle">Payment will be collected later</div>
-                    )}
-                    {Number(data?.amount) === 0 && (
-                        <div className="amount-subtitle">No charges applied for this service</div>
+                    <div className="amount">
+                        <h3>{formatCurrency(data?.verifiedAmount)}</h3>
+                        {data?.totalBillAmount !== data?.verifiedAmount && <h4>/ {formatCurrency(data?.totalBillAmount)}</h4>}
+                    </div>
+                    {data?.paymentDescription && (
+                        <div className="amount-subtitle">{data?.paymentDescription}</div>
                     )}
                 </div>
 
-                {data?.paymentStatus === 'completed' && Number(data?.amount) > 0 && data?.paymentId && (
+                {Number(data?.verifiedAmount) > 0 && data?.receiptNo && (
                     <div className="payment-id-section">
-                        <span className="payment-id-label">Payment ID</span>
-                        <span className="payment-id-value">{data?.paymentId}</span>
+                        <span className="payment-id-label">Receipt No</span>
+                        <span className="payment-id-value">{data?.receiptNo}</span>
                     </div>
                 )}
             </div>

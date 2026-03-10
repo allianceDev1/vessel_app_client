@@ -98,15 +98,29 @@
         }
 
         .amount {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
             margin-bottom: 4px;
+
+            h3 {
+                font-size: 32px;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            h4 {
+                font-size: 15px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                text-align: end;
+                margin-bottom: 5px;
+            }
         }
 
         .amount-subtitle {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: var(--text-secondary-1);
         }
 
         .payment-id-section {
@@ -126,9 +140,8 @@
 
         .payment-id-value {
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-secondary);
-            font-family: 'Courier New', monospace;
         }
 
     }

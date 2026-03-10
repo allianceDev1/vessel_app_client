@@ -135,11 +135,100 @@ export const generateMonthlyRunningReport = (data = []) => {
 
 
 export const convertEligibilityToArray = (data) => {
-  return Object.entries(data)
-    .filter(([key]) => key !== "product_id") // skip product_id
-    .map(([key, value]) => {
-      const [status, note = null] = value; // note optional
-      return [key, status, note];
-    });
+    return Object.entries(data)
+        .filter(([key]) => key !== "product_id") // skip product_id
+        .map(([key, value]) => {
+            const [status, note = null] = value; // note optional
+            return [key, status, note];
+        });
 };
 
+/**
+ * Group service items by group.id
+ * @param {Array} services
+ * @returns {Array}
+ */
+export const groupItemsByGroupId = (items = []) => {
+    const grouped = new Map();
+
+    for (const item of items) {
+        const groupId = item?.group?.id;
+
+        if (!groupId) continue;
+
+        if (!grouped.has(groupId)) {
+            grouped.set(groupId, {
+                group_id: item.group.id,
+                group_name: item.group.name,
+                items: []
+            });
+        }
+
+        grouped.get(groupId).items.push(item);
+    }
+
+    return Array.from(grouped.values());
+};
+
+
+export const getPaymentDisplay = ({ total, paid, verified }) => {
+    total = Number(total) || 0
+    paid = Number(paid) || 0
+    verified = Number(verified) || 0
+
+    // data safety
+    if (verified > paid) verified = paid
+    if (verified > total) verified = total
+
+    let status = ""
+    let description = ""
+    let color = "warning"
+
+    // No payment required
+    if (total === 0) {
+        return {
+            status: "",
+            description: "No charges applied for this service",
+            color: ""
+        }
+    }
+
+    // Fully paid
+    if (verified === total) {
+        return {
+            status: "Paid",
+            description: "Fully paid and verified",
+            color: "success"
+        }
+    }
+
+    // Partial verified
+    if (verified > 0) {
+
+        if (paid > verified) {
+            status = "Partially Paid (Verification Pending)"
+            description = `₹${paid} submitted, ₹${verified} verified`
+        } else {
+            status = "Partially Paid"
+            description = `₹${verified} verified`
+        }
+
+        return { status, description, color }
+    }
+
+    // Payment submitted but not verified
+    if (paid > 0) {
+        return {
+            status: "Payment Submitted",
+            description: `₹${paid} submitted, awaiting verification`,
+            color
+        }
+    }
+
+    // Unpaid
+    return {
+        status: "Unpaid",
+        description: "No payment received",
+        color
+    }
+}

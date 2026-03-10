@@ -37,24 +37,13 @@ const ServiceCompleted = ({ }) => {
     }
 
     useEffect(() => {
-        if (!location?.state?.serviceNumber || !location?.state?.paymentStatus
-            || !location?.state?.amount || !location?.state?.paymentId || !location?.state?.date
+        if (!location?.state?.serviceNumber || !location?.state?.date
             || !location?.state?.customerName || !location?.state?.customerId) {
             closePage()
             return;
         }
 
-        setData({
-            serviceStatus: location?.state?.serviceStatus,
-            date: location?.state?.date,
-            serviceNumber: location?.state?.serviceNumber,
-            paymentStatus: location?.state?.paymentStatus,
-            amount: location?.state?.amount,
-            paymentId: location?.state?.paymentId,
-            customerName: location?.state?.customerName,
-            customerId: location?.state?.customerId
-        })
-
+        setData(location?.state)
 
     }, [])
 

@@ -105,7 +105,7 @@ const Payment = ({ page }) => {
         const balance = summery?.grandTotal - enteredAmount
         setPaidAmount(enteredAmount)
         setBalanceAmount(balance)
-        
+
     }, [payment, review])
 
 
@@ -121,7 +121,7 @@ const Payment = ({ page }) => {
             <BillSummery expand={false} />
 
             {/* Payment methods */}
-            {(grandTotal > 0 || payment?.payment_methods?.length) ? <div className="payment-container">
+            {(grandTotal > 0 && review?.is_ready_to_pay) ? <div className="payment-container">
                 <h3 className='sub-title'>Payment Methods</h3>
                 <div className="payments-list">
                     {payment?.payment_methods?.map((pay) => {
@@ -158,7 +158,7 @@ const Payment = ({ page }) => {
             </div> : ''}
 
             {/* Balance Amount */}
-            {balanceAmount > 0 ? <div className="balance-amount-container">
+            {balanceAmount > 0 && review?.is_ready_to_pay ? <div className="balance-amount-container">
                 <h3 className='sub-title'>Balance Amount</h3>
                 <div className="balance-form-div">
                     <InputText label={'Balance Amount'} value={balanceAmount || 0} disabled />

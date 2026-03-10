@@ -19,11 +19,19 @@ const Review = ({ page }) => {
         }))
     }
 
+    const setVerificationType = (type) => {
+        dispatch(sfActions.updateVerification({
+            verification_type: type,
+            is_verified: false,
+            verification_at: null
+        }))
+    }
+
     return (
         <div className="tech-service-from-review">
             {!verification?.is_verified && <Verification resetVerificationType={resetVerificationType} />}
             {verification?.is_verified && <>
-                {!openedBill?.service_srl_no && <ReviewForm page={page} resetVerificationType={resetVerificationType} setOpenedBill={setOpenedBill} />}
+                {!openedBill?.service_srl_no && <ReviewForm page={page} setVerificationType={setVerificationType} setOpenedBill={setOpenedBill} />}
                 {openedBill?.service_srl_no && <BillReview bill={openedBill} setOpenedBill={setOpenedBill} />}
             </>}
         </div>

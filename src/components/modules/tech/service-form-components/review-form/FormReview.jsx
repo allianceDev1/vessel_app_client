@@ -14,7 +14,7 @@ import { toStandardText } from '../../../../../utils/helpers/text-formatting';
 import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
 
 
-const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
+const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
     const dispatch = useDispatch();
     const { verification, serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
@@ -72,7 +72,7 @@ const ReviewForm = ({ page, resetVerificationType, setOpenedBill }) => {
                 </div>
                 <div>
                     {verification?.verification_type !== 'OTP' &&
-                        <p className='action' onClick={resetVerificationType}>Use OTP ?</p>}
+                        <p className='action' onClick={() => setVerificationType('OTP')}>Use OTP ?</p>}
                 </div>
             </div>
 

@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 import './submit-form.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../../../api'
-import { sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 import { audio, modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import Button from '../../../../UI_Primitives/buttons/Button'
 import { getLocation } from '../../../../../utils/services/location_services'
 import { initAudio, unlockAudio } from '../../../../../utils/services/success_audio_services'
 import { useNavigate } from 'react-router-dom'
+import { calculateBillsSummery } from '../../../../../utils/helpers/math-equations'
+import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../../utils/helpers/date-helpers'
+import { getPaymentDisplay } from '../../../../../utils/services/work_services'
 
 
 
@@ -16,18 +19,17 @@ const SubmitForm = ({ modalId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { internet } = useSelector((state) => state.system)
-    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings, review, payment } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState({ error: false, message: "" })
     const [apiProgress, setApiProgress] = useState(0);
     const [apiStatus, setApiStatus] = useState("");
-    const [isSubmitted, setSubmitted] = useState(false)
 
     const handleProceed = async () => {
+        setLoading(true)
 
         setError({ error: false, message: "" })
-
 
         if (!internet) {
             dispatch(toast.push({
@@ -35,10 +37,13 @@ const SubmitForm = ({ modalId }) => {
                 message: 'No internet connection'
             }))
 
+            setLoading(false)
+
             return;
         }
 
         if (!formVerification?.ok) {
+            setLoading(false)
             return;
         }
 
@@ -46,195 +51,82 @@ const SubmitForm = ({ modalId }) => {
         dispatch(audio.setUnlocked());
 
         try {
-            setLoading(true)
 
             // collect location
             const locationData = await getLocation()
             const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
-       
-            // setup Body
-            // const body = {
-            //     service_form_uuid: serviceForm?.service_form_uuid,
-            //     customer_id: serviceForm?.customer_id,
-            //     registration_id: serviceForm?.registration_id,
-            //     visit_uuid: serviceForm?.visit_uuid,
-            //     technician_uuid: serviceForm?.technician_uuid,
-            //     site_info: {
-            //         work_site: serviceForm?.work_site,
-            //         source: serviceForm?.source,
-            //         tank_capacity_ltr: serviceForm?.tank_capacity_ltr,
-            //         floor_hight: serviceForm?.floor_hight,
-            //         t_hight: serviceForm?.t_hight
-            //     },
-            //     service_products: [],
-            //     new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
-            //         return {
-            //             unique_id: value?.unique_id,
-            //             item_id: value?.item_id,
-            //             item_uuid: value?.item_uuid,
-            //             purchase_type: value?.purchase_type,
-            //             is_zero_fee: value?.is_zero_fee || false,
-            //             expire_date: value?.expire_date,
-            //             element: {
-            //                 spare_uuid: value?.element?.spare_uuid,
-            //                 qty: value?.element?.qty
-            //             },
-            //             service_charge_estimate: value?.service_charge?.list_price || 0
-            //         }
-            //     }),
-            //     repeat: {
-            //         system_say: serviceForm?.repeat?.system_say || false,
-            //         tech_say: serviceForm?.repeat?.tech_say || false,
-            //         comment: serviceForm?.repeat?.comment || null
-            //     },
-            //     work_status: {
-            //         closed: serviceForm?.work_status?.closed || false,
-            //         schedule_date: serviceForm?.work_status?.schedule_date || null,
-            //         start_time: serviceForm?.work_status?.start_time || null,
-            //         end_time: serviceForm?.work_status?.end_time || null
-            //     }
-            // }
 
-            // Object.entries(serviceForm?.service_products || {}).forEach(([key, value]) => {
-            //     const isVessel = key.startsWith("V") ? true : false;
+            const summery = calculateBillsSummery(
+                review?.bills ?? [],
+                review?.zero_free_items ?? [],
+                payment?.complement_amount ?? 0
+            )
+            const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+            const balance = summery?.grandTotal - enteredAmount
+            // Setup Body
+            const body = {
+                service_job_uuid: serviceForm?.service_form_uuid,
+                customer_id: serviceForm?.customer_id,
+                registration_id: serviceForm?.registration_id,
+                visit_uuid: serviceForm?.visit_uuid,
+                technician_uuid: serviceForm?.technician_uuid,
+                location: location,
+                grand_total: summery?.subTotal || 0,
+                receivable_amount: summery?.grandTotal || 0, // without compliment
+                payment_methods: payment?.payment_methods,
+                promise_amount: balance,
+                promise_date: payment?.balance_payment_date,
+                promise_reason: payment?.balance_payment_reason,
+                paid_amount: enteredAmount,
+                paid_from_compliment: payment?.complement_amount,
+                zero_free_items: review?.zero_free_items
+            }
 
-            //     if (!serviceFormSettings?.products?.[key]?.is_submitted) {
-            //         return;
-            //     }
+            const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {
+                timeout: 5 * 60 * 1000,
+                onUploadProgress: (progressEvent) => {
+                    if (!progressEvent.total) return;
 
-            //     if (isVessel) {
-            //         body?.service_products?.push({
-            //             product_id: key,
-            //             current_condition: value?.current_condition,
-            //             inspection_report: {
-            //                 condition_status: value?.inspection_report?.condition === "Good",
-            //                 tech_analyze: value?.inspection_report?.tech_analyze || null
-            //             },
-            //             service_data: {
-            //                 is_skipped: !value?.service_data?.category_id || false,
-            //                 service_id: value?.service_data?.service_id || null,
-            //                 category_id: value?.service_data?.category_id || null,
-            //                 mode: value?.service_data?.mode || null,
-            //                 service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
-            //                 renewed_package: value?.service_data?.renewed_package?.is_renewed ? {
-            //                     is_renewed: true,
-            //                     package_id: value?.service_data?.renewed_package?.package_id
-            //                 } : null
-            //             },
-            //             work: {
-            //                 service_list: (value?.work?.services_list || [])?.map(s => ({
-            //                     service_uuid: s?.service_id
-            //                 })),
-            //                 components_list: (value?.work?.components_list || [])?.map(c => ({
-            //                     spare_uuid: c?.spare_id,
-            //                     spare_type: c?.spare_type,
-            //                     qty: c?.qty
-            //                 })),
-            //                 removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-            //                     spare_uuid: c?.spare_id,
-            //                     spare_type: c?.spare_type
-            //                 }))
-            //             },
-            //             evaluation: {
-            //                 filtered_water: value?.evaluation?.filtered_water,
-            //                 water_quality: {
-            //                     status: value?.evaluation?.water_quality?.status === 'Good',
-            //                     comment: value?.evaluation?.water_quality?.comment
-            //                 }
-            //             }
-            //         })
-            //     } else {
-            //         body?.service_products?.push({
-            //             product_id: key,
-            //             current_condition: {
-            //                 working: {
-            //                     status: value?.current_condition?.working?.status === 'Good',
-            //                     comment: value?.current_condition?.working?.comment || null
-            //                 },
-            //                 lead_crack: {
-            //                     status: value?.current_condition?.lead_crack?.status === 'Yes',
-            //                     comment: value?.current_condition?.lead_crack?.comment || null
-            //                 },
-            //             },
-            //             service_data: {
-            //                 is_skipped: !value?.service_data?.category_id || false,
-            //                 category_id: value?.service_data?.category_id || null,
-            //                 mode: value?.service_data?.mode || null,
-            //                 service_charge_estimate: value?.service_data?.service_charge?.estimate || null
-            //             },
-            //             work: {
-            //                 service_list: (value?.work?.services_list || [])?.map(s => ({
-            //                     service_uuid: s?.service_id
-            //                 })),
-            //                 components_list: (value?.work?.components_list || [])?.map(c => ({
-            //                     spare_uuid: c?.spare_id,
-            //                     spare_type: c?.spare_type,
-            //                     qty: c?.qty
-            //                 })),
-            //                 removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-            //                     spare_uuid: c?.spare_id,
-            //                     spare_type: c?.spare_type
-            //                 }))
-            //             },
-            //             evaluation: {
-            //                 working: {
-            //                     status: value?.evaluation?.working?.status === 'Good',
-            //                     comment: value?.evaluation?.working?.comment || null
-            //                 },
-            //                 lead_crack: {
-            //                     status: value?.evaluation?.lead_crack?.status === 'Yes',
-            //                     comment: value?.evaluation?.lead_crack?.comment || null
-            //                 }
-            //             }
-            //         })
-            //     }
+                    const percent = Math.round(
+                        (progressEvent.loaded * 100) / progressEvent.total
+                    );
 
-            // })
+                    setApiProgress(percent);
 
+                    if (percent < 100) {
+                        setApiStatus(`Uploading data...`);
+                    } else {
+                        setApiStatus("Processing...");
+                    }
+                }
+            })
 
-            // const result = await api.vfTv2Axios.post('/service/service-form/.....', body, {
-            //     timeout: 5 * 60 * 1000,
-            //     onUploadProgress: (progressEvent) => {
-            //         if (!progressEvent.total) return;
-
-            //         const percent = Math.round(
-            //             (progressEvent.loaded * 100) / progressEvent.total
-            //         );
-
-            //         setApiProgress(percent);
-
-            //         if (percent < 100) {
-            //             setApiStatus(`Uploading data...`);
-            //         } else {
-            //             setApiStatus("Processing...");
-            //         }
-            //     }
-            // })
-
-            // // Update save and navigate
-            // const savedProducts = Array.isArray(result?.products)
-            //     ? new Set(result.products)
-            //     : new Set();
-
-            // const updatedProducts = Object.entries(serviceFormSettings?.products ?? {})
-            //     .reduce((acc, [key, value]) => {
-            //         acc[key] = {
-            //             ...value,
-            //             is_saved: savedProducts.has(key)
-            //         };
-            //         return acc;
-            //     }, {});
-
-            // dispatch(
-            //     sfSetting.update({
-            //         form_saved: true,
-            //         form_saved_time: new Date(result?.save_time).toISOString(),
-            //         activePage: 101,
-            //         products: updatedProducts
-            //     })
-            // );
-
+            dispatch(sfSetting.clearAll())
+            dispatch(sfActions.clearAll())
             dispatch(modal.pull.single(modalId))
+
+            const { status, description, color } = getPaymentDisplay({
+                total: result?.totalBillAmount,
+                paid: result?.paidAmount,
+                verified: result?.verifiedAmount
+            })
+
+            navigate("/tech/service/work-success", {
+                replace: true,
+                state: {
+                    serviceStatus: "SUCCESS",
+                    date: `${isoToDDMonYYYY(result?.date)}, ${convertIsoToAmPm(result?.date)}`,
+                    serviceNumber: result?.serviceNumber,
+                    paymentStatus: status,
+                    paymentDescription: description,
+                    paymentColor: color,
+                    totalBillAmount: result?.totalBillAmount,
+                    verifiedAmount: result?.verifiedAmount,
+                    receiptNo: result?.receiptNo,
+                    customerName: result?.customerName,
+                    customerId: result?.customerId
+                }
+            });
 
         } catch (error) {
             setError({
@@ -246,20 +138,6 @@ const SubmitForm = ({ modalId }) => {
             setApiProgress(0);
             setApiStatus("");
         }
-
-        navigate("/tech/service/work-success", {
-            replace: true,
-            state: {
-                serviceStatus: "SUCCESS",
-                date: '09 Feb 2026, 04:00 PM',
-                serviceNumber: 'SRV-2026-001245',
-                paymentStatus: 'completed', // 'completed' or 'pending'
-                amount: '110',
-                paymentId: 'UPI202602051234567',
-                customerName: 'Rahul Kumar',
-                customerId: 'CUST-10982'
-            }
-        });
     }
 
     const closeModal = () => {
@@ -333,7 +211,7 @@ const SubmitForm = ({ modalId }) => {
     return (
         <div className="s-form-close-service-container">
             {/* Proceed */}
-            {!error?.error && !loading && !isSubmitted && <div className='submit-section'>
+            {!error?.error && !loading && <div className='submit-section'>
                 <div className="text-section">
                     <h2>Close Service</h2>
                     <p>

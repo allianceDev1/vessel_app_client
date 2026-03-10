@@ -53,7 +53,7 @@ const VfServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
           <EmptyState
             size='sm'
             icon={<TbComponents />}
-            title={'Services not available'}
+            title={'No Access'}
             hight='250px'
           />}
         {itemsList?.length > 0 &&
@@ -76,7 +76,7 @@ const VfServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
             })}
           </div>}
       </div>
-      
+
       <div className="fixed-section">
         <div className="submit-button">
           <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setWorkMenu({ type: null, id: null })} />

@@ -8,13 +8,13 @@ import ServiceInfo from '../../../components/modules/tech/customer-profile/Servi
 import Message from '../../../components/UI_Primitives/message/Message';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
+import ActionButtons from './ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbBorderAll, } from 'react-icons/tb';
 import { api } from '../../../api';
 import { useNavigate, useParams } from 'react-router-dom';
-import ActionButtons from './ActionButtons';
-import { sfActions } from '../../../redux/features/persisted/applicationSlice';
+import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice';
 
 
 const ScheduleProfile = () => {
@@ -64,6 +64,7 @@ const ScheduleProfile = () => {
 
     const resetServiceForm = () => {
       dispatch(sfActions.clearAll())
+      dispatch(sfSetting.clearAll())
     }
 
     dispatch(doDialog.confirm({
@@ -107,7 +108,7 @@ const ScheduleProfile = () => {
   // Error
   if (error?.error) {
     return <ErrorState
-     size='sm'
+      size='sm'
       hight='400px'
       title={error?.title}
       message={error?.message}

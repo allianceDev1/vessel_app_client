@@ -23,6 +23,9 @@ export const appDataSlice = createSlice({
         // ServiceForm
         clearServiceForm: (state) => {
             state.serviceForm = {}
+            state.verification = {}
+            state.review = {}
+            state.payment = {}
         },
         startServiceWork: (state, action) => {
             state.serviceForm = {
@@ -104,8 +107,6 @@ export const appDataSlice = createSlice({
         },
         clearServiceFormSettings: (state) => {
             state.serviceFormSettings = {}
-            state.verification = {}
-            state.review = {}
         },
         updateSubmitStatus: (state, action) => {
             const { product_id, ...status } = action.payload;

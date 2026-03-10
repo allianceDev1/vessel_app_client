@@ -84,10 +84,6 @@ const SFormSave = ({ modalId }) => {
                 return;
             }
 
-            if (serviceFormSettings?.products?.[key]?.is_saved) {
-                return;
-            }
-
             if (isVessel) {
                 body?.service_products?.push({
                     product_id: key,

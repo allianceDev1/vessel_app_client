@@ -157,7 +157,8 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
                                 onClick={() => selectSection('MATERIALS_SECTION')} />
                         }
 
-                        <Button icon={<TbSearch />} size='small' rounded outlined onClick={() => setEnableSearch(!enableSearch)} />
+                        <Button icon={<TbSearch />} size='small' rounded outlined onClick={() => setEnableSearch(!enableSearch)}
+                            disabled={!itemsList.length} />
                     </div>}
             </div>
 

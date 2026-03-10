@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './bill-review.scss'
 import Button from '../../../../UI_Primitives/buttons/Button';
 import { TbCheck } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
 import { sfActions } from '../../../../../redux/features/persisted/applicationSlice';
+import { groupItemsByGroupId } from '../../../../../utils/services/work_services';
 
 const BillReview = ({ bill, setOpenedBill }) => {
     const dispatch = useDispatch();
     const { review } = useSelector((state) => state.application)
+    const [billItems, setBillItems] = useState([])
 
     const clickCheckBox = (itemUUID, isDisabled) => {
         if (isDisabled) return;
@@ -28,6 +30,11 @@ const BillReview = ({ bill, setOpenedBill }) => {
         }
     }
 
+    useEffect(() => {
+        const grouped = groupItemsByGroupId(bill?.items || []);
+        setBillItems(grouped)
+    }, [bill?.items])
+
     return (
         <div className="tech-bill-review-page-container">
             {/* Title */}
@@ -38,34 +45,42 @@ const BillReview = ({ bill, setOpenedBill }) => {
 
             {/* Items */}
             <div className="bill-border">
-                {bill?.items?.map((item) => {
-
-                    const isDisabled = !review?.is_editable || ['INSTALLATION_CHARGE', 'SERVICE_CHARGE'].includes(item?.item_id) ||
-                        ['PACKAGE', 'SERVICE_TOKEN'].includes(item?.item_category) || Number(item?.total) === 0
-
-                    return <div className="item" key={item?.uuid} onClick={() => clickCheckBox(item?.uuid, isDisabled)}>
-                        <div className="checkbox-section">
-                            <div className={`item-checkbox ${!review?.zero_free_items?.includes(item?.uuid) ? "checked" : ''} ${isDisabled ? 'disabled' : ''}`} >
-                                <TbCheck />
-                            </div>
+                {billItems?.map((group) => {
+                    return <div className="list-section" key={group?.group_id}>
+                        <div className="item-header">
+                            <h5>{group?.group_name}</h5>
                         </div>
-                        <div>
-                            <div className="name-section">
-                                <h3>{item?.item_name}</h3>
-                            </div>
-                            <div className="detail-section">
-                                <div>
-                                    {item?.unit
-                                        ? <p className="single-price">1 item for Rs.{item?.pricing?.charged}</p>
-                                        : <p className="single-price">This not spare or service</p>}
-                                    <p className="qty">Qty: {item?.qty} {item?.unit}</p>
+                        {group?.items?.map((item) => {
+                            const isDisabled = !review?.is_editable || ['INSTALLATION_CHARGE', 'SERVICE_CHARGE'].includes(item?.item_id) ||
+                                ['PACKAGE', 'SERVICE_TOKEN'].includes(item?.item_category) || Number(item?.total) === 0
+                                || ['RENEWAL_SERVICE', 'RENEWAL_SPARE']?.includes(item?.item_type)
+
+
+                            return <div className="item" key={item?.uuid} onClick={() => clickCheckBox(item?.uuid, isDisabled)}>
+                                <div className="checkbox-section">
+                                    <div className={`item-checkbox ${!review?.zero_free_items?.includes(item?.uuid) ? "checked" : ''} ${isDisabled ? 'disabled' : ''}`} >
+                                        <TbCheck />
+                                    </div>
                                 </div>
                                 <div>
-                                    <p className="estimate">Estimate ₹{Number(item?.pricing?.list || 0) * Number(item?.qty || 1)}</p>
-                                    <p className="price">₹{Number(item?.total || 0)}</p>
+                                    <div className="name-section">
+                                        <h3>{item?.item_name}</h3>
+                                    </div>
+                                    <div className="detail-section">
+                                        <div>
+                                            {item?.unit
+                                                ? <p className="single-price">1 item for Rs.{item?.pricing?.charged}</p>
+                                                : <p className="single-price">This not spare or service</p>}
+                                            <p className="qty">Qty: {item?.qty} {item?.unit}</p>
+                                        </div>
+                                        <div>
+                                            <p className="estimate">Estimate ₹{Number(item?.pricing?.list || 0) * Number(item?.qty || 1)}</p>
+                                            <p className="price">₹{Number(item?.total || 0)}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        })}
                     </div>
                 })}
 
