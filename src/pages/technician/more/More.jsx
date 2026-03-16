@@ -4,10 +4,12 @@ import { page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
 import { TbArrowRight, TbBike, TbChartInfographic, TbCircleLetterT, TbHelpSquareRounded, TbMap } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
+import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers'
 
 const More = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const thisMonth = isoToYYYYMMDD(new Date()).slice(0, 7);
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'More Options', note: "" }))
@@ -32,7 +34,7 @@ const More = () => {
                 </div>
 
                 {/* Daily Running */}
-                <div className="menu" onClick={() => navigate('/tech/running-kms')}>
+                <div className="menu" onClick={() => navigate(`/tech/running-kms?month=${thisMonth}`)}>
                     <div className="icon">
                         <TbBike />
                     </div>
@@ -45,7 +47,7 @@ const More = () => {
                 </div>
 
                 {/* DAR */}
-                <div className="menu">
+                <div className="menu" >
                     <div className="icon">
                         <TbChartInfographic />
                     </div>
@@ -58,7 +60,7 @@ const More = () => {
                 </div>
 
                 {/* Token Top-ups */}
-                <div className="menu">
+                <div className="menu" onClick={() => navigate('/tech/token-top-up')}>
                     <div className="icon">
                         <TbCircleLetterT />
                     </div>

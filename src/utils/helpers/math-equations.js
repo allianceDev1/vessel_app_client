@@ -106,7 +106,10 @@ export const toDecimal = (
         allowNegative = true
     } = {}
 ) => {
-    if (value === null || value === undefined) return fallback;
+
+    const toFormatted = (n) => Number(n).toFixed(precision);
+
+    if (value === null || value === undefined) return toFormatted(fallback);
 
     // Convert to string & clean
     let cleaned = String(value)
@@ -115,24 +118,24 @@ export const toDecimal = (
         .replace(/[^\d.-]/g, '');        // remove currency & text
 
     if (!cleaned || cleaned === '-' || cleaned === '.') {
-        return fallback;
+        return toFormatted(fallback);
     }
 
     let number = Number(cleaned);
 
     // Handle NaN & Infinity
     if (!Number.isFinite(number)) {
-        return fallback;
+        return toFormatted(fallback);
     }
 
     // Negative handling
     if (!allowNegative && number < 0) {
-        return fallback;
+        return toFormatted(fallback);
     }
 
     // Fix floating precision issue
     const factor = 10 ** precision;
-    return Math.round((number + Number.EPSILON) * factor) / factor;
+    return ((Math.round((number + Number.EPSILON) * factor) / factor)).toFixed(precision);
 };
 
 export const normalizeMoney = (value, options) => {

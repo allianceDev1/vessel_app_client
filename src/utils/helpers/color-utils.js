@@ -1,4 +1,5 @@
 export const getContrastText = (bgColor) => {
+    if (!bgColor) return '#FFFFFF';
     const hex = bgColor.replace('#', '');
 
     const r = parseInt(hex.substring(0, 2), 16);

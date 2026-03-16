@@ -229,7 +229,6 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                     <>{customer?.productStretcher?.map((pg, pgIndx) => {
                         return <div className="group-product" key={pgIndx}>
                             {pg?.map((item, productIndex) => {
-
                                 const product = customerProducts?.filter(p => p.product_id === item?.product_id)?.[0]
                                 const productPackage = product?.package?.package_status === PACKAGE_STATUSES.ACTIVE ? product?.package : null
                                 const packageFreeze = product?.package?.package_status === PACKAGE_STATUSES.FROZEN ? true : false
@@ -239,8 +238,8 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                                 const isWorked = serviceForm?.service_products?.[item?.product_id]?.service_data?.category_id ? true : false
                                 const alertText = packageFreeze ? "The current product package is frozen"
                                     : packageExpire ? "The current product package is expired"
-                                        : lowTokens ? 'May be chance to expire the product package on this service'
-                                            : (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens' : ''
+                                        : (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens'
+                                            : lowTokens ? 'May be chance to expire the product package on this service' : ''
                                 const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
                                 const isSaved = serviceFormSettings?.products?.[product?.product_id]?.is_saved || false
 

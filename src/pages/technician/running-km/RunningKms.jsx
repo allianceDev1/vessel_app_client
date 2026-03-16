@@ -95,7 +95,7 @@ const RunningKms = () => {
                     onChange={(e) => setSearchParams({ month: e.target.value })} size='small' max={isoToYYYYMMDD(new Date()).slice(0, 7)} />
             </div>
 
-            {error?.error || (!loading && !data?.length)
+            {error?.error || (!loading && !calenderData?.length)
                 ? <ErrorState
                  size='sm'
                     hight='60vh'

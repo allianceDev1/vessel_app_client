@@ -113,7 +113,7 @@ const SFormSave = ({ modalId }) => {
                             spare_type: c?.spare_type,
                             qty: c?.qty
                         })),
-                        removed_components_list: (value?.removed_components_list || [])?.map(c => ({
+                        removed_components_list: (value?.work?.removed_components_list || [])?.map(c => ({
                             spare_uuid: c?.spare_uuid,
                             spare_type: c?.spare_type,
                         }))
