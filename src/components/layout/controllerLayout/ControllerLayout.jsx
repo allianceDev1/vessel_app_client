@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './controllerLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
-import { TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbReport } from 'react-icons/tb';
+import { TbClipboardText, TbClockStar, TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbPaperclip, TbReport } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
@@ -94,13 +94,17 @@ const ControllerLayout = ({ children }) => {
                             <TbMoodSpark />
                             <span>Customers</span>
                         </div>
-                        <div className={`item ${activeSegment === 'csr-list' && 'active'}`} onClick={() => handleMenuClick('/controller/csr-list')}>
-                            <TbFilePhone />
-                            <span>CSR list</span>
+                        <div className={`item ${activeSegment === 'upcoming' && 'active'}`} onClick={() => handleMenuClick('/controller/upcoming')}>
+                            <TbClockStar />
+                            <span>Upcoming</span>
                         </div>
-                        <div className={`item ${activeSegment === 'dar-list' && 'active'}`} onClick={() => handleMenuClick('/controller/dar-list')}>
-                            <TbReport />
-                            <span>DAR list</span>
+                        <div className={`item ${activeSegment === 'registered' && 'active'}`} onClick={() => handleMenuClick('/controller/registered')}>
+                            <TbPaperclip />
+                            <span>Registered</span>
+                        </div>
+                        <div className={`item ${activeSegment === 'completed' && 'active'}`} onClick={() => handleMenuClick('/controller/completed')}>
+                            <TbClipboardText />
+                            <span>Completed</span>
                         </div>
                         {user?.allowed_origins?.includes('vfcr_appConfig_write') &&
                             <div className={`item ${activeSegment === 'app-config' && 'active'}`} onClick={() => handleMenuClick('/controller/app-config')}>
