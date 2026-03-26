@@ -34,7 +34,7 @@ const UpdatePackage = ({ data, setData }) => {
 
 
   const expireTypeList = [
-    { label: 'Package Duration', value: packageExpireTypes?.PACKAGE_DURATION, disabled: true},
+    { label: 'Package Duration', value: packageExpireTypes?.PACKAGE_DURATION, disabled: true },
     { label: 'Remaining Tokens', value: packageExpireTypes?.REMAINING_TOKENS },
   ]
 

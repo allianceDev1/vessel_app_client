@@ -103,7 +103,7 @@ function MultiSelectInput({
         <div className="multiselect-options">
           {searchable && (
             <div className="multiselect-search">
-              <InputText size='small' label={searchPlaceholder} ref={searchRef} value={searchQuery}
+              <InputText size='small' label={searchPlaceholder} ref={searchRef} value={searchQuery} type='search'
                 onChange={(e) => setSearchQuery(e.target.value)} onClick={(e) => e.stopPropagation()} />
             </div>
           )}

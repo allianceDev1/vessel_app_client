@@ -1,59 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React, { useMemo } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { TbDownload, TbFilePencil, TbMoodSadDizzy, TbMoodSearch, TbPencilPlus } from 'react-icons/tb'
+import { TbDownload, TbMoodSearch, TbPencilPlus } from 'react-icons/tb'
 import { api } from '../../../../api'
-import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import Button from '../../../UI_Primitives/buttons/Button'
-import SearchCustomerByKey from '../../../forms/tech/search-customer/SearchCustomerByKey'
+import SearchCustomerByKey from '../../../forms/controller/search-customer/SearchCustomerByKey'
 import Table from '../../../UI_Primitives/table/Table'
-import Badge from '../../../UI_Primitives/badge/Badge'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
-import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
+import ServiceRegistration from '../../../forms/controller/registration/ServiceRegistration'
 
 
 
 const SearchCustomer = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { user } = useSelector((state) => state.user)
     const [searchParams] = useSearchParams();
-    const [loading, setLoading] = useState('fetch')
-    const [customerList, setCustomerList] = useState([])
-    const [tableColumns, setTableColumns] = useState([])
-    const [tableRows, setTableRows] = useState([])
-    const [error, setError] = useState({ error: false, title: null, message: null })
-    const [viewType, setViewType] = useState('Group View')
 
+    const getSortField = (id) => ({
+        'CID': 'cid',
+        'Customer': 'full_name',
+        'Address': 'address',
+        'Place': 'place',
+        'Post offices': 'post',
+        'City': 'city_name'
+    })[id] || id
 
-
-
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
-
-            const customers = await api.vfCv2Axios.get(`/customer/search?${searchParams.toString()}`)
-            setCustomerList(customers)
-
-        } catch (error) {
-            setError({ error: true, title: error.message })
-        } finally {
-            setLoading('')
-        }
+    const openRegistrationPopUp = (customer) => {
+        dispatch(modal.push({ show: true, title: "Register Service", body: <ServiceRegistration customerName={customer?.Customer} customerId={customer?.CID} /> }))
     }
 
-    useEffect(() => {
-        fetchApi()
-        // eslint-disable-next-line
-    }, [searchParams.get('key'), searchParams.get('key_type'), searchParams.get('city_id'), searchParams.get('post')])
-
-    useEffect(() => {
-
-        if (!customerList?.length) {
-            return;
-        }
+    const tableColumns = useMemo(() => {
 
         const tempColumns = [
             { header: 'CID', accessorKey: 'CID', enableHiding: false },
@@ -65,65 +42,75 @@ const SearchCustomer = () => {
             { header: 'City', accessorKey: 'City' }
         ]
 
-        setTableRows(customerList?.map((customer) => ({
-            'CID': customer?.cid,
-            "Customer": customer?.full_name,
-            "Address": customer?.address,
-            "Place": customer?.place,
-            "Post offices": customer?.post,
-            "City": customer?.city_name,
-            city_id: customer?.city_id,
-            "Pin Code": customer?.pin_code
-        })))
-
-
-        if (user?.allowed_origins?.includes('vfcr_customers_write')) {
+        if (user?.allowed_origins?.includes('vfcr_sr_reg_write')) {
             tempColumns.push({
                 header: 'Actions',
-                cell: ({ row }) => (
-                    <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button title={'Register'} severity={'warning'} icon={<TbPencilPlus />} rounded size='small' />
-                    </div>
-                ),
                 enableSorting: false,
                 enableColumnFilter: false,
+                meta: { disableRowClick: true },
+                cell: ({ row }) => (
+                    <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button title={'Register Service'} outlined severity={'primary'} icon={<TbPencilPlus />} rounded size='small'
+                            onClick={() => openRegistrationPopUp(row.original)} />
+                    </div>
+                )
             })
         }
 
-        setTableColumns(tempColumns)
-
+        return tempColumns
         // eslint-disable-next-line
-    }, [customerList])
+    }, [user])
 
-    // loading
-    if (loading === 'fetch') {
-        return <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <SkeletonGrid rows={1} columns={1} height={50} />
-            <SkeletonGrid rows={1} columns={1} height={400} />
-        </div>
-    }
+    const fetchCustomerData = useMemo(() => async ({ page, pageSize, search, sort }) => {
 
-    // Error
-    if (error?.error) {
-        return <ErrorState
-            hight='70vh'
-            title={error?.title}
-            message={error?.message}
-            icon={<TbMoodSadDizzy />}
-            footer={<div>
-                <Button label={'Search again'} rounded outlined size='small' icon={<TbMoodSearch />} style={{ width: '140px' }}
-                    onClick={() => dispatch(modal.push({ show: true, title: "Search Customers", body: <SearchCustomerByKey /> }))} />
-            </div>}
-        />
-    }
+        const sortBy = sort?.[0] ? getSortField(sort[0].id) : ''
+        const sortDir = sort?.[0] ? (sort[0].desc ? 'desc' : 'asc') : ''
+
+        const params = new URLSearchParams({
+            page,
+            limit: pageSize,
+            sort_by: sortBy,
+            sort_dir: sortDir,
+            ...(search ? { search } : {}),
+            key: searchParams.get('key') || '',
+            key_type: searchParams.get('key_type') || '',
+            city_id: searchParams.get('city_id') || '',
+            post: searchParams.get('post') || ''
+        })
+
+        const res = await api.vfCv2Axios.get(`/customer/search?${params}`)
+
+        const transformed = res.data.map((item, index) => {
+            const globalIndex = page * pageSize + index + 1
+
+            return {
+                Index: globalIndex,
+                'CID': item?.cid,
+                "Customer": item?.full_name,
+                "Address": item?.address,
+                "Place": item?.place,
+                "Post offices": item?.post,
+                "City": item?.city_name,
+                city_id: item?.city_id,
+                "Pin Code": item?.pin_code,
+                _rowStyle: { cursor: 'pointer' },
+                _rowNavigateUrl: `/404`
+            }
+        })
+
+        return { data: transformed, total: res.total }
+        // eslint-disable-next-line
+    }, [navigate, searchParams.get('key'), searchParams.get('key_type'), searchParams.get('city_id'), searchParams.get('post')])
 
     // Content
     return (
         <div className="customer-search-comp">
             <Table
+                tableKey="search_customer_table"
                 columns={tableColumns}
-                data={tableRows}
+                fetchFn={fetchCustomerData}
                 columnVisible={{ 'Pin Code': false, "City": false }}
+                queryKey={['search_customer_table', searchParams.get('key'), searchParams.get('key_type'), searchParams.get('city_id'), searchParams.get('post')]}
                 topComponents={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <Button label={'Excel'} rounded outlined size='small' icon={<TbDownload />} />

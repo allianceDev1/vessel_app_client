@@ -1,4 +1,4 @@
-@use '../../../assets/scss/mixins/mixin.scss'as *;
+@use '../../../assets/scss/mixins/mixin.scss' as *;
 
 .dropdown-wrapper {
     position: relative;
@@ -42,6 +42,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: relative;
         padding: 11px 12px;
         cursor: pointer;
         border-radius: 10px;
@@ -58,6 +59,17 @@
             svg {
                 font-size: 19px;
             }
+        }
+
+        .selected-icon {
+            position: absolute;
+            width: 4px;
+            height: 80%;
+            background-color: var(--color-primary);
+            left: -8px;
+            top: 50%;
+            transform: translate(0, -50%);
+            border-radius: 0px 10px 10px 0px;
         }
 
         &:hover:not(.disabled) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import './input-phone-number.scss'
@@ -42,7 +42,6 @@ const InputPhoneNumber = ({
         } else {
             countryCode = value
         }
-
         onChange({ country_code: countryCode, number: mobile, name })
     };
 

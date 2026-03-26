@@ -8,7 +8,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../../api';
 import Table from '../../../components/UI_Primitives/table/Table'
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import ButtonGroup from '../../../components/UI_Primitives/buttons/ButtonGroup'
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
@@ -36,9 +35,10 @@ const AreaList = () => {
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Area List', note: "View all cities and related information." }))
+        // eslint-disable-next-line
     }, [])
 
-   
+
     const {
         data: miniReport = {},
         isLoading: reportLoading,
@@ -49,7 +49,7 @@ const AreaList = () => {
             const res = await api.vfCv2Axios.get('/branch-area/mini-report')
             return res
         },
-        staleTime: 5 * 60_000,
+        staleTime: 10 * 60_000,
     })
 
     const handleChangeViewType = (type) => {
@@ -68,10 +68,10 @@ const AreaList = () => {
     const viewTypeOptions = [
         {
             items: [
-                { label: 'City view', onClick: () => handleChangeViewType('cityBase') },
-                { label: 'Tech view', onClick: () => handleChangeViewType('techBase') },
-                { label: 'Post view', onClick: () => handleChangeViewType('postBase') },
-                { label: 'Pin view', onClick: () => handleChangeViewType('pinBase') },
+                { label: 'City view', value: 'cityBase', onClick: (arg) => handleChangeViewType(arg?.value) },
+                { label: 'Tech view', value: 'techBase', onClick: (arg) => handleChangeViewType(arg?.value) },
+                { label: 'Post view', value: 'postBase', onClick: (arg) => handleChangeViewType(arg?.value) },
+                { label: 'Pin view', value: 'pinBase', onClick: (arg) => handleChangeViewType(arg?.value) },
             ],
         }
     ];
@@ -143,8 +143,8 @@ const AreaList = () => {
         })
 
         return { data: transformed, total: res.total }
-
-    }, [viewType, navigate])  // new fetchFn only when view changes
+        // eslint-disable-next-line
+    }, [viewType, navigate]) 
 
 
     // ── 4. Edit modal ─────────────────────────────────────────────────────────
@@ -217,20 +217,18 @@ const AreaList = () => {
                         enableSorting: false,
                         enableColumnFilter: false,
                         cell: ({ row }) => (
-                            <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center' }}>
-                                <ButtonGroup rounded>
-                                    <Button
-                                        icon={<TbPencil />} size='small' outlined
-                                        onClick={() => openEditModal(row.original)}
-                                    />
-                                    <Button
-                                        icon={<TbTrash />} size='small' outlined
-                                        spinIcon={row.original.deletedLoad}
-                                        onClick={() => handleDeleteTech([
-                                            { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
-                                        ])}
-                                    />
-                                </ButtonGroup>
+                            <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
+                                <Button rounded title={'Edit'}
+                                    icon={<TbPencil />} size='small' outlined
+                                    onClick={() => openEditModal(row.original)}
+                                />
+                                <Button rounded severity={'danger'} title={'Delete'}
+                                    icon={<TbTrash />} size='small' outlined
+                                    spinIcon={row.original.deletedLoad}
+                                    onClick={() => handleDeleteTech([
+                                        { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
+                                    ])}
+                                />
                             </div>
                         ),
                     })
@@ -316,7 +314,7 @@ const AreaList = () => {
                                         searchParams.get('view_type') === 'pinBase' ? 'Pin view' : 'City view',
                                 icon: < IoIosArrowDown />, iconPos: 'right',
                                 rounded: true, outlined: true, size: 'small', style: { width: '120px' }
-                            }} list={viewTypeOptions} />
+                            }} list={viewTypeOptions} selected={searchParams.get('view_type') || 'cityBase'} />
                         </div>
                     } />
             </div>

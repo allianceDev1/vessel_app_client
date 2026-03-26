@@ -1,0 +1,38 @@
+.profile-list-card-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left-div {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .image-div {
+            width: 35px;
+            height: 35px;
+            overflow: hidden;
+            border-radius: 100%;
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            -ms-border-radius: 100%;
+            -o-border-radius: 100%;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .name-div {
+            h4 {
+                font-size: 13px;
+            }
+
+            p {
+                font-size: 11px;
+                color: var(--text-c2);
+            }
+        }
+    }
+
+}

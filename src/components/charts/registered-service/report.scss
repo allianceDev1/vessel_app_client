@@ -1,0 +1,80 @@
+.registered-service-report-container {
+    margin-bottom: 40px;
+
+    .reports {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 20px;
+        justify-content: space-between;
+
+        .report-box {
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
+            padding: 10px 15px;
+            border-radius: 15px;
+
+            .title-section {
+                padding-bottom: 10px;
+
+                h4 {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+            }
+
+            .content {
+                overflow: hidden;
+                width: 100%;
+                min-height: 200px;
+            }
+        }
+
+        .report-one {
+            grid-column: span 6;
+            order: 1;
+        }
+
+        .report-two {
+            grid-column: span 4;
+            order: 3;
+        }
+
+        .report-three {
+            grid-column: span 8;
+            order: 4;
+        }
+
+        .report-four {
+            grid-column: span 6;
+            order: 2;
+        }
+    }
+
+    .last-update {
+        font-size: 13px;
+        text-align: end;
+        color: var(--text-secondary-2);
+        margin-top: 10px;
+    }
+
+
+    @media screen and (max-width:750px) {
+        .reports {
+
+            .report-one,
+            .report-two,
+            .report-three,
+            .report-four {
+                grid-column: span 12;
+            }
+
+        }
+
+    }
+
+
+
+
+}

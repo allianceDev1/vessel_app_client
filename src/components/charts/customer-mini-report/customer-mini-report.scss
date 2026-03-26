@@ -33,8 +33,8 @@
 
     .reports {
         margin-top: 15px;
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
         gap: 20px;
         justify-content: space-between;
 
@@ -60,7 +60,7 @@
         }
 
         .vessel-report {
-            width: 64%;
+            grid-column: span 8;
 
             .content {
                 display: grid;
@@ -121,11 +121,11 @@
         }
 
         .customer-report {
-            width: 33%;
+            grid-column: span 4;
         }
 
         .add-on-report {
-            width: 100%;
+            grid-column: span 12;
 
             .content {
                 display: grid;
@@ -208,16 +208,23 @@
 
     @media screen and (max-width:500px) {
         .reports {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
             gap: 20px;
 
-            .add-on-report,
-            .customer-report,
+            .add-on-report {
+                grid-column: 1;
+                grid-row: 3;
+            }
+
+            .customer-report {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
             .vessel-report {
-                width: 100%;
-                grid-column: unset;
-                grid-row: unset;
+                grid-column: 1;
+                grid-row: 1;
             }
         }
     }

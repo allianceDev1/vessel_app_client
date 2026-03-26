@@ -3,7 +3,7 @@ import './app-config.scss'
 import { useDispatch } from 'react-redux';
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbArrowLeft } from 'react-icons/tb';
-import { ui_version } from '../../../config/appConfig';
+import { app_version } from '../../../config/app_config';
 import { useNavigate } from 'react-router-dom';
 
 const AppConfig = () => {
@@ -31,7 +31,7 @@ const AppConfig = () => {
                                 <h4>Software Version</h4>
                             </div>
                             <div className="r">
-                                <p>{ui_version}</p>
+                                <p>{app_version}</p>
                             </div>
                         </div>
                     </div>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import './add-call-log.scss';
-import TextArea from '../../UI_Primitives/inputs/TextArea';
-import Button from '../../UI_Primitives/buttons/Button';
-import { api } from '../../../api';
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
+import TextArea from '../../../UI_Primitives/inputs/TextArea';
+import Button from '../../../UI_Primitives/buttons/Button';
+import { api } from '../../../../api';
+import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -20,6 +20,13 @@ const AddCallLog = ({ customerId, setCallLogs, isController }) => {
             setLoading('submit')
 
             if (isController) {
+                await api.vfCv2Axios.post(`/customer/${customerId}/call-log`, { message })
+                dispatch(modal.pull.all())
+                dispatch(toast.push({
+                    type: "success",
+                    head: 'Success!',
+                    message: "Your call log Updated."
+                }))
 
             } else {
                 await api.vfTv2Axios.post(`/customer/${customerId}/call-log`, { message })

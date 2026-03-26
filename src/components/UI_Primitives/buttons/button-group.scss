@@ -6,15 +6,18 @@
 
         &:first-child {
             border-radius: 8px 0 0 8px;
-            border-right: 0;
-
-            &:hover {
-                border-right: 0;
-            }
         }
 
         &:last-child {
             border-radius: 0 8px 8px 0;
+        }
+
+        &:not(:last-child) {
+            border-right: 0px;
+
+            &:hover{
+                border-right: 0px;
+            }
         }
     }
 

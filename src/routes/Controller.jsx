@@ -20,6 +20,9 @@ const SearchCustomer = React.lazy(() => import('../components/modules/controller
 const FormResources = React.lazy(() => import('../pages/controller/form-resources/FormResources'))
 const ResourceStretcher = React.lazy(() => import('../pages/controller/form-resources/ResourceStretcher'))
 const ServiceCategory = React.lazy(() => import('../pages/controller/service-category/ServiceCategory'))
+const UpcomingServices = React.lazy(() => import('../pages/controller/upcoming/UpcomingServices'))
+const RegisteredService = React.lazy(() => import('../pages/controller/registered/RegisteredService'))
+
 
 
 
@@ -48,6 +51,25 @@ const Controller = () => {
                         <Route path='/area-list/:city_id' element={<PrivateRoute element={<ViewArea />} isAuthenticated={isAuthenticated} />} />
                     </>}
 
+                    {/* Customer list */}
+                    {user?.allowed_origins?.some(access => ['vfcr_customers_read', 'vfcr_customers_write'].includes(access)) && <>
+                        <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
+                            <Route index element={<CustomerMiniReport />} />
+                            <Route path="search" element={<SearchCustomer />} />
+                            {/* <Route path="filter" element={<SearchPage />} /> */}
+                        </Route>
+                    </>}
+
+                    {/* Upcoming Service */}
+                    {user?.allowed_origins?.some(access => ['vfcr_up_service_read', 'vfcr_up_service_write'].includes(access)) && <>
+                        <Route path='/upcoming' element={<PrivateRoute element={<UpcomingServices />} isAuthenticated={isAuthenticated} />} />
+                    </>}
+
+                    {/* Registered */}
+                    <Route path='/registered' element={<PrivateRoute element={<RegisteredService />} isAuthenticated={isAuthenticated} />} />
+
+
+
                     {/* App Config */}
                     {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>
                         <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
@@ -64,14 +86,6 @@ const Controller = () => {
                         <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
                     </>}
 
-                    {/* Customer list */}
-                    {user?.allowed_origins?.some(access => ['vfcr_customers_read', 'vfcr_customers_write'].includes(access)) && <>
-                        <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
-                            <Route index element={<CustomerMiniReport />} />
-                            <Route path="search" element={<SearchCustomer />} />
-                            {/* <Route path="filter" element={<SearchPage />} /> */}
-                        </Route>
-                    </>}
 
 
 

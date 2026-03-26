@@ -1,3 +1,5 @@
+import { toStandardText } from "../../../utils/helpers/text-formatting"
+
 export const serviceFormPageRoute = [
     { key: 100, title: 'Select Products', description: "Choose the products or parts required for this service" },
     { key: 101, title: 'Review & Confirmation', description: "Review service details and verify the total amount" },
@@ -31,5 +33,12 @@ export const SERVICE_SECTION_TITLES = {
     ADDITIONAL_SERVICE: "Additional Services"
 }
 
-
-
+export const SERVICE_TYPES = ['COMPLAINT', 'SERVICE', 'RENEWAL']
+export const SERVICE_PRIORITY = {
+    1: "Normal",
+    2: "Urgent",
+    3: "High"
+}
+export const SERVICE_PRIORITY_TEXT = Object.fromEntries(
+    Object.entries(SERVICE_PRIORITY).map(([key, value]) => [value, toStandardText(key)])
+);

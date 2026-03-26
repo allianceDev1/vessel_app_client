@@ -3,7 +3,7 @@ import './dropdown.scss'
 import { Button } from '../buttons/Button'
 import { createPortal } from 'react-dom';
 
-const Dropdown = ({ button, list }) => {
+const Dropdown = ({ button, list, selected = null }) => {
     const [open, setOpen] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const wrapperRef = useRef();
@@ -19,7 +19,7 @@ const Dropdown = ({ button, list }) => {
         const screenHeight = window.innerHeight;
         const screenWidth = window.innerWidth;
 
-        // 🔥 vertical fallback
+        //  vertical fallback
         let top = btnRect.bottom;
         if (btnRect.bottom + menuRect.height > screenHeight) {
             if (btnRect.top - menuRect.height > 0) {
@@ -29,7 +29,7 @@ const Dropdown = ({ button, list }) => {
             }
         }
 
-        // 🔥 horizontal fallback
+        //  horizontal fallback
         let left = btnRect.left;
         if (btnRect.left + menuRect.width > screenWidth) {
             left = screenWidth - menuRect.width - 10;
@@ -66,8 +66,10 @@ const Dropdown = ({ button, list }) => {
     }, []);
 
     const handleItemClick = (item) => {
+        if (item.type === 'divider') return;
+        const { onClick, ...arg } = item;
         if (!item.disabled && item.onClick) {
-            item.onClick();
+            item.onClick(arg);
             setOpen(false);
         }
     };
@@ -95,6 +97,7 @@ const Dropdown = ({ button, list }) => {
                                 className={`dropdown-item ${item.disabled ? 'disabled' : ''} ${item.theme || ''}`}
                                 onClick={() => handleItemClick(item)}
                             >
+                                {selected === item.value && <div className="selected-icon"></div>}
                                 <div className="left-section">{item.icon ? item?.icon : ""}{item.label}</div>
                                 {item.right && <div className="right-section">{item.right}</div>}
                             </div>
@@ -109,8 +112,8 @@ const Dropdown = ({ button, list }) => {
     //         {
     //             heading: 'General',
     //             items: [
-    //                 { label: 'View', icon: <FaEye />, onClick: () => alert('View Clicked') },
-    //                 { label: 'Edit', icon: <FaEdit />, onClick: () => alert('Edit Clicked') },
+    //                 { label: 'View', value : "view" icon: <FaEye />, onClick: () => alert('View Clicked') },
+    //                 { label: 'Edit',value : "view"  icon: <FaEdit />, onClick: () => alert('Edit Clicked') },
     //                 { type:"divider") },
     //             ],
     //         },

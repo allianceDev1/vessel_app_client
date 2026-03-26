@@ -94,10 +94,12 @@ const ControllerLayout = ({ children }) => {
                             <TbMoodSpark />
                             <span>Customers</span>
                         </div>
-                        <div className={`item ${activeSegment === 'upcoming' && 'active'}`} onClick={() => handleMenuClick('/controller/upcoming')}>
+
+                        {user?.allowed_origins?.some(access => ['vfcr_up_service_read', 'vfcr_up_service_write'].includes(access)) && <div className={`item ${activeSegment === 'upcoming' && 'active'}`}
+                            onClick={() => handleMenuClick('/controller/upcoming?view_type=product')}>
                             <TbClockStar />
                             <span>Upcoming</span>
-                        </div>
+                        </div>}
                         <div className={`item ${activeSegment === 'registered' && 'active'}`} onClick={() => handleMenuClick('/controller/registered')}>
                             <TbPaperclip />
                             <span>Registered</span>

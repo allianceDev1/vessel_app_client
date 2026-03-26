@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './customer-mini-report.scss'
 import { TbMoodSadDizzy, TbMoodSearch } from 'react-icons/tb'
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
-import { renderCustomChartLabel } from '../../../utils/services/chart_service'
+import { renderCustomChartLabel } from '../../../utils/helpers/chart_utils'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { api } from '../../../api'
 import ChartTooltip from '../primitives/ChartTooltip';
@@ -11,7 +11,7 @@ import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
-import SearchCustomerByKey from '../../forms/tech/search-customer/SearchCustomerByKey'
+import SearchCustomerByKey from '../../forms/controller/search-customer/SearchCustomerByKey'
 
 
 const CustomerMiniReport = () => {
@@ -236,7 +236,7 @@ const CustomerMiniReport = () => {
                                     paddingAngle={5}
                                 >
                                     {productChart.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={chartLabelColors[(index + 4) % chartLabelColors.length]} stroke='none' />
+                                        <Cell key={`cell-${index}`} fill={chartLabelColors[(index) % chartLabelColors.length]} stroke='none' />
                                     ))}
                                     <ChartTooltip />
                                     <ChartLegend />

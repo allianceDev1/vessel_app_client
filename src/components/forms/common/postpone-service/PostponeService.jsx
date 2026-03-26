@@ -39,7 +39,18 @@ const PostponeService = ({ customerId, products, setUpServices, isController = f
             setLoading('submit')
 
             if (isController) {
+                await api.vfCv2Axios.post(`/service/${customerId}/postpone`, {
+                    postpone_date: form?.postpone_date,
+                    products: selectedProducts,
+                    reason: form?.reason
+                })
 
+                dispatch(modal.pull.all())
+                dispatch(toast.push({
+                    type: "success",
+                    head: 'Success!',
+                    message: "Service date Updated."
+                }))
             } else {
                 await api.vfTv2Axios.post(`/service/${customerId}/postpone`, {
                     postpone_date: form?.postpone_date,

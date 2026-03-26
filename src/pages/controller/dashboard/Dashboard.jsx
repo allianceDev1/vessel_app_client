@@ -1,9 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import './dashboard.scss'
+import { page } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { useDispatch } from 'react-redux'
+import TodayWorkFlow from '../../../components/charts/dashboard/TodayWorkFlow'
 
 const Dashboard = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(page.setTitle({}))
+        // eslint-disable-next-line
+    }, [])
+
+
     return (
-        <div>
-            <h1>Home Page</h1>
+        <div className='controller-dashboard-page-container'>
+            <div className="reports">
+                <div className="report-box work-flow-report">
+                    <div className="title-section">
+                        <h4>Today work flow</h4>
+                    </div>
+                    <div className="content">
+                        <TodayWorkFlow />
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

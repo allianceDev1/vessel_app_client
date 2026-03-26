@@ -11,7 +11,7 @@ import Message from '../../../components/UI_Primitives/message/Message';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import PostponeService from '../../../components/forms/common/postpone-service/PostponeService';
-import AddCallLog from '../../../components/forms/add-call-log/AddCallLog';
+import AddCallLog from '../../../components/forms/common/add-call-log/AddCallLog';
 import TechScheduleService from '../../../components/forms/tech/schedule-service/TechScheduleService';
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';

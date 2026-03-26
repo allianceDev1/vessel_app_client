@@ -9,13 +9,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/app/store'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/react-query'
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const queryClient = new QueryClient();
+
 
 root.render(
   <React.StrictMode>

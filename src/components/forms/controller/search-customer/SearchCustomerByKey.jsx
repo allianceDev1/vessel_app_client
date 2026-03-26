@@ -25,7 +25,7 @@ const SearchCustomerByKey = () => {
         city_id: searchParams.get('city_id'),
         post: searchParams.get('post')
     })
-    const [keyType, setKeyType] = useState(searchParams.get('key_type') || 'letter')
+    const [keyType, setKeyType] = useState(searchParams.get('key_type') || 'id')
 
 
     const keyTypes = ['letter', 'number', 'id']

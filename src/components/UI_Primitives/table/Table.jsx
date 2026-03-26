@@ -150,7 +150,7 @@ const Table = ({
     })
 
     const serverData = serverResult?.data ?? []
-    const serverTotal = serverResult?.total ?? 0
+    const serverTotal = typeof serverResult?.total === 'number' ? serverResult.total : Number(serverResult?.total ?? 0)
 
     // ── Decide what data the table renders ──────────────────────────────────
     // Server mode: data comes from API, pagination is manual (manualPagination: true)
@@ -329,7 +329,7 @@ const Table = ({
                                             navigate(row.original._rowNavigateUrl)
                                         }}
                                     >
-                                        {row.getVisibleCells().map(cell => {
+                                        {row?.getVisibleCells()?.map(cell => {
                                             const colMeta = cell.column.columnDef.meta || {}
                                             const cellStyle = row.original._cellStyle?.[cell.column.id] || {}
                                             return (
@@ -337,7 +337,10 @@ const Table = ({
                                                     key={cell.id}
                                                     className={`${colMeta.className || ''} ${row.getIsSelected() ? 'selected-td' : ''}`}
                                                     style={{ ...colMeta.style, ...cellStyle }}
-                                                    onClick={(e) => cell.column.id === 'select' && e.stopPropagation()}
+                                                    onClick={(e) => {
+                                                        if (cell.column.id === 'select') e.stopPropagation()
+                                                        if (colMeta.disableRowClick) e.stopPropagation()
+                                                    }}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </td>
