@@ -10,7 +10,7 @@ export const buildCustomerPGStretcher = (products = []) => {
     // Group vessels by order prefix (A, B, C, etc.)
     const vesselGroups = {};
     vessels.forEach(vessel => {
-        const prefix = vessel.order_id.charAt(0);
+        const prefix = vessel.order_id?.charAt(0);
         if (!vesselGroups[prefix]) {
             vesselGroups[prefix] = [];
         }

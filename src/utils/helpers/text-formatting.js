@@ -3,7 +3,7 @@ export const toStandardText = (text = "") => {
         .toLowerCase()                // approval_pending
         .split("_")                   // ["approval", "pending"]
         .map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
+            word?.charAt(0).toUpperCase() + word.slice(1)
         )                             // ["Approval", "Pending"]
         .join(" ");                   // "Approval Pending"
 };
