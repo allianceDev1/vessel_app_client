@@ -22,6 +22,7 @@ const ResourceStretcher = React.lazy(() => import('../pages/controller/form-reso
 const ServiceCategory = React.lazy(() => import('../pages/controller/service-category/ServiceCategory'))
 const UpcomingServices = React.lazy(() => import('../pages/controller/upcoming/UpcomingServices'))
 const RegisteredService = React.lazy(() => import('../pages/controller/registered/RegisteredService'))
+const RegisteredView = React.lazy(() => import('../pages/controller/registered/RegisteredView'))
 
 
 
@@ -67,6 +68,7 @@ const Controller = () => {
 
                     {/* Registered */}
                     <Route path='/registered' element={<PrivateRoute element={<RegisteredService />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/registered/:reg_no' element={<PrivateRoute element={<RegisteredView />} isAuthenticated={isAuthenticated} />} />
 
 
 

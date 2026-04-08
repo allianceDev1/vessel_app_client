@@ -1,0 +1,63 @@
+@use '../../../../assets//scss/mixins/mixin.scss' as *;
+
+
+.registration-info-container {
+    margin-bottom: 20px;
+
+    .sub-title {
+        @include subTitleMedium();
+    }
+
+    .reg-content {
+        .list {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+
+            .item {
+                background-color: var(--color-natural-trans-53);
+                padding: 10px 15px;
+                border-radius: 10px;
+
+                .label {
+                    font-size: 13px;
+                    color: var((--text-secondary-2));
+                }
+
+                div {
+                    margin-top: 5px;
+
+                    .text-value {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .span-item {
+                grid-column: span 2;
+            }
+        }
+    }
+
+    @media screen and (max-width:1000px) {
+        .reg-content {
+            .list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    }
+
+    @media screen and (max-width:500px) {
+        .reg-content {
+            .list {
+                grid-template-columns: 1fr;
+
+                .span-item {
+                    grid-column: span 1;
+                }
+            }
+        }
+    }
+}

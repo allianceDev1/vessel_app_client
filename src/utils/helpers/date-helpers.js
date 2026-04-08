@@ -44,6 +44,49 @@ export const getIsoDayDifference = (iso1, iso2) => {
     return diff || 0;
 };
 
+export const getTimeDiff = (startISO, endISO, options = {}) => {
+    const { includeSeconds = false } = options;
+
+    const start = new Date(startISO);
+    const end = new Date(endISO);
+
+    // validation
+    if (isNaN(start) || isNaN(end)) {
+        throw new Error('Invalid ISO date provided');
+    }
+
+    const diffMs = end - start;
+    const absDiff = Math.abs(diffMs);
+
+    const totalSeconds = Math.floor(absDiff / 1000);
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const totalDays = Math.floor(totalHours / 24);
+
+    // breakdown (important 🔥)
+    const days = totalDays;
+    const hours = totalHours % 24;
+    const minutes = totalMinutes % 60;
+    const seconds = totalSeconds % 60;
+
+    const result = {
+        days,
+        hours,
+        minutes,
+        totalDays,
+        totalHours,
+        totalMinutes,
+        isNegative: diffMs < 0
+    };
+
+    if (includeSeconds) {
+        result.seconds = seconds;
+        result.totalSeconds = totalSeconds;
+    }
+
+    return result;
+};
+
 export const formatRelativeIsoDate = (isoDate) => {
 
     if (!isoDate) return null;

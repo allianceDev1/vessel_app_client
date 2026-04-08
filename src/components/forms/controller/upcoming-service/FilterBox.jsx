@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import moment from 'moment';
 import Select from '../../../UI_Primitives/inputs/Select'
 import Button from '../../../UI_Primitives/buttons/Button'
@@ -115,11 +115,13 @@ const FilterBox = () => {
 
       {(!cityLoading || !packageLoading) && (!cityError || !packageError) &&
         <form action="" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleSubmit}>
-          <InputText label={'From Date'} name={'from_date'} type='date' value={form.from_date} onChange={handleChange}
-            max={form.end_date} required />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <InputText label={'From Date'} name={'from_date'} type='date' value={form.from_date} onChange={handleChange}
+              max={form.end_date} required />
 
-          <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
-            min={form.from_date} required />
+            <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
+              min={form.from_date} required />
+          </div>
 
           <Select label={'City'} name={'city_id'} options={[{ label: '', value: '' }, ...(cityList || [])?.map((city) => ({ label: city.city_name, value: city.city_id }))]}
             value={form.city_id} onChange={handleChange} />

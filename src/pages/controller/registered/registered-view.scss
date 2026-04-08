@@ -1,0 +1,71 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.service-registered-view-page-container {
+    margin-bottom: 40px;
+    margin-top: 20px;
+
+    .top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+
+        .left-section {
+            h3 {
+                font-weight: 600;
+                font-size: 20px;
+                @include threeDots();
+            }
+
+            p {
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--text-secondary-2);
+                margin-top: 3px;
+                @include threeDots();
+            }
+        }
+
+        .right-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: nowrap;
+            justify-content: flex-end;
+        }
+
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 25px;
+
+        .section-one {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+    }
+
+
+    @media screen and (max-width:750px) {
+        .top-section {
+            flex-direction: column;
+
+            .left-section {
+                text-align: center;
+            }
+
+            .right-section {
+                margin-top: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        .content {
+            grid-template-columns: 1fr;
+        }
+    }
+}

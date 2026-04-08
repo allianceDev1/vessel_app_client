@@ -42,3 +42,19 @@ export const SERVICE_PRIORITY = {
 export const SERVICE_PRIORITY_TEXT = Object.fromEntries(
     Object.entries(SERVICE_PRIORITY).map(([key, value]) => [value, toStandardText(key)])
 );
+
+export const SERVICE_REG_STATUS_LIST = [
+    { key: 1, label: "Registered", bg: "rgba(107, 114, 128, 0.12)", text: "#6B7280", border: "rgba(107, 114, 128, 0.25)" },
+    { key: 2, label: "Proceed", bg: "rgba(37, 99, 235, 0.12)", text: "#2563EB", border: "rgba(37, 99, 235, 0.25)" },
+    { key: 3, label: "Scheduled", bg: "rgba(124, 58, 237, 0.12)", text: "#7C3AED", border: "rgba(124, 58, 237, 0.25)" },
+    { key: 4, label: "On Visit", bg: "rgba(234, 88, 12, 0.12)", text: "#EA580C", border: "rgba(234, 88, 12, 0.25)" },
+    { key: 5, label: "Closed", bg: "rgba(22, 163, 74, 0.12)", text: "#16A34A", border: "rgba(22, 163, 74, 0.25)" },
+    { key: 6, label: "Cancelled", bg: "rgba(220, 38, 38, 0.12)", text: "#DC2626", border: "rgba(220, 38, 38, 0.25)" }
+]
+
+export const SERVICE_VISIT_STATUS_LIST = [
+    { key: 1, label: "Travel", bg: "rgba(37, 99, 235, 0.12)", text: "#2563EB", border: "rgba(37, 99, 235, 0.25)" },
+    { key: 2, label: "In Service", bg: "rgba(124, 58, 237, 0.12)", text: "#7C3AED", border: "rgba(124, 58, 237, 0.25)" },
+    { key: 3, label: "Completed", bg: "rgba(22, 163, 74, 0.12)", text: "#16A34A", border: "rgba(22, 163, 74, 0.25)" },
+    { key: 4, label: "Cancelled", bg: "rgba(220, 38, 38, 0.12)", text: "#DC2626", border: "rgba(220, 38, 38, 0.25)" }
+]
