@@ -15,17 +15,17 @@ const BillReview = ({ bill, setOpenedBill }) => {
     const clickCheckBox = (itemUUID, isDisabled) => {
         if (isDisabled) return;
 
-        const isIncluded = review?.zero_free_items?.includes(itemUUID)
+        const isIncluded = review?.zero_fee_items?.includes(itemUUID)
 
         if (isIncluded) {
             dispatch(sfActions.updateReview({
                 ...review,
-                zero_free_items: review?.zero_free_items?.filter(i => i !== itemUUID)
+                zero_fee_items: review?.zero_fee_items?.filter(i => i !== itemUUID)
             }))
         } else {
             dispatch(sfActions.updateReview({
                 ...review,
-                zero_free_items: [...(review?.zero_free_items || []), itemUUID]
+                zero_fee_items: [...(review?.zero_fee_items || []), itemUUID]
             }))
         }
     }
@@ -58,7 +58,7 @@ const BillReview = ({ bill, setOpenedBill }) => {
 
                             return <div className="item" key={item?.uuid} onClick={() => clickCheckBox(item?.uuid, isDisabled)}>
                                 <div className="checkbox-section">
-                                    <div className={`item-checkbox ${!review?.zero_free_items?.includes(item?.uuid) ? "checked" : ''} ${isDisabled ? 'disabled' : ''}`} >
+                                    <div className={`item-checkbox ${!review?.zero_fee_items?.includes(item?.uuid) ? "checked" : ''} ${isDisabled ? 'disabled' : ''}`} >
                                         <TbCheck />
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@ const BillReview = ({ bill, setOpenedBill }) => {
                 })}
 
                 <div className="grand-total">
-                    <h3>Grand Total : ₹{calculateBillTotalAmount(bill?.items, review?.zero_free_items || [])}</h3>
+                    <h3>Grand Total : ₹{calculateBillTotalAmount(bill?.items, review?.zero_fee_items || [])}</h3>
                 </div>
 
             </div>

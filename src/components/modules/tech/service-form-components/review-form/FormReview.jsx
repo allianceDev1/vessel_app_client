@@ -109,7 +109,7 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
                             </div>
                             <div className="s-2">
                                 <p>Bill Amount</p>
-                                <h3>₹{calculateBillTotalAmount(bill?.items, review?.zero_free_items || [])}</h3>
+                                <h3>₹{calculateBillTotalAmount(bill?.items, review?.zero_fee_items || [])}</h3>
                             </div>
                         </div>
                     ))}

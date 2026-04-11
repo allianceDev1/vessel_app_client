@@ -11,7 +11,7 @@ const BillSummery = ({ expand = true }) => {
     useEffect(() => {
         const summery = calculateBillsSummery(
             review?.bills ?? [], 
-            review?.zero_free_items ?? [],
+            review?.zero_fee_items ?? [],
             payment?.complement_amount ?? 0
         )
         setBillSummery(summery)

@@ -95,7 +95,7 @@ const Payment = ({ page }) => {
     useEffect(() => {
         const summery = calculateBillsSummery(
             review?.bills ?? [],
-            review?.zero_free_items ?? [],
+            review?.zero_fee_items ?? [],
             payment?.complement_amount ?? 0
         )
 
@@ -170,14 +170,14 @@ const Payment = ({ page }) => {
             </div> : ""}
 
             {/* Advance Amount */}
-            {!review?.is_ready_to_pay &&
+            {(!review?.is_ready_to_pay && grandTotal > 0) &&
                 <Message type={'info'}
                     head={'Payment Not Enabled'}
                     message={'The current service is not closed yet, so payment collection is not allowed. Payment can be collected only after the work is closed. However, you may collect an advance payment if required.'}
                     style={{ marginTop: '10px' }}
                 />}
 
-            {!review?.is_ready_to_pay &&
+            {(!review?.is_ready_to_pay && grandTotal > 0) &&
                 <div className="advance-amount-container">
                     <h3 className='sub-title'>Advance Amount</h3>
                     <p className='info-note'>

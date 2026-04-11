@@ -58,7 +58,7 @@ const SubmitForm = ({ modalId }) => {
 
             const summery = calculateBillsSummery(
                 review?.bills ?? [],
-                review?.zero_free_items ?? [],
+                review?.zero_fee_items ?? [],
                 payment?.complement_amount ?? 0
             )
             const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
@@ -79,7 +79,7 @@ const SubmitForm = ({ modalId }) => {
                 promise_reason: payment?.balance_payment_reason,
                 paid_amount: enteredAmount,
                 paid_from_compliment: payment?.complement_amount,
-                zero_free_items: review?.zero_free_items
+                zero_fee_items: review?.zero_fee_items
             }
 
             const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {

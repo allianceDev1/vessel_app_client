@@ -115,7 +115,7 @@ const RegistrationInfo = ({ data }) => {
 
             {/* This is a temp visit info setup. this update feature versions. */}
             {data?.last_visit?.visit_status && <div className="registration-info-container">
-                <h3 className='sub-title'>Visit Info</h3>
+                <h3 className='sub-title'>Last Visit Info</h3>
                 <div className="reg-content">
                     <div className="list">
                         {data?.last_visit?.pickup_work_at && <div className="item">
