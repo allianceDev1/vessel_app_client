@@ -23,6 +23,9 @@ const ServiceCategory = React.lazy(() => import('../pages/controller/service-cat
 const UpcomingServices = React.lazy(() => import('../pages/controller/upcoming/UpcomingServices'))
 const RegisteredService = React.lazy(() => import('../pages/controller/registered/RegisteredService'))
 const RegisteredView = React.lazy(() => import('../pages/controller/registered/RegisteredView'))
+const CompletedService = React.lazy(() => import('../pages/controller/completed/CompletedServices'))
+
+
 
 
 
@@ -70,6 +73,9 @@ const Controller = () => {
                     <Route path='/registered' element={<PrivateRoute element={<RegisteredService />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/registered/:reg_no' element={<PrivateRoute element={<RegisteredView />} isAuthenticated={isAuthenticated} />} />
 
+
+                    {/* Completed */}
+                    <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
 
 
                     {/* App Config */}

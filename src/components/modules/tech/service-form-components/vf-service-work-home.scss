@@ -59,6 +59,13 @@
             @include subTitleSmall();
         }
 
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+
         .buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;

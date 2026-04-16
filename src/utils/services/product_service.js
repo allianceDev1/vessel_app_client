@@ -80,9 +80,9 @@ export const setupAvailableServiceCategories = (categories, product, productElig
                 if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
                     disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                } else if (regData?.service_type !== 'COMPLAINT') {
-                    is_disable = true
-                    disable_reason = "It is not complaint registration."
+                // } else if (regData?.service_type !== 'COMPLAINT') {
+                //     is_disable = true
+                //     disable_reason = "It is not complaint registration."
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
@@ -146,9 +146,9 @@ export const setupAddOnServiceCategories = (categories, regData, productEligibil
                 if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
                     disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                } else if (regData?.service_type !== 'COMPLAINT') {
-                    is_disable = true
-                    disable_reason = "It is not complaint registration."
+                // } else if (regData?.service_type !== 'COMPLAINT') {
+                //     is_disable = true
+                //     disable_reason = "It is not complaint registration."
                 }
                 break;
 

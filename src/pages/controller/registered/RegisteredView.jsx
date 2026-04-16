@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './registered-view.scss'
 import { useDispatch } from 'react-redux';
-import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import RegistrationInfo from '../../../components/modules/controller/registered-service/RegistrationInfo';
 // import VisitInfo from '../../../components/modules/controller/registered-service/VisitInfo';
@@ -14,11 +14,52 @@ import { getTimeDiff } from '../../../utils/helpers/date-helpers';
 import { api } from '../../../api';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
+import AddCallLog from '../../../components/forms/common/add-call-log/AddCallLog';
+import EditRegistration from '../../../components/forms/controller/registration/EditRegistration';
+import RescheduleService from '../../../components/forms/tech/schedule-service/RescheduleService';
+import UnscheduleService from '../../../components/forms/tech/schedule-service/UnscheduleService';
+import CancelRegistration from '../../../components/forms/controller/registration/CancelRegistration';
 
 const RegisteredView = () => {
   const dispatch = useDispatch();
   const { reg_no } = useParams();
   const [actionOptions, setActionOptions] = useState([])
+
+
+  const openEnterCallLogPopUp = ({ customer_id }) => {
+    dispatch(modal.push({
+      show: true, title: "Enter Call Log",
+      body: <AddCallLog customerId={customer_id} isController={true} />
+    }))
+  }
+
+  const openEditRegistrationPopUp = ({ reg_no }) => {
+    dispatch(modal.push({
+      show: true, title: "Edit Registration",
+      body: <EditRegistration regNo={reg_no} initialData={data} />
+    }))
+  }
+
+  const openReschedulePopUp = ({ registrationId }) => {
+    dispatch(modal.push({
+      title: 'Reschedule Service',
+      body: <RescheduleService registrationId={registrationId} isController={true} />
+    }))
+  }
+
+  const openUnschedulePopUp = ({ registrationId }) => {
+    dispatch(modal.push({
+      title: 'Unschedule Service',
+      body: <UnscheduleService registrationId={registrationId} isController={true} />
+    }))
+  }
+
+  const openCancelRegistrationPopUp = ({ registrationId }) => {
+    dispatch(modal.push({
+      title: 'Cancel Registration',
+      body: <CancelRegistration registrationId={registrationId} />
+    }))
+  }
 
 
   const { data, isLoading, error } = useQuery({
@@ -60,24 +101,26 @@ const RegisteredView = () => {
 
     if ([1, 2, 3, 4].includes(data?.status?.status)) {
       actions[0].items.push(
-        { icon: <TbMessage2Plus />, label: 'Add Call Log', value: 'techBase' },
-        { icon: <TbPencil />, label: 'Edit Registration', value: 'cityBase' },
+        { icon: <TbMessage2Plus />, label: 'Add Call Log', onClick: () => openEnterCallLogPopUp({ customer_id: data?.customer?.customer_id }) },
+        { icon: <TbPencil />, label: 'Edit Registration', onClick: () => openEditRegistrationPopUp({ reg_no }) },
       )
     }
 
     if (data?.status?.status === 3) {
-      actions[0].items.push({ icon: <TbCalendarUp />, label: 'Reschedule', value: 'pinBase' })
-      actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', value: 'pinBase' })
+      actions[0].items.push({ icon: <TbCalendarUp />, label: 'Reschedule', onClick: () => openReschedulePopUp({ registrationId: reg_no }) })
+      actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', onClick: () => openUnschedulePopUp({ registrationId: reg_no }) })
     }
 
-    if ([1, 2, 3, 4].includes(data?.status?.status)) {
+    if ([1, 2, 3].includes(data?.status?.status)) {
       actions[1].items.push(
-        { icon: <TbX />, label: 'Registration', value: 'postBase', theme: 'danger', },
+        { icon: <TbX />, label: 'Registration', theme: 'danger', onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) },
         { icon: <TbExposurePlus1 />, label: 'Service Index', value: 'postBase', theme: 'danger', }
       )
     }
 
     setActionOptions(actions)
+
+    // eslint-disable-next-line
   }, [data])
 
 
@@ -106,8 +149,8 @@ const RegisteredView = () => {
     <div className="service-registered-view-page-container">
       <div className="top-section">
         <div className="left-section">
-          <h3>Customer Name (Customer Id)</h3>
-          <p>Address</p>
+          <h3>{data?.customer?.customer_name} (CID : {data?.customer?.customer_id})</h3>
+          <p>{data?.customer?.address?.address} House, {data?.customer?.address?.place}, P.O {data?.customer?.address?.post}</p>
         </div>
         <div className="right-section">
           <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }} />

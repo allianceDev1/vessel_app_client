@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './vf-service-categories.scss'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { TbPlayerSkipForwardFilled } from 'react-icons/tb'
 import { setupAvailableServiceCategories } from '../../../../utils/services/product_service'
@@ -10,6 +10,7 @@ import { calculateTaxAmount, toDecimal } from '../../../../utils/helpers/math-eq
 
 const VfServiceCategories = ({ categories, product, productEligibility, regData, changeSubmitStatus }) => {
     const dispatch = useDispatch();
+    const { serviceForm } = useSelector((state) => state.application)
     const [serviceCategories, setServiceCategories] = useState([])
 
     const skipPage = () => {
@@ -25,7 +26,12 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData,
             service_data: {
                 service_id: category?.service_id || null,
                 category_id: category?.category_id,
-                mode: category?.mode
+                mode: category?.mode,
+                repeat: {
+                    system_say: serviceForm?.repeat?.system_say || false,
+                    tech_say: serviceForm?.repeat?.tech_say || false,
+                    comment: null
+                }
             }
         }
 

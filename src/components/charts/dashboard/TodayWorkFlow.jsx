@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine, BarStack } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from "recharts";
 import { chartLabelColors } from "../../../assets/javascript/pre_data/chart";
 
 const TECHNICIANS = [
-    { worker_uuid: 1, worker_name: "James Carter", color: chartLabelColors[0], },
-    { worker_uuid: 2, worker_name: "Maria Santos", color: chartLabelColors[1] },
-    { worker_uuid: 3, worker_name: "David Kim", color: chartLabelColors[2] },
-    { worker_uuid: 4, worker_name: "Rachel Torres", color: chartLabelColors[3] },
-    { worker_uuid: 5, worker_name: "John Doe ", color: chartLabelColors[4] },
+    { worker_uuid: 1, worker_name: "James Carter", color: chartLabelColors[0], attendance_status: 'IN', status_color: 'green' },
+    { worker_uuid: 2, worker_name: "Maria Santos", color: chartLabelColors[1], attendance_status: 'OUT', status_color: 'red' },
+    { worker_uuid: 3, worker_name: "David Kim", color: chartLabelColors[2], attendance_status: 'LEAVE', status_color: 'red' },
+    { worker_uuid: 4, worker_name: "Rachel Torres", color: chartLabelColors[3], attendance_status: 'PENDING', status_color: 'yellow' },
+    { worker_uuid: 5, worker_name: "John Doe ", color: chartLabelColors[4], attendance_status: 'IN', status_color: 'green' },
 ];
 
 const now = new Date().getHours() + Number((new Date().getMinutes() / 60).toFixed(2));
@@ -271,9 +271,18 @@ const CustomYAxisTick = ({ x, y, payload }) => {
 
     return (
         <g transform={`translate(${x},${y})`}>
-            <text x={-114} y={4} textAnchor="start" fontSize={12} fill="var(--text-secondary-1)" fontWeight={500} fontFamily="sans-serif">
+            <text x={-114} y={tech?.attendance_status ? -4 : 4} textAnchor="start" fontSize={12} fill="var(--text-secondary-1)" fontWeight={500} fontFamily="sans-serif">
                 {tech.worker_name}
             </text>
+            {tech?.attendance_status && (
+                <text
+                    x={-114} y={10}
+                    textAnchor="start" fontSize={10}
+                    fill={tech.status_color} fontWeight={500} fontFamily="sans-serif"
+                >
+                    {tech?.attendance_status}
+                </text>
+            )}
         </g>
     );
 };

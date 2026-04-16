@@ -46,7 +46,7 @@ const InputPhoneNumber = ({
     };
 
     return (
-        <div className={`ui-input-phone-number-container ${size} ${error ? 'error' : ''} ${value || isFocused ? 'active' : ''}`}>
+        <div className={`ui-input-phone-number-container ${size} ${error ? 'error' : ''} ${value || isFocused ? 'active' : ''} ${isFocused ? 'focus' : ''}`}>
             <PhoneInput
                 inputProps={{
                     name,

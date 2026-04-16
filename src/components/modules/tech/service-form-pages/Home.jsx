@@ -330,20 +330,6 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                             onChange={handleChangeForm} type='number' step={0.1} min={0} />
                     </div>
 
-                    {/* Repeat */}
-                    {serviceForm?.repeat?.system_say && <>
-                        <h3 style={{ marginTop: '20px' }}>Repeat Work</h3>
-                        <div className="form-section">
-                            <Radio label={"It is repeat work"} name={'repeat_status'} radioValue={'Yes'} onChange={handleChangeRepeat}
-                                checked={serviceForm?.repeat?.tech_say} required />
-                            <Radio label={"Not repeat work"} name={'repeat_status'} radioValue={'No'} onChange={handleChangeRepeat}
-                                checked={!serviceForm?.repeat?.tech_say} required />
-
-                            {!serviceForm?.repeat?.tech_say && <InputText label={'Comments'} id={'comment'} name={'repeat_comment'} value={serviceForm?.repeat?.comment}
-                                onChange={handleChangeRepeat} required />}
-                        </div>
-                    </>}
-
                     {/* Work Status */}
                     <h3 style={{ marginTop: '20px' }}>Work Status</h3>
                     <div className="form-section">

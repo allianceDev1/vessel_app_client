@@ -6,12 +6,14 @@ import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useNavigate } from 'react-router-dom'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { useQueryClient } from '@tanstack/react-query'
 
-const RescheduleService = ({ registrationId }) => {
+const RescheduleService = ({ registrationId, isController = false }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState('')
   const [form, setForm] = useState({ date: null, fromTime: null, endTime: null, reason: null })
+  const queryClient = useQueryClient()
 
 
   const handleSubmit = async (e) => {
@@ -23,20 +25,40 @@ const RescheduleService = ({ registrationId }) => {
     try {
       setLoading('submit')
 
-      await api.vfTv2Axios.patch(`/registered-service/${registrationId}/reschedule`, {
-        schedule_slot_start_at: startTime,
-        schedule_slot_finish_at: endTime,
-        reason: form?.reason
-      })
+      if (isController) {
 
-      dispatch(modal.pull.all())
+        await api.vfCv2Axios.patch(`/service-registration/${registrationId}/reschedule`, {
+          schedule_slot_start_at: startTime,
+          schedule_slot_finish_at: endTime,
+          reason: form?.reason
+        })
 
-      dispatch(toast.push({
-        type: 'success',
-        head: 'Your work rescheduled'
-      }))
+        dispatch(toast.push({
+          type: 'success',
+          head: 'Work rescheduled'
+        }))
 
-      navigate('/tech/schedules')
+        queryClient.invalidateQueries({
+          queryKey: ['registration_info_controller', registrationId]
+        })
+
+        dispatch(modal.pull.all())
+
+      } else {
+        await api.vfTv2Axios.patch(`/registered-service/${registrationId}/reschedule`, {
+          schedule_slot_start_at: startTime,
+          schedule_slot_finish_at: endTime,
+          reason: form?.reason
+        })
+
+        dispatch(toast.push({
+          type: 'success',
+          head: 'Your work rescheduled'
+        }))
+
+        dispatch(modal.pull.all())
+        navigate('/tech/schedules')
+      }
 
     } catch (error) {
       dispatch(toast.push({

@@ -25,6 +25,10 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            <div className="text-mark">
+                <h1>Track, monitor, decide —</h1>
+                <h2>Purity is our flag.</h2>
+            </div>
         </div>
     )
 }

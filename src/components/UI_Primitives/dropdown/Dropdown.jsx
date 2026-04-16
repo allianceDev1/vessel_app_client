@@ -80,7 +80,7 @@ const Dropdown = ({ button, list, selected = null }) => {
             style={{ top: `${position.y}px`, left: `${position.x}px`, position: 'absolute', zIndex: 1000 }}
             ref={menuRef}
         >
-            {list?.map((section, sectionIndex) => (
+            {list?.map((section, sectionIndex) => section.items?.length ? (
                 <div key={sectionIndex} className="dropdown-section">
                     {section.heading && (
                         <>
@@ -104,7 +104,7 @@ const Dropdown = ({ button, list, selected = null }) => {
                         )
                     )}
                 </div>
-            ))}
+            ) : '')}
         </div>
     ) : null
 

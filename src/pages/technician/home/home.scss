@@ -1,0 +1,100 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-home-page-container {
+    margin-top: 25px;
+    margin-bottom: 40px;
+
+    .sub-title {
+        margin-bottom: 10px;
+
+        h3 {
+            @include subTitleSmall();
+        }
+    }
+
+    .my-works-report {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+
+        .report-work-item {
+            background-color: var(--color-warning-trans-33);
+            padding: 20px 15px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            p {
+                font-size: 14px;
+                @include threeDots(2);
+            }
+
+            h2 {
+                font-size: 30px;
+                color: var(--color-warning-text)
+            }
+
+            svg {
+                position: absolute;
+                left: -30px;
+                top: -70px;
+                font-size: 160px;
+                color: var(--color-warning-text);
+                opacity: .1;
+            }
+        }
+    }
+
+    .my-service-report {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+
+        .report-status-item {
+            background-color: var(--color-primary-trans-33);
+            padding: 15px 15px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+
+            h2 {
+                font-size: 30px;
+                color: var(--color-primary-text)
+            }
+
+            .title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+
+                div {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+            }
+
+            p {
+                font-size: 14px;
+                @include threeDots();
+            }
+
+            >svg {
+                position: absolute;
+                left: -30px;
+                top: -70px;
+                font-size: 160px;
+                color: var(--color-primary-text);
+                opacity: .1;
+            }
+
+
+        }
+    }
+}

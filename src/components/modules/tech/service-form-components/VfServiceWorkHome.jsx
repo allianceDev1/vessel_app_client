@@ -6,6 +6,7 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { doDialog, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import Radio from '../../../UI_Primitives/inputs/Radio'
 
 const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
   const dispatch = useDispatch();
@@ -65,6 +66,37 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
       message: 'Are you sure to reset work category?',
       accept: { onClick: () => resetAction() }
     }))
+  }
+
+  const handleChangeRepeat = (e) => {
+    const { name, value } = e.target;
+
+    changeSubmitStatus(false)
+
+    if (name === 'repeat_status') {
+      dispatch(sfActions.updateProduct({
+        service_data: {
+          repeat: {
+            ...(productInForm?.service_data?.repeat || {}),
+            tech_say: value === 'Yes',
+            comment: ''
+          }
+        }
+      }))
+
+      return;
+    }
+
+    if (name === 'repeat_comment') {
+      dispatch(sfActions.updateProduct({
+        service_data: {
+          repeat: {
+            ...(productInForm?.service_data?.repeat || {}),
+            comment: e.target.value || ""
+          }
+        }
+      }))
+    }
   }
 
   const handleSubmit = (e) => {
@@ -184,6 +216,21 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         {category?.service_charges?.[0]?.charge_amount !== productInForm?.service_data?.service_charge?.estimate &&
           <InputText label={'Extra Charge Reason'} name={'remark'} value={productInForm?.service_data?.service_charge?.remark}
             onChange={handelChangeServiceCharge} required />}
+
+
+        {/* Repeat */}
+        {serviceForm?.repeat?.system_say && <>
+          <h4 style={{ marginTop: '15px' }}>Repeat Work</h4>
+          <div className='form-section'>
+            <Radio label={"It is repeat work"} name={'repeat_status'} radioValue={'Yes'} onChange={handleChangeRepeat}
+              checked={productInForm?.service_data?.repeat?.tech_say} required />
+            <Radio label={"Not repeat work"} name={'repeat_status'} radioValue={'No'} onChange={handleChangeRepeat}
+              checked={!productInForm?.service_data?.repeat?.tech_say} required />
+          </div>
+
+          {!productInForm?.service_data?.repeat?.tech_say && <InputText label={'Comments'} id={'comment'} name={'repeat_comment'}
+            value={productInForm?.service_data?.repeat?.comment} onChange={handleChangeRepeat} required />}
+        </>}
 
         <div className="buttons">
           <Button type='button' label={'Reset Work'} rounded severity={'danger'} onClick={resetWorkCategory} />

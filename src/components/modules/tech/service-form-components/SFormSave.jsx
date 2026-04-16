@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './s-form-save.scss'
-import Message from '../../../UI_Primitives/message/Message'
 import { useDispatch, useSelector } from 'react-redux'
-import Button from '../../../UI_Primitives/buttons/Button'
 import { api } from '../../../../api'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import Message from '../../../UI_Primitives/message/Message'
+import Button from '../../../UI_Primitives/buttons/Button'
 
 
 const SFormSave = ({ modalId }) => {
@@ -64,11 +64,6 @@ const SFormSave = ({ modalId }) => {
                     service_charge_estimate: value?.service_charge?.list_price || 0
                 }
             }),
-            repeat: {
-                system_say: serviceForm?.repeat?.system_say || false,
-                tech_say: serviceForm?.repeat?.tech_say || false,
-                comment: serviceForm?.repeat?.comment || null
-            },
             work_status: {
                 closed: serviceForm?.work_status?.closed || false,
                 schedule_date: serviceForm?.work_status?.schedule_date || null,
@@ -101,7 +96,12 @@ const SFormSave = ({ modalId }) => {
                         renewed_package: value?.service_data?.renewed_package?.is_renewed ? {
                             is_renewed: true,
                             package_id: value?.service_data?.renewed_package?.package_id
-                        } : null
+                        } : null,
+                        repeat: {
+                            system_say: value?.service_data?.repeat?.system_say || false,
+                            tech_say: value?.service_data?.repeat?.tech_say || false,
+                            comment: value?.service_data?.repeat?.comment || null
+                        }
                     },
                     work: {
                         service_list: (value?.work?.services_list || [])?.map(s => ({
@@ -143,7 +143,12 @@ const SFormSave = ({ modalId }) => {
                         is_skipped: !value?.service_data?.category_id || false,
                         category_id: value?.service_data?.category_id || null,
                         mode: value?.service_data?.mode || null,
-                        service_charge_estimate: value?.service_data?.service_charge?.estimate || null
+                        service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
+                        repeat: {
+                            system_say: value?.service_data?.repeat?.system_say || false,
+                            tech_say: value?.service_data?.repeat?.tech_say || false,
+                            comment: value?.service_data?.repeat?.comment || null
+                        }
                     },
                     work: {
                         service_list: (value?.work?.services_list || [])?.map(s => ({

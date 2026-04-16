@@ -209,6 +209,21 @@
         color: var(--color-natural-6);
     }
 
+    &.focus {
+
+        label {
+            color: var(--color-primary);
+        }
+
+        .react-tel-input {
+
+            .flag-dropdown,
+            .form-control {
+                border-color: var(--color-primary);
+            }
+        }
+    }
+
     &.active {
         label {
             background: none;
@@ -219,14 +234,6 @@
             top: 3px;
             font-size: 12px;
             font-weight: 400;
-        }
-
-        .react-tel-input {
-
-            .flag-dropdown,
-            .form-control {
-                border-color: var(--color-primary);
-            }
         }
     }
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './vf-components-list.scss'
-import InputText from '../../../UI_Primitives/inputs/InputText'
-import Button from '../../../UI_Primitives/buttons/Button'
 import { TbComponents, TbMinus, TbPlus, TbSearch, TbTrash, TbX } from 'react-icons/tb'
-import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch } from 'react-redux'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
+import InputText from '../../../UI_Primitives/inputs/InputText'
+import Button from '../../../UI_Primitives/buttons/Button'
+import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
+
 
 const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, changeSubmitStatus, workMenu, category }) => {
     const dispatch = useDispatch();
@@ -178,7 +179,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
                                 (c) => c?.spare_section === subPage?.id
                             ).length || 0;
 
-                            return <div className={`item ${item?.is_customer_product ? 'blue-box' : ''} ${item?.qty ? 'select-box' : ''}`} key={item?.spare_id}>
+                            return <div className={`item ${item?.is_customer_product ? 'select-box' : ''} ${item?.qty ? 'blue-box' : ''}`} key={item?.spare_id}>
                                 <div className="item-content">
                                     <p className='id'>{item?.spare_id}</p>
                                     <h4>{item?.spare_name}</h4>
@@ -200,7 +201,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
                                             : <Button icon={<TbTrash />} rounded size='small' severity={'danger'} onClick={() => removeSpare(item)}
                                                 disabled={!subPage?.deleteItem || !item?.is_customer_product} />}
 
-                                        <p>{item?.qty || 0} {item?.unit || ''}</p>
+                                        {item?.qty ? <p>{item?.qty || 0} {item?.unit || ''}</p> : ""}
 
                                         <Button icon={<TbPlus />} rounded size='small' severity={'success'} onClick={() => addToSpareList(item)}
                                             disabled={subPage?.max && existedCount >= subPage.max} />

@@ -150,9 +150,9 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
                     <h3 className='subtitle'>Product condition</h3>
                     <div className="box-col1">
                         <Radio label={"Ok, it's normal"} name={'condition'} radioValue={'Good'} onChange={updateProductCondition}
-                            checked={productInForm?.inspection_report?.condition === 'Good'} />
+                            checked={productInForm?.inspection_report?.condition === 'Good'} required />
                         <Radio label={"Not ok, Have a problem"} name={'condition'} radioValue={'Bad'} onChange={updateProductCondition}
-                            checked={productInForm?.inspection_report?.condition === 'Bad'} />
+                            checked={productInForm?.inspection_report?.condition === 'Bad'} required />
                     </div>
                 </div>
 

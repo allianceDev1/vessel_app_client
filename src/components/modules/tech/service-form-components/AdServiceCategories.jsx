@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import './vf-service-categories.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import { TbPlayerSkipForwardFilled } from 'react-icons/tb';
 import { setupAddOnServiceCategories } from '../../../../utils/services/product_service';
 
 const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus, productEligibility }) => {
     const dispatch = useDispatch();
+    const { serviceForm } = useSelector((state) => state.application)
     const [serviceCategories, setServiceCategories] = useState([])
 
     const skipPage = () => {
@@ -22,7 +23,12 @@ const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus,
             service_data: {
                 service_id: category?.service_id || null,
                 category_id: category?.category_id,
-                mode: category?.mode
+                mode: category?.mode,
+                repeat: {
+                    system_say: serviceForm?.repeat?.system_say || false,
+                    tech_say: serviceForm?.repeat?.tech_say || false,
+                    comment: null
+                }
             }
         }
 

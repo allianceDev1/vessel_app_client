@@ -1,6 +1,6 @@
 .controller-dashboard-page-container {
     margin-bottom: 40px;
-    margin-top: 20px;
+    margin-top: 40px;
 
     .reports {
         margin-top: 15px;
@@ -36,10 +36,6 @@
             grid-column: span 12;
             order: 1;
         }
-
-
-
-
     }
 
     .last-update {
@@ -49,13 +45,38 @@
         margin-top: 10px;
     }
 
+    .text-mark {
+        padding: 50px 10px;
+        margin-top: 50px;
 
-    // @media screen and (max-width:1050px) {
-    //     .reports {
+        h1 {
+            font-size: 40px;
+            font-weight: 600;
+        }
 
-    //     }
+        h2 {
+            font-size: 30px;
+            font-weight: 500;
+        }
 
-    // }
+
+    }
+
+
+    @media screen and (max-width:500px) {
+        .text-mark {
+            h1 {
+                font-size: 25px;
+                font-weight: 600;
+            }
+
+            h2 {
+                font-size: 18px;
+                font-weight: 500;
+            }
+        }
+
+    }
 
 
 

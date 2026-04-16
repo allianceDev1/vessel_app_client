@@ -7,6 +7,7 @@ import Button from '../../../UI_Primitives/buttons/Button';
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import { doDialog } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import Radio from '../../../UI_Primitives/inputs/Radio';
 
 const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
     const dispatch = useDispatch();
@@ -48,6 +49,37 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         }
 
         dispatch(sfSetting.setActiveSubPage(202))
+    }
+
+    const handleChangeRepeat = (e) => {
+        const { name, value } = e.target;
+
+        changeSubmitStatus(false)
+
+        if (name === 'repeat_status') {
+            dispatch(sfActions.updateProduct({
+                service_data: {
+                    repeat: {
+                        ...(productInForm?.service_data?.repeat || {}),
+                        tech_say: value === 'Yes',
+                        comment: ''
+                    }
+                }
+            }))
+
+            return;
+        }
+
+        if (name === 'repeat_comment') {
+            dispatch(sfActions.updateProduct({
+                service_data: {
+                    repeat: {
+                        ...(productInForm?.service_data?.repeat || {}),
+                        comment: e.target.value || ""
+                    }
+                }
+            }))
+        }
     }
 
     const handelChange = (e) => {
@@ -138,6 +170,21 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
                 <InputText label={'Next Visit Date'} type={'date'} name={'service_date'} value={productInForm?.service_data?.next_service_date}
                     onChange={handleChangeServiceData} helperText={'Set the next visit date if you want to schedule the next service.'}
                     min={isoToYYYYMMDD(new Date())} />
+
+
+                {/* Repeat */}
+                {serviceForm?.repeat?.system_say && <>
+                    <h4 style={{ marginTop: '15px' }}>Repeat Work</h4>
+                    <div className='form-section'>
+                        <Radio label={"It is repeat work"} name={'repeat_status'} radioValue={'Yes'} onChange={handleChangeRepeat}
+                            checked={productInForm?.service_data?.repeat?.tech_say} required />
+                        <Radio label={"Not repeat work"} name={'repeat_status'} radioValue={'No'} onChange={handleChangeRepeat}
+                            checked={!productInForm?.service_data?.repeat?.tech_say} required />
+                    </div>
+
+                    {!productInForm?.service_data?.repeat?.tech_say && <InputText label={'Comments'} id={'comment'} name={'repeat_comment'}
+                        value={productInForm?.service_data?.repeat?.comment} onChange={handleChangeRepeat} required />}
+                </>}
 
                 <div className="buttons">
                     <Button type='button' label={'Reset Work'} rounded severity={'danger'} onClick={resetWorkCategory} />

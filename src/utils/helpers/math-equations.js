@@ -166,6 +166,9 @@ export const calculateBillTotalAmount = (items, zeroFeeItems = []) => {
         return item
     })
 
+    const decimalPart = total % 1;
+    total -= decimalPart;
+
     return total;
 }
 
