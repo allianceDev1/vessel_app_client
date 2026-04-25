@@ -1,0 +1,86 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.customer-product-view-controller-container {
+    position: relative;
+    margin-bottom: 40px;
+
+    .menu-box {
+        margin-top: 20px;
+        padding: 10px 0;
+        position: sticky;
+        top: 0px;
+        z-index: 1;
+        background-color: var(--background);
+        width: 100%;
+        overflow: hidden;
+
+        .slide-menus {
+            display: inline-flex;
+            overflow-y: auto;
+            max-height: 300px;
+            @include scrollBar();
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 30px;
+                cursor: pointer;
+                border-radius: 8px;
+                font-size: 15px;
+                min-width: fit-content;
+
+                svg {
+                    font-size: 21px;
+                }
+
+                &.active {
+                    color: var(--color-primary);
+                    font-weight: 600;
+                    position: relative;
+
+                    &::after {
+                        content: '';
+                        width: 70%;
+                        height: 3px;
+                        position: absolute;
+                        background-color: var(--color-primary-bg);
+                        left: 50%;
+                        bottom: 0;
+                        border-radius: 10px;
+                        transform: translate(-50%, 0%);
+                    }
+                }
+
+                &:hover {
+                    background-color: var(--color-natural-3);
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width:850px) {
+        .top-section {
+            flex-direction: column;
+
+            .title {
+                text-align: center;
+            }
+
+        }
+
+        .contents {
+            .section-one {
+                grid-template-columns: 1fr;
+            }
+
+            .section-two {
+                .item-list {
+                    .item {
+                        grid-template-columns: 1fr 1fr 1fr 35px;
+                    }
+                }
+            }
+        }
+    }
+}

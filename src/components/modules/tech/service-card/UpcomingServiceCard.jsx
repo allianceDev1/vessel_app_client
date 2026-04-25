@@ -55,10 +55,11 @@ const UpcomingServiceCard = ({ data }) => {
                             <p>Renewal date</p>
                             <p>{isoToDDMonYYYY(new Date(data?.expire_date))}</p>
                         </>
-                            : <>
+                            : data?.service_date ? <>
                                 <p>Service date</p>
                                 <p>{isoToDDMonYYYY(new Date(data?.service_date))}</p>
-                            </>}
+                            </>
+                                : <></>}
                 </div>
             </div>
             <div className="s-two">

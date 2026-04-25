@@ -1,0 +1,125 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.service-card-item-container {
+    background-color: var(--color-natural-trans-73);
+    max-width: 400px;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    user-select: none;
+
+    .header {
+        position: relative;
+        padding: 10px 15px 0px 15px;
+
+        .left {
+            h4 {
+                font-size: 17px;
+                font-weight: 500;
+                @include threeDots();
+            }
+
+            p {
+                font-size: 14px;
+                margin-top: 2px;
+            }
+        }
+
+        .right {
+            p {
+                font-size: 13px;
+                text-align: end;
+                color: white !important;
+            }
+        }
+
+        .gradient-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    }
+
+    .middle-content {
+        padding: 5px 10px;
+        // background-color: salmon;
+
+        .middle-border-1 {
+            display: flex;
+            justify-content: space-between;
+            text-align: end;
+
+
+            .left {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+                margin-top: 30px;
+            }
+
+            .right {
+                display: flex;
+                flex-direction: column;
+                align-items: end;
+                gap: 5px;
+
+                p {
+                    font-size: 13px;
+                    font-weight: 500;
+                }
+
+                .badge-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        .middle-border-2 {
+            margin-top: 5px;
+
+            .text {
+                font-size: 13px;
+                font-weight: 500;
+                text-align: justify;
+            }
+        }
+    }
+
+    .footer-content {
+        padding: 10px 10px;
+
+        .footer-border {
+            display: flex;
+            justify-content: space-between;
+            background-color: #58585818;
+            padding: 5px 5px;
+            border-radius: 50px;
+            border: 1px solid #5858586b;
+
+            .right,
+            .left {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+
+                p {
+                    font-size: 13px;
+                    font-weight: 500;
+                }
+            }
+
+            .right {
+                p {
+                    text-align: end;
+                }
+            }
+        }
+    }
+
+
+
+}

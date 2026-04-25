@@ -136,7 +136,7 @@ const ServiceRegistration = ({ customerId, customerName, serviceType, }) => {
             <form action="" onSubmit={handleSubmit}>
                 <div className="info">
                     <h5>Customer ID : {customerId || '____'}</h5>
-                    <h3>{customerName || '______'}</h3>
+                    {customerName && <h3>{customerName}</h3>}
                 </div>
 
                 <Select label={'Service Type'} name={'service_type'} required value={form?.service_type || ''} onChange={handleChange}

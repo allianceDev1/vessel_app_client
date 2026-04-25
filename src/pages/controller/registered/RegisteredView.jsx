@@ -6,8 +6,8 @@ import Button from '../../../components/UI_Primitives/buttons/Button';
 import RegistrationInfo from '../../../components/modules/controller/registered-service/RegistrationInfo';
 // import VisitInfo from '../../../components/modules/controller/registered-service/VisitInfo';
 // import RegistrationRoute from '../../../components/modules/controller/registered-service/RegistrationRoute';
-import { useParams } from 'react-router-dom';
-import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbExposurePlus1, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
+import { useNavigate, useParams } from 'react-router-dom';
+import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbExposurePlus1, TbHomeSearch, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
 import { useQuery } from '@tanstack/react-query';
 import { getTimeDiff } from '../../../utils/helpers/date-helpers';
@@ -22,6 +22,7 @@ import CancelRegistration from '../../../components/forms/controller/registratio
 
 const RegisteredView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { reg_no } = useParams();
   const [actionOptions, setActionOptions] = useState([])
 
@@ -106,6 +107,12 @@ const RegisteredView = () => {
       )
     }
 
+    if ([1, 2, 3].includes(data?.status?.status)) {
+      actions[0].items.push(
+        { icon: <TbHomeSearch />, label: 'To RD', }
+      )
+    }
+
     if (data?.status?.status === 3) {
       actions[0].items.push({ icon: <TbCalendarUp />, label: 'Reschedule', onClick: () => openReschedulePopUp({ registrationId: reg_no }) })
       actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', onClick: () => openUnschedulePopUp({ registrationId: reg_no }) })
@@ -153,7 +160,8 @@ const RegisteredView = () => {
           <p>{data?.customer?.address?.address} House, {data?.customer?.address?.place}, P.O {data?.customer?.address?.post}</p>
         </div>
         <div className="right-section">
-          <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }} />
+          <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
+            onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} />
           <Button label={'Service Job'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }} />
           {[1, 2, 3, 4].includes(data?.status?.status) && <Dropdown button={{
             label: 'Actions', icon: <TbChevronDown />,

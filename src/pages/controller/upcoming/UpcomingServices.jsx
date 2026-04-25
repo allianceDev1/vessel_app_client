@@ -27,8 +27,8 @@ const UpcomingServices = () => {
     const viewTypeOptions = [
         {
             items: [
-                { label: 'Product view', value: 'product', onClick: (arg) => handleChangeViewType(arg.value) },
-                { label: 'Customer view', value: 'customer', onClick: (arg) => handleChangeViewType(arg.value) }
+                { label: 'Customer view', value: 'customer', onClick: (arg) => handleChangeViewType(arg.value) },
+                { label: 'Product view', value: 'product', onClick: (arg) => handleChangeViewType(arg.value) }
             ]
         }
     ];

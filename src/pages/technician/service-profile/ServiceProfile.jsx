@@ -79,7 +79,7 @@ const ServiceProfile = () => {
         dispatch(modal.push({
             title: 'Schedule service',
             body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id}
-                serviceType={service_type === 'renewals' ? 'RENEWAL' : service_type === 'services' ? 'SERVICE' : 'COMPLAINT'} />
+                serviceType={service_type === 'renewals' ? 'RENEWAL' : service_type === 'services' ? 'SERVICE' : service_type === 'overdue' ? 'RENEWAL' : 'COMPLAINT'} />
         }))
     }
 
@@ -151,6 +151,9 @@ const ServiceProfile = () => {
                 }}
             />
             {customer?.note ? <Message message={customer?.note} type={'info'} /> : ''}
+
+            {service_type === 'overdue' ? <Message type={'warning'} head={'Overdue Under Development'}
+                message={'Now you can see the overdue package service works. now you can schedule the service has normal registration for the customer.'} /> : ''}
 
             {regService?.registration_id
                 ? <RegistrationInfo

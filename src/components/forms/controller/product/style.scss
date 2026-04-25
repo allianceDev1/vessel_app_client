@@ -1,0 +1,13 @@
+.add-customer-product-comp-container {
+    form {
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .input-checkbox {
+            margin: 15px 0;
+        }
+    }
+}

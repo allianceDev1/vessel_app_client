@@ -1,0 +1,76 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.controller-customer-products-container {
+    margin-top: 20px;
+
+    .sub-title {
+        @include subTitleMedium();
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 10px;
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background-color: var(--surface);
+            padding: 10px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+
+            .order-section {
+                width: 40px;
+                height: 40px;
+                background-color: var(--surface-2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 100%;
+            }
+
+            .content {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                .x1 {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+
+                    p {
+                        font-size: 13px;
+                        font-weight: 500;
+
+                    }
+
+                    .text-2 {
+                        color: var(--color-primary);
+                    }
+                }
+
+                h3 {
+                    font-size: 18px;
+                    font-weight: 500;
+                    @include threeDots();
+                }
+
+                .x3 {
+                    display: flex;
+                    gap: 5px;
+                }
+            }
+        }
+    }
+
+    @media screen and (max-width:650px) {
+        .product-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+}

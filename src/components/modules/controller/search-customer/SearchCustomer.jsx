@@ -94,7 +94,7 @@ const SearchCustomer = () => {
                 city_id: item?.city_id,
                 "Pin Code": item?.pin_code,
                 _rowStyle: { cursor: 'pointer' },
-                _rowNavigateUrl: `/404`
+                _rowNavigateUrl: `/controller/customer/${item?.cid}/about`
             }
         })
 

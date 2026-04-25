@@ -1,0 +1,59 @@
+.controller-eligibility-customer-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+
+    .container {
+        max-width: 500px;
+        width: 100%;
+
+        .eli-item {
+            background-color: var(--color-natural-trans-53);
+            padding: 10px 15px;
+            border-radius: 10px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 50px auto;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+
+            .icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--color-natural-trans-53);
+
+                svg {
+                    font-size: 20px;
+                    color: var(--color-white);
+                }
+            }
+
+            .content {
+                p {
+                    font-size: 14px;
+                    color: var(--text-secondary-1);
+                }
+            }
+        }
+
+        .success {
+            .icon {
+                background-color: var(--color-success);
+            }
+        }
+
+        .danger {
+            .icon {
+                background-color: var(--color-danger);
+            }
+        }
+
+
+    }
+}

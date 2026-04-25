@@ -1,0 +1,39 @@
+.controller-spares-customer-container {
+    margin-top: 20px;
+
+
+    .menu-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content {
+        margin-top: 20px;
+
+        .list-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+    }
+
+    @media screen and (max-width:1000px) {
+        .content {
+            .list-items {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    }
+
+    @media screen and (max-width:550px) {
+        .content {
+            .list-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+
+}

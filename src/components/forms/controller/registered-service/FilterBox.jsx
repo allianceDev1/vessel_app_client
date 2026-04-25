@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import moment from 'moment';
 import Select from '../../../UI_Primitives/inputs/Select'
 import Button from '../../../UI_Primitives/buttons/Button'
 import ButtonGroup from '../../../UI_Primitives/buttons/ButtonGroup'
@@ -19,11 +18,11 @@ const FilterBox = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const [form, setForm] = useState({
-        from_date: searchParams.get('from_date') || moment().subtract(10, 'days').format('YYYY-MM-DD'),
-        end_date: searchParams.get('end_date') || moment().format('YYYY-MM-DD'),
+        from_date: searchParams.get('from_date') || '',
+        end_date: searchParams.get('end_date') || '',
         id_key: searchParams.get('id_key') || '',
         service_type: searchParams.get('service_type') || '',
-        status: searchParams.get('status')?.split(',')?.map(Number) || [],
+        status: searchParams.get('fl') ? (searchParams.get('status')?.split(',')?.map(Number) || []) : [1, 2, 3, 4],
         city_id: searchParams.get('city_id') || ''
     })
 
@@ -135,10 +134,10 @@ const FilterBox = () => {
 
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <InputText label={'From Date'} name={'from_date'} type='date' value={form.from_date} onChange={handleChange}
-                            max={form.end_date} required={form.service_type || form.city_id} />
+                            max={form.end_date} required={form.service_type || form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
 
                         <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
-                            min={form.from_date} required={form.service_type || form.city_id} />
+                            min={form.from_date} required={form.service_type || form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
                     </div>
 
                     <ButtonGroup style={{ dispatch: "grid", }} rounded>

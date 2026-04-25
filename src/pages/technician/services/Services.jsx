@@ -20,7 +20,7 @@ const Services = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState('fetch')
     const [error, setError] = useState({ error: false, title: null, message: null })
-    const [data, setData] = useState({ complaints: [], services: [], renewals: [], blacklist: [] })
+    const [data, setData] = useState({ complaints: [], services: [], renewals: [], overdue: [] })
     const [filterOptions, setFilterOptions] = useState({})
 
 
@@ -117,10 +117,10 @@ const Services = () => {
     const subPageOptions = [
         {
             items: [
-                { label: 'Complaints', onClick: () => handleChangeTab('Complaints') },
-                { label: 'Services', onClick: () => handleChangeTab('Services') },
-                { label: 'Renewals', onClick: () => handleChangeTab('Renewals') },
-                { label: 'Blacklist', onClick: () => handleChangeTab('Blacklist'), }
+                { label: 'Complaints', value: 'Complaints', onClick: () => handleChangeTab('Complaints') },
+                { label: 'Services', value: 'Services', onClick: () => handleChangeTab('Services') },
+                { label: 'Renewals', value: 'Renewals', onClick: () => handleChangeTab('Renewals') },
+                { label: 'Overdue', value: 'Overdue', onClick: () => handleChangeTab('Overdue'), }
             ]
         }
     ]
@@ -129,21 +129,21 @@ const Services = () => {
         try {
             setLoading('fetch')
             setError({ error: false, title: null, message: null })
-            const { complaints, services, renewals } = await api.vfTv2Axios.get('/service/upcoming-services')
-            const blacklist = []
+            const { complaints, services, renewals, overdue } = await api.vfTv2Axios.get('/service/upcoming-services')
 
-            setData({ complaints, services, renewals, blacklist })
-            setFilterOptions(extractCustomerFieldsInServiceCard([...(complaints || []), ...(services || []), ...(renewals || []), ...(blacklist || [])]))
+
+            setData({ complaints, services, renewals, overdue })
+            setFilterOptions(extractCustomerFieldsInServiceCard([...(complaints || []), ...(services || []), ...(renewals || []), ...(overdue || [])]))
 
         } catch (error) {
-            setError({ error: true, title: 'Data fecting failed', message: error.message })
+            setError({ error: true, title: 'Data fetching failed', message: error.message })
         } finally {
             setLoading('')
         }
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Upcoming services', note: "Complaints, services, renewal and Blacklist" }))
+        dispatch(page.setTitle({ title: 'Upcoming services', note: "Complaints, services, renewal and Overdue" }))
 
         // fetch data
         fetchApi()
@@ -176,12 +176,16 @@ const Services = () => {
         <div className="tech-service-page">
             <div className="top-section">
                 <div className="section-one">
-                    <Dropdown button={{
-                        label: `${searchParams.get('tab') || 'Complaints'} ${finalData.length ? '| ' + finalData.length : ""}`,
-                        icon: <TbArrowDown />,
-                        iconPos: 'right',
-                        rounded: true, text: true, size: 'small',
-                    }} list={subPageOptions} />
+                    <Dropdown
+                        button={{
+                            label: `${searchParams.get('tab') || 'Complaints'} ${finalData.length ? '| ' + finalData.length : ""}`,
+                            icon: <TbArrowDown />,
+                            iconPos: 'right',
+                            rounded: true, text: true, size: 'small',
+                        }}
+                        list={subPageOptions}
+                        selected={searchParams.get('tab') || 'Complaints'}
+                    />
                 </div>
                 <div className="section-two">
                     <span onClick={fetchApi}>

@@ -9,9 +9,8 @@ export const redirectViewLocation = (placeId = null, customerLat, customerLng, p
     if (placeId) {
         mapsUrl = `https://www.google.com/maps/place/?q=place_id:${placeId}`;
     } else if (customerLat && customerLng) {
-
-        const searchQuery = encodeURIComponent(`${place} ${post} ${customerLat},${customerLng}`);
-        mapsUrl = `https://www.google.com/maps/search/${searchQuery}/@${customerLat},${customerLng},17z`;
+       
+        mapsUrl = `https://www.google.com/maps/search/?api=1&query=${customerLat},${customerLng}&z=12&t=m`;
     }
 
     window.open(mapsUrl, "_blank");

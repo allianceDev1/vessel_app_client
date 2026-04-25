@@ -17,6 +17,7 @@ const ViewArea = React.lazy(() => import('../pages/controller/view-area/ViewArea
 const Customers = React.lazy(() => import('../pages/controller/customers/Customers'))
 const CustomerMiniReport = React.lazy(() => import('../components/charts/customer-mini-report/CustomerMiniReport'))
 const SearchCustomer = React.lazy(() => import('../components/modules/controller/search-customer/SearchCustomer'))
+const FilterCustomer = React.lazy(() => import('../components/modules/controller/search-customer/FilterCustomer'))
 const FormResources = React.lazy(() => import('../pages/controller/form-resources/FormResources'))
 const ResourceStretcher = React.lazy(() => import('../pages/controller/form-resources/ResourceStretcher'))
 const ServiceCategory = React.lazy(() => import('../pages/controller/service-category/ServiceCategory'))
@@ -24,6 +25,16 @@ const UpcomingServices = React.lazy(() => import('../pages/controller/upcoming/U
 const RegisteredService = React.lazy(() => import('../pages/controller/registered/RegisteredService'))
 const RegisteredView = React.lazy(() => import('../pages/controller/registered/RegisteredView'))
 const CompletedService = React.lazy(() => import('../pages/controller/completed/CompletedServices'))
+const CustomerView = React.lazy(() => import('../pages/controller/customer-view/CustomerView'))
+const AboutCustomer = React.lazy(() => import('../components/modules/controller/customer-view/AboutCustomer'))
+const CustomerProductList = React.lazy(() => import('../components/modules/controller/customer-view/ProductList'))
+const CustomerCallLogs = React.lazy(() => import('../components/modules/controller/customer-view/CallLogs'))
+const ServiceJob = React.lazy(() => import('../pages/controller/service-job/ServiceJob'))
+const CustomerProductView = React.lazy(() => import('../pages/controller/customer-product/CustomerProductView'))
+const AboutCustomerProduct = React.lazy(() => import('../components/modules/controller/customer-product/AboutProduct'))
+const CustomerProductSpares = React.lazy(() => import('../components/modules/controller/customer-product/SpareList'))
+const CustomerProductEligibility = React.lazy(() => import('../components/modules/controller/customer-product/Eligibility'))
+const CustomerProductServiceCardList = React.lazy(() => import('../components/modules/controller/customer-product/ServiceCardList'))
 
 
 
@@ -60,7 +71,22 @@ const Controller = () => {
                         <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
                             <Route index element={<CustomerMiniReport />} />
                             <Route path="search" element={<SearchCustomer />} />
-                            {/* <Route path="filter" element={<SearchPage />} /> */}
+                            <Route path="filter" element={<FilterCustomer />} />
+                        </Route>
+
+                        <Route path='/customer/:customer_id' element={<PrivateRoute element={<CustomerView />} isAuthenticated={isAuthenticated} />} >
+                            <Route index element={<AboutCustomer />} />
+                            <Route path="about" index element={<AboutCustomer />} />
+                            <Route path="products" element={<CustomerProductList />} />
+                            <Route path="call-logs" element={<CustomerCallLogs />} />
+                        </Route>
+
+                        <Route path='/customer/:customer_id/product/:product_id' element={<PrivateRoute element={<CustomerProductView />} isAuthenticated={isAuthenticated} />} >
+                            <Route index element={<AboutCustomerProduct />} />
+                            <Route path="about" index element={<AboutCustomerProduct />} />
+                            <Route path="spares" element={<CustomerProductSpares />} />
+                            <Route path="eligibility" element={<CustomerProductEligibility />} />
+                            <Route path="service-cards" element={<CustomerProductServiceCardList />} />
                         </Route>
                     </>}
 
@@ -76,6 +102,7 @@ const Controller = () => {
 
                     {/* Completed */}
                     <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/completed/service-job/:service_srl_no' element={<PrivateRoute element={<ServiceJob />} isAuthenticated={isAuthenticated} />} />
 
 
                     {/* App Config */}
