@@ -19,11 +19,12 @@ const FilterBox = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const [form, setForm] = useState({
-        from_date: searchParams.get('from_date') || moment().format('YYYY-MM-DD'),
-        end_date: searchParams.get('end_date') || moment().format('YYYY-MM-DD'),
+        from_date: searchParams.get('from_date') || searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD'),
+        end_date: searchParams.get('end_date') || searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD'),
         technician_id: searchParams.get('technician_id') || '',
         customer_id: searchParams.get('customer_id') || '',
-        product_id: searchParams.get('product_id') || ''
+        product_id: searchParams.get('product_id') || '',
+        reg_no: searchParams.get('reg_no') || ''
     })
 
     const {
@@ -61,6 +62,7 @@ const FilterBox = () => {
             form.technician_id ? next.set('technician_id', form.technician_id) : next.delete('technician_id')
             form.customer_id ? next.set('customer_id', form.customer_id) : next.delete('customer_id')
             form.product_id ? next.set('product_id', form.product_id) : next.delete('product_id')
+            form.reg_no ? next.set('reg_no', form.reg_no) : next.delete('reg_no')
             return next;
         })
 
@@ -73,7 +75,8 @@ const FilterBox = () => {
             end_date: '',
             technician_id: '',
             customer_id: '',
-            product_id: ''
+            product_id: '',
+            reg_no: '',
         })
         setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
@@ -83,6 +86,7 @@ const FilterBox = () => {
             next.delete('technician_id');
             next.delete('customer_id');
             next.delete('product_id');
+            next.delete('reg_no');
             return next;
         })
     }
@@ -113,6 +117,8 @@ const FilterBox = () => {
                     <InputText label={'Customer Id'} name={'customer_id'} type='number' value={form.customer_id} onChange={handleChange} />
 
                     <InputText label={'Product Id'} name={'product_id'} type='text' style={{ textTransform: "uppercase" }} value={form.product_id} onChange={handleChange} />
+
+                    <InputText label={'Reg No'} name={'reg_no'} type='text' style={{ textTransform: "uppercase" }} value={form.reg_no} onChange={handleChange} />
 
                     <ButtonGroup style={{ dispatch: "grid", }} rounded>
                         <Button label={'Clear'} type={'button'} severity={'primary'} outlined style={{ width: '100%' }} disabled={searchParams.get('fl') !== 'Yes'}

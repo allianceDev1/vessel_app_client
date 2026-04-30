@@ -1,0 +1,60 @@
+import React, { useEffect, useState } from 'react'
+import '../customer-product/customer-product-view.scss'
+import moment from "moment"
+import { useDispatch } from 'react-redux'
+import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbDropletBolt, TbDropletPlus, TbMessage, TbPlayCard4 } from 'react-icons/tb';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import Button from '../../../components/UI_Primitives/buttons/Button';
+import Badge from '../../../components/UI_Primitives/badge/Badge';
+
+const ServicePackageView = () => {
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [activeSegment, setActiveSegment] = useState('');
+    const { serial_number } = useParams();
+
+    const navigateSubMenu = (url) => {
+        navigate(url)
+    }
+
+    useEffect(() => {
+        dispatch(page.setTitle({ title: serial_number, note: "Service Package View" }))
+        // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        const segments = location?.pathname?.split('/').filter(Boolean)
+        const lastSegment = ['about', 'services', 'extensions'].includes((segments.at(-1) || ''))
+            ? segments.at(-1) || '' : null
+
+        setActiveSegment(lastSegment)
+    }, [location?.pathname])
+
+    return (
+        <div className="customer-product-view-controller-container">
+            <div className="menu-box">
+                <div className="slide-menus">
+                    <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/about`)}>
+                        <TbDropletBolt />
+                        <p>About</p>
+                    </div>
+                    <div className={`menu-item ${(activeSegment === 'services') && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/services`)}>
+                        <TbPlayCard4 />
+                        <p>Services</p>
+                    </div>
+                    <div className={`menu-item ${(activeSegment === 'extensions') && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/extensions`)}>
+                        <TbDropletPlus />
+                        <p>Extensions</p>
+                    </div>
+                </div>
+            </div>
+            <div className="customer-content">
+                <Outlet />
+            </div>
+        </div>
+    )
+}
+
+export default ServicePackageView

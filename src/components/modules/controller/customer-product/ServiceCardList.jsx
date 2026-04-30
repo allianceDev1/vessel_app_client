@@ -2,7 +2,7 @@ import React from 'react'
 import ServiceCard from '../../common/cards/ServiceCard'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { TbPlayCard4, TbRotate } from 'react-icons/tb'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -11,6 +11,7 @@ import InstallationCard from '../../common/cards/InstallationCard'
 
 const ServiceCardList = () => {
     const { product_id } = useParams();
+    const navigate = useNavigate();
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
 
@@ -77,7 +78,8 @@ const ServiceCardList = () => {
                 />}
 
                 {allCards.map((card) => (
-                    card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} /> :
+                    card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer
+                        onClick={() => navigate(`/controller/completed/service-job/${card?.service_srl_no}`)} /> :
                         card?.card_type === 'INSTALLATION_CARD' ? <InstallationCard key={card.uuid} data={card} /> : ""
                 ))}
 

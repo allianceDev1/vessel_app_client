@@ -6,17 +6,15 @@ import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 
-const InstallationCard = ({ data, pointer = false }) => {
-    const tempColor = '#004b10'
+const CancellationCard = ({ data, pointer = false }) => {
+    const tempColor = '#ff0000'
 
     return (
-        <div className="service-card-item-container"
-            style={{ backgroundColor: 'var(--color-success-trans-33)', cursor: pointer ? 'pointer' : 'default' }}
-        >
+        <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }}>
             <div className="header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
-                        <linearGradient id="installGradient">
+                        <linearGradient id="cancellationGradient">
                             <stop offset="0%" stopColor={tempColor} />
                             <stop offset="100%" stopColor="#000000" />
                         </linearGradient>
@@ -24,13 +22,13 @@ const InstallationCard = ({ data, pointer = false }) => {
 
                     <path
                         d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill="url(#installGradient)"
+                        fill="url(#cancellationGradient)"
                     />
                 </svg>
 
                 <div className="left">
-                    <h4 style={{ color: getContrastText(tempColor) }}>{data?.card_title}</h4>
-                    <p style={{ color: getContrastText(tempColor) }}>{toStandardText(data?.card_type)}</p>
+                    <h4 style={{ color: getContrastText(tempColor) }}>Service Cancelled</h4>
+                    <p style={{ color: getContrastText(tempColor) }}>By {data?.cancelled_by}</p>
                 </div>
                 <div className="right">
                     <p>{isoToDDMonYYYY(data?.date)}</p>
@@ -38,21 +36,8 @@ const InstallationCard = ({ data, pointer = false }) => {
             </div>
 
             <div className="middle-content">
-                <div className="middle-border-1">
-                    <div className="left">
-
-                    </div>
-                    <div className="right">
-
-                        <div className="badge-container">
-                            {data?.repeat ? <Badge value={'Repeat'} severity={'danger'} /> : ""}
-                            {data?.item_id ? <Badge value={`${data?.item_id}`} severity={'info'} /> : ''}
-                        </div>
-                    </div>
-                </div>
-                {(data?.comment || data?.product_name) ? <div className="middle-border-2">
-                    {data?.comment && <p className='text'>{data?.comment}</p>}
-                    {data?.product_name && <p className='text'>{data?.product_name}</p>}
+                {data?.comment ? <div className="middle-border-2" style={{ marginTop: '10px' }}>
+                    <p className='text' style={{ textAlign: 'end', }}>{data?.comment}</p>
                 </div> : ''}
             </div>
             <div className="footer-content">
@@ -61,10 +46,10 @@ const InstallationCard = ({ data, pointer = false }) => {
                 >
                     <div className="left">
                         <TbHash />
-                        <p>{data?.service_srl_no || 'Not Linked'}</p>
+                        <p>Index : {data?.service_index}</p>
                     </div>
                     <div className="right">
-                        <p>{data?.worker_name}</p>
+                        <p>{data?.cancelled_by}</p>
                         <TbUser />
                     </div>
                 </div>
@@ -73,4 +58,4 @@ const InstallationCard = ({ data, pointer = false }) => {
     )
 }
 
-export default InstallationCard
+export default CancellationCard

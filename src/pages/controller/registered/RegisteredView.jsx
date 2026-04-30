@@ -162,7 +162,8 @@ const RegisteredView = () => {
         <div className="right-section">
           <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
             onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} />
-          <Button label={'Service Job'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }} />
+          <Button label={'Service Jobs'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }}
+            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} />
           {[1, 2, 3, 4].includes(data?.status?.status) && <Dropdown button={{
             label: 'Actions', icon: <TbChevronDown />,
             iconPos: 'right', rounded: true, outlined: true, size: 'small', style: { width: '120px' }

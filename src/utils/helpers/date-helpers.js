@@ -141,3 +141,61 @@ export const normalizeDate = (date) => {
     return isNaN(d) ? null : d;
 }
 
+export const getPackageProgress = ({
+    startDate,
+    endDate,
+    currentDate = new Date()
+}) => {
+    const start = new Date(startDate).getTime();
+    const end = new Date(endDate).getTime();
+    const today = new Date(currentDate).getTime();
+
+    if (Number.isNaN(start) || Number.isNaN(end)) {
+        throw new Error("Invalid date input");
+    }
+
+    if (start >= end) {
+        return {
+            status: "invalid",
+            progress: 0
+        };
+    }
+
+    // Status
+    let status;
+    if (today < start) status = "upcoming";
+    else if (today > end) status = "expired";
+    else status = "active";
+
+    // Progress Calculation
+    const totalDuration = end - start;
+    const elapsed = today - start;
+
+    let progress = (elapsed / totalDuration) * 100;
+
+    // Clamp between 0 and 100
+    progress = Math.max(0, Math.min(100, progress));
+
+    return {
+        status,
+        progress: Number(progress.toFixed(2))
+    };
+};
+
+export const formatDuration = (totalSeconds) => {
+    if (!totalSeconds || totalSeconds < 0) return "0 Seconds";
+
+    const days = Math.floor(totalSeconds / (24 * 60 * 60));
+    const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+    const seconds = totalSeconds % 60;
+
+    const parts = [];
+
+    if (days) parts.push(`${days} Day${days > 1 ? "s" : ""}`);
+    if (hours) parts.push(`${hours} Hour${hours > 1 ? "s" : ""}`);
+    if (minutes) parts.push(`${minutes} Minute${minutes > 1 ? "s" : ""}`);
+    if (seconds) parts.push(`${parseInt(seconds)} Second${seconds > 1 ? "s" : ""}`);
+
+    return parts.join(" ");
+}

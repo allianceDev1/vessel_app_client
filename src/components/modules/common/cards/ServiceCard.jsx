@@ -6,15 +6,15 @@ import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 
-const ServiceCard = ({ data, pointer = false }) => {
+const ServiceCard = ({ data, pointer = false, onClick = () => { } }) => {
     const tempColor = '#464646'
 
     return (
-        <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }}>
+        <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }} onClick={onClick}>
             <div className="header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
-                        <linearGradient id="myGradient">
+                        <linearGradient id="serviceGradient">
                             <stop offset="0%" stopColor={data?.package_color_code || tempColor} />
                             <stop offset="100%" stopColor="#000000" />
                         </linearGradient>
@@ -22,7 +22,7 @@ const ServiceCard = ({ data, pointer = false }) => {
 
                     <path
                         d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill="url(#myGradient)"
+                        fill="url(#serviceGradient)"
                     />
                 </svg>
 

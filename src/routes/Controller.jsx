@@ -35,6 +35,15 @@ const AboutCustomerProduct = React.lazy(() => import('../components/modules/cont
 const CustomerProductSpares = React.lazy(() => import('../components/modules/controller/customer-product/SpareList'))
 const CustomerProductEligibility = React.lazy(() => import('../components/modules/controller/customer-product/Eligibility'))
 const CustomerProductServiceCardList = React.lazy(() => import('../components/modules/controller/customer-product/ServiceCardList'))
+const CustomerProductPackageHistory = React.lazy(() => import('../components/modules/controller/customer-product/PackageHistory'))
+const ServicePackageView = React.lazy(() => import('../pages/controller/service-package/ServicePackageView'))
+const AboutProductPackage = React.lazy(() => import('../components/modules/controller/service-package/AboutPackage'))
+const ServicesUnderProductPackage = React.lazy(() => import('../components/modules/controller/service-package/Services'))
+const ProductPackageExtensions = React.lazy(() => import('../components/modules/controller/service-package/Extensions'))
+const ProductLogInfo = React.lazy(() => import('../components/modules/controller/service-job/ProductLogInfo'))
+const PurchaseLogInfo = React.lazy(() => import('../components/modules/controller/service-job/PurchaseLogInfo'))
+
+
 
 
 
@@ -87,6 +96,14 @@ const Controller = () => {
                             <Route path="spares" element={<CustomerProductSpares />} />
                             <Route path="eligibility" element={<CustomerProductEligibility />} />
                             <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+                            <Route path="package-history" element={<CustomerProductPackageHistory />} />
+                        </Route>
+
+                        <Route path='/service-package/:serial_number' element={<PrivateRoute element={<ServicePackageView />} isAuthenticated={isAuthenticated} />} >
+                            <Route index element={<AboutProductPackage />} />
+                            <Route path="about" index element={<AboutProductPackage />} />
+                            <Route path="services" element={<ServicesUnderProductPackage />} />
+                            <Route path="extensions" element={<ProductPackageExtensions />} />
                         </Route>
                     </>}
 
@@ -102,8 +119,11 @@ const Controller = () => {
 
                     {/* Completed */}
                     <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
-                    <Route path='/completed/service-job/:service_srl_no' element={<PrivateRoute element={<ServiceJob />} isAuthenticated={isAuthenticated} />} />
-
+                    <Route path='/completed/service-job/:service_srl_no' element={<PrivateRoute element={<ServiceJob />} isAuthenticated={isAuthenticated} />} >
+                        <Route index element={<ServiceJob />} />
+                        <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
+                        <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
+                    </Route>
 
                     {/* App Config */}
                     {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>

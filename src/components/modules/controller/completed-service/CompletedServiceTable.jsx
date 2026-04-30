@@ -5,22 +5,13 @@ import { api } from '../../../../api'
 import Table from '../../../UI_Primitives/table/Table'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
-import { useDispatch, useSelector } from 'react-redux'
-import Button from '../../../UI_Primitives/buttons/Button'
-import ServiceRegistration from '../../../forms/controller/registration/ServiceRegistration'
-import AddCallLog from '../../../forms/common/add-call-log/AddCallLog'
-import { TbArrowForwardUpDouble, TbMessagePlus, TbPencilPlus } from 'react-icons/tb'
-import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import PostponeService from '../../../forms/common/postpone-service/PostponeService'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 const CompletedServiceTable = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [searchParams] = useSearchParams();
     const listType = searchParams.get('view_type') || 'customer';
     const [columnVisibility, setColumnVisibility] = useState({})
-    const { user } = useSelector((state) => state.user)
 
 
     const getSortField = (id) => ({
@@ -42,29 +33,6 @@ const CompletedServiceTable = () => {
         )
     );
 
-    const openRegistrationPopUp = ({ customer_id, customer_name, service_type }) => {
-        dispatch(modal.push({
-            show: true, title: "Register Service",
-            body: <ServiceRegistration customerName={customer_name} customerId={customer_id} serviceType={service_type || ''} />
-        }))
-    }
-
-    const openEnterCallLogPopUp = ({ customer_id }) => {
-        dispatch(modal.push({
-            show: true, title: "Enter Call Log",
-            body: <AddCallLog customerId={customer_id} isController={true} />
-        }))
-    }
-
-    const openPostponePopUp = ({ customer_id, product }) => {
-        dispatch(modal.push({
-            show: true, title: "Postpone Service",
-            body: <PostponeService customerId={customer_id} isController={true} products={[
-                { ...product }
-            ]} />
-        }))
-    }
-
     const fetchServiceData = useMemo(() => async ({ page, pageSize, search, sort }) => {
 
         if (searchParams.get('fl') !== 'Yes') return { data: [], total: 0 }
@@ -84,7 +52,7 @@ const CompletedServiceTable = () => {
         const res = await api.vfCv2Axios.get(`/service/completed/list/${listType}?${params}`)
 
         const transformed = res.data.map((item, index) => {
-            const globalIndex = page * pageSize + index + 1
+           
 
             switch (listType) {
                 case 'customer':
@@ -118,7 +86,7 @@ const CompletedServiceTable = () => {
                         package_name: item.package_name,
                         package_color_code: item.package_color_code,
                         _rowStyle: { cursor: 'pointer' },
-                        _rowNavigateUrl: `/404`,
+                        _rowNavigateUrl: `/controller/completed/service-job/${item.service_srl_no}/pl/${item.product_id}`,
                     }
 
                 default:
@@ -129,7 +97,8 @@ const CompletedServiceTable = () => {
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
     }, [navigate, searchParams.get('view_type'), searchParams.get('product_id'), searchParams.get('customer_id'), searchParams.get('technician_id'),
-        searchParams.get('from_date'), searchParams.get('end_date')])
+       // eslint-disable-next-line
+        searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no')])
 
     const tableColumns = useMemo(() => {
 
@@ -204,7 +173,7 @@ const CompletedServiceTable = () => {
                 fetchFn={fetchServiceData}
                 columnVisible={columnVisibility}
                 queryKey={['completed_service_table_list', listType, searchParams.get('product_id'), searchParams.get('customer_id'),
-                    searchParams.get('technician_id'), searchParams.get('from_date'), searchParams.get('end_date')]}
+                    searchParams.get('technician_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no')]}
                 tableKey="completed_service"
             />
         </div>

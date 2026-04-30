@@ -91,9 +91,7 @@ const UpcomingServiceTable = () => {
                         'Post office': item.post,
                         'City': item.city_name,
                         'Service Date': item.next_service_date ? isoToDDMonYYYY(new Date(item.next_service_date)) : '',
-                        'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
-                        _rowStyle: { cursor: 'pointer' },
-                        _rowNavigateUrl: `/404`,
+                        'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : ''
                     }
 
                 case 'product':
@@ -113,9 +111,7 @@ const UpcomingServiceTable = () => {
                         product_name: item.product_name,
                         service_type: item.service_type,
                         package_name: item.package_name,
-                        package_color_code: item.package_color_code,
-                        _rowStyle: { cursor: 'pointer' },
-                        _rowNavigateUrl: `/404`,
+                        package_color_code: item.package_color_code
                     }
 
                 default:

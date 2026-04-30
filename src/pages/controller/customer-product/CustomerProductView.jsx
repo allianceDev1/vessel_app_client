@@ -26,7 +26,7 @@ const CustomerProductView = () => {
 
     useEffect(() => {
         const segments = location?.pathname?.split('/').filter(Boolean)
-        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards'].includes((segments.at(-1) || ''))
+        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history'].includes((segments.at(-1) || ''))
             ? segments.at(-1) || '' : null
 
         setActiveSegment(lastSegment)
@@ -52,8 +52,7 @@ const CustomerProductView = () => {
                         <TbPlayCard4 />
                         <p>Service Cards</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 's-cards') && 'active'}`}
-                        onClick={() => navigate(`/controller/completed?fl=Yes&from_date=${moment().subtract(3, "months").format("YYYY-MM-DD")}&end_date=${moment().format("YYYY-MM-DD")}&customer_id=${customer_id}`)}>
+                    <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/package-history`)}>
                         <TbDropletBolt />
                         <p>Package History</p>
                     </div>
