@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './registered-view.scss'
 import { useDispatch } from 'react-redux';
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import RegistrationInfo from '../../../components/modules/controller/registered-service/RegistrationInfo';
 // import VisitInfo from '../../../components/modules/controller/registered-service/VisitInfo';
@@ -9,7 +9,7 @@ import RegistrationInfo from '../../../components/modules/controller/registered-
 import { useNavigate, useParams } from 'react-router-dom';
 import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbExposurePlus1, TbHomeSearch, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTimeDiff } from '../../../utils/helpers/date-helpers';
 import { api } from '../../../api';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
@@ -24,6 +24,7 @@ const RegisteredView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { reg_no } = useParams();
+  const queryClient = useQueryClient();
   const [actionOptions, setActionOptions] = useState([])
 
 
@@ -62,6 +63,91 @@ const RegisteredView = () => {
     }))
   }
 
+  const convertToRND = (regNo) => {
+    dispatch(doDialog.confirm({
+      message: 'Are you sure, convert the registration to R&D department ?',
+      accept: {
+        onClick: async () => {
+          try {
+            await api.cnAv1Axios.post('/service/registration/rnd/convert', {
+              product_type: "VESSEL_FILTER",
+              registration_id: regNo
+            })
+
+            queryClient.setQueryData(
+              ['registration_info_controller', regNo],
+              (oldData) => {
+                if (!oldData) return oldData;
+
+                return {
+                  ...oldData,
+                  about: {
+                    ...(oldData?.about),
+                    is_under_rnd: true
+                  }
+                };
+              }
+            );
+
+            dispatch(toast.push({
+              type: 'success',
+              head: 'Converted to R&D',
+            }))
+
+          } catch (error) {
+            dispatch(toast.push({
+              type: 'danger',
+              head: 'Conversion Failed',
+              message: error?.message || 'Something Wrong'
+            }))
+          }
+        }
+      }
+    }))
+  }
+
+  const retrieveFromRND = (regNo) => {
+    dispatch(doDialog.confirm({
+      message: 'Are you sure, retrieve the registration from R&D department ?',
+      accept: {
+        onClick: async () => {
+          try {
+            await api.cnAv1Axios.post('/service/registration/rnd/retrieve', {
+              product_type: "VESSEL_FILTER",
+              registration_id: regNo
+            })
+
+            queryClient.setQueryData(
+              ['registration_info_controller', regNo],
+              (oldData) => {
+                if (!oldData) return oldData;
+
+                return {
+                  ...oldData,
+                  about: {
+                    ...(oldData?.about),
+                    is_under_rnd: false
+                  }
+                };
+              }
+            );
+
+            dispatch(toast.push({
+              type: 'success',
+              head: 'Retrieved from R&D',
+            }))
+
+          } catch (error) {
+            dispatch(toast.push({
+              type: 'danger',
+              head: 'Conversion Failed',
+              message: error?.message || 'Something Wrong'
+            }))
+          }
+        }
+      }
+    }))
+  }
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['registration_info_controller', reg_no],
@@ -74,7 +160,6 @@ const RegisteredView = () => {
     },
     staleTime: 10_000
   })
-
 
   useEffect(() => {
     dispatch(page.setTitle({ title: 'Registration Info', note: "Registration info by reg number." }))
@@ -108,9 +193,11 @@ const RegisteredView = () => {
     }
 
     if ([1, 2, 3].includes(data?.status?.status)) {
-      actions[0].items.push(
-        { icon: <TbHomeSearch />, label: 'To RD', }
-      )
+      if (!data?.about.is_under_rnd && data?.about?.service_type === 'COMPLAINT') {
+        actions[0].items.push(
+          { icon: <TbHomeSearch />, label: 'Convert to R&D', theme: 'info', onClick: () => convertToRND(reg_no) }
+        )
+      }
     }
 
     if (data?.status?.status === 3) {
@@ -119,9 +206,14 @@ const RegisteredView = () => {
     }
 
     if ([1, 2, 3].includes(data?.status?.status)) {
+      if (data?.about.is_under_rnd) {
+        actions[1].items.push(
+          { icon: <TbHomeSearch />, label: 'Retrieve from R&D', onClick: () => retrieveFromRND(reg_no) }
+        )
+      }
+
       actions[1].items.push(
-        { icon: <TbX />, label: 'Registration', theme: 'danger', onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) },
-        { icon: <TbExposurePlus1 />, label: 'Service Index', value: 'postBase', theme: 'danger', }
+        { icon: <TbX />, label: 'Registration', theme: 'danger', onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) }
       )
     }
 
@@ -130,6 +222,8 @@ const RegisteredView = () => {
     // eslint-disable-next-line
   }, [data])
 
+
+  
 
   if (isLoading) {
     return <div className="service-registered-view-page-container">

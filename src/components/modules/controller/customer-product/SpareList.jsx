@@ -8,8 +8,12 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
+import { useDispatch } from 'react-redux'
+import AddSpare from '../../../forms/controller/product/AddSpare'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 const SpareList = () => {
+    const dispatch = useDispatch();
     const { customer_id, product_id } = useParams();
 
     const { data, isLoading, error } = useQuery({
@@ -20,6 +24,13 @@ const SpareList = () => {
         },
         staleTime: 60_000
     })
+
+    const openAddSpareModal = () => {
+        dispatch(modal.push({
+            title: "Add New Spare",
+            body: <AddSpare productId={product_id} customerId={customer_id} />
+        }))
+    }
 
     if (isLoading) {
         return <div>
@@ -44,7 +55,8 @@ const SpareList = () => {
     return (
         <div className="controller-spares-customer-container">
             <div className="menu-buttons">
-                <Button icon={<TbPlus />} label={'Spare'} size='small' severity={'primary'} rounded style={{ width: '100px' }} />
+                <Button icon={<TbPlus />} label={'Spare'} size='small' severity={'primary'} rounded style={{ width: '100px' }}
+                    onClick={openAddSpareModal} />
             </div>
             <div className="content">
                 {data?.length > 0
@@ -52,12 +64,17 @@ const SpareList = () => {
                         {data?.map((spare) => {
                             return <SpareCard
                                 key={spare?.spare_id}
+                                customerId={customer_id}
+                                productId={product_id}
                                 spareUuid={spare?.spare_uuid}
                                 spareId={spare?.spare_id}
                                 spareName={spare?.spare_name}
                                 spareCategory={spare?.spare_category}
-                                Qty={`${spare?.qty} ${spare?.unit || ''}`}
+                                Qty={spare?.qty}
+                                Unit={spare?.unit}
+                                warrantyStarted={spare?.wr_start_date}
                                 warrantyExpiry={spare?.wr_expire_date}
+                                warrantyPeriod={spare?.wr_period}
                                 insertAt={spare?.insert_at}
                             />
                         })}

@@ -2,26 +2,105 @@
     margin-bottom: 40px;
     margin-top: 40px;
 
-    .reports {
-        margin-top: 15px;
+    .count-card-list {
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 20px;
-        justify-content: space-between;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+
+        .count-card {
+            background-color: var(--color-natural-2);
+            padding: 20px 15px 15px 15px;
+            border-radius: 10px;
+            position: relative;
+            user-select: none;
+            cursor: pointer;
+
+            h2 {
+                font-size: 35px;
+                font-weight: 600;
+                margin-top: 9px;
+            }
+
+            h4 {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary-1);
+            }
+
+            p {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-secondary-4);
+                margin-top: 3px;
+            }
+
+        }
+    }
+
+    .direct-buttons-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+
+        .button-card {
+            background-color: var(--color-natural-2);
+            padding: 20px 20px;
+            border-radius: 10px;
+            position: relative;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+
+            h4 {
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--text-secondary-1);
+            }
+
+            svg {
+                font-size: 25px;
+            }
+
+        }
+    }
+
+    .reports {
+        margin-top: 20px;
 
         .report-box {
             background-color: var(--color-natural-trans-53);
             backdrop-filter: blur(5px);
             padding: 10px 15px;
             border-radius: 15px;
+            position: relative;
 
             .title-section {
                 padding-bottom: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
 
                 h4 {
                     font-size: 14px;
                     font-weight: 500;
                     color: var(--text-secondary-2);
+                }
+
+                p {
+                    font-size: 13px;
+                    font-weight: 400;
+                    color: var(--text-secondary-4);
+                    margin-right: 45px;
+                    text-align: end;
+                }
+
+                button {
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
                 }
             }
 
@@ -29,13 +108,13 @@
                 overflow: hidden;
                 width: 100%;
                 min-height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
             }
         }
 
-        .work-flow-report {
-            grid-column: span 12;
-            order: 1;
-        }
+        
     }
 
     .last-update {
@@ -63,6 +142,14 @@
     }
 
 
+    @media screen and (max-width:1000px) {
+
+        .direct-buttons-list,
+        .count-card-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     @media screen and (max-width:500px) {
         .text-mark {
             h1 {
@@ -74,6 +161,11 @@
                 font-size: 18px;
                 font-weight: 500;
             }
+        }
+
+        .direct-buttons-list,
+        .count-card-list {
+            grid-template-columns: 1fr;
         }
 
     }

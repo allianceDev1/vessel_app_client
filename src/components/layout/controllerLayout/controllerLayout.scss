@@ -90,6 +90,7 @@
         -ms-transition: ease-in-out .3s;
         -o-transition: ease-in-out .3s;
         overflow: hidden;
+        z-index: 5;
 
         .nav-sections {
             height: 100vh;

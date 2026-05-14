@@ -13,6 +13,7 @@ import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import Badge from '../../../components/UI_Primitives/badge/Badge';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, getTimeDiff, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
+import VerifyService from '../../../components/forms/controller/completed-service/VerifyService';
 
 
 
@@ -25,7 +26,6 @@ const ServiceJob = () => {
         dispatch(page.setTitle({ title: service_srl_no, note: "Service Job View" }))
         // eslint-disable-next-line
     }, [])
-
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['service_job_view', service_srl_no, 'about'],
@@ -54,6 +54,15 @@ const ServiceJob = () => {
         },
         staleTime: 60_000
     })
+
+    const verifyService = () => {
+        dispatch(modal.push({
+            title: "Service Manual Verification",
+            body: <VerifyService
+                registrationId={data?.registration_id} serviceSrlNo={service_srl_no} verifyType={'SUPERVISOR_APPROVAL'}
+            />
+        }))
+    }
 
     if (isLoading) {
         return (
@@ -124,9 +133,9 @@ const ServiceJob = () => {
                         style: { width: '120px' }
                     }}
                         list={[
-                            {
+                            data?.verification?.verified ? {} : {
                                 items: [
-                                    { icon: <TbPasswordFingerprint />, label: "Verify Customer", onClick: () => alert('Verify Customer') },
+                                    { icon: <TbPasswordFingerprint />, label: "Verify Service", onClick: verifyService },
                                     { type: 'divider' },
                                 ]
                             },
@@ -194,7 +203,7 @@ const ServiceJob = () => {
                             <p className='label'>Turnaround Time (TAT)</p>
                             <div>
                                 <p className='text-value'>
-                                    {(data?.tat?.day || 0) > 0 && `${data?.tat?.day || 0} Days`}, {(data?.tat?.hour || 0) > 0 && `${data?.tat?.hour || 0} Hours`}, {(data?.tat?.hour || 0) > 0 && `${data?.tat?.hour || 0} Minutes`}
+                                    {(data?.tat?.day || 0) > 0 && `${data?.tat?.day || 0} Days,`} {(data?.tat?.hour || 0) > 0 && `${data?.tat?.hour || 0} Hours,`} {(data?.tat?.minute || 0) > 0 && `${data?.tat?.minute || 0} Minutes`}
                                 </p>
                             </div>
                         </div>

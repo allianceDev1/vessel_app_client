@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import moment from "moment";
 import './completed-services.scss'
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
@@ -8,6 +9,9 @@ import FilterBox from '../../../components/forms/controller/completed-service/Fi
 import { useSearchParams } from 'react-router-dom';
 import CompletedServiceTable from '../../../components/modules/controller/completed-service/CompletedServiceTable';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
+import CompletedServiceReport from '../../../components/charts/completed-service/CompletedServiceReport';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../../../api';
 
 const CompletedServices = () => {
     const dispatch = useDispatch();
@@ -37,7 +41,20 @@ const CompletedServices = () => {
         }
     ];
 
-
+    const {
+        data: reportData,
+        isLoading: reportLoading,
+        error: reportError,
+        dataUpdatedAt: reportDataUpdatedAt,
+    } = useQuery({
+        queryKey: ['completed_mini_report'],
+        queryFn: async () => {
+            const res = await api.vfCv2Axios.get(`/service/completed/mini-report`)
+            return res
+        },
+        enabled: searchParams.get('fl') !== 'Yes',
+        staleTime: 30 * 60_000
+    })
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Completed Services', note: "Completed service list and tracking." }))
@@ -48,23 +65,32 @@ const CompletedServices = () => {
     return (
         <div className="completed-services-page-controller">
             <div className="top-section">
-                {searchParams.get('fl') === "Yes" && <>
-                    <Dropdown button={{
-                        label: searchParams.get('view_type') === 'product' ? 'Product view' : 'Customer view',
-                        icon: < TbChevronDown />, iconPos: 'right',
-                        rounded: true, outlined: true, size: 'small', style: { width: '140px' }
-                    }} list={viewTypeOptions}
-                        selected={searchParams.get('view_type') || 'customer'} />
+                <div className="left">
+                    {searchParams.get('fl') !== "Yes" && <h4 className='sub-title'>
+                        {new Date().getDate() > 5 ? moment(new Date()).format("MMMM YYYY") : moment().subtract(1, "month").format("MMMM YYYY")} - Report
+                    </h4>}
+                </div>
 
-                    <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} />
-                </>}
+                <div className="right">
+                    {searchParams.get('fl') === "Yes" && <>
+                        <Dropdown button={{
+                            label: searchParams.get('view_type') === 'product' ? 'Product view' : 'Customer view',
+                            icon: < TbChevronDown />, iconPos: 'right',
+                            rounded: true, outlined: true, size: 'small', style: { width: '140px' }
+                        }} list={viewTypeOptions}
+                            selected={searchParams.get('view_type') || 'customer'} />
 
-                <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                    onClick={onClickFilter} />
+                        <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} />
+                    </>}
 
+                    <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
+                        onClick={onClickFilter} />
+                </div>
             </div>
+
             <div className="content">
-                {searchParams.get('fl') !== "Yes" && <>REPORT</>}
+                {searchParams.get('fl') !== "Yes" && <CompletedServiceReport
+                    data={reportData} loading={reportLoading} error={reportError} updatedAt={reportDataUpdatedAt} />}
                 {searchParams.get('fl') === "Yes" && <CompletedServiceTable />}
             </div>
         </div>

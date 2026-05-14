@@ -103,4 +103,22 @@
             margin-top: 10px;
         }
     }
+
+    @media screen and (max-width:800px) {
+
+        .assessment-report-border,
+        .text-content {
+            grid-template-columns: 1fr 1fr;
+        }
+
+    }
+
+    @media screen and (max-width:550px) {
+
+        .assessment-report-border,
+        .text-content {
+            grid-template-columns: 1fr;
+        }
+
+    }
 }

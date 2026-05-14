@@ -1,11 +1,24 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
 .completed-services-page-controller {
     margin-top: 20px;
     margin-bottom: 40px;
 
     .top-section {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         gap: 10px;
+
+        .sub-title {
+            @include subTitleMedium();
+        }
+
+        .right {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            align-items: center;
+        }
     }
 }

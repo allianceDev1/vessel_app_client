@@ -199,3 +199,12 @@ export const formatDuration = (totalSeconds) => {
 
     return parts.join(" ");
 }
+
+export const isoToDecimalHour = (isoDate) => {
+    const date = new Date(isoDate);
+
+    let hours = date.getHours() % 12 || 12;
+    const minutes = date.getMinutes();
+
+    return Number((hours + minutes / 60).toFixed(2));
+};

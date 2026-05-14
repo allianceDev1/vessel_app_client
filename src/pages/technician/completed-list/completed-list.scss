@@ -1,0 +1,24 @@
+.tech-completed-services-page-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .top-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .content {
+        margin-top: 15px;
+
+        .list-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .more-button {
+            margin-top: 20px;
+        }
+    }
+}

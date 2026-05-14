@@ -76,3 +76,18 @@ export const validateUpdatePackageServiceForm = (form) => {
         errors
     }
 }
+
+export const packageExtendForm = (form) => {
+    const errors = {}
+    // service name
+    if (!form.verify_text?.trim()) {
+        errors.verify_text = "Is required"
+    } else if (form.verify_text !== 'EXTEND') {
+        errors.verify_text = "Confirmation not completed"
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    }
+}

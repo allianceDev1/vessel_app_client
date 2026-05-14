@@ -8,15 +8,26 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../../api'
 import CancellationCard from '../../common/cards/CancellationCard'
 import Button from '../../../UI_Primitives/buttons/Button'
+import { useDispatch } from 'react-redux'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import ServiceCancellation from '../../../forms/controller/service-package/ServiceCancellation'
 
 const Services = () => {
     const { serial_number } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
         const res = await api.vfCv2Axios(`/package/${serial_number}/services`)
         return res
     };
+
+    const openCancellationModal = () => {
+        dispatch(modal.push({
+            title: "Service Index Cancellation",
+            body: <ServiceCancellation packageSrlNo={serial_number} />
+        }))
+    }
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["package_service_cards", serial_number],
@@ -48,7 +59,8 @@ const Services = () => {
         <div className="controller-customer-service-cards-container" >
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }} />
+                <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
+                    onClick={openCancellationModal} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>

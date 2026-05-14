@@ -15,10 +15,10 @@ import { normalizeMoney } from '../../../../utils/helpers/math-equations'
 import Payment from '../payment/Payment'
 import { useNavigate } from 'react-router-dom'
 
-const TokenTopUp = ({ fetchCustomerApi, doTopUpApi, redirectUrl = '/404' }) => {
+const TokenTopUp = ({ fetchCustomerApi, doTopUpApi, redirectUrl = '/404', prePage }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const [pageState, setPackageState] = useState('form') // form / payment / success
+    const [pageState, setPackageState] = useState(prePage || 'form') // form / payment / success
     const [topUpForm, setTopUpForm] = useState({})
     const [payment, setPayment] = useState({})
     const [loading, setLoading] = useState(false)

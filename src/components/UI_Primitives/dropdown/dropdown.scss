@@ -82,6 +82,14 @@
             pointer-events: none;
         }
 
+        &.info {
+            color: var(--color-info-text);
+
+            &:hover {
+                background-color: var(--color-info-trans-81);
+            }
+        }
+
         &.danger {
             color: var(--color-danger-text);
 

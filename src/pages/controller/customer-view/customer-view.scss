@@ -42,7 +42,7 @@
         overflow: hidden;
 
         .slide-menus {
-            display: inline-flex;
+            display: flex;
             overflow-y: auto;
             max-height: 300px;
             @include scrollBar();

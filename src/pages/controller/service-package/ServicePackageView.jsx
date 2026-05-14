@@ -3,7 +3,7 @@ import '../customer-product/customer-product-view.scss'
 import moment from "moment"
 import { useDispatch } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbDropletBolt, TbDropletPlus, TbMessage, TbPlayCard4 } from 'react-icons/tb';
+import { TbDropletBolt, TbDropletPlus, TbMessage, TbPlayCard4, TbSnowflake } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import Badge from '../../../components/UI_Primitives/badge/Badge';
@@ -26,10 +26,8 @@ const ServicePackageView = () => {
 
     useEffect(() => {
         const segments = location?.pathname?.split('/').filter(Boolean)
-        const lastSegment = ['about', 'services', 'extensions'].includes((segments.at(-1) || ''))
-            ? segments.at(-1) || '' : null
 
-        setActiveSegment(lastSegment)
+        setActiveSegment(segments.at(-1))
     }, [location?.pathname])
 
     return (
@@ -47,6 +45,10 @@ const ServicePackageView = () => {
                     <div className={`menu-item ${(activeSegment === 'extensions') && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/extensions`)}>
                         <TbDropletPlus />
                         <p>Extensions</p>
+                    </div>
+                    <div className={`menu-item ${(activeSegment === 'freeze-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/freeze-history`)}>
+                        <TbSnowflake />
+                        <p>Freeze History</p>
                     </div>
                 </div>
             </div>

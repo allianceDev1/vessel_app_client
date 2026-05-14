@@ -19,6 +19,7 @@ const More = React.lazy(() => import('../pages/technician/more/More'))
 const ServiceAreaList = React.lazy(() => import('../pages/technician/service-area/ServiceAreaList'))
 const RunningKms = React.lazy(() => import('../pages/technician/running-km/RunningKms'))
 const TopUp = React.lazy(() => import('../pages/technician/top-up/TopUp'))
+const CompletedList = React.lazy(() => import('../pages/technician/completed-list/CompletedList'))
 
 
 
@@ -63,6 +64,8 @@ const Technician = () => {
           <Route path='/running-kms' element={<PrivateRoute element={<RunningKms />} isAuthenticated={isAuthenticated} />} />
           <Route path='/token-top-up' element={<PrivateRoute element={<TopUp />} isAuthenticated={isAuthenticated} />} />
 
+          {/* Completed */}
+          <Route path='/completed' element={<PrivateRoute element={<CompletedList />} isAuthenticated={isAuthenticated} />} />
 
           {/* 404 */}
           <Route path="/*" element={<Page404 />} />

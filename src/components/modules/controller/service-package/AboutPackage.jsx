@@ -11,8 +11,16 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
+import { useDispatch } from 'react-redux'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import PackageExtend from '../../../forms/controller/service-package/PackageExtend'
+import FreezeUnfreeze from '../../../forms/controller/service-package/FreezeUnfreeze'
+import ActivatePackage from '../../../forms/controller/service-package/ActivatePackage'
+import TokenTopUps from './TokenTopUps'
+
 
 const AboutPackage = () => {
+    const dispatch = useDispatch();
     const { serial_number } = useParams();
 
     const { data, isLoading, error } = useQuery({
@@ -23,6 +31,38 @@ const AboutPackage = () => {
         },
         staleTime: 60_000
     })
+
+    const openPackageExtensionModel = () => {
+        dispatch(modal.push({
+            title: "Extend Package Expire Date",
+            body: <PackageExtend
+                expireDate={data?.expire_date}
+                packageSrlNo={serial_number}
+            />
+        }))
+    }
+
+    const openFreezeUnFreezeModel = (type) => {
+        dispatch(modal.push({
+            title: type === 'FREEZE' ? 'Freeze the Package' : 'Unfreeze the Package',
+            body: <FreezeUnfreeze type={type} packageSrlNo={serial_number} />
+        }))
+    }
+
+    const openActivationModel = () => {
+        dispatch(modal.push({
+            title: 'Activate the Package',
+            body: <ActivatePackage packageSrlNo={serial_number} />
+        }))
+    }
+
+    const openTopUpsHistoryModel = () => {
+        dispatch(modal.push({
+            title: 'Token Top-ups History',
+            body: <TokenTopUps serial_number={serial_number} />,
+            style: { width: "1000px" }
+        }))
+    }
 
     if (isLoading) {
         return <div>
@@ -51,12 +91,16 @@ const AboutPackage = () => {
     return (
         <div className="controller-about-customer-container">
             <div className="menu-buttons">
-                {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'primary'} rounded style={{ width: '110px' }} />}
-                {data?.package_status === 2 && <Button icon={<TbSnowflake />} label={'Freeze'} size='small' severity={'danger'} rounded style={{ width: '100px' }} />}
-                {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }} />}
-                {data?.package_status === 2 && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }} />}
-                {data?.freeze?.freeze_times > 0 && <Button icon={<TbSnowflake />} label={'Freeze History'} size='small' outlined rounded style={{ width: '140px' }} />}
-                {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }} />}
+                {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
+                    onClick={openActivationModel} />}
+                {data?.package_status === 2 && <Button icon={<TbSnowflake />} label={'Freeze'} size='small' severity={'danger'} rounded style={{ width: '100px' }}
+                    onClick={() => openFreezeUnFreezeModel('FREEZE')} />}
+                {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
+                    onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
+                {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
+                    onClick={openPackageExtensionModel} />}
+                {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
+                    onClick={openTopUpsHistoryModel} />}
             </div>
             <div className="reg-content">
                 <div className="list">

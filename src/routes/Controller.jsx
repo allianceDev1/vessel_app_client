@@ -40,6 +40,7 @@ const ServicePackageView = React.lazy(() => import('../pages/controller/service-
 const AboutProductPackage = React.lazy(() => import('../components/modules/controller/service-package/AboutPackage'))
 const ServicesUnderProductPackage = React.lazy(() => import('../components/modules/controller/service-package/Services'))
 const ProductPackageExtensions = React.lazy(() => import('../components/modules/controller/service-package/Extensions'))
+const ProductPackageFeezeHistory = React.lazy(() => import('../components/modules/controller/service-package/FreezeHistory'))
 const ProductLogInfo = React.lazy(() => import('../components/modules/controller/service-job/ProductLogInfo'))
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/controller/service-job/PurchaseLogInfo'))
 
@@ -104,6 +105,7 @@ const Controller = () => {
                             <Route path="about" index element={<AboutProductPackage />} />
                             <Route path="services" element={<ServicesUnderProductPackage />} />
                             <Route path="extensions" element={<ProductPackageExtensions />} />
+                            <Route path="freeze-history" element={<ProductPackageFeezeHistory />} />
                         </Route>
                     </>}
 

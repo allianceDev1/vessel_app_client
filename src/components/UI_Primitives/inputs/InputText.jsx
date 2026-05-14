@@ -9,7 +9,7 @@ function InputText({
     id,
     value = '',
     type = 'text',
-    required,
+    required=false,
     rightIcon,
     rightIconAction,
     inputStyle,

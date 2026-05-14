@@ -66,7 +66,7 @@ const RegistrationInfo = ({ data }) => {
                                     backgroundColor: SERVICE_REG_STATUS_LIST.find(s => s.key === data?.status?.status)?.bg,
                                     color: SERVICE_REG_STATUS_LIST.find(s => s.key === data?.status?.status)?.text
                                 }} />
-                                {data?.about?.is_under_rnd && <Badge value={'RND'} severity={'warning'} />}
+                                {data?.about?.is_under_rnd && <Badge value={'R&D'} severity={'warning'} />}
                                 {data?.status?.is_self_close && <Badge value={'Self Close'} severity={'success'} />}
 
                                 <Badge value={`Total ${data?.status?.total_visits} Visit(s)`} severity={'secondary'} />

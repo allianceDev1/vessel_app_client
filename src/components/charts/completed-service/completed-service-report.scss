@@ -1,0 +1,145 @@
+.completed-service-report-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .count-card-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+
+        .count-card {
+            background-color: var(--color-natural-trans-53);
+            padding: 20px 15px 15px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--color-primary-bg);
+            position: relative;
+            user-select: none;
+
+            .top-section {
+                display: flex;
+                justify-content: flex-start;
+                gap: 15px;
+                align-items: center;
+
+                .icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    background-color: var(--color-primary-trans-53);
+                    border: 1px solid var(--color-primary-bg);
+                    color: var(--color-primary-text);
+                    font-size: 30px;
+                    font-weight: 600;
+                }
+
+                .count {
+                    h2 {
+                        font-size: 30px;
+                        font-weight: 600;
+                        color: var(--color-primary-text);
+                    }
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: var(--color-natural-trans-73)
+                    }
+                }
+            }
+
+            .text-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 15px;
+
+                h4 {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+                .percentage {
+                    display: flex;
+                    gap: 5px;
+                    align-items: center;
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                }
+
+                .success {
+                    color: var(--color-success);
+                }
+
+                .danger {
+                    color: var(--color-danger);
+                }
+            }
+        }
+    }
+
+    .reports {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        justify-content: space-between;
+
+        .report-box {
+            background-color: var(--color-natural-trans-53);
+            backdrop-filter: blur(5px);
+            padding: 10px 15px;
+            border-radius: 15px;
+
+            .title-section {
+                padding-bottom: 10px;
+
+                h4 {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+            }
+
+            .content {
+                overflow: hidden;
+                width: 100%;
+                min-height: 200px;
+            }
+        }
+    }
+
+    .last-update {
+        font-size: 13px;
+        text-align: end;
+        color: var(--text-secondary-2);
+        margin-top: 10px;
+    }
+
+    @media screen and (max-width:1250px) {
+        .count-card-list {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    }
+
+    @media screen and (max-width:800px) {
+        .count-card-list {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .reports {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media screen and (max-width:500px) {
+        .count-card-list {
+            grid-template-columns: 1fr;
+        }
+    }
+}

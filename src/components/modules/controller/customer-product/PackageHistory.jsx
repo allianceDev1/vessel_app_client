@@ -76,11 +76,9 @@ const PackageHistory = () => {
                 hight='400px'
             />}
 
-
             <div className="history-list">
                 {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack} />)}
             </div>
-
 
             {hasNextPage &&
                 <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>

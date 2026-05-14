@@ -19,8 +19,8 @@ const FilterBox = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const [form, setForm] = useState({
-        from_date: searchParams.get('from_date') || searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD'),
-        end_date: searchParams.get('end_date') || searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD'),
+        from_date: searchParams.get('from_date') || (searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD')),
+        end_date: searchParams.get('end_date') || (searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD')),
         technician_id: searchParams.get('technician_id') || '',
         customer_id: searchParams.get('customer_id') || '',
         product_id: searchParams.get('product_id') || '',

@@ -6,7 +6,7 @@ function Textarea({
     name,
     id,
     value = '', // Ensure controlled component
-    required,
+    required=false,
     textareaStyle,
     onBlur,
     onFocus,

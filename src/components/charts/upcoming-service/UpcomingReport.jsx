@@ -14,6 +14,7 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
   const [summery, setSummery] = useState([])
   const [counts, setCounts] = useState([])
   const [cityChart, setCityChart] = useState([])
+  const [MCPC, setMCPC] = useState({})
 
   useEffect(() => {
     // generate report
@@ -21,12 +22,13 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
       return;
     }
 
-    const { summeryData, countsData, chartData, monthChart } = upcomingServiceMiniReport(data)
+    const { summeryData, countsData, chartData, monthChart, monthCharPackageColorCode } = upcomingServiceMiniReport(data)
 
     setSummery(summeryData)
     setCounts(countsData)
     setCityChart(chartData)
     setMonthChart(monthChart)
+    setMCPC(monthCharPackageColorCode)
 
     // eslint-disable-next-line
   }, [data, loading, error])
@@ -55,7 +57,7 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               {Object.keys(packages || {})?.length && <Line type="monotone" dataKey="Addon" stroke={chartLabelColors[8]} strokeWidth={2} />}
               {
                 Object.keys(packages || {}).map((key, index) => {
-                  return <Bar key={key} dataKey={key} barSize={20} fill={chartLabelColors[(index) % chartLabelColors.length]} radius={[10, 10, 0, 0]} />
+                  return <Bar key={key} dataKey={key} barSize={20} fill={MCPC?.[key]} radius={[10, 10, 0, 0]} />
                 })
               }
             </ComposedChart>

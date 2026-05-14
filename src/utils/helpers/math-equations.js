@@ -194,3 +194,17 @@ export const calculateBillsSummery = (bills = [], zeroFeeItems = [], maxDiscount
     }
 
 }
+
+
+export const getGrowthPercentage = (current, previous) => {
+    // handle edge case
+    if (previous === 0) {
+        if (current === 0) return 0;
+        return 100; // or Infinity based on your business logic
+    }
+
+    const growth = ((current - previous) / previous) * 100;
+
+    return Number(growth.toFixed(2)); // 2 decimal
+}
+

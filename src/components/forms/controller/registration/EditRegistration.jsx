@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './service-registration.scss'
 import { vfCv2Axios } from '../../../../api/axios/axiosConfig'
-import {  useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SERVICE_PRIORITY_TEXT, SERVICE_TYPES } from '../../../../assets/javascript/pre_data/service'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { serviceRegistration } from '../../../../utils/validators/registration'
@@ -27,7 +27,7 @@ const EditRegistration = ({ regNo, initialData }) => {
     const [vErr, setVErr] = useState({})
     const [loading, setLoading] = useState('')
     const queryClient = useQueryClient()
-    
+
 
     const fetchResources = async () => {
         const [workers, inputs] = await Promise.all([
@@ -169,7 +169,8 @@ const EditRegistration = ({ regNo, initialData }) => {
                 </div>
 
                 <Select label={'Service Type'} name={'service_type'} required value={form?.service_type || ''} onChange={handleChange}
-                    options={[{ label: '', value: '' }, ...SERVICE_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]} />
+                    options={[{ label: '', value: '' }, ...SERVICE_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]}
+                    disabled={regData?.about?.is_under_rnd} helperText={regData?.about?.is_under_rnd ? 'This work is under R&D' : ''} />
 
                 {form?.service_type === 'COMPLAINT' &&
                     <MultiSelect label={'What is the Complaint ?'} name={'complaint_category'} onChange={handleChange}

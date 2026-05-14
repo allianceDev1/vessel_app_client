@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const upcomingServiceMiniReport = (data) => {
     const { summary, city_chart, month_chart } = data;
 
@@ -33,6 +35,15 @@ export const upcomingServiceMiniReport = (data) => {
         ),
     ];
 
+    const monthCharPackageColorCode = Object.fromEntries(
+        month_chart?.flatMap(({ package_counts = [] }) =>
+            package_counts.map(({ package_name, package_color_code }) => [
+                package_name,
+                package_color_code
+            ])
+        ) || []
+    );
+
     // ------------------ Build Month Range ------------------
     const now = new Date();
 
@@ -55,6 +66,7 @@ export const upcomingServiceMiniReport = (data) => {
         })
     );
 
+
     const monthChart = monthRange.map((date) => {
         const key = formatMonthKey(date);
         const m = monthMap[key];
@@ -62,7 +74,7 @@ export const upcomingServiceMiniReport = (data) => {
         const packageMap = Object.fromEntries(
             (m?.package_counts || []).map((p) => [
                 p.package_name,
-                p.count,
+                p.count
             ])
         );
 
@@ -93,12 +105,12 @@ export const upcomingServiceMiniReport = (data) => {
         countsData,
         chartData,
         monthChart,
+        monthCharPackageColorCode
     }
 
 }
 
-// utils/reportNormalizer.js
-
+//
 export const normalizeRegistrationMiniReports = (data) => {
     const report = data || {};
 
@@ -127,7 +139,7 @@ export const normalizeRegistrationMiniReports = (data) => {
     const totalMap = Object.fromEntries(
         (report.total || []).map(item => [item.month, item])
     );
-  
+
     const total = last6Months.map(month => ({
         month: new Date(month).toLocaleString("default", { year: "numeric", month: "long" }),
         closed: totalMap[month]?.closed || 0,
@@ -180,3 +192,44 @@ export const normalizeRegistrationMiniReports = (data) => {
         city_list
     };
 };
+
+export const normalizeCompletedModeReport = (data, months, allPackages) => {
+    const packageKeys = Object.keys(allPackages); // 🔥 extract keys
+    const map = new Map();
+
+    data.forEach((item) => {
+        const pkgFlat = {};
+
+        item.package_counts?.forEach((pkg) => {
+            pkgFlat[pkg.package_name] = pkg.count;
+        });
+
+        packageKeys.forEach((pkg) => {
+            if (!(pkg in pkgFlat)) {
+                pkgFlat[pkg] = 0;
+            }
+        });
+
+        map.set(item.month, {
+            name: moment(item.month, "YYYY-MM").format("MMM YYYY"),
+            "Product Works": item.total_work,
+            ...pkgFlat,
+        });
+    });
+
+    return months.map((month) => {
+        if (map.has(month)) return map.get(month);
+
+        // missing month → fill all packages
+        const emptyPackages = {};
+        packageKeys.forEach((pkg) => {
+            emptyPackages[pkg] = 0;
+        });
+
+        return {
+            name: moment(month, "YYYY-MM").format("MMM YYYY"),
+            "Product Works": 0,
+            ...emptyPackages,
+        };
+    });
+}
