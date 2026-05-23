@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import Textarea from '../../../UI_Primitives/inputs/TextArea'
 import Button from '../../../UI_Primitives/buttons/Button'
 import InputText from '../../../UI_Primitives/inputs/InputText'
-import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { api } from '../../../../api'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
@@ -26,7 +25,7 @@ const ServiceCancellation = ({ packageSrlNo }) => {
         }
 
         try {
-            const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/service-cancellation`, { comment })
+            await api.vfCv2Axios.post(`/package/${packageSrlNo}/service-cancellation`, { comment })
 
             queryClient.invalidateQueries({
                 queryKey: ['package_service_cards', packageSrlNo],

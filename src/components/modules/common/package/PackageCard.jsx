@@ -5,7 +5,7 @@ import { getPackageProgress, isoToDDMonYYYY } from '../../../../utils/helpers/da
 import { PACKAGE_STATUSES_TEXT } from '../../../../assets/javascript/pre_data/package'
 import { useNavigate } from 'react-router-dom'
 
-const PackageCard = ({ data }) => {
+const PackageCard = ({ data, redirectUrl }) => {
     const navigate = useNavigate();
     const tempColor = '#000000'
 
@@ -15,8 +15,9 @@ const PackageCard = ({ data }) => {
     return (
         <div className="package-card-container" style={{
             borderColor: `${data?.color_code || tempColor}a8`,
-            backgroundImage: `radial-gradient(${data?.color_code || tempColor}4b 0.7000000000000001px, #ffffff0e 0.7000000000000001px)`
-        }} onClick={() => navigate(`/controller/service-package/${data?.serial_number}/about`)}>
+            backgroundImage: `radial-gradient(${data?.color_code || tempColor}4b 0.7000000000000001px, #ffffff0e 0.7000000000000001px)`,
+            cursor: redirectUrl ? 'pointer' : ''
+        }} onClick={() => redirectUrl ? navigate(redirectUrl) : ''}>
             <div className="border">
                 <div className="top-section">
                     <div className="icon-box" style={{ backgroundColor: `${data?.color_code || tempColor}38` }}>

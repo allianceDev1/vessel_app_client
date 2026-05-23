@@ -122,7 +122,7 @@ const ScheduleProfile = () => {
         fullName={customer?.customer_name}
         customerId={customer?.cid}
         isActive={true}
-        onClick={() => { }}
+        onClick={() => navigate(`/tech/customer/${customer_id}/about`)}
       />
       <Contacts
         contacts={{

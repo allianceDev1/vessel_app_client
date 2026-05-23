@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import './vf-service-list.scss'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { TbCheck, TbComponents } from 'react-icons/tb'

@@ -1,0 +1,73 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-customer-products-container {
+
+    .sub-title {
+        @include subTitleSmall();
+    }
+
+    .product-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 5px;
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 10px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+
+            .order-section {
+                width: 35px;
+                height: 35px;
+                background-color: var(--surface-2);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 100%;
+
+                h4 {
+                    font-size: 15px;
+                    font-weight: 500;
+                }
+            }
+
+            .content {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                .x1 {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+
+                    p {
+                        font-size: 12px;
+                        font-weight: 500;
+                    }
+
+                    .text-2 {
+                        color: var(--color-primary);
+                    }
+                }
+
+                h3 {
+                    font-size: 16px;
+                    font-weight: 500;
+                    @include threeDots();
+                }
+
+                .x3 {
+                    display: flex;
+                    gap: 5px;
+                }
+            }
+        }
+    }
+
+}

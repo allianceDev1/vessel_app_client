@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React from 'react'
 import './product-log.scss'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import { convertIsoToAmPm, formatDuration, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
-import Badge from '../../../UI_Primitives/badge/Badge'
-import Button from '../../../UI_Primitives/buttons/Button'
+import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
@@ -13,13 +11,12 @@ import { api } from '../../../../api'
 
 const PurchaseLogInfo = () => {
     const { service_srl_no, pp_product_id } = useParams();
-    const [activeSection, setActionSection] = useState('')
 
-    const { data, isLoading, error } = useQuery({
+
+    const { data } = useQuery({
         queryKey: ['service_job_purchase_log_view', service_srl_no, "pp", pp_product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
-
 
             return {
                 ...data,

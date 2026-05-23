@@ -1,10 +1,13 @@
 import React from 'react'
 import './service-job-item.scss'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
+import { useNavigate } from 'react-router-dom'
 
-const ServiceJobItem = ({ data }) => {
+const ServiceJobItem = ({ data, redirectUrl }) => {
+    const navigate = useNavigate()
     return (
-        <div className="tech-service-job-item-container">
+        <div className="tech-service-job-item-container" onClick={() => redirectUrl ? navigate(redirectUrl) : ''}
+            style={{ cursor: redirectUrl ? 'pointer' : "" }}>
             <h3>{data?.customer_id} - {data?.customer_name}</h3>
             <div className="line">
                 <p>{data?.service_srl_no}</p>

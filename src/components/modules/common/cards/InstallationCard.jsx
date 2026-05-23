@@ -13,7 +13,7 @@ const InstallationCard = ({ data, pointer = false }) => {
         <div className="service-card-item-container"
             style={{ backgroundColor: 'var(--color-success-trans-33)', cursor: pointer ? 'pointer' : 'default' }}
         >
-            <div className="header" style={{ color: 'white' }}>
+            <div className="card-header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
                         <linearGradient id="installGradient">

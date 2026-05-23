@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './spare-card.scss'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
@@ -13,7 +13,8 @@ import { useQueryClient } from '@tanstack/react-query'
 
 
 const SpareCard = ({
-    customerId, productId, spareId, spareUuid, spareName, spareCategory, Qty, Unit, warrantyStarted, warrantyExpiry, warrantyPeriod, insertAt
+    customerId, productId, spareId, spareUuid, spareName, spareCategory, Qty, Unit, warrantyStarted,
+    warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false
 }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
@@ -79,13 +80,13 @@ const SpareCard = ({
                     <p>{spareId} - {toStandardText(spareCategory)}</p>
                 </div>
                 <div className="right-section">
-                    <Dropdown button={{
+                    {!isReadyOnly && <Dropdown button={{
                         icon: <TbDots />,
                         size: "small",
                         text: true
                     }}
                         list={dropdownOptions}
-                    />
+                    />}
                 </div>
             </div>
             <div className="section-two">

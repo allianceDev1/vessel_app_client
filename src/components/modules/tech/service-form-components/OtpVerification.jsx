@@ -135,6 +135,7 @@ const OtpVerification = ({ resetType }) => {
                 log?.WHATSAPP?.attempt
             )
         });
+        // eslint-disable-next-line
     }, [verification?.resendLog]);
 
     useEffect(() => {

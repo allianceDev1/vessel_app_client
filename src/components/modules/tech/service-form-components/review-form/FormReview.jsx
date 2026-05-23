@@ -54,6 +54,7 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
         if (serviceFormSettings?.form_saved_time !== review?.current_form_save_time) {
             fetchReview()
         }
+        // eslint-disable-next-line
     }, [serviceFormSettings, review])
 
     return (

@@ -1,29 +1,16 @@
 import React, { useMemo } from 'react'
 import Table from '../../../UI_Primitives/table/Table'
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
-import ServiceRegistration from '../../../forms/controller/registration/ServiceRegistration';
-import Button from '../../../UI_Primitives/buttons/Button';
-import { TbPencilPlus } from 'react-icons/tb';
+import { useParams } from 'react-router-dom';
 import { api } from '../../../../api';
 import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers';
 
 const CallLogs = () => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { user } = useSelector((state) => state.user)
     const { customer_id } = useParams();
-    const [searchParams] = useSearchParams();
 
     const getSortField = (id) => ({
         'Date': 'called_at',
         'Caller': 'called_by'
     })[id] || id
-
-    const openRegistrationPopUp = (customer) => {
-        dispatch(modal.push({ show: true, title: "Register Service", body: <ServiceRegistration customerName={customer?.Customer} customerId={customer?.CID} /> }))
-    }
 
     const tableColumns = [
         { header: 'Date', accessorKey: 'Date', enableHiding: false },
@@ -47,8 +34,6 @@ const CallLogs = () => {
         const res = await api.vfCv2Axios.get(`/customer/${customer_id}/call-logs?${params}`)
 
         const transformed = res.data.map((item, index) => {
-            const globalIndex = page * pageSize + index + 1
-
             return {
                 'Date': `${isoToDDMonYYYY(item?.called_at)}, ${convertIsoToAmPm(item?.called_at)}`,
                 "Caller": item?.called_by,

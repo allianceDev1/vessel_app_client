@@ -65,35 +65,35 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
         }))
     }
 
-    const handleChangeRepeat = (e) => {
-        const { name, value } = e.target;
+    // const handleChangeRepeat = (e) => {
+    //     const { name, value } = e.target;
 
-        if (name === 'repeat_status') {
-            dispatch(sfActions.updateForm({
-                repeat: {
-                    ...(serviceForm?.repeat || {}),
-                    tech_say: value === 'Yes',
-                    comment: ''
-                }
-            }))
+    //     if (name === 'repeat_status') {
+    //         dispatch(sfActions.updateForm({
+    //             repeat: {
+    //                 ...(serviceForm?.repeat || {}),
+    //                 tech_say: value === 'Yes',
+    //                 comment: ''
+    //             }
+    //         }))
 
-            return;
-        }
+    //         return;
+    //     }
 
-        if (name === 'repeat_comment') {
-            dispatch(sfActions.updateForm({
-                repeat: {
-                    ...(serviceForm?.repeat || {}),
-                    comment: e.target.value || ""
-                }
-            }))
-        }
+    //     if (name === 'repeat_comment') {
+    //         dispatch(sfActions.updateForm({
+    //             repeat: {
+    //                 ...(serviceForm?.repeat || {}),
+    //                 comment: e.target.value || ""
+    //             }
+    //         }))
+    //     }
 
-        dispatch(sfSetting.update({
-            form_saved: false,
-            form_saved_time: null
-        }))
-    }
+    //     dispatch(sfSetting.update({
+    //         form_saved: false,
+    //         form_saved_time: null
+    //     }))
+    // }
 
     const handleChangeWorkStatus = (e) => {
         const { name, value } = e.target;
@@ -173,7 +173,7 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
         if (Object.keys(payload).length > 0) {
             dispatch(sfActions.updateForm(payload));
         }
-
+        // eslint-disable-next-line
     }, [customer])
 
     useEffect(() => {
@@ -188,7 +188,7 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                 }
             }));
         }
-
+        // eslint-disable-next-line
     }, [repeatWork])
 
     useEffect(() => {

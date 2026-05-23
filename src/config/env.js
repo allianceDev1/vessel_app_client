@@ -5,7 +5,8 @@ const env = {
     API: {
         TIMETRACK: process.env.REACT_APP_API_TIMETRACK_SERVER,
         CONTROLNEX: process.env.REACT_APP_API_CONTROLNEX_SERVER,
-        VESSEL: process.env.REACT_APP_API_VESSEL_SERVER
+        VESSEL: process.env.REACT_APP_API_VESSEL_SERVER,
+        FINANCE: process.env.REACT_APP_API_FINANCE
     }
 }
 

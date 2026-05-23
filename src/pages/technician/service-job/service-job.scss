@@ -1,0 +1,129 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.service-job-tech-container {
+    position: relative;
+    margin-bottom: 40px;
+
+    .buttons {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+
+        .menu-buttons {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+            order: 1
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+            order: 2;
+        }
+    }
+
+    .about-content {
+        .text-content {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+
+            .item {
+                background-color: var(--color-natural-trans-53);
+                padding: 10px 15px;
+                border-radius: 10px;
+
+                .label {
+                    font-size: 12px;
+                    color: var((--text-secondary-2));
+                }
+
+                div {
+                    margin-top: 5px;
+
+                    .text-value {
+                        font-size: 13px;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .span-item {
+                grid-column: span 2;
+            }
+
+            .success-item {
+                color: var(--color-success)
+            }
+
+            .danger-item {
+                color: var(--color-danger)
+            }
+
+            .location {
+                cursor: pointer;
+                position: relative;
+
+                svg {
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    font-size: 35px;
+                    transform: translate(0, -50%);
+                    color: var(--color-primary);
+                }
+            }
+        }
+
+        .payment-border {
+            display: grid;
+            grid-template-columns: 1fr;
+            margin-top: 20px;
+            background-color: var(--color-natural-trans-53);
+            border-radius: 10px;
+            padding: 10px 20px;
+
+            .summery-box {
+                .amount {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    padding: 15px 0;
+
+                    .left-section,
+                    .right-section {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        h2 {
+                            font-size: 25px;
+                            font-weight: 600;
+                        }
+
+                        p {
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: var(--text-secondary-2);
+                        }
+                    }
+
+                    .right-section {
+                        text-align: end;
+
+                        h2 {
+                            color: var(--color-success);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

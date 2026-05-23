@@ -1,0 +1,66 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-customer-view-container {
+    position: relative;
+    margin-bottom: 40px;
+
+    .menu-box {
+        padding: 10px 0;
+        position: sticky;
+        top: 0px;
+        z-index: 1;
+        background-color: var(--background);
+        width: 100%;
+        overflow: hidden;
+
+        .slide-menus {
+            display: flex;
+            overflow-y: auto;
+            @include scrollBar();
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 8px;
+                font-size: 14px;
+                min-width: fit-content;
+                font-size: 500;
+
+                svg {
+                    font-size: 18px;
+                }
+
+                &.active {
+                    color: var(--color-primary);
+                    font-weight: 500;
+                    position: relative;
+
+                    &::after {
+                        content: '';
+                        width: 70%;
+                        height: 3px;
+                        position: absolute;
+                        background-color: var(--color-primary-bg);
+                        left: 50%;
+                        bottom: 0;
+                        border-radius: 10px;
+                        transform: translate(-50%, 0%);
+                    }
+                }
+
+                &:hover {
+                    background-color: var(--color-natural-3);
+                }
+            }
+        }
+    }
+
+    .fixed-section {
+        position: fixed;
+        bottom: 70px;
+        right: 20px;
+    }
+}

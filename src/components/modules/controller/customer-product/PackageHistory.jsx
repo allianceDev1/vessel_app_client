@@ -77,7 +77,8 @@ const PackageHistory = () => {
             />}
 
             <div className="history-list">
-                {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack} />)}
+                {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack}
+                    redirectUrl={`/controller/service-package/${pack.serial_number}/about`} />)}
             </div>
 
             {hasNextPage &&

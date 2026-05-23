@@ -1,8 +1,6 @@
 import React from 'react'
 import './service-card.scss'
 import { TbHash, TbUser } from 'react-icons/tb'
-import Badge from '../../../UI_Primitives/badge/Badge'
-import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 
@@ -11,7 +9,7 @@ const CancellationCard = ({ data, pointer = false }) => {
 
     return (
         <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }}>
-            <div className="header" style={{ color: 'white' }}>
+            <div className="card-header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
                         <linearGradient id="cancellationGradient">

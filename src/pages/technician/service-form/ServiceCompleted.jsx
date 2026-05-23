@@ -9,7 +9,7 @@ import { playSuccessAudio } from '../../../utils/services/success_audio_services
 import { useLocation, useNavigate } from 'react-router-dom'
 
 
-const ServiceCompleted = ({ }) => {
+const ServiceCompleted = () => {
     const shareRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -44,7 +44,7 @@ const ServiceCompleted = ({ }) => {
         }
 
         setData(location?.state)
-
+        // eslint-disable-next-line
     }, [])
 
     return (

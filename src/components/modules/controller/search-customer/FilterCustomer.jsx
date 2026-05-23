@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { TbDownload, TbMoodSearch, TbPencilPlus } from 'react-icons/tb'
+import { useSelector } from 'react-redux'
+import { TbDownload } from 'react-icons/tb'
 import { api } from '../../../../api'
-import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import Button from '../../../UI_Primitives/buttons/Button'
@@ -13,7 +12,6 @@ import Badge from '../../../UI_Primitives/badge/Badge'
 
 
 const FilterCustomer = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user)
     const [searchParams] = useSearchParams();
@@ -102,7 +100,9 @@ const FilterCustomer = () => {
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
     }, [navigate, searchParams.get('city_id'), searchParams.get('item_id'), searchParams.get('installation_mode'), searchParams.get('product_type'),
+        // eslint-disable-next-line
         searchParams.get('origin_category'), searchParams.get('package_filter_type'), searchParams.get('package_ids'), searchParams.get('date_filtration_type'),
+        // eslint-disable-next-line
         searchParams.get('from_date'), searchParams.get('end_date')
     ])
 

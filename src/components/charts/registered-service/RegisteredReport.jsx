@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import './report.scss'
-import { Bar, BarChart, ComposedChart, Line, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis, YAxis } from 'recharts'
+import { Bar, ComposedChart, Line, PolarAngleAxis, PolarGrid, Radar, RadarChart, XAxis, YAxis } from 'recharts'
 import ChartTooltip from '../primitives/ChartTooltip'
 import ChartLegend from '../primitives/ChartLegend'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
-import ProfileListCard from '../../modules/common/profile/ProfileListCard'
-import Button from '../../UI_Primitives/buttons/Button'
+
+
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
-import { TbArrowsMaximize, TbPaperclip, TbPin } from 'react-icons/tb'
+import { TbPaperclip } from 'react-icons/tb'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../api'
 import { normalizeRegistrationMiniReports } from '../../../utils/services/chart_service'
 
 
 const RegisteredReport = () => {
+    // eslint-disable-next-line
     const [limit, setLimit] = useState(5);
 
 

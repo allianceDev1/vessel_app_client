@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './service-job.scss'
 import { useDispatch } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbArrowDown, TbArrowUpRight, TbChevronDown, TbClipboardText, TbDownload, TbPasswordFingerprint } from 'react-icons/tb';
+import { TbArrowUpRight, TbChevronDown, TbClipboardText, TbDownload, TbPasswordFingerprint } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -14,6 +14,7 @@ import Badge from '../../../components/UI_Primitives/badge/Badge';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, getTimeDiff, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import VerifyService from '../../../components/forms/controller/completed-service/VerifyService';
+import { downloadServiceBill, downloadServiceReceipt } from '../../../utils/services/finance_service';
 
 
 
@@ -86,38 +87,28 @@ const ServiceJob = () => {
                 <div className="menu-buttons">
                     <Button label={'About'} rounded outlined={pl_product_id || pp_product_id ? true : false} size='small' style={{ width: '100px' }}
                         onClick={() => navigate(`/controller/completed/service-job/${service_srl_no}`)} />
-                    {data?.service_products?.length > 0 && <Dropdown button={{
+                    {(data?.service_products?.length > 0 || data?.purchase_products?.length > 0) && <Dropdown button={{
                         icon: <TbChevronDown />,
-                        label: "Product Logs",
+                        label: "Products",
                         size: 'small',
                         rounded: true,
-                        outlined: pl_product_id && !pp_product_id ? false : true,
-                        style: { width: '150px' }
+                        outlined: (pl_product_id || pp_product_id) ? false : true,
+                        style: { width: '120px' }
                     }}
-                        selected={pl_product_id}
+                        selected={pl_product_id || pp_product_id}
                         list={[
-                            {
+                            ...(data?.service_products?.length > 0 ? [{
+                                heading: 'Product Logs',
                                 items: data?.service_products?.map((pl) => ({
                                     label: pl, value: pl, onClick: () => navigate(`/controller/completed/service-job/${service_srl_no}/pl/${pl}`)
                                 }))
-                            }
-                        ]}
-                    />}
-                    {data?.purchase_products?.length > 0 && <Dropdown button={{
-                        icon: <TbChevronDown />,
-                        label: "Installs",
-                        size: 'small',
-                        rounded: true,
-                        outlined: !pl_product_id && pp_product_id ? false : true,
-                        style: { width: '120px' }
-                    }}
-                        selected={pp_product_id}
-                        list={[
-                            {
+                            }] : []),
+                            ...(data?.purchase_products?.length > 0 ? [{
+                                heading: 'Install Logs',
                                 items: data?.purchase_products?.map((pp) => ({
                                     label: pp, value: pp, onClick: () => navigate(`/controller/completed/service-job/${service_srl_no}/pp/${pp}`)
                                 }))
-                            }
+                            }] : [])
                         ]}
                     />}
                 </div>
@@ -142,8 +133,11 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => alert('Bill') },
-                                    { icon: <TbDownload />, label: "Receipt", onClick: () => alert('Receipt') },
+                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadServiceBill(service_srl_no) },
+                                    {
+                                        icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
+                                        onClick: () => downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+                                    },
                                 ]
                             }
                         ]}

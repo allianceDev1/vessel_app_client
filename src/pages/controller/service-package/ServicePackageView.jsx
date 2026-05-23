@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import '../customer-product/customer-product-view.scss'
-import moment from "moment"
 import { useDispatch } from 'react-redux'
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbDropletBolt, TbDropletPlus, TbMessage, TbPlayCard4, TbSnowflake } from 'react-icons/tb';
+import {  page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbDropletBolt, TbDropletPlus, TbPlayCard4, TbSnowflake } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import Button from '../../../components/UI_Primitives/buttons/Button';
-import Badge from '../../../components/UI_Primitives/badge/Badge';
+
 
 const ServicePackageView = () => {
     const dispatch = useDispatch();

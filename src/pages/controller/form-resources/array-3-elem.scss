@@ -1,0 +1,55 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.array-3-elem-page-container {
+
+  .top-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+  }
+
+  .masonry {
+    columns: 4 250px;
+    column-gap: 12px;
+  }
+
+  .card {
+    break-inside: avoid;
+    margin-bottom: 12px;
+
+    background-color: var(--color-natural-2);
+    border-radius: 10px;
+    padding: 15px;
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 5px;
+      align-items: center;
+
+      h4 {
+        font-size: 15px;
+        font-weight: 500;
+        @include threeDots();
+      }
+    }
+
+    .section {
+      margin-top: 15px;
+
+      h5 {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary-2);
+        @include threeDots();
+        margin-bottom: 3px;
+      }
+
+      p {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.6;
+      }
+    }
+  }
+}

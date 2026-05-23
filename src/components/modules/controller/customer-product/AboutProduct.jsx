@@ -5,16 +5,25 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbDropletStar, TbMapPin, TbMoodSpark, TbPencil } from 'react-icons/tb'
-import { redirectViewLocation } from '../../../../utils/services/location_services'
+import { TbAlignLeft, TbCalendarCheck, TbCheck, TbDropletStar, TbX } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
+import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
+import { IoIosArrowDown } from 'react-icons/io'
+import { useDispatch } from 'react-redux'
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import ChangeProductStatus from '../../../forms/controller/product/ChangeProductStatus'
+import UpdateProduct from '../../../forms/controller/product/UpdateProduct'
+import EditNote from '../../../forms/controller/product/EditNote'
+import UpdateServiceDate from '../../../forms/controller/product/UpdateServiceDate'
 
 const AboutProduct = () => {
+    const dispatch = useDispatch();
     const { customer_id, product_id } = useParams();
+
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['controller_customer_product_info', customer_id, product_id],
@@ -25,12 +34,44 @@ const AboutProduct = () => {
         staleTime: 60_000
     })
 
-    const handleViewLocation = () => {
-        if (!data?.address?.location?.length) {
-            return
+    const dropdownOptions = [
+        {
+            items: [
+                { label: 'Update Product', icon: <TbDropletStar />, onClick: () => openUpdateProductModel() },
+                { label: 'Edit Note', icon: <TbAlignLeft />, onClick: () => openUpdateNoteModel() },
+                { label: 'Change Service Date', icon: <TbCalendarCheck />, onClick: () => openUpdateServiceDateModel() }
+            ]
         }
-        redirectViewLocation(null, data?.address?.location?.[0], data?.address?.location?.[1], data?.address?.place, data?.address?.post)
-    };
+    ]
+
+    const openStatusChangeModel = (status) => {
+        dispatch(modal.push({
+            title: status === 'DISCONNECT' ? 'Disconnect the Product' : 'Reconnect the Product',
+            body: <ChangeProductStatus status={status} productId={product_id} customerId={customer_id} />
+        }))
+    }
+
+    const openUpdateProductModel = () => {
+        dispatch(modal.push({
+            title: 'Update Product Details',
+            body: <UpdateProduct data={data} productId={product_id} customerId={customer_id} />
+        }))
+    }
+
+    const openUpdateNoteModel = () => {
+        dispatch(modal.push({
+            title: 'Edit Note',
+            body: <EditNote note={data?.note} productId={product_id} customerId={customer_id} />
+        }))
+    }
+
+    const openUpdateServiceDateModel = () => {
+        dispatch(modal.push({
+            title: 'Change Service Date',
+            body: <UpdateServiceDate data={data} productId={product_id} customerId={customer_id} />
+        }))
+    }
+
 
     if (isLoading) {
         return <div>
@@ -59,7 +100,22 @@ const AboutProduct = () => {
     return (
         <div className="controller-about-customer-container">
             <div className="menu-buttons">
-                <Button icon={<TbPencil />} label={'Edit Product'} size='small' outlined rounded style={{ width: '135px' }} />
+                {data?.product_active
+                    ? <Button icon={<TbX />} label={'Disconnect'} size='small' severity={'danger'} rounded style={{ width: '120px' }}
+                        onClick={() => openStatusChangeModel('DISCONNECT')} />
+                    : <Button icon={<TbCheck />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
+                        onClick={() => openStatusChangeModel('CONNECT')} />}
+                <Dropdown
+                    button={{
+                        icon: <IoIosArrowDown />,
+                        label: 'Action',
+                        size: "small",
+                        rounded: true,
+                        outlined: true,
+                        style: { width: '100px' }
+                    }}
+                    list={dropdownOptions}
+                />
             </div>
             <div className="reg-content">
                 <div className="list">
@@ -74,8 +130,8 @@ const AboutProduct = () => {
                         <div style={{ display: 'flex', gap: '15px' }}>
                             <p className='text-value'>{data?.product_id} </p>
                             {data?.product_active
-                                ? <Badge value={'Active'} severity={'success'} />
-                                : <Badge value={'Inactive'} severity={'danger'} />}
+                                ? <Badge value={'Connected'} severity={'success'} />
+                                : <Badge value={'Disconnected'} severity={'danger'} />}
 
                         </div>
                     </div>

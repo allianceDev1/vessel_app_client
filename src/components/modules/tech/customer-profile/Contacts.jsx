@@ -27,9 +27,11 @@ const Contacts = ({ contacts: { primary, secondary, whatsapp, additional } }) =>
     //     }
     // };
 
+    console.log(whatsapp)
+
     return (
         <div className="tech-customer-contacts">
-            <div className="contacts-container">
+            <div className="contacts-container" style={{ gridTemplateColumns: additional ? 'repeat(4,1fr)' : 'repeat(3,1fr)' }}>
                 <div className={primary?.length > 4 ? "call-button" : "call-button disable-button"} onClick={() => handleCallClick(primary)}>
                     <TbPhone />
                     <p>Primary</p>
@@ -38,10 +40,10 @@ const Contacts = ({ contacts: { primary, secondary, whatsapp, additional } }) =>
                     <TbPhone />
                     <p>Secondary</p>
                 </div>
-                <div className={additional?.length > 4 ? "call-button" : "call-button disable-button"} onClick={() => handleCallClick(additional)}>
+                {additional && <div className={additional?.length > 4 ? "call-button" : "call-button disable-button"} onClick={() => handleCallClick(additional)}>
                     <TbPhone />
                     <p>Additional</p>
-                </div>
+                </div>}
                 <div className={whatsapp?.length > 4 ? "call-button" : "call-button disable-button"} onClick={() => handleWhatsappClick(whatsapp)}>
                     <TbBrandWhatsapp />
                     <p>Whatsapp</p>

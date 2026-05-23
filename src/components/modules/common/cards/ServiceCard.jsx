@@ -11,7 +11,7 @@ const ServiceCard = ({ data, pointer = false, onClick = () => { } }) => {
 
     return (
         <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }} onClick={onClick}>
-            <div className="header" style={{ color: 'white' }}>
+            <div className="card-header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
                         <linearGradient id="serviceGradient">

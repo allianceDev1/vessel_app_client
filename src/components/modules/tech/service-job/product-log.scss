@@ -1,0 +1,88 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-service-job-log-view-container {
+    .text-content {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+
+        .item {
+            background-color: var(--color-natural-trans-53);
+            padding: 10px 15px;
+            border-radius: 10px;
+
+            .label {
+                font-size: 12px;
+                color: var((--text-secondary-2));
+            }
+
+            div {
+                margin-top: 5px;
+
+                .text-value {
+                    font-size: 13px;
+                    font-weight: 500;
+                }
+            }
+        }
+
+        .success-item {
+            color: var(--color-success)
+        }
+
+        .danger-item {
+            color: var(--color-danger)
+        }
+    }
+
+    .sub-title {
+        @include subTitleSmall();
+        margin: 25px 0 15px 0;
+    }
+
+    .assessment-report-border {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+
+        .section-border {
+            h4 {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary-4);
+                margin-bottom: 10px;
+            }
+
+            .list {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                align-items: center;
+                margin: 6px 0;
+
+                .label,
+                .text-value {
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+
+                .label {
+                    color: var(--text-secondary-2);
+                }
+            }
+        }
+    }
+
+    .table-list {
+        .table-menu {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .table-box {
+            margin-top: 10px;
+        }
+    }
+}

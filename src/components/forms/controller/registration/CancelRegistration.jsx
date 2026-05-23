@@ -4,12 +4,10 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { api } from '../../../../api'
 import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 
 const CancelRegistration = ({ registrationId }) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState('')
     const [form, setForm] = useState({ reason: null })
     const queryClient = useQueryClient()

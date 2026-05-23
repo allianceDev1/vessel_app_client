@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux';
-import Button from '../../../components/UI_Primitives/buttons/Button';
 import './home.scss'
 import { TbChevronsUp, TbTagFilled, TbTarget } from 'react-icons/tb';
 

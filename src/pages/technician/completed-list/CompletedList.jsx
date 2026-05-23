@@ -17,7 +17,7 @@ import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGri
 const CompletedList = () => {
     const LIMIT = 10;
     const dispatch = useDispatch();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Completed Services', note: "All your closed service jobs" }))
@@ -111,7 +111,9 @@ const CompletedList = () => {
                     <div className="content">
                         <div className="list-items">
                             {allServiceJobs?.map((job) => {
-                                return <ServiceJobItem key={job?.service_srl_no} data={job} />
+                                return <ServiceJobItem key={job?.service_srl_no} data={job}
+                                    redirectUrl={`/tech/completed/service-job/${job?.service_srl_no}`}
+                                />
                             })}
                         </div>
                         {hasNextPage && <div className="more-button">

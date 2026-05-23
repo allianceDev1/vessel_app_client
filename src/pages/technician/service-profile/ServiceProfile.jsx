@@ -17,11 +17,12 @@ import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbBorderAll, TbCalendarTime, TbCornerUpRightDouble, TbMessage2Plus } from 'react-icons/tb';
 import { api } from '../../../api';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 
 const ServiceProfile = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { customer_id, service_type } = useParams();
     const [searchParams] = useSearchParams()
     const [loading, setLoading] = useState('fetch')
@@ -39,7 +40,7 @@ const ServiceProfile = () => {
             const apis = [
                 api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
                 api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
-                api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?page=1&limit=20`),
+                api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?page=0&limit=10`),
             ]
 
             if (searchParams.get('reg_id')) {
@@ -50,7 +51,7 @@ const ServiceProfile = () => {
 
             setCustomer(customerRes)
             setUpServices(upServiceRes)
-            setCallLogs(callLogsRes)
+            setCallLogs(callLogsRes?.data)
             setRegService(regServiceRes || {})
 
         } catch (err) {
@@ -129,7 +130,7 @@ const ServiceProfile = () => {
                 fullName={customer?.customer_name}
                 customerId={customer?.cid}
                 isActive={true}
-                onClick={() => { }}
+                onClick={() => navigate(`/tech/customer/${customer_id}/about`)}
             />
             <Contacts
                 contacts={{

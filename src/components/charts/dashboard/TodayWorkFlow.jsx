@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine } from "recharts";
-import { chartLabelColors } from "../../../assets/javascript/pre_data/chart";
+
 
 const STATUS_CONFIG = {
     Completed: { label: "Completed", color: "#22c55e", bg: "var(--surface-1)" },
@@ -22,11 +22,6 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
         const ampm = h < 12 ? "AM" : "PM";
         const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
         return `${h12}:${m} ${ampm}`;
-    }
-
-    function getNowDecimal() {
-        const now = new Date();
-        return now.getHours() + Number((now.getMinutes() / 60).toFixed(2));
     }
 
     function getStatus(w) {

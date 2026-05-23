@@ -144,7 +144,7 @@ const AreaList = () => {
 
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
-    }, [viewType, navigate]) 
+    }, [viewType, navigate])
 
 
     // ── 4. Edit modal ─────────────────────────────────────────────────────────
@@ -328,3 +328,5 @@ const AreaList = () => {
 }
 
 export default AreaList
+
+

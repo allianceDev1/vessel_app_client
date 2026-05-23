@@ -7,7 +7,6 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { TbCircleCheck } from 'react-icons/tb'
 import { packageExtendForm } from '../../../../utils/validators/package_form'
 import { api } from '../../../../api'
-import { useParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
@@ -16,6 +15,7 @@ const PackageExtend = ({ expireDate, packageSrlNo }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({})
+    // eslint-disable-next-line
     const [error, setError] = useState({})
     const queryClient = useQueryClient()
 
@@ -41,9 +41,9 @@ const PackageExtend = ({ expireDate, packageSrlNo }) => {
         }
 
         setLoading(true)
-  
+
         try {
-            const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/extend`, {
+            await api.vfCv2Axios.post(`/package/${packageSrlNo}/extend`, {
                 extended_to: form?.extended_to,
                 comment: form?.comment
             })

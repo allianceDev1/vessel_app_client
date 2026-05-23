@@ -5,7 +5,7 @@ import { price_unit_objects } from '../../../../assets/javascript/pre_data/units
 import { TbMoodAnnoyed } from 'react-icons/tb';
 import { toast, modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../../api'
-import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
+
 import InputText from '../../../UI_Primitives/inputs/InputText';
 import Select from '../../../UI_Primitives/inputs/Select';
 import Radio from '../../../UI_Primitives/inputs/Radio';
@@ -17,8 +17,8 @@ import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 const UpdatePackageService = ({ packageId, serviceData, setServiceList }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState('')
-  const [packages, setPackages] = useState([])
   const [form, setForm] = useState({})
+  // eslint-disable-next-line
   const [error, setError] = useState({ error: false, title: null, message: null })
 
   const handleChangeForm = (e) => {

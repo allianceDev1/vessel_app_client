@@ -18,6 +18,7 @@ const TopUp = () => {
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Token Top-up', note: "Top up token base products services" }))
+        // eslint-disable-next-line
     }, [])
 
     return (

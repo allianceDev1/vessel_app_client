@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './controllerLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
-import { TbClipboardText, TbClockStar, TbDropletCog, TbFilePhone, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbPaperclip, TbReport } from 'react-icons/tb';
+import { TbClipboardText, TbClockStar, TbDropletCog, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbPaperclip } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';

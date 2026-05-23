@@ -81,7 +81,7 @@ const ProductList = () => {
                                         value={vessel?.package?.package_name}
                                         style={{ backgroundColor: vessel?.package?.color_code, color: getContrastText(vessel?.package?.color_code) }} />}
                                     {vessel?.rental && <Badge value={'Rental'} />}
-                                    {!vessel?.active && <Badge severity={'danger'} value={'Inactive'} />}
+                                    {!vessel?.active && <Badge severity={'danger'} value={'Disconnected'} />}
                                 </div>
                             </div>
                         </div>
@@ -111,7 +111,7 @@ const ProductList = () => {
                                         value={vessel?.package?.package_name}
                                         style={{ backgroundColor: vessel?.package?.color_code, color: getContrastText(vessel?.package?.color_code) }} />}
                                     {vessel?.rental && <Badge value={'Rental'} />}
-                                    {!vessel?.active && <Badge severity={'danger'} value={'Inactive'} />}
+                                    {!vessel?.active && <Badge severity={'danger'} value={'Disconnected'} />}
                                 </div>
                             </div>
                         </div>

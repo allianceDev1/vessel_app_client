@@ -13,7 +13,7 @@ const AboutCustomer = () => {
     const { customer_id } = useParams();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['controller_customer_profile', customer_id],
+        queryKey: ['customer_profile', customer_id],
         queryFn: async () => {
             const data = await api.cnAv1Axios(`/customer/${customer_id}/profile`)
             return data;

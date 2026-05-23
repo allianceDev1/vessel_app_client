@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './customer-view.scss'
 import { useDispatch } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbArrowUpRight, TbManualGearbox, TbMessage, TbMessagePlus, TbMoodSpark, TbPencilPlus, TbPlayCard4, TbPlus, TbReport } from 'react-icons/tb';
+import { TbArrowUpRight, TbManualGearbox, TbMessage, TbMessagePlus, TbMoodSpark, TbPencilPlus,  TbPlus } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button';
-import Badge from '../../../components/UI_Primitives/badge/Badge';
 import ServiceRegistration from '../../../components/forms/controller/registration/ServiceRegistration';
 import AddCallLog from '../../../components/forms/common/add-call-log/AddCallLog';
 import moment from "moment"

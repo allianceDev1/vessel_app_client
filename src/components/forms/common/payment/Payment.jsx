@@ -57,7 +57,7 @@ const Payment = ({
             payments: payments,
             payment_later: paymentLater
         })
-
+        // eslint-disable-next-line
     }, [payments, paymentLater])
 
     return (

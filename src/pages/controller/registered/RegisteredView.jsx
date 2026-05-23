@@ -7,7 +7,7 @@ import RegistrationInfo from '../../../components/modules/controller/registered-
 // import VisitInfo from '../../../components/modules/controller/registered-service/VisitInfo';
 // import RegistrationRoute from '../../../components/modules/controller/registered-service/RegistrationRoute';
 import { useNavigate, useParams } from 'react-router-dom';
-import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbExposurePlus1, TbHomeSearch, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
+import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbHomeSearch, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTimeDiff } from '../../../utils/helpers/date-helpers';

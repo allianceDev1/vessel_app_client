@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './customer-product-view.scss'
-import moment from "moment"
 import { useDispatch } from 'react-redux'
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbArrowUpRight, TbCircleCheck, TbDropletBolt, TbDropletStar, TbManualGearbox, TbMessage, TbMessagePlus, TbMoodSpark, TbPencilPlus, TbPlayCard4, TbPlus, TbReport, TbSquareLetterS } from 'react-icons/tb';
+import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbCircleCheck, TbDropletBolt, TbDropletStar, TbPlayCard4, TbSquareLetterS } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import Button from '../../../components/UI_Primitives/buttons/Button';
-import Badge from '../../../components/UI_Primitives/badge/Badge';
+
 
 const CustomerProductView = () => {
     const dispatch = useDispatch();

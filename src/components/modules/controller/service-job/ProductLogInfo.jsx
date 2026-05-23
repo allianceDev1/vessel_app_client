@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './product-log.scss'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import { convertIsoToAmPm, formatDuration, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
+import {  isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
@@ -16,7 +16,7 @@ const ProductLogInfo = () => {
     const { service_srl_no, pl_product_id } = useParams();
     const [activeSection, setActionSection] = useState('')
 
-    const { data, isLoading, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ['service_job_product_log_view', service_srl_no, "pl", pl_product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/product-log/${pl_product_id}`);
@@ -101,67 +101,6 @@ const ProductLogInfo = () => {
                     })
                 }
         }
-
-
-        return {}
-        // switch (listType) {
-        //     case 'customer':
-
-        //         setColumnVisibility({
-        //             'Post Office': false,
-        //             'Reg No': false
-        //         })
-
-        //         return [
-        //             { header: 'Date', accessorKey: 'Date', enableHiding: false },
-        //             { header: 'CID', accessorKey: 'CID', enableHiding: false },
-        //             { header: 'Customer name', accessorKey: 'Customer name' },
-        //             { header: 'Post Office', accessorKey: 'Post Office' },
-        //             { header: 'City', accessorKey: 'City' },
-        //             { header: 'Service Srl No', accessorKey: 'Service Srl No', enableSorting: false },
-        //             { header: 'Reg No', accessorKey: 'Reg No' },
-        //             { header: 'Technician', accessorKey: 'Technician', enableSorting: false },
-        //             { header: 'In Time', accessorKey: 'In Time', enableSorting: false },
-        //             { header: 'Out Time', accessorKey: 'Out Time', enableSorting: false },
-        //         ]
-
-        //     case 'product': {
-        //         setColumnVisibility({
-        //             'Customer name': false,
-        //             'Reg No': false
-        //         })
-
-        //         return [
-        //             { header: 'Date', accessorKey: 'Date', enableHiding: false },
-        //             { header: 'CID', accessorKey: 'CID', enableHiding: false },
-        //             { header: 'Customer name', accessorKey: 'Customer name' },
-        //             { header: 'Product Id', accessorKey: 'Product Id', },
-        //             { header: 'Origin', accessorKey: 'Origin', },
-        //             {
-        //                 header: 'Package',
-        //                 enableSorting: false,
-        //                 enableColumnFilter: false,
-        //                 meta: { style: { textAlign: 'center' } },
-        //                 cell: ({ row }) => {
-        //                     if (row.original.package_id) {
-        //                         return <Badge value={row.original.package_name}
-        //                             style={{
-        //                                 backgroundColor: row.original.package_color_code,
-        //                                 color: getContrastText(row.original.package_color_code)
-        //                             }} />
-        //                     }
-        //                 },
-        //             },
-        //             { header: 'Service', accessorKey: 'Service' },
-        //             { header: 'Service Srl No', accessorKey: 'Service Srl No' },
-        //             { header: 'Reg No', accessorKey: 'Reg No', enableSorting: false },
-        //             { header: 'Technician', accessorKey: 'Technician', enableSorting: false },
-        //         ]
-        //     }
-
-        //     default:
-        //         return []
-        // }
     }, [data, activeSection])
 
     useEffect(() => {

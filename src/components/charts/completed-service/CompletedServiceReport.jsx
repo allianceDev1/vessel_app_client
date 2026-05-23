@@ -7,7 +7,7 @@ import ChartLegend from '../primitives/ChartLegend'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { getGrowthPercentage } from '../../../utils/helpers/math-equations'
 import { convertAmount } from '../../../utils/helpers/text-formatting'
-import { normalizeCompletedCityReport, normalizeCompletedModeReport } from '../../../utils/services/chart_service'
+import { normalizeCompletedModeReport } from '../../../utils/services/chart_service'
 import moment from 'moment'
 
 
@@ -112,7 +112,7 @@ const CompletedServiceReport = ({ data, loading, error, updatedAt }) => {
             cityReport: city_report,
             getAllPackages
         }
-
+        // eslint-disable-next-line
     }, [data, loading, error])
 
     return (

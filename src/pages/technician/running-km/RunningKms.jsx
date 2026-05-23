@@ -6,11 +6,9 @@ import InputText from '../../../components/UI_Primitives/inputs/InputText'
 import { useSearchParams } from 'react-router-dom';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
-import { TbBike, TbBikeOff, TbPlus } from 'react-icons/tb';
-import moment from 'moment';
-import Button from '../../../components/UI_Primitives/buttons/Button';
+import { TbBikeOff } from 'react-icons/tb';
 import { generateMonthlyRunningCalendar, generateMonthlyRunningReport } from '../../../utils/services/work_services';
-import { isoToDDMonYYYY, isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
+import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
 import { api } from '../../../api'
 import UpdateRunningKm from '../../../components/modules/tech/running-km/UpdateRunningKm';
 

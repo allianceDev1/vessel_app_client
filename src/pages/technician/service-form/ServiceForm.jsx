@@ -155,6 +155,7 @@ const ServiceForm = () => {
 
         // initial fetch
         fetchApi()
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
@@ -167,6 +168,7 @@ const ServiceForm = () => {
                 })
             }
         }
+        // eslint-disable-next-line
     }, [customer, regData])
 
 
