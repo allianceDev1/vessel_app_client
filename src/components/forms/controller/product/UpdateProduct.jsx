@@ -15,7 +15,7 @@ const UpdateProduct = ({ data, productId, customerId }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
-        item_id: data?.item_id || '',
+        sku: data?.sku || '',
         order_id: data?.order_id || '',
         origin_category: data?.origin_category || '',
         installation_mode: data?.installation_mode_uuid || '',
@@ -77,7 +77,7 @@ const UpdateProduct = ({ data, productId, customerId }) => {
     return (
         <div>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <InputText label={'Model No / Item Id'} name={'item_id'} value={form?.item_id} required
+                <InputText label={'SKU'} name={'sku'} value={form?.sku} required
                     onChange={handleChange} />
                 {data?.product_type === 'VESSEL_FILTER' &&
                     <InputText label={'Order Id'} name={'order_id'} required value={form?.order_id}

@@ -1,7 +1,13 @@
 import React from 'react'
 import { Tooltip } from 'recharts'
 
-const ChartTooltip = ({ labelFormatter } = {}) => {
+const ChartTooltip = ({
+    labelFormatter,
+    valueFormatter,
+    nameVisibility = true,
+    nameColorVisibility = true,
+    labelVisibility = true
+} = {}) => {
     return <Tooltip
         cursor={false}
         content={({ active, payload, label }) => {
@@ -14,39 +20,42 @@ const ChartTooltip = ({ labelFormatter } = {}) => {
                     color: 'var(--text-primary)',
                     borderRadius: '8px',
                     padding: '6px 10px',
-                    fontSize: '13px',
+                    fontSize: '13px'
                 }}>
                     {/* Optional label/title row */}
-                    {label && (
+                    {(label && labelVisibility) && (
                         <p style={{ margin: '0 0 4px 0', fontWeight: 600 }}>
                             {labelFormatter ? labelFormatter(label) : label}
                         </p>
                     )}
 
                     {/* Each data entry with a color dot */}
-                    {payload.map((entry, index) => (
-                        <div key={index} style={{
+                    {payload.map((entry, index) => {
+                        const color = entry.color || entry.fill || entry.payload?.fill || entry.payload?.color_code
+
+                        return <div key={index} style={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: '6px',
                             padding: '2px 0',
                         }}>
                             {/* Color dot */}
-                            <span style={{
+                            {nameColorVisibility && <span style={{
                                 display: 'inline-block',
                                 width: '8px',
                                 height: '8px',
                                 borderRadius: '50%',
-                                backgroundColor: entry.color,
+                                backgroundColor: color,
                                 flexShrink: 0,
-                            }} />
+                            }} />}
 
                             {/* Label + value */}
                             <span style={{ color: 'var(--text-primary)' }}>
-                                {entry.name}: <strong>{entry.value}</strong>
+                                {nameVisibility ? `${entry.name} : ` : ''}
+                                <strong>{valueFormatter ? valueFormatter(entry.value) : entry.value}</strong>
                             </span>
                         </div>
-                    ))}
+                    })}
                 </div>
             )
         }}

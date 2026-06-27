@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './area-list.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
@@ -21,6 +21,7 @@ const AreaList = () => {
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user)
     const [searchParams, setSearchParams] = useSearchParams();
+    const [deletingKey, setDeletingKey] = useState(null);
     const queryClient = useQueryClient()
 
     const viewType = searchParams.get('view_type') || 'cityBase'
@@ -174,6 +175,8 @@ const AreaList = () => {
             accept: {
                 onClick: async () => {
                     try {
+                        const key = `${arr[0].worker_uuid}-${arr[0].city_id}`;
+                        setDeletingKey(key);
                         await api.vfCv2Axios.delete(`/branch-area/cities/technicians`, { data: { workers: arr } })
                         queryClient.invalidateQueries({ queryKey: ['area-data', viewType] })
                         clearSelection()
@@ -183,6 +186,8 @@ const AreaList = () => {
                             head: 'Deletion failed',
                             message: error.message
                         }))
+                    } finally {
+                        setDeletingKey(null);
                     }
                 }
             }
@@ -211,26 +216,32 @@ const AreaList = () => {
                     { header: 'To date', accessorKey: 'To date', enableSorting: false },
                 ]
 
-                if (user?.allowed_origins?.includes('vfcr_areas_write')) {
+                if (user?.allowed_origins?.some(origin => ['vessel_c_writer', 'vessel_c_admin']?.includes(origin))) {
                     cols.push({
                         header: 'Actions',
                         enableSorting: false,
                         enableColumnFilter: false,
-                        cell: ({ row }) => (
-                            <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
-                                <Button rounded title={'Edit'}
-                                    icon={<TbPencil />} size='small' outlined
-                                    onClick={() => openEditModal(row.original)}
-                                />
-                                <Button rounded severity={'danger'} title={'Delete'}
-                                    icon={<TbTrash />} size='small' outlined
-                                    spinIcon={row.original.deletedLoad}
-                                    onClick={() => handleDeleteTech([
-                                        { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
-                                    ])}
-                                />
-                            </div>
-                        ),
+                        cell: ({ row }) => {
+                            const rowKey = `${row.original.worker_uuid}-${row.original.city_id}`;
+
+                            return (
+                                <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
+                                    <Button rounded title={'Edit'}
+                                        icon={<TbPencil />} size='small' outlined
+                                        onClick={() => openEditModal(row.original)}
+                                    />
+                                    {user?.allowed_origins?.includes('vessel_c_admin') &&
+                                        <Button rounded severity={'danger'} title={'Delete'}
+                                            icon={<TbTrash />} size='small' outlined
+                                            spinIcon={deletingKey === rowKey}
+                                            disabled={deletingKey === rowKey}
+                                            onClick={() => handleDeleteTech([
+                                                { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
+                                            ])}
+                                        />}
+                                </div>
+                            )
+                        },
                     })
                 }
                 return cols
@@ -253,7 +264,7 @@ const AreaList = () => {
             default:
                 return []
         }
-    }, [viewType, user?.allowed_origins])  // eslint-disable-line react-hooks/exhaustive-deps
+    }, [viewType, user?.allowed_origins, deletingKey])  // eslint-disable-line react-hooks/exhaustive-deps
 
 
     // Data
@@ -307,7 +318,7 @@ const AreaList = () => {
                     )}
                     topComponents={
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Button label={'Excel'} icon={<TbDownload />} outlined size='small' rounded style={{ width: '100px' }} />
+                            {/* <Button label={'Excel'} icon={<TbDownload />} outlined size='small' rounded style={{ width: '100px' }} /> */}
                             <Dropdown button={{
                                 label: searchParams.get('view_type') === 'techBase' ? 'Tech view' :
                                     searchParams.get('view_type') === 'postBase' ? 'Post view' :

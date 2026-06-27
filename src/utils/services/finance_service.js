@@ -8,10 +8,6 @@ const downloadServiceBill = async (serviceSrlNumber) => {
         responseType: "blob"
     });
 
-    console.log(response);
-    console.log(response.headers["content-type"]);
-    console.log(response.size);
-
     const blob = new Blob([response.data], {
         type: "application/pdf"
     });
@@ -31,10 +27,6 @@ const downloadServiceReceipt = async (billNo) => {
     const response = await axios.get(`${env.API.FINANCE}/p/download/pdf/receipt/bn/${billNo}`, {
         responseType: "blob"
     });
-
-    console.log(response);
-    console.log(response.headers["content-type"]);
-    console.log(response.size);
 
     const blob = new Blob([response.data], {
         type: "application/pdf"

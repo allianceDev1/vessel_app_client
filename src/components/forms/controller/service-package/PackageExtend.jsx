@@ -108,7 +108,7 @@ const PackageExtend = ({ expireDate, packageSrlNo }) => {
                         }
                     }} />
                 <Button label={expired ? 'Extend & Re-activate Package' : 'Extend Package'} rounded
-                    severity={expired ? 'success' : 'primary'} spinIcon={loading} />
+                    severity={expired ? 'success' : 'primary'} spinIcon={loading} disabled={loading} />
             </form>
         </div>
     )

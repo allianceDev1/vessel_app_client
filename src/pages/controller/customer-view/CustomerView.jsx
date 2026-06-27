@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './customer-view.scss'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbArrowUpRight, TbManualGearbox, TbMessage, TbMessagePlus, TbMoodSpark, TbPencilPlus,  TbPlus } from 'react-icons/tb';
+import { TbArrowUpRight, TbManualGearbox, TbMessage, TbMessagePlus, TbMoodSpark, TbPencilPlus, TbPlus } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import ServiceRegistration from '../../../components/forms/controller/registration/ServiceRegistration';
@@ -16,6 +16,7 @@ const CustomerView = () => {
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('');
     const { customer_id } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     const navigateSubMenu = (url) => {
         navigate(url)
@@ -64,14 +65,15 @@ const CustomerView = () => {
                 <div className="title">
                     <h2>{`Customer ID : ${customer_id}`}</h2>
                 </div>
-                <div className="actions">
-                    <Button label={'Product'} icon={<TbPlus />} size='small' severity={'primary'} rounded style={{ width: '100px' }}
-                        onClick={openAddProductPopUp} />
-                    <Button label={'Call Log'} icon={<TbMessagePlus />} size='small' outlined rounded style={{ width: '110px' }}
-                        onClick={() => openEnterCallLogPopUp({ customer_id })} />
-                    <Button label={'Registration'} icon={<TbPencilPlus />} size='small' outlined rounded style={{ width: '130px' }}
-                        onClick={() => openRegistrationPopUp({ customer_id })} />
-                </div>
+                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                    <div className="actions">
+                        <Button label={'Product'} icon={<TbPlus />} size='small' severity={'primary'} rounded style={{ width: '100px' }}
+                            onClick={openAddProductPopUp} />
+                        <Button label={'Call Log'} icon={<TbMessagePlus />} size='small' outlined rounded style={{ width: '110px' }}
+                            onClick={() => openEnterCallLogPopUp({ customer_id })} />
+                        <Button label={'Registration'} icon={<TbPencilPlus />} size='small' outlined rounded style={{ width: '130px' }}
+                            onClick={() => openRegistrationPopUp({ customer_id })} />
+                    </div>}
             </div>
             <div className="menu-box">
                 <div className="slide-menus">
@@ -97,13 +99,12 @@ const CustomerView = () => {
                         <p>Service Jobs</p>
                         <TbArrowUpRight />
                     </div>
-
                 </div>
             </div>
             <div className="customer-content">
                 <Outlet />
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -118,8 +118,6 @@ const Table = ({
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    console.log(columnVisible)
-
 
     // ── Determine mode ──────────────────────────────────────────────────────
     const isServerMode = !!fetchFn

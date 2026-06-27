@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './view-service-package.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { useParams } from 'react-router-dom';
 import { api } from '../../../api';
@@ -26,6 +26,7 @@ const ViewServicePackage = () => {
     const [serviceList, setServiceList] = useState([])
     const [loading, setLoading] = useState('fetch')
     const [error, setError] = useState({ error: false, title: null, message: null })
+    const { user } = useSelector((state) => state.user)
 
     const openModal = (title, body, style) => {
         dispatch(modal.push({
@@ -139,17 +140,18 @@ const ViewServicePackage = () => {
 
     return (
         <div className="view-service-package-page">
-            <div className="top-section">
-                <div className="action-buttons">
-                    <Button label={'Update'} icon={<TbPencil />} size='small' outlined rounded style={{ width: '100px' }}
-                        onClick={() => openModal('Update package', <UpdatePackage data={packageInfo} setData={setPackageInfo} />, { width: "800px" })} />
-                    {packageInfo?.is_active
-                        ? <Button label={'Disable'} icon={<TbEyeClosed />} severity={'danger'} size='small' rounded style={{ width: '100px' }}
-                            onClick={() => updateActiveStatus(false)} />
-                        : <Button label={'Enable'} icon={<TbEye />} severity={'info'} size='small' rounded style={{ width: '100px' }}
-                            onClick={() => updateActiveStatus(true)} />}
-                </div>
-            </div>
+            {user?.allowed_origins?.includes('vessel_c_admin') &&
+                <div className="top-section">
+                    <div className="action-buttons">
+                        <Button label={'Update'} icon={<TbPencil />} size='small' outlined rounded style={{ width: '100px' }}
+                            onClick={() => openModal('Update package', <UpdatePackage data={packageInfo} setData={setPackageInfo} />, { width: "800px" })} />
+                        {packageInfo?.is_active
+                            ? <Button label={'Disable'} icon={<TbEyeClosed />} severity={'danger'} size='small' rounded style={{ width: '100px' }}
+                                onClick={() => updateActiveStatus(false)} />
+                            : <Button label={'Enable'} icon={<TbEye />} severity={'info'} size='small' rounded style={{ width: '100px' }}
+                                onClick={() => updateActiveStatus(true)} />}
+                    </div>
+                </div>}
             <div className="package-title" style={{
                 borderColor: packageInfo?.color_code,
                 background: `linear-gradient(50deg,
@@ -301,9 +303,10 @@ const ViewServicePackage = () => {
                                             )
                                         })}
                                     </div>}
+                                    {user?.allowed_origins?.includes('vessel_c_admin') && 
                                     <div className="buttons">
                                         <Button icon={<TbEdit />} rounded outlined size='small' onClick={() => handelEditService(item)} />
-                                    </div>
+                                    </div>}
                                 </div>)
                         })}
                     </div>}

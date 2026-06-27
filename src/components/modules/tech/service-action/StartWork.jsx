@@ -8,10 +8,12 @@ import { modal, toast } from '../../../../redux/features/non_persisted/miniSyste
 import { getLocation } from '../../../../utils/services/location_services';
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const StartWork = ({ registrationId, visitId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const queryClient = useQueryClient()
     const [loading, setLoading] = useState('')
 
 
@@ -30,6 +32,9 @@ const StartWork = ({ registrationId, visitId }) => {
 
             navigate('/tech/service/attend-work')
 
+            queryClient.removeQueries({
+                queryKey: ['tech_schedule_profile']
+            })
 
         } catch (error) {
             dispatch(toast.push({

@@ -42,7 +42,7 @@ const SearchCustomer = () => {
             { header: 'City', accessorKey: 'City' }
         ]
 
-        if (user?.allowed_origins?.includes('vfcr_sr_reg_write')) {
+        if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
             tempColumns.push({
                 header: 'Actions',
                 enableSorting: false,
@@ -113,7 +113,7 @@ const SearchCustomer = () => {
                 queryKey={['search_customer_table', searchParams.get('key'), searchParams.get('key_type'), searchParams.get('city_id'), searchParams.get('post')]}
                 topComponents={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Button label={'Excel'} rounded outlined size='small' icon={<TbDownload />} />
+                        {/* <Button label={'Excel'} rounded outlined size='small' icon={<TbDownload />} /> */}
                         <Button label={'Edit search'} rounded outlined size='small' icon={<TbMoodSearch />}
                             onClick={() => dispatch(modal.push({ show: true, title: "Search Customers", body: <SearchCustomerByKey /> }))} />
                     </div>

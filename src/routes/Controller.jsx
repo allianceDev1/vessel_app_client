@@ -43,6 +43,8 @@ const ProductPackageExtensions = React.lazy(() => import('../components/modules/
 const ProductPackageFeezeHistory = React.lazy(() => import('../components/modules/controller/service-package/FreezeHistory'))
 const ProductLogInfo = React.lazy(() => import('../components/modules/controller/service-job/ProductLogInfo'))
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/controller/service-job/PurchaseLogInfo'))
+const Subscriptions = React.lazy(() => import("../pages/controller/subscriptions/Subscriptions"))
+const RunningKms = React.lazy(() => import("../pages/controller/running-kms/RunningKms"))
 
 
 
@@ -61,7 +63,9 @@ const PurchaseLogInfo = React.lazy(() => import('../components/modules/controlle
 
 const Controller = () => {
     const { user } = useSelector((state) => state.user)
-    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("vfcr"));
+    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("vessel_c_"));
+
+
 
     return (
         <ControllerLayout>
@@ -71,53 +75,48 @@ const Controller = () => {
                     <Route path='/' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Area */}
-                    {user?.allowed_origins?.some(access => ['vfcr_areas_read', 'vfcr_areas_write'].includes(access)) && <>
-                        <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />
-                        <Route path='/area-list/:city_id' element={<PrivateRoute element={<ViewArea />} isAuthenticated={isAuthenticated} />} />
-                    </>}
+                    <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/area-list/:city_id' element={<PrivateRoute element={<ViewArea />} isAuthenticated={isAuthenticated} />} />
+
 
                     {/* Customer list */}
-                    {user?.allowed_origins?.some(access => ['vfcr_customers_read', 'vfcr_customers_write'].includes(access)) && <>
-                        <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
-                            <Route index element={<CustomerMiniReport />} />
-                            <Route path="search" element={<SearchCustomer />} />
-                            <Route path="filter" element={<FilterCustomer />} />
-                        </Route>
+                    <Route path='/customers' element={<PrivateRoute element={<Customers />} isAuthenticated={isAuthenticated} />} >
+                        <Route index element={<CustomerMiniReport />} />
+                        <Route path="search" element={<SearchCustomer />} />
+                        <Route path="filter" element={<FilterCustomer />} />
+                    </Route>
 
-                        <Route path='/customer/:customer_id' element={<PrivateRoute element={<CustomerView />} isAuthenticated={isAuthenticated} />} >
-                            <Route index element={<AboutCustomer />} />
-                            <Route path="about" index element={<AboutCustomer />} />
-                            <Route path="products" element={<CustomerProductList />} />
-                            <Route path="call-logs" element={<CustomerCallLogs />} />
-                        </Route>
+                    <Route path='/customer/:customer_id' element={<PrivateRoute element={<CustomerView />} isAuthenticated={isAuthenticated} />} >
+                        <Route index element={<AboutCustomer />} />
+                        <Route path="about" index element={<AboutCustomer />} />
+                        <Route path="products" element={<CustomerProductList />} />
+                        <Route path="call-logs" element={<CustomerCallLogs />} />
+                    </Route>
 
-                        <Route path='/customer/:customer_id/product/:product_id' element={<PrivateRoute element={<CustomerProductView />} isAuthenticated={isAuthenticated} />} >
-                            <Route index element={<AboutCustomerProduct />} />
-                            <Route path="about" index element={<AboutCustomerProduct />} />
-                            <Route path="spares" element={<CustomerProductSpares />} />
-                            <Route path="eligibility" element={<CustomerProductEligibility />} />
-                            <Route path="service-cards" element={<CustomerProductServiceCardList />} />
-                            <Route path="package-history" element={<CustomerProductPackageHistory />} />
-                        </Route>
+                    <Route path='/customer/:customer_id/product/:product_id' element={<PrivateRoute element={<CustomerProductView />} isAuthenticated={isAuthenticated} />} >
+                        <Route index element={<AboutCustomerProduct />} />
+                        <Route path="about" index element={<AboutCustomerProduct />} />
+                        <Route path="spares" element={<CustomerProductSpares />} />
+                        <Route path="eligibility" element={<CustomerProductEligibility />} />
+                        <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+                        <Route path="package-history" element={<CustomerProductPackageHistory />} />
+                    </Route>
 
-                        <Route path='/service-package/:serial_number' element={<PrivateRoute element={<ServicePackageView />} isAuthenticated={isAuthenticated} />} >
-                            <Route index element={<AboutProductPackage />} />
-                            <Route path="about" index element={<AboutProductPackage />} />
-                            <Route path="services" element={<ServicesUnderProductPackage />} />
-                            <Route path="extensions" element={<ProductPackageExtensions />} />
-                            <Route path="freeze-history" element={<ProductPackageFeezeHistory />} />
-                        </Route>
-                    </>}
+                    <Route path='/service-package/:serial_number' element={<PrivateRoute element={<ServicePackageView />} isAuthenticated={isAuthenticated} />} >
+                        <Route index element={<AboutProductPackage />} />
+                        <Route path="about" index element={<AboutProductPackage />} />
+                        <Route path="services" element={<ServicesUnderProductPackage />} />
+                        <Route path="extensions" element={<ProductPackageExtensions />} />
+                        <Route path="freeze-history" element={<ProductPackageFeezeHistory />} />
+                    </Route>
+
 
                     {/* Upcoming Service */}
-                    {user?.allowed_origins?.some(access => ['vfcr_up_service_read', 'vfcr_up_service_write'].includes(access)) && <>
-                        <Route path='/upcoming' element={<PrivateRoute element={<UpcomingServices />} isAuthenticated={isAuthenticated} />} />
-                    </>}
+                    <Route path='/upcoming' element={<PrivateRoute element={<UpcomingServices />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Registered */}
                     <Route path='/registered' element={<PrivateRoute element={<RegisteredService />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/registered/:reg_no' element={<PrivateRoute element={<RegisteredView />} isAuthenticated={isAuthenticated} />} />
-
 
                     {/* Completed */}
                     <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
@@ -127,27 +126,29 @@ const Controller = () => {
                         <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
                     </Route>
 
+                    {/* Subscriptions */}
+                    <Route path='/subscriptions' element={<PrivateRoute element={<Subscriptions />} isAuthenticated={isAuthenticated} />} />
+
                     {/* App Config */}
-                    {user?.allowed_origins?.includes('vfcr_appConfig_write') && <>
-                        <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config' element={<PrivateRoute element={<AppConfig />} isAuthenticated={isAuthenticated} />} />
 
-                        {/* Package */}
-                        <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
-                        <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
+                    {/* Package */}
+                    <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
 
-                        {/* Category */}
-                        <Route path='/app-config/service-categories' element={<PrivateRoute element={<ServiceCategory />} isAuthenticated={isAuthenticated} />} />
+                    {/* Category */}
+                    <Route path='/app-config/service-categories' element={<PrivateRoute element={<ServiceCategory />} isAuthenticated={isAuthenticated} />} />
 
-                        {/* Form Resources */}
-                        <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
-                        <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
-                    </>}
+                    {/* Form Resources */}
+                    <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
 
-
-
+                    {/* Running Kms */}
+                    <Route path='/running-kms/:month' element={<PrivateRoute element={<RunningKms />} isAuthenticated={isAuthenticated} />} />
 
                     {/* 404 */}
                     <Route path="/*" element={<Page404 />} />
+                    
                 </Routes>
             </Suspense>
         </ControllerLayout>

@@ -17,7 +17,7 @@ const FilterCustomerProduct = () => {
     const [searchParams] = useSearchParams();
     const [form, setForm] = useState({
         city_id: searchParams.get('city_id') || '',
-        item_id: searchParams.get('item_id') || '',
+        sku: searchParams.get('sku') || '',
         installation_mode: searchParams.get('installation_mode') || '',
         product_type: searchParams.get('product_type') || '',
         origin_category: searchParams.get('origin_category') || '',
@@ -37,19 +37,6 @@ const FilterCustomerProduct = () => {
     const handleChange = (e) => {
 
         let value = e.target.value
-
-        if (e.target.name === 'item_id') {
-
-            const PREFIX = 'PRD-'
-            let input = e.target.value.replace(PREFIX, "");
-
-            // Allow only digits
-            input = input.replace(/\D/g, "");
-
-            value = String(PREFIX + input).toUpperCase()
-        }
-
-
         setForm({
             ...form,
             [e.target.name]: value
@@ -88,7 +75,7 @@ const FilterCustomerProduct = () => {
         e.preventDefault();
 
         // validation
-        if (!form.city_id && !form.item_id && !form.installation_mode && !form?.product_type && !form?.origin_category
+        if (!form.city_id && !form.sku && !form.installation_mode && !form?.product_type && !form?.origin_category
             && !form?.package_ids?.length && !form?.from_date && !form?.end_date
         ) {
             return;
@@ -104,10 +91,10 @@ const FilterCustomerProduct = () => {
             newSearchParams.delete('city_id')
         }
 
-        if (form?.item_id) {
-            newSearchParams.set('item_id', form?.item_id)
+        if (form?.sku) {
+            newSearchParams.set('sku', form?.sku)
         } else {
-            newSearchParams.delete('item_id')
+            newSearchParams.delete('sku')
         }
 
         if (form?.installation_mode) {
@@ -158,7 +145,7 @@ const FilterCustomerProduct = () => {
                 <Select label={'City'} name={'city_id'} value={form?.city_id} options={[{}, ...(resourcesData?.cityList || [])]}
                     onChange={handleChange} />
 
-                <InputText label={'Product Model Id'} name={'item_id'} value={form?.item_id} onChange={handleChange} />
+                <InputText label={'SKU'} name={'sku'} value={form?.sku} onChange={handleChange} />
 
                 <Select label={'Installation Mode'} options={[{}, ...(resourcesData?.modesList || [])]} name={'installation_mode'}
                     value={form?.installation_mode} onChange={handleChange} />
@@ -189,7 +176,7 @@ const FilterCustomerProduct = () => {
                     required={form?.date_filtration_type || form?.from_date} min={form?.from_date} />
 
                 <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }}
-                    rounded disabled={!form.city_id && !form.item_id && !form.installation_mode && !form?.product_type && !form?.origin_category
+                    rounded disabled={!form.city_id && !form.sku && !form.installation_mode && !form?.product_type && !form?.origin_category
                         && !form?.package_ids?.length && !form?.from_date && !form?.end_date} />
 
 

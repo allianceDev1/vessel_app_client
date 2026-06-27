@@ -48,13 +48,13 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
     }
 
     const handleChangeProduct = (e) => {
-        const product = availableAddOns?.filter(a => a.item_uuid === e.target.value)?.[0]
+        const product = availableAddOns?.filter(a => a.variant_uuid === e.target.value)?.[0]
 
         // Set to form
         setForm({
             ...form,
-            item_id: product?.item_id,
-            item_uuid: product?.item_uuid,
+            sku: product?.sku,
+            variant_uuid: product?.variant_uuid,
             product_name: product?.product_name,
             selling_rate: product?.selling_rate || 0,
             purchase_cost: product?.purchase_cost || 0,
@@ -93,8 +93,8 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
 
         const obj = {
             unique_id: new Date().getTime(),
-            item_id: form?.item_id,
-            item_uuid: form?.item_uuid,
+            sku: form?.sku,
+            variant_uuid: form?.variant_uuid,
             product_name: form?.product_name,
             purchase_type: form?.purchase_type,
             is_zero_fee: form?.is_zero_fee,
@@ -238,8 +238,8 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
                             checked={form?.purchase_type === 'RENTAL'} onChange={handleChange} />
                     </div>
                 </div>
-                <Select label={'Product'} name={'product'} options={[{}, ...(availableAddOns?.map(a => ({ label: `${a?.item_id} - ${a?.product_name}`, value: a?.item_uuid })) || [])]}
-                    onChange={handleChangeProduct} required value={form?.item_uuid} />
+                <Select label={'Product'} name={'product'} options={[{}, ...(availableAddOns?.map(a => ({ label: `${a?.sku} - ${a?.product_name}`, value: a?.variant_uuid })) || [])]}
+                    onChange={handleChangeProduct} required value={form?.variant_uuid} />
                 <Select label={'Filling element'} name={'spare'} options={[{}, ...(addOnSpareList?.map(a => ({ label: a.spare_name, value: a?.spare_uuid })) || [])]}
                     onChange={handleChangeElement} required value={form?.element?.spare_uuid} />
                 <Select label={'Filling element qty'} name={'spare_qty'} options={[...([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(a => ({ label: `${a} ${form?.element?.unit || ''}`, value: a })) || [])]}

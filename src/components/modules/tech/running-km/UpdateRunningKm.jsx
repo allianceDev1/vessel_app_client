@@ -4,10 +4,14 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import { api } from '../../../../api';
 import { useDispatch } from 'react-redux';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import { useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const UpdateRunningKm = ({ data, setData }) => {
     const dispatch = useDispatch()
+    const queryClient = useQueryClient()
     const [loading, setLoading] = useState(false)
+    const [searchParams] = useSearchParams()
     const [km, setKm] = useState('');
 
     const handleSubmit = async (e) => {
@@ -21,19 +25,25 @@ const UpdateRunningKm = ({ data, setData }) => {
                 value: Number(km)
             })
 
-            setData((state) => {
-                const existed = state.find((item) => item?.date === data?.date)
-                if (existed) {
-                    return state.map((item) => {
-                        if (item?.date === data?.date) {
-                            return { ...item, value: Number(km) }
-                        }
-                        return item
-                    })
-                } else {
-                    return [...state, { date: data?.date, value: Number(km) }]
+            queryClient.setQueryData(
+                ['tech_running_kms', searchParams.get('month')],
+                old => {
+                    if (!old) return old
+
+                    const existed = old.find((item) => item?.date === data?.date)
+
+                    if (existed) {
+                        return old.map((item) => {
+                            if (item?.date === data?.date) {
+                                return { ...item, value: Number(km) }
+                            }
+                            return item
+                        })
+                    } else {
+                        return [...old, { date: data?.date, value: Number(km) }]
+                    }
                 }
-            })
+            )
 
             dispatch(modal.pull.all())
         } catch (error) {

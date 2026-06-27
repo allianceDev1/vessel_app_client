@@ -6,9 +6,16 @@
 
     .sub-title {
         margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         h3 {
             @include subTitleSmall();
+        }
+
+        p {
+            font-size: 12px;
         }
     }
 
@@ -34,7 +41,8 @@
             }
 
             h2 {
-                font-size: 30px;
+                font-size: 25px;
+                font-weight: 600;
                 color: var(--color-warning-text)
             }
 
@@ -56,15 +64,16 @@
 
         .report-status-item {
             background-color: var(--color-primary-trans-33);
-            padding: 15px 15px;
+            padding: 20px 5px 5px 5px;
             border-radius: 10px;
             text-align: center;
             position: relative;
             overflow: hidden;
 
             h2 {
-                font-size: 30px;
-                color: var(--color-primary-text)
+                font-size: 23px;
+                color: var(--color-primary-text);
+                font-weight: 600;
             }
 
             .title {
@@ -77,11 +86,19 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
+
+                    &.success {
+                        color: var(--color-success)
+                    }
+
+                    &.danger {
+                        color: var(--color-danger)
+                    }
                 }
             }
 
             p {
-                font-size: 14px;
+                font-size: 12px;
                 @include threeDots();
             }
 
@@ -93,8 +110,19 @@
                 color: var(--color-primary-text);
                 opacity: .1;
             }
+        }
+    }
 
+    .banner-image-section {
+        width: 100%;
+        overflow: hidden;
+        margin-top: 25px;
+        border-radius: 15px;
 
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     }
 }

@@ -87,7 +87,7 @@ const Payment = ({ page }) => {
         dispatch(modal.push({
             id: modalId,
             title: " ",
-            body: <SubmitForm modalId={modalId} />,
+            body: <SubmitForm modalId={modalId} unenablePayment={!review?.is_ready_to_pay && grandTotal > 0} />,
             freezeClose: true
         }))
     }

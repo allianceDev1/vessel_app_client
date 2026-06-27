@@ -8,13 +8,15 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import AddSpare from '../../../forms/controller/product/AddSpare'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 const SpareList = () => {
     const dispatch = useDispatch();
     const { customer_id, product_id } = useParams();
+    const { user } = useSelector((state) => state.user)
+
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['controller_customer_spare_list', customer_id, product_id],
@@ -54,10 +56,11 @@ const SpareList = () => {
 
     return (
         <div className="controller-spares-customer-container">
-            <div className="menu-buttons">
-                <Button icon={<TbPlus />} label={'Spare'} size='small' severity={'primary'} rounded style={{ width: '100px' }}
-                    onClick={openAddSpareModal} />
-            </div>
+            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
+                && <div className="menu-buttons">
+                    <Button icon={<TbPlus />} label={'Spare'} size='small' severity={'primary'} rounded style={{ width: '100px' }}
+                        onClick={openAddSpareModal} />
+                </div>}
             <div className="content">
                 {data?.length > 0
                     ? <div className='list-items'>

@@ -233,3 +233,66 @@ export const normalizeCompletedModeReport = (data, months, allPackages) => {
         };
     });
 }
+
+export const normalizeSubscriptionRenewalReport = (data, months, allPackages) => {
+    const packageKeys = Object.keys(allPackages); // 🔥 extract keys
+    const map = new Map();
+
+    data.forEach((item) => {
+        const pkgFlat = {};
+
+        item.package_counts?.forEach((pkg) => {
+            pkgFlat[pkg.package_name] = pkg.count;
+        });
+
+        packageKeys.forEach((pkg) => {
+            if (!(pkg in pkgFlat)) {
+                pkgFlat[pkg] = 0;
+            }
+        });
+
+        map.set(item.month, {
+            name: moment(item.month, "YYYY-MM").format("MMM YYYY"),
+            "Pkg Context": item.from_package_count,
+            "Non Pkg Context": item.from_non_package_count,
+            ...pkgFlat,
+        });
+    });
+
+    return months.map((month) => {
+        if (map.has(month)) return map.get(month);
+
+        // missing month → fill all packages
+        const emptyPackages = {};
+        packageKeys.forEach((pkg) => {
+            emptyPackages[pkg] = 0;
+        });
+
+        return {
+            name: moment(month, "YYYY-MM").format("MMM YYYY"),
+            "Pkg Context": 0,
+            "Non Pkg Context": 0,
+            ...emptyPackages,
+        };
+    });
+}
+
+export const normalizeSubscriptionAmountReport = (data, months, allPackages = {}) => {
+    const map = new Map();
+
+    data.forEach((item) => {
+        map.set(item.month, {
+            name: moment(item.month, "YYYY-MM").format("MMM YYYY"),
+            "Amount": item.total_amount
+        });
+    });
+
+    return months.map((month) => {
+        if (map.has(month)) return map.get(month);
+
+        return {
+            name: moment(month, "YYYY-MM").format("MMM YYYY"),
+            "Amount": 0
+        };
+    });
+}

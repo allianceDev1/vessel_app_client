@@ -36,18 +36,8 @@ const AddCustomerProduct = ({ customerId }) => {
         let value = e.target.value
 
         // convert to capital
-        if (['item_id', 'order_id', 'eq_form_srl_no'].includes(e.target.name)) {
+        if (['sku', 'order_id', 'eq_form_srl_no'].includes(e.target.name)) {
             value = String(value).toUpperCase()
-        }
-
-        if (e.target.name === 'item_id') {
-            const PREFIX = 'PRD-'
-            let input = e.target.value.replace(PREFIX, "");
-
-            // Allow only digits
-            input = input.replace(/\D/g, "");
-
-            value = PREFIX + input
         }
 
         setForm({
@@ -82,7 +72,7 @@ const AddCustomerProduct = ({ customerId }) => {
             origin_category: form?.origin_category,
             product_type: form?.product_type,
             parent_type: 'VESSEL_FILTER',
-            item_id: form?.item_id,
+            sku: form?.sku,
             order_id: form?.order_id || null,
             installation_mode: form?.installation_mode,
             product_warranty_start_date: form?.product_warranty ? form?.product_warranty_start_date : null,
@@ -160,7 +150,7 @@ const AddCustomerProduct = ({ customerId }) => {
                     <Select label={'Installation Mode'} name={'installation_mode'} required value={form?.installation_mode || ''} onChange={handleChange}
                         options={[{ label: '', value: '' }, ...(installationModes || [])?.map(i => ({ label: i?.data?.[0], value: i?.uuid }))]} />
 
-                    <InputText label={'Model Id'} name={'item_id'} value={form?.item_id || ''} onChange={handleChange} required />
+                    <InputText label={'Model Id / SKU'} name={'sku'} value={form?.sku || ''} onChange={handleChange} required />
 
                     {form?.product_type !== 'ADD_ON' &&
                         <InputText label={'Order Id'} name={'order_id'} value={form?.order_id || ''} onChange={handleChange} required />}

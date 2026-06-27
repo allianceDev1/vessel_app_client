@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './product-log.scss'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import {  isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
+import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
@@ -10,24 +10,19 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 
 
 const ProductLogInfo = () => {
     const { service_srl_no, pl_product_id } = useParams();
     const [activeSection, setActionSection] = useState('')
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['service_job_product_log_view', service_srl_no, "pl", pl_product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/product-log/${pl_product_id}`);
 
-            const serviceWorkCallTotal = data?.service_works?.reduce((acc, curr) => acc + Number(curr?.call_rate || 0), 0)
-            const serviceChargeCall = data?.service_data?.service_charge?.call_rate_applied || 0
-
-            return {
-                ...data,
-                call_total: serviceWorkCallTotal + serviceChargeCall
-            }
+            return data
         },
         staleTime: 60_000
     })
@@ -112,6 +107,14 @@ const ProductLogInfo = () => {
         )
     }, [data])
 
+
+    if (isLoading) {
+        return <div>
+            <SkeletonGrid rows={2} columns={3} height={'60px'} gap={'10px'} />
+            <SkeletonGrid style={{ marginTop: '15px' }} rows={2} columns={3} height={'200px'} gap={'10px'} />
+            <SkeletonGrid style={{ marginTop: '15px' }} rows={1} columns={1} height={'200px'} gap={'10px'} />
+        </div>
+    }
 
     return (
         <div className="service-job-product-log-view-container">
@@ -202,10 +205,10 @@ const ProductLogInfo = () => {
 
                 {!data?.service_data?.skip_actions &&
                     <div className="item">
-                        <p className='label'>Call for the product</p>
+                        <p className='label'>Call for the product (Applied / Estimate)</p>
                         <div>
                             <p className='text-value'>
-                                {data?.call_total || 0}
+                                {data?.service_data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.service_data?.call_summery?.call_rate_estimate || 0} Call</span>
                             </p>
                         </div>
                     </div>}

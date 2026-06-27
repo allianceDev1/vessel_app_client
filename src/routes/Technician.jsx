@@ -43,7 +43,7 @@ const PurchaseLogInfo = React.lazy(() => import('../components/modules/tech/serv
 
 const Technician = () => {
   const { user } = useSelector((state) => state.user)
-  const isAuthenticated = user?.allowed_origins?.includes("vftc_default_write");
+  const isAuthenticated = user?.allowed_origins?.includes("vessel_t_worker");
 
 
   return (

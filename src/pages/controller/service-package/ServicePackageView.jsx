@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import '../customer-product/customer-product-view.scss'
 import { useDispatch } from 'react-redux'
-import {  page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbDropletBolt, TbDropletPlus, TbPlayCard4, TbSnowflake } from 'react-icons/tb';
+import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbCrown, TbDropletPlus, TbPlayCard4, TbSnowflake } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
@@ -18,7 +18,7 @@ const ServicePackageView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: serial_number, note: "Service Package View" }))
+        dispatch(page.setTitle({ title: serial_number, note: "Subscription View" }))
         // eslint-disable-next-line
     }, [])
 
@@ -33,7 +33,7 @@ const ServicePackageView = () => {
             <div className="menu-box">
                 <div className="slide-menus">
                     <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/about`)}>
-                        <TbDropletBolt />
+                        <TbCrown />
                         <p>About</p>
                     </div>
                     <div className={`menu-item ${(activeSegment === 'services') && 'active'}`} onClick={() => navigateSubMenu(`/controller/service-package/${serial_number}/services`)}>

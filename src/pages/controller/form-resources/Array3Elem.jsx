@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import './array-3-elem.scss'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { useParams } from 'react-router-dom';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
@@ -17,7 +17,8 @@ import Array3ElemCU from '../../../components/forms/controller/resources/Array3E
 
 const Array3Elem = ({ deleteData }) => {
     const dispatch = useDispatch();
-    const {  title } = useParams()
+    const { title } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, isFetching, error } = useQuery({
         queryKey: ['resources_values', title],
@@ -75,16 +76,17 @@ const Array3Elem = ({ deleteData }) => {
 
     return (
         <div className='array-3-elem-page-container'>
-            <div className='top-section'>
-                <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
-                    onClick={createModel} />
-            </div>
+            {user?.allowed_origins?.includes('vessel_c_admin') &&
+                <div className='top-section'>
+                    <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
+                        onClick={createModel} />
+                </div>}
             <div class="masonry">
                 {data?.values?.map((box) => {
                     return <div class="card" key={box?.uuid}>
                         <div className="top">
                             <h4>{box?.data?.[0]}</h4>
-                            <Dropdown
+                            {user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown
                                 button={{
                                     icon: <TbDots />,
                                     size: 'small',
@@ -98,7 +100,7 @@ const Array3Elem = ({ deleteData }) => {
                                         ],
                                     }
                                 ]}
-                            />
+                            />}
                         </div>
                         {box?.data?.map((d, index) => {
                             if (index === 0) return '';

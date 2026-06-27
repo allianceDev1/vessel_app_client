@@ -21,19 +21,19 @@ const Dashboard = () => {
     const redirectButtons = [
         {
             label: 'R&D Jobs',
-            redirect_url: null
+            redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes`
         },
         {
             label: 'R&D Registrations',
-            redirect_url: null
+            redirect_url: `/controller/registered?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes&status=1%2C2%2C3%2C4%2C5`
         },
         {
-            label: 'Upcoming Packages',
-            redirect_url: null
+            label: 'Upcoming Subscriptions',
+            redirect_url: `/controller/subscriptions?fl=Yes&statuses=1`
         },
         {
             label: 'Running Kms',
-            redirect_url: null
+            redirect_url: `/controller/running-kms/${moment().format('YYYY-MM')}`
         },
     ]
 
@@ -48,28 +48,28 @@ const Dashboard = () => {
                     value: res?.yellow_list_count || 0,
                     desc: 'Service Under 11 - 20 Days',
                     text_color: 'var(--color-warning)',
-                    redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 10)))}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 19)))}`
+                    redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 10)))}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 19)))}&service_type=RENEWAL`
                 },
                 {
                     label: "Red List",
                     value: res?.red_list_count || 0,
                     desc: 'Service Under 1 - 10 Days',
                     text_color: 'var(--color-danger)',
-                    redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date())}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 9)))}`
+                    redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date())}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 9)))}&service_type=RENEWAL`
                 },
                 {
                     label: "Overdue List",
                     value: res?.overdue_list_count || 0,
                     desc: 'Expired package, service pending',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/overdue-list`
+                    redirect_url: `/controller/subscriptions?fl=Yes&blacklisted=Yes`
                 },
                 {
                     label: "Unverified Jobs",
                     value: res?.non_verified_count || 0,
                     desc: 'Customer not verified jobs',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/completed`
+                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes`
                 }
             ]
         },
@@ -79,7 +79,7 @@ const Dashboard = () => {
     const workerQuery = useQuery({
         queryKey: ['workers_current_status'],
         queryFn: async () => {
-            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=vftc_default_write')
+            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=vessel_t_worker')
             return res?.map((w, i) => ({
                 worker_uuid: w?.worker_uuid,
                 worker_name: `${w?.first_name || ''} ${w?.last_name || ''}`,
@@ -95,6 +95,7 @@ const Dashboard = () => {
         queryKey: ['workers_today_work_flow'],
         queryFn: async () => {
             const res = await api.vfCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
+            console.log(res, 'res')
             return res?.map((w, i) => ({
                 techId: w?.technician_uuid,
                 id: w?.customer_id,
@@ -169,11 +170,19 @@ const Dashboard = () => {
                             <TodayWorkFlow technicians={workerQuery?.data || []} workFlows={servicesQuery?.data || []} />
                         </div>
                     </div>}
-
             </div>
-            <div className="text-mark">
-                <h1>Track, monitor, decide —</h1>
-                <h2>Purity is our flag.</h2>
+
+            <div className="footer-container">
+                <div className="left-section">
+                    <p>Copyright © 2012 - {new Date().getFullYear()} Alliance Water Solutions LLP. All Rights Reserved</p>
+                </div>
+                <div className="right-section">
+                    <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/privacy-policy#id-7.-cookies-and-tracking')}>Cookies</p>
+                    <span>.</span>
+                    <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/terms-of-service')}>Terms</p>
+                    <span>.</span>
+                    <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/privacy-policy')}>Privacy</p>
+                </div>
             </div>
         </div>
     )

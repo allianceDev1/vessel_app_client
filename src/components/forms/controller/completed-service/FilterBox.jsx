@@ -23,7 +23,9 @@ const FilterBox = () => {
         technician_id: searchParams.get('technician_id') || '',
         customer_id: searchParams.get('customer_id') || '',
         product_id: searchParams.get('product_id') || '',
-        reg_no: searchParams.get('reg_no') || ''
+        reg_no: searchParams.get('reg_no') || '',
+        rnd: searchParams.get('rnd') || '',
+        unverified: searchParams.get('unverified') || '',
     })
 
     const {
@@ -62,6 +64,8 @@ const FilterBox = () => {
             form.customer_id ? next.set('customer_id', form.customer_id) : next.delete('customer_id')
             form.product_id ? next.set('product_id', form.product_id) : next.delete('product_id')
             form.reg_no ? next.set('reg_no', form.reg_no) : next.delete('reg_no')
+            form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
+            form.unverified ? next.set('unverified', form.unverified) : next.delete('unverified')
             return next;
         })
 
@@ -76,6 +80,8 @@ const FilterBox = () => {
             customer_id: '',
             product_id: '',
             reg_no: '',
+            rnd: '',
+            unverified: '',
         })
         setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
@@ -86,6 +92,8 @@ const FilterBox = () => {
             next.delete('customer_id');
             next.delete('product_id');
             next.delete('reg_no');
+            next.delete('rnd');
+            next.delete('unverified');
             return next;
         })
     }

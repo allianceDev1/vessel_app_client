@@ -6,6 +6,9 @@ import ChartLegend from '../primitives/ChartLegend'
 import { renderCustomChartLabel } from '../../../utils/helpers/chart_utils'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { upcomingServiceMiniReport } from '../../../utils/services/chart_service'
+import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
+import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
+import { TbAlertCircle, TbAlertCircleOff, TbPaperclip } from 'react-icons/tb'
 
 const UpcomingReport = ({ data, loading, error, updatedAt }) => {
   const [monthChart, setMonthChart] = useState()
@@ -32,6 +35,20 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
 
     // eslint-disable-next-line
   }, [data, loading, error])
+
+
+
+  if (loading) {
+    return (
+      <SkeletonGrid style={{ marginTop: '20px', marginBottom: '40px' }} rows={2} columns={2} height={'250px'}
+        responsive={{ md: { columns: 1, rows: 3, height: '250px' } }} />
+    )
+  }
+
+  if (error) {
+    return <ErrorState icon={<TbAlertCircle />} title={'Report not available'}
+      message={error?.message || "Can't find report data"} hight='400px' />
+  }
 
   return (
     <div className="upcoming-service-report-container">

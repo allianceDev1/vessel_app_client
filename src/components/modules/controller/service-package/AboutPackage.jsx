@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbBorderLeftPlus, TbCircleLetterT, TbDropletBolt, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
+import { TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import PackageExtend from '../../../forms/controller/service-package/PackageExtend'
 import FreezeUnfreeze from '../../../forms/controller/service-package/FreezeUnfreeze'
@@ -22,6 +22,7 @@ import TokenTopUps from './TokenTopUps'
 const AboutPackage = () => {
     const dispatch = useDispatch();
     const { serial_number } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_package_info', serial_number],
@@ -80,7 +81,7 @@ const AboutPackage = () => {
     if (error) {
         return <div>
             <ErrorState
-                icon={<TbDropletBolt />}
+                icon={<TbCrown />}
                 title={'Data fetching Failed'}
                 message={error?.message}
                 hight='400px'
@@ -91,14 +92,18 @@ const AboutPackage = () => {
     return (
         <div className="controller-about-customer-container">
             <div className="menu-buttons">
-                {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
-                    onClick={openActivationModel} />}
-                {data?.package_status === 2 && <Button icon={<TbSnowflake />} label={'Freeze'} size='small' severity={'danger'} rounded style={{ width: '100px' }}
-                    onClick={() => openFreezeUnFreezeModel('FREEZE')} />}
-                {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
-                    onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
-                {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
-                    onClick={openPackageExtensionModel} />}
+                {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                    {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
+                        onClick={openActivationModel} />}
+                    {data?.package_status === 2 && <Button icon={<TbSnowflake />} label={'Freeze'} size='small' severity={'danger'} rounded style={{ width: '100px' }}
+                        onClick={() => openFreezeUnFreezeModel('FREEZE')} />}
+                    {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
+                        onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
+                </>}
+                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && <>
+                    {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
+                        onClick={openPackageExtensionModel} />}
+                </>}
                 {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
                     onClick={openTopUpsHistoryModel} />}
             </div>

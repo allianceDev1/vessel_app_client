@@ -5,10 +5,12 @@ import Textarea from '../../../UI_Primitives/inputs/TextArea';
 import { api } from '../../../../api';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const StopTravel = ({ registrationId, visitId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const queryClient = useQueryClient()
     const [loading, setLoading] = useState('')
     const [form, setForm] = useState({ reason: null })
 
@@ -32,6 +34,10 @@ const StopTravel = ({ registrationId, visitId }) => {
             }))
 
             navigate('/tech/schedules')
+
+            queryClient.removeQueries({
+                queryKey: ['tech_schedule_profile']
+            })
 
         } catch (error) {
             dispatch(toast.push({

@@ -27,8 +27,6 @@ const Contacts = ({ contacts: { primary, secondary, whatsapp, additional } }) =>
     //     }
     // };
 
-    console.log(whatsapp)
-
     return (
         <div className="tech-customer-contacts">
             <div className="contacts-container" style={{ gridTemplateColumns: additional ? 'repeat(4,1fr)' : 'repeat(3,1fr)' }}>

@@ -90,7 +90,7 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
             </div>
 
             {/* Payment Status Card */}
-            <div className="card">
+            {!data?.unenable_payment && <div className="card">
                 <div className="payment-header">
                     <div className="card-title" style={{ marginBottom: 0 }}>Payment Status</div>
                     {data?.paymentStatus && <Badge value={data?.paymentStatus || "Pending"}
@@ -113,7 +113,25 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
                         <span className="payment-id-value">{data?.receiptNo}</span>
                     </div>
                 )}
-            </div>
+            </div>}
+
+            {/* Unenable payment alert */}
+            {data?.unenable_payment && <div className="card">
+                <div className="payment-header">
+                    <div className="card-title" style={{ marginBottom: 0 }}>Service Amount</div>
+                </div>
+
+                <div className="amount-section">
+                    <div className="amount">
+                        <h3>{formatCurrency(data?.totalBillAmount)}</h3>
+                    </div>
+                    <div className="amount-note" style={{ marginTop: '10px' }}>
+                        Registration closure is pending. The final bill will be issued once the registration is closed. 
+                        Any advance amount collected will be adjusted in the final bill.
+                    </div>
+                </div>
+            </div>}
+
 
             {/* Customer Details Card */}
             <div className="card">

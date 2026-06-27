@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './postpone-service.scss';
 import Checkbox from '../../../UI_Primitives/inputs/Checkbox';
 import InputText from '../../../UI_Primitives/inputs/InputText';
@@ -8,14 +8,18 @@ import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
 import { useDispatch } from 'react-redux';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../../api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 
 
-const PostponeService = ({ customerId, products, setUpServices, isController = false }) => {
+const PostponeService = ({ customerId, products, serviceType, isController = false }) => {
     const dispatch = useDispatch();
+    const queryClient = useQueryClient()
+    const [searchParams] = useSearchParams()
     const [selectedProducts, setSelectedProducts] = useState(products?.map((p) => p.product_id) || [])
     const [form, setForm] = useState({ postpone_date: null, reason: null })
-    const [loading, setLoading] = useState('fetch')
-    const [postponeReasons, setPostponeReasons] = useState([])
+    const [loading, setLoading] = useState('')
+
 
 
     const handleProductSelect = (productId) => {
@@ -58,21 +62,33 @@ const PostponeService = ({ customerId, products, setUpServices, isController = f
                     reason: form?.reason
                 })
 
-                setUpServices((prev) => ({
-                    ...prev,
-                    products: prev?.products?.map(p => {
-                        if (p.service?.service_type === 'SERVICE' && selectedProducts.filter((s) => s.product_id === p.product_id).length > 0) {
-                            return {
-                                ...p,
-                                service: {
-                                    ...p.service,
-                                    service_date: form?.postpone_date
-                                }
+                queryClient.setQueryData(
+                    ['tech_service_profile', customerId, serviceType, searchParams.get('reg_id')],
+                    old => {
+                        console.log(old, 'old')
+                        if (!old) return old
+                        return {
+                            ...old,
+                            upServices: {
+                                ...old.upServices,
+                                products: (old.upServices?.products || [])?.map(p => {
+
+                                    if (p.service?.service_type === 'SERVICE' && selectedProducts.includes(p.product_id)) {
+                                        console.log(p)
+                                        return {
+                                            ...p,
+                                            service: {
+                                                ...p.service,
+                                                service_date: new Date(form?.postpone_date)
+                                            }
+                                        }
+                                    }
+                                    return p
+                                })
                             }
                         }
-                        return p
-                    })
-                }))
+                    }
+                )
 
                 dispatch(modal.pull.all())
             }
@@ -89,35 +105,22 @@ const PostponeService = ({ customerId, products, setUpServices, isController = f
         }
     }
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-
+    const {
+        data,
+        isLoading
+    } = useQuery({
+        queryKey: ['service_postpone_reasons'],
+        queryFn: async () => {
             const res = await api.vfTv2Axios.get(`/service/form-resources?titles=service_postpone_reasons`)
             const postponeList = res?.[0] || {}
-            setPostponeReasons(postponeList?.values?.map(v => v.data?.[0]) || [])
-
-        } catch (error) {
-            dispatch(toast.push({
-                type: 'danger',
-                head: 'Something went wrong',
-                message: error.message,
-            }))
-            dispatch(modal.pull.all())
-        } finally {
-            setLoading('')
-        }
-    }
-
-    useEffect(() => {
-        fetchApi()
-
-        // eslint-disable-next-line
-    }, [])
+            return postponeList?.values?.map(v => v.data?.[0]) || []
+        },
+        staleTime: 60_000
+    })
 
 
 
-    if (loading === 'fetch') return (
+    if (isLoading) return (
         <div className="postpone-service-load">
             <SkeletonGrid height={'150px'} />
             <SkeletonGrid height={'50px'} rows={'4'} />
@@ -143,7 +146,7 @@ const PostponeService = ({ customerId, products, setUpServices, isController = f
                 </div>
                 <InputText label={'Postpone date'} name={'postpone_date'} value={form?.postpone_date} onChange={handelChangeInputs}
                     type='date' required={true} />
-                <Select label={'Postpone reason'} name={'reason'} options={[{ value: '', label: '' }, ...postponeReasons.map(r => ({ value: r, label: r })), { value: '_input_write_', label: 'Other' },]}
+                <Select label={'Postpone reason'} name={'reason'} options={[{ value: '', label: '' }, ...data.map(r => ({ value: r, label: r })), { value: '_input_write_', label: 'Other' },]}
                     value={form?.reason} onChange={handelChangeInputs} required={true} />
                 <Button label={'Postpone'} rounded severity={'danger'} disabled={selectedProducts.length === 0 || !form?.postpone_date || !form?.reason}
                     style={{ width: '100%' }} spinIcon={loading === 'submit'} />

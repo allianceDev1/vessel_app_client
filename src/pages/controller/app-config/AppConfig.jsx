@@ -5,6 +5,8 @@ import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbArrowLeft } from 'react-icons/tb';
 import { app_version } from '../../../config/app_config';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../../api';
+import { useQuery } from '@tanstack/react-query';
 
 const AppConfig = () => {
     const dispatch = useDispatch();
@@ -16,6 +18,15 @@ const AppConfig = () => {
 
         // eslint-disable-next-line
     }, [])
+
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['controller_access'],
+        queryFn: async () => {
+            return await api.ttPv2Axios.get('/worker/account/filter?origins=vessel_c_reader,vessel_c_writer,vessel_c_admin')
+        },
+        staleTime: 60_000
+    })
 
     return (
         <div className="app-config-page">
@@ -79,30 +90,18 @@ const AppConfig = () => {
                         <h3>User Access & Roles</h3>
                     </div>
                     <div className="content">
-                        <div className="list-item">
-                            <div className="l">
-                                <h4>Shibily Muhamemd</h4>
+                        {data?.map((worker) => {
+                            return <div className="list-item" key={worker?.worker_uuid}>
+                                <div className="l">
+                                    <h4>{worker?.full_name}</h4>
+                                </div>
+                                <div className="r">
+                                    <p>{worker?.origins?.includes('vessel_c_admin') ? 'Administrator' :
+                                        worker?.origins?.includes('vessel_c_writer') ? 'Editor' :
+                                            worker?.origins?.includes('vessel_c_reader') ? 'Viewer' : 'None'}</p>
+                                </div>
                             </div>
-                            <div className="r">
-                                <p>Editor</p>
-                            </div>
-                        </div>
-                        <div className="list-item">
-                            <div className="l">
-                                <h4>Shibily Muhamemd</h4>
-                            </div>
-                            <div className="r">
-                                <p>Viewer</p>
-                            </div>
-                        </div>
-                        <div className="list-item">
-                            <div className="l">
-                                <h4>Shibily Muhamemd</h4>
-                            </div>
-                            <div className="r">
-                                <p>Administrator</p>
-                            </div>
-                        </div>
+                        })}
                     </div>
                 </div>
             </div>

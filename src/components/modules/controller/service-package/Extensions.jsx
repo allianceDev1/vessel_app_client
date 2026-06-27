@@ -20,6 +20,7 @@ const Extensions = () => {
         { header: 'By', accessorKey: 'By' },
         { header: 'Extended To', accessorKey: 'Extended To' },
         { header: 'Days', accessorKey: 'Days', enableHiding: false },
+        { header: 'Re-active', accessorKey: 'Re-active', enableHiding: false },
         { header: 'Reason', accessorKey: 'Reason' }
     ]
 
@@ -35,6 +36,7 @@ const Extensions = () => {
                     'By': item.extended_by,
                     'Extended To': item.extended_to ? isoToDDMonYYYY(new Date(item.extended_to)) : '',
                     'Days': item.extended_days,
+                    'Re-active': item.is_return_based_extension ? 'Yes' : 'No',
                     'Reason': item.comment
                 }
             })

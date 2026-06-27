@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import './completed-service-report.scss'
-import { TbBriefcase2, TbChevronsDown, TbChevronsUp, TbCurrencyRupee, TbDroplet, TbDropletBolt, TbManualGearbox, TbTransactionRupee } from 'react-icons/tb'
+import { TbAlertCircle, TbBriefcase2, TbChevronsDown, TbChevronsUp, TbCrown, TbCurrencyRupee, TbDroplet, TbManualGearbox, TbTransactionRupee } from 'react-icons/tb'
 import { Bar, ComposedChart, Line, XAxis, YAxis } from 'recharts'
 import ChartTooltip from '../primitives/ChartTooltip'
 import ChartLegend from '../primitives/ChartLegend'
@@ -9,6 +9,8 @@ import { getGrowthPercentage } from '../../../utils/helpers/math-equations'
 import { convertAmount } from '../../../utils/helpers/text-formatting'
 import { normalizeCompletedModeReport } from '../../../utils/services/chart_service'
 import moment from 'moment'
+import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
+import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 
 
 const CompletedServiceReport = ({ data, loading, error, updatedAt }) => {
@@ -61,14 +63,14 @@ const CompletedServiceReport = ({ data, loading, error, updatedAt }) => {
                 percentage: getGrowthPercentage(REPORT1?.addon_count?.current || 0, REPORT1?.addon_count?.previous || 0)
             },
             {
-                label: "Package Works",
-                icon: <TbDropletBolt />,
+                label: "Subscription Works",
+                icon: <TbCrown />,
                 value: REPORT1?.package_count?.current || 0,
                 desc: null,
                 percentage: getGrowthPercentage(REPORT1?.package_count?.current || 0, REPORT1?.package_count?.previous || 0)
             },
             {
-                label: "Non Package Works",
+                label: "Non Subscription Works",
                 icon: <TbDroplet />,
                 value: REPORT1?.non_package_count?.current || 0,
                 desc: null,
@@ -114,6 +116,26 @@ const CompletedServiceReport = ({ data, loading, error, updatedAt }) => {
         }
         // eslint-disable-next-line
     }, [data, loading, error])
+
+
+
+    if (loading) {
+        return <>
+            <SkeletonGrid style={{ marginTop: '20px', }} rows={2} columns={4} height={'120px'}
+                responsive={{
+                    md: { columns: 2, rows: 4, height: '120px' },
+                    sm: { columns: 1, rows: 4, height: '120px' }
+                }} />
+
+            <SkeletonGrid style={{ marginTop: '20px', marginBottom: '40px' }} rows={2} columns={2} height={'250px'}
+                responsive={{ md: { columns: 1, rows: 3, height: '250px' } }} />
+        </>
+    }
+
+    if (error) {
+        return <ErrorState icon={<TbAlertCircle />} title={'Report not available'}
+            message={error?.message || "Can't find report data"} hight='400px' />
+    }
 
     return (
         <div className="completed-service-report-container">
@@ -221,7 +243,7 @@ const CompletedServiceReport = ({ data, loading, error, updatedAt }) => {
                         >
                             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                             <YAxis niceTicks="snap125" tick={{ fontSize: 11 }} />
-                            <ChartTooltip />
+                            <ChartTooltip nameColorVisibility={false} nameVisibility={false} />
                             <Bar key={'key'} dataKey={'Works'} barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 0, 0]} />
                         </ComposedChart>
                     </div>

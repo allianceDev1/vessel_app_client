@@ -4,8 +4,6 @@ import { Bar, ComposedChart, Line, PolarAngleAxis, PolarGrid, Radar, RadarChart,
 import ChartTooltip from '../primitives/ChartTooltip'
 import ChartLegend from '../primitives/ChartLegend'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
-
-
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 import { TbPaperclip } from 'react-icons/tb'
@@ -18,21 +16,6 @@ const RegisteredReport = () => {
     // eslint-disable-next-line
     const [limit, setLimit] = useState(5);
 
-
-    const { isLoading: techLoading, data: techData, error: techError } = useQuery({
-        queryKey: ['tech_reg_mini_report', limit],
-        queryFn: async () => {
-            // ✅ build URL dynamically
-            const url = limit
-                ? `/worker/current-status?limit=${limit}`
-                : `/worker/current-status`;
-
-            const data = await api.vfCv2Axios.get(url);
-            return data;
-        },
-        staleTime: 30_000,
-        keepPreviousData: true
-    })
 
     const { isLoading: reportLoading, data: reportData, error: reportError, dataUpdatedAt: updatedAt } = useQuery({
         queryKey: ['reg_mini_report'],
@@ -47,16 +30,16 @@ const RegisteredReport = () => {
     })
 
 
-    if (reportLoading || techLoading) {
+    if (reportLoading) {
         return (
             <SkeletonGrid style={{ marginTop: '20px', marginBottom: '40px' }} rows={2} columns={2} height={'250px'}
                 responsive={{ md: { columns: 1, rows: 3, height: '250px' } }} />
         )
     }
 
-    if (reportError || techError) {
+    if (reportError) {
         return <ErrorState icon={<TbPaperclip />} title={'Report not available'}
-            message={reportError?.message || techError?.message || "Can't find report data"} hight='400px' />
+            message={reportError?.message || "Can't find report data"} hight='400px' />
     }
 
     return (
@@ -102,7 +85,7 @@ const RegisteredReport = () => {
                             margin={{ left: -30 }}
                         >
                             <PolarGrid />
-                            <ChartTooltip />
+                            <ChartTooltip nameColorVisibility={false} nameVisibility={false} />
                             <PolarAngleAxis dataKey="subject" tick={{ fontSize: 13 }} />
                             <Radar name="Count" dataKey="count" stroke={chartLabelColors[5]} fill={chartLabelColors[2]} fillOpacity={0.6} />
                         </RadarChart>
@@ -124,7 +107,7 @@ const RegisteredReport = () => {
                         >
                             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                             <YAxis dataKey="Count" tick={{ fontSize: 11 }} />
-                            <ChartTooltip />
+                            <ChartTooltip nameColorVisibility={false} nameVisibility={false} />
                             <Bar key={'Count'} dataKey={'Count'} barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 0, 0]} />
                         </ComposedChart>
                     </div>

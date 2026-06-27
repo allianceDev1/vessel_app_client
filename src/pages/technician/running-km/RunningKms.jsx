@@ -11,32 +11,25 @@ import { generateMonthlyRunningCalendar, generateMonthlyRunningReport } from '..
 import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
 import { api } from '../../../api'
 import UpdateRunningKm from '../../../components/modules/tech/running-km/UpdateRunningKm';
+import { useQuery } from '@tanstack/react-query';
 
 const RunningKms = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams()
-    const [error, setError] = useState({ error: false })
-    const [loading, setLoading] = useState('fetch')
-    const [data, setData] = useState([])
     const [report, setReport] = useState({})
     const [calenderData, setCalenderData] = useState([])
 
 
-    const fetchApi = async () => {
-        setLoading('fetch');
-        setError({ error: false, title: '', message: '' })
+    const { isLoading, data, error } = useQuery({
+        queryKey: ['tech_running_kms', searchParams.get('month')],
+        queryFn: async () => {
 
-        // api
-        try {
             const response = await api.vfTv2Axios.get(`/tech/running-kms/${searchParams.get('month')}`)
-            setData(response)
-
-        } catch (error) {
-            setError({ error: true, title: 'Calender fetch failed', message: error?.message })
-        } finally {
-            setLoading('')
-        }
-    }
+            return response
+        },
+        staleTime: 60_000,
+        enabled: searchParams.get('month') ? true : false
+    })
 
     const openUpdateModal = (day) => {
 
@@ -46,7 +39,7 @@ const RunningKms = () => {
 
         dispatch(modal.push({
             title: 'Update Kilometer',
-            body: <UpdateRunningKm data={day} setData={setData} />
+            body: <UpdateRunningKm data={day} />
         }))
     }
 
@@ -71,13 +64,13 @@ const RunningKms = () => {
         if (!searchParams.get('month')) {
             return;
         }
-        fetchApi();
+
         // eslint-disable-next-line
     }, [searchParams.get('month')])
 
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="tech-service-page-load">
             <SkeletonGrid rows={1} columns={1} height={50} gap={5} />
             <SkeletonGrid rows={5} columns={7} height={50} gap={5} style={{ marginTop: '10px' }} />
@@ -93,11 +86,11 @@ const RunningKms = () => {
                     onChange={(e) => setSearchParams({ month: e.target.value })} size='small' max={isoToYYYYMMDD(new Date()).slice(0, 7)} />
             </div>
 
-            {error?.error || (!loading && !calenderData?.length)
+            {error || (!isLoading && !calenderData?.length)
                 ? <ErrorState
-                 size='sm'
+                    size='sm'
                     hight='60vh'
-                    title={error?.title || "You are tired."}
+                    title={"You are tired."}
                     message={error?.message || "Running data not found"}
                     icon={<TbBikeOff />}
                 />

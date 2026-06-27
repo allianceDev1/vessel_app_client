@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice'
 import { api } from '../../../api'
 import { buildCustomerPGStretcher } from '../../../utils/services/product_service'
-import { createBatchProgress } from '../../../utils/services/event-service'
+
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
 import FormTopBar from '../../../components/modules/tech/service-form-components/FormTopBar'
 import Home from '../../../components/modules/tech/service-form-pages/Home'
@@ -19,111 +19,94 @@ import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/
 import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
 import Review from '../../../components/modules/tech/service-form-pages/Review'
 import Payment from '../../../components/modules/tech/service-form-pages/Payment'
+import { useQuery } from '@tanstack/react-query'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
-    const [loading, setLoading] = useState('preparation')
-    const [customerProducts, setCustomerProducts] = useState([])
-    const [customer, setCustomer] = useState({})
-    const [regData, setRegData] = useState({})
-    const [vesselsEligibilities, setVesselsEligibilities] = useState([])
-    const [addOnsEligibilities,setAddOnsEligibilities] = useState([])
-    const [materialsList, setMaterialsList] = useState([])
-    const [bagList, setBagList] = useState([])
-    const [spareList, setSpareList] = useState([])
-    const [vesselServiceList, setVesselServiceList] = useState([])
-    const [resources, setResources] = useState([])
-    const [serviceCategories, setServiceCategories] = useState([])
-    const [addOnServiceCategories, setAddOnServiceCategories] = useState([])
-    const [addOnServiceList, setAddOnServiceList] = useState([])
-    const [addOnSpareList, setAddOnSpareList] = useState([])
-    const [availableAddOns, setAvailableAddOns] = useState([])
-    const [repeatWork, setRepeatWork] = useState(false)
-    const [serviceCharges, setServiceCharges] = useState([])
-    const [error, setError] = useState({ error: false, title: '', message: '' })
-    const [apiProgress, setApiProgress] = useState(0);
+    const [conflict, setConflict] = useState({ error: false, title: '', message: '' })
 
 
-    const fetchApi = async () => {
 
-        try {
-            setLoading('preparation')
-            setApiProgress(0);
-            setError({ error: false, title: '', message: '' })
-
-            const updateBatchProgress = createBatchProgress(setApiProgress);
+    const {
+        isLoading,
+        isFetching,
+        data: {
+            resources,
+            materialsList,
+            bagList,
+            spareList,
+            vesselServiceList,
+            addOnServiceList,
+            addOnSpareList,
+            availableAddOns,
+            serviceCharges,
+            customerProducts,
+            customer,
+            vesselsEligibilities,
+            addOnsEligibilities,
+            serviceCategories,
+            addOnServiceCategories,
+            regData,
+            repeatWork
+        } = {},
+        error
+    } = useQuery({
+        queryKey: ['service_form_resources', serviceForm?.customer_id, serviceForm?.visit_uuid],
+        queryFn: async () => {
 
             const apis = [
-                api.vfTv2Axios.get(`/service/service-form/resources?customer_id=${serviceForm?.customer_id}`, {
-                    onDownloadProgress: (e) => {
-                        if (!e.total) return; // sometimes server doesn't send content-length
-                        const percent = Math.round((e.loaded * 100) / e.total);
-                        updateBatchProgress("resources", percent);
-                    }
-                }),
-                api.vfTv2Axios.get(`/service/service-form/init?customer_id=${serviceForm?.customer_id}&registration_id=${serviceForm?.registration_id}`, {
-                    onDownloadProgress: (e) => {
-                        if (!e.total) return;
-                        const percent = Math.round((e.loaded * 100) / e.total);
-                        updateBatchProgress("init", percent);
-                    }
-                }),
+                api.vfTv2Axios.get(`/service/service-form/resources?customer_id=${serviceForm?.customer_id}`),
+                api.vfTv2Axios.get(`/service/service-form/init?customer_id=${serviceForm?.customer_id}&registration_id=${serviceForm?.registration_id}`)
             ]
 
             const [resResources, resInit] = await Promise.all(apis);
 
-            // Form Resources
-            setResources(resResources?.form_resources || [])
-            setMaterialsList(resResources?.v_materials || [])
-            setBagList(resResources?.v_bags || [])
-            setSpareList(resResources?.v_spares || [])
-            setVesselServiceList(resResources?.v_services || [])
-            setAddOnServiceList(resResources?.a_services || [])
-            setAddOnSpareList(resResources?.a_spares || [])
-            setAvailableAddOns(resResources?.add_on_products || [])
-            setServiceCharges(resResources?.new_product_service_charges || [])
-
-            // Customer products and packages
             const customerOwnProducts = [...(resInit?.products?.vessel_filters || []), ...(resInit?.products?.add_ons || [])]
-            setCustomerProducts(customerOwnProducts)
-
-            // Product Group
             const pgStretcher = buildCustomerPGStretcher(customerOwnProducts)
-            setCustomer({ ...resInit?.customer, productStretcher: pgStretcher })
-
-            //  eligibility
-            setVesselsEligibilities(resInit?.products?.vessel_filters_eligibility || [])
-            setAddOnsEligibilities(resInit?.products?.add_ons_eligibility || [])
-
-
-            // Service Categories
-            setServiceCategories(resInit?.vessel_service_categories || [])
-            setAddOnServiceCategories(resInit?.add_on_service_categories || [])
-
-            // Registration form
-            setRegData(resInit?.registration || {})
-
-            // Repeat
-            setRepeatWork(resInit?.repeat || { is_repeat: false, repeat_work: {} })
 
             // Call Log
             dispatch(sfActions.updateVerification({
                 otpLogs: resInit?.otp_logs || []
             }))
 
-        } catch (error) {
-            setError({
-                error: true,
-                title: 'Preparation Failed',
-                message: error?.message ? `${error?.message}, Please tye again!` : "Please tye again!"
-            })
-        } finally {
-            setLoading('')
-            setApiProgress(0)
-        }
-    }
+            return {
+                // Form Resources
+                resources: resResources?.form_resources || [],
+                materialsList: resResources?.v_materials || [],
+                bagList: resResources?.v_bags || [],
+                spareList: resResources?.v_spares || [],
+                vesselServiceList: resResources?.v_services || [],
+                addOnServiceList: resResources?.a_services || [],
+                addOnSpareList: resResources?.a_spares || [],
+                availableAddOns: resResources?.add_on_products || [],
+                serviceCharges: resResources?.new_product_service_charges || [],
+
+                // Customer products and packages
+                customerProducts: customerOwnProducts,
+
+                // Product Group
+                customer: { ...resInit?.customer, productStretcher: pgStretcher },
+
+                //  eligibility
+                vesselsEligibilities: resInit?.products?.vessel_filters_eligibility || [],
+                addOnsEligibilities: resInit?.products?.add_ons_eligibility || [],
+
+
+                // Service Categories
+                serviceCategories: resInit?.vessel_service_categories || [],
+                addOnServiceCategories: resInit?.add_on_service_categories || [],
+
+                // Registration form
+                regData: resInit?.registration || {},
+
+                // Repeat
+                repeatWork: resInit?.repeat || { is_repeat: false, repeat_work: {} },
+            }
+        },
+        staleTime: 30 * 60_000 // 30 minutes
+    })
 
     const changeSubmitStatusIsFalse = () => {
         if (!serviceFormSettings?.activeProduct?.[0]) return;
@@ -153,15 +136,13 @@ const ServiceForm = () => {
             dispatch(sfSetting.setActivePage(100))
         }
 
-        // initial fetch
-        fetchApi()
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         if (serviceForm?.customer_id && serviceForm?.registration_id && customer?.customer_id && regData?.registration_id) {
             if (serviceForm?.customer_id !== customer?.customer_id || serviceForm?.registration_id !== regData?.registration_id) {
-                setError({
+                setConflict({
                     error: true,
                     title: 'Data Conflict Detected',
                     message: "We found existing service data stored in your cache that may conflict with this action. To continue safely, you need to clear the cached data first."
@@ -173,7 +154,7 @@ const ServiceForm = () => {
 
 
     // loading
-    if (loading === 'preparation') {
+    if (isLoading || isFetching) {
         return <div className="tech-service-form-loader-container">
             <div className="loader-border">
                 {/* <TbLoader /> */}
@@ -181,20 +162,18 @@ const ServiceForm = () => {
                 <p>Loading resources and initial information. This may take a moment.</p>
 
                 <div className="progress-bar">
-                    {(apiProgress && apiProgress < 100)
-                        ? <div className="progress" style={{ width: `${apiProgress}%` }}></div>
-                        : <div className="progress spin"></div>}
+                    <div className="progress spin"></div>
                 </div>
             </div>
         </div>
     }
 
     // Error
-    if (error?.error) {
+    if (error || conflict?.error) {
         return <ErrorState
-            hight='70vh'
-            title={error?.title}
-            message={error?.message}
+            hight='80vh'
+            title={conflict?.title || 'Form resources fetching failed'}
+            message={conflict?.error || error?.message}
             icon={<TbFileText />}
         />
     }
@@ -205,7 +184,7 @@ const ServiceForm = () => {
         <div className="tech-service-form-container">
 
             <div className="top-bar-container">
-                <FormTopBar refresh={fetchApi} />
+                <FormTopBar />
             </div>
 
             <div className="service-form-page-container">

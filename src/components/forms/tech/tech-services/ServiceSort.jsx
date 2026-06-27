@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
-const ServiceSort = () => {
+const ServiceSort = ({ tab }) => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
     const [form, setForm] = useState({
@@ -20,10 +20,14 @@ const ServiceSort = () => {
     }
 
     const fieldOptions = [
-        { label: 'Customer Id', value: 'customer_id' },
-        { label: 'City', value: 'city' },
-        { label: 'Post office', value: 'post' },
-        { label: 'Date', value: 'date' }
+        { label: 'Customer Id', value: 'customer.0' },
+        { label: 'City', value: 'address.3' },
+        { label: 'Post office', value: 'address.2' },
+        {
+            label: 'Date', value: ['COMPLAINT', 'REG_SERVICE', 'REG_RENEWAL'].includes(tab) ? 'registered_date.2'
+                : ['RENEWAL', 'OVERDUE'].includes(tab) ? 'expire_date'
+                    : 'service_date'
+        }
     ]
 
     const handleSubmit = (e) => {

@@ -81,7 +81,7 @@ const RegisteredServiceTable = () => {
 
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
-    }, [navigate, searchParams.get('id_key'), searchParams.get('service_type'), searchParams.get('status'), searchParams.get('city_id'), searchParams.get('from_date'), searchParams.get('end_date')])
+    }, [navigate, searchParams.get('id_key'), searchParams.get('service_type'), searchParams.get('status'), searchParams.get('city_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('rnd')])
 
     const tableColumns = useMemo(() => {
 
@@ -122,7 +122,7 @@ const RegisteredServiceTable = () => {
                 columnVisible={columnVisibility}
                 queryKey={['registered_service_table_list', searchParams.get('status'), searchParams.get('id_key'),
                     searchParams.get('service_type'), searchParams.get('city_id'),
-                    searchParams.get('from_date'), searchParams.get('end_date')]}
+                    searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('rnd')]}
                 tableKey="registered_service"
             />
         </div>

@@ -9,38 +9,35 @@ import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import { api } from '../../../api';
 import { hexToRgba } from '../../../utils/helpers/color-utils';
+import { useQuery } from '@tanstack/react-query';
 
 
 const ServicePackages = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState('fetch')
-    const [data, setData] = useState([])
-    const [error, setError] = useState({ error: false, title: null, message: null })
 
-    const fetchPackages = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
+   
+   
+
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['service_package_list', 'controller'],
+        queryFn: async () => {
             const res = await api.vfCv2Axios.get('/config/service-package/list?product_type=VESSEL_FILTER&hidden=Yes')
-            setData(res)
-        } catch (error) {
-            setError({ error: true, title: 'Data fetching failed', message: error.message })
-        } finally {
-            setLoading('')
-        }
-    }
+            return res
+        },
+        staleTime: 10_000
+    })
+
+  
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Service Packages', note: "Manage the vessel system service packages & services." }))
-
-        // Initial fetch
-        fetchPackages();
+       
         // eslint-disable-next-line
     }, [])
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="service-packages-page-load">
             <SkeletonGrid
                 rows={2}
@@ -56,10 +53,10 @@ const ServicePackages = () => {
         </div>
     }
 
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='80vh'
-            title={error?.title}
+            title={'Data fetching failed!'}
             message={error?.message}
             icon={<TbCarouselHorizontal />}
         />

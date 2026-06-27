@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import './more.scss'
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { TbArrowRight, TbBike, TbCircleLetterT, TbDropletCheck, TbHelpSquareRounded, TbMap } from 'react-icons/tb'
+import { TbArrowRight, TbBike, TbCircleLetterT, TbDots, TbDropletCheck, TbHelpSquareRounded, TbMap } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers'
 import moment from 'moment'
@@ -88,6 +88,19 @@ const More = () => {
                     </div>
                     <div className="action">
                         <TbArrowRight />
+                    </div>
+                </div>
+
+                <div className="footer-container">
+                    <div className="left-section">
+                        <p>Copyright © 2012 - {new Date().getFullYear()} Alliance Water Solutions LLP. <br></br> All Rights Reserved</p>
+                    </div>
+                    <div className="right-section">
+                        <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/privacy-policy#id-7.-cookies-and-tracking')}>Cookies</p>
+                        <span>.</span>
+                        <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/terms-of-service')}>Terms</p>
+                        <span>.</span>
+                        <p className='link' onClick={() => window.open('https://awsllp.gitbook.io/workers/privacy-policy')}>Privacy</p>
                     </div>
                 </div>
             </div>

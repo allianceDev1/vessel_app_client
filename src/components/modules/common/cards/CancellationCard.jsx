@@ -1,18 +1,19 @@
-import React from 'react'
+import React, { useId } from 'react'
 import './service-card.scss'
 import { TbHash, TbUser } from 'react-icons/tb'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const CancellationCard = ({ data, pointer = false }) => {
-    const tempColor = '#ff0000'
+    const tempColor = '#ff0000';
+    const gradientId = useId();
 
     return (
         <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }}>
             <div className="card-header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
-                        <linearGradient id="cancellationGradient">
+                        <linearGradient id={gradientId}>
                             <stop offset="0%" stopColor={tempColor} />
                             <stop offset="100%" stopColor="#000000" />
                         </linearGradient>
@@ -20,7 +21,7 @@ const CancellationCard = ({ data, pointer = false }) => {
 
                     <path
                         d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill="url(#cancellationGradient)"
+                        fill={`url(#${gradientId})`}
                     />
                 </svg>
 

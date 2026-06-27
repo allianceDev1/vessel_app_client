@@ -91,7 +91,9 @@ const UpcomingServiceTable = () => {
                         'Post office': item.post,
                         'City': item.city_name,
                         'Service Date': item.next_service_date ? isoToDDMonYYYY(new Date(item.next_service_date)) : '',
-                        'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : ''
+                        'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
+                        _rowStyle: { cursor: 'pointer' },
+                        _rowNavigateUrl: `/controller/customer/${item?.customer_id}/about`
                     }
 
                 case 'product':
@@ -111,7 +113,9 @@ const UpcomingServiceTable = () => {
                         product_name: item.product_name,
                         service_type: item.service_type,
                         package_name: item.package_name,
-                        package_color_code: item.package_color_code
+                        package_color_code: item.package_color_code,
+                        _rowStyle: { cursor: 'pointer' },
+                        _rowNavigateUrl: `/controller/customer/${item?.customer_id}/product/${item.product_id}/about`
                     }
 
                 default:
@@ -143,7 +147,7 @@ const UpcomingServiceTable = () => {
                     { header: 'Expire Date', accessorKey: 'Expire Date', enableSorting: false },
                 ]
 
-                if (user?.allowed_origins?.includes('vfcr_up_service_write')) {
+                if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
                     cols.push({
                         header: 'Actions',
                         enableSorting: false,
@@ -207,7 +211,7 @@ const UpcomingServiceTable = () => {
                     { header: 'Expire Date', accessorKey: 'Expire Date', enableSorting: false },
                 ]
 
-                if (user?.allowed_origins?.includes('vfcr_up_service_write')) {
+                if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
                     cols.push({
                         header: 'Actions',
                         enableSorting: false,

@@ -63,7 +63,7 @@ const FilterCustomer = () => {
             sort_dir: sortDir,
             ...(search ? { search } : {}),
             city_id: searchParams.get('city_id') ? searchParams.get('city_id') : '',
-            item_id: searchParams.get('item_id') ? searchParams.get('item_id') : '',
+            sku: searchParams.get('sku') ? searchParams.get('sku') : '',
             installation_mode: searchParams.get('installation_mode') ? searchParams.get('installation_mode') : '',
             product_type: searchParams.get('product_type') ? searchParams.get('product_type') : '',
             origin_category: searchParams.get('origin_category') ? searchParams.get('origin_category') : '',
@@ -99,7 +99,7 @@ const FilterCustomer = () => {
 
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
-    }, [navigate, searchParams.get('city_id'), searchParams.get('item_id'), searchParams.get('installation_mode'), searchParams.get('product_type'),
+    }, [navigate, searchParams.get('city_id'), searchParams.get('sku'), searchParams.get('installation_mode'), searchParams.get('product_type'),
         // eslint-disable-next-line
         searchParams.get('origin_category'), searchParams.get('package_filter_type'), searchParams.get('package_ids'), searchParams.get('date_filtration_type'),
         // eslint-disable-next-line
@@ -114,7 +114,7 @@ const FilterCustomer = () => {
                 columns={tableColumns}
                 fetchFn={fetchCustomerData}
                 columnVisible={{ 'Pin Code': false, "City": false }}
-                queryKey={['filter_customer_product_table', searchParams.get('city_id'), searchParams.get('item_id'), searchParams.get('installation_mode'), searchParams.get('product_type'),
+                queryKey={['filter_customer_product_table', searchParams.get('city_id'), searchParams.get('sku'), searchParams.get('installation_mode'), searchParams.get('product_type'),
                     searchParams.get('origin_category'), searchParams.get('package_filter_type'), searchParams.get('package_ids'), searchParams.get('date_filtration_type'),
                     searchParams.get('from_date'), searchParams.get('end_date')]}
                 topComponents={

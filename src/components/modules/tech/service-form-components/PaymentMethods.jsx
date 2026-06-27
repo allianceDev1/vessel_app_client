@@ -45,7 +45,7 @@ const PaymentMethods = () => {
                 unique_id: new Date().getTime(),
                 method: form?.method,
                 amount: form?.amount,
-                transaction_id: form?.transaction_id,
+                txn_id: form?.txn_id,
                 cheque_no: form?.cheque_no,
                 bank_name: form?.bank_name,
                 cheque_date: form?.cheque_date
@@ -66,7 +66,7 @@ const PaymentMethods = () => {
 
                 {/* Bank */}
                 {form?.method === 'BANK' &&
-                    <InputText label={'Transaction ID'} name={'transaction_id'} type='text' value={form?.transaction_id} required onChange={handleChange} />
+                    <InputText label={'Transaction ID'} name={'txn_id'} type='text' value={form?.txn_id} required onChange={handleChange} />
                 }
 
                 {/* Cheque */}

@@ -52,7 +52,7 @@ const CompletedServiceTable = () => {
         const res = await api.vfCv2Axios.get(`/service/completed/list/${listType}?${params}`)
 
         const transformed = res.data.map((item, index) => {
-           
+
 
             switch (listType) {
                 case 'customer':
@@ -97,8 +97,8 @@ const CompletedServiceTable = () => {
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
     }, [navigate, searchParams.get('view_type'), searchParams.get('product_id'), searchParams.get('customer_id'), searchParams.get('technician_id'),
-       // eslint-disable-next-line
-        searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no')])
+        // eslint-disable-next-line
+        searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no'), searchParams.get('rnd'), searchParams.get('unverified')])
 
     const tableColumns = useMemo(() => {
 
@@ -173,7 +173,8 @@ const CompletedServiceTable = () => {
                 fetchFn={fetchServiceData}
                 columnVisible={columnVisibility}
                 queryKey={['completed_service_table_list', listType, searchParams.get('product_id'), searchParams.get('customer_id'),
-                    searchParams.get('technician_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no')]}
+                    searchParams.get('technician_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no'),
+                    searchParams.get('rnd'), searchParams.get('unverified')]}
                 tableKey="completed_service"
             />
         </div>

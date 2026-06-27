@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './service-job.scss'
-import { useDispatch } from 'react-redux'
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbArrowUpRight, TbChevronDown, TbClipboardText, TbDownload, TbPasswordFingerprint } from 'react-icons/tb';
+import { TbArrowUpRight, TbChevronDown, TbClipboardText, TbDownload, TbPasswordFingerprint, TbRefresh } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -15,6 +15,7 @@ import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, getTimeDiff, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import VerifyService from '../../../components/forms/controller/completed-service/VerifyService';
 import { downloadServiceBill, downloadServiceReceipt } from '../../../utils/services/finance_service';
+import { generateUniqueId } from '../../../utils/helpers/generate_Id';
 
 
 
@@ -22,6 +23,7 @@ const ServiceJob = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { service_srl_no, pl_product_id, pp_product_id } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     useEffect(() => {
         dispatch(page.setTitle({ title: service_srl_no, note: "Service Job View" }))
@@ -64,6 +66,41 @@ const ServiceJob = () => {
             />
         }))
     }
+
+
+    const downloadAction = async (type) => {
+
+        const key = generateUniqueId(6)
+
+        try {
+            dispatch(toast.push({
+                id: key,
+                type: null,
+                head: `Fetching ${type}...`,
+                message: 'Place wait for a while',
+                icon: <TbRefresh />,
+                doClose: false,
+                autoClose: false
+            }))
+
+            if (type === 'Bill') {
+                await downloadServiceBill(service_srl_no)
+            } else {
+                await downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+            }
+
+        } catch (error) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: "Downloading Failed",
+                message: error?.message
+            }))
+        } finally {
+            dispatch(toast.pull.single(key))
+        }
+    }
+
+
 
     if (isLoading) {
         return (
@@ -124,7 +161,7 @@ const ServiceJob = () => {
                         style: { width: '120px' }
                     }}
                         list={[
-                            data?.verification?.verified ? {} : {
+                            (!data?.verification?.verified && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) && {
                                 items: [
                                     { icon: <TbPasswordFingerprint />, label: "Verify Service", onClick: verifyService },
                                     { type: 'divider' },
@@ -133,10 +170,10 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadServiceBill(service_srl_no) },
+                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill') },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
-                                        onClick: () => downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+                                        onClick: () => downloadAction('Receipt')
                                     },
                                 ]
                             }
@@ -167,6 +204,7 @@ const ServiceJob = () => {
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <p className='text-value'>{data?.service_srl_no}</p>
                                 <Badge size='small' value={toStandardText(data?.job_status)} severity={'success'} />
+                                {data?.rnd_uuid && <Badge size='small' value={'R&D'} severity={'warning'} />}
                             </div>
                         </div>
                         <div className="item">
@@ -187,10 +225,16 @@ const ServiceJob = () => {
                                 <p className='text-value'>{isoToDDMonYYYY(data?.date)}</p>
                             </div>
                         </div>
-                        <div className="item">
+                        <div className={`item ${data?.duration <= 600 && 'warning-item'}`}>
                             <p className='label'>IN & OUT</p>
                             <div>
-                                <p className='text-value'>{convertIsoToAmPm(data?.in_time)} - {convertIsoToAmPm(data?.out_time)} ({formatDuration(data?.duration)})</p>
+                                <p className='text-value ' >{convertIsoToAmPm(data?.in_time)} - {convertIsoToAmPm(data?.out_time)} ({formatDuration(data?.duration)})</p>
+                            </div>
+                        </div>
+                        <div className="item">
+                            <p className='label'>Call Summery (Applied / Estimate)</p>
+                            <div>
+                                <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
                             </div>
                         </div>
                         <div className="item">
@@ -198,6 +242,7 @@ const ServiceJob = () => {
                             <div>
                                 <p className='text-value'>
                                     {(data?.tat?.day || 0) > 0 && `${data?.tat?.day || 0} Days,`} {(data?.tat?.hour || 0) > 0 && `${data?.tat?.hour || 0} Hours,`} {(data?.tat?.minute || 0) > 0 && `${data?.tat?.minute || 0} Minutes`}
+                                    {data?.tat?.day === 0 && data?.tat?.hour === 0 && data?.tat?.minute === 0 && 'No TAT'}
                                 </p>
                             </div>
                         </div>

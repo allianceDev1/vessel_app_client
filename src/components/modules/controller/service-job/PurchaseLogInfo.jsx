@@ -5,6 +5,7 @@ import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 
 
 
@@ -13,7 +14,7 @@ const PurchaseLogInfo = () => {
     const { service_srl_no, pp_product_id } = useParams();
 
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['service_job_purchase_log_view', service_srl_no, "pp", pp_product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
@@ -27,7 +28,14 @@ const PurchaseLogInfo = () => {
     })
 
 
-
+    if (isLoading) {
+        return <div>
+            <SkeletonGrid rows={6} columns={3} height={'60px'} gap={'10px'}
+                responsive={{
+                    md: { columns: 1, rows: 10 }
+                }} />
+        </div>
+    }
 
     return (
         <div className="service-job-product-log-view-container">
@@ -39,9 +47,15 @@ const PurchaseLogInfo = () => {
                     </div>
                 </div>
                 <div className="item">
-                    <p className='label'>Product Name & Item / Model Id</p>
+                    <p className='label'>SKU</p>
                     <div>
-                        <p className='text-value'>{data?.product_name} - {data?.item_id}</p>
+                        <p className='text-value'>{data?.sku}</p>
+                    </div>
+                </div>
+                <div className="item">
+                    <p className='label'>Product Name</p>
+                    <div>
+                        <p className='text-value'> {data?.product_name} </p>
                     </div>
                 </div>
                 <div className="item">

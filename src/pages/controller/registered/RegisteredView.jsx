@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './registered-view.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import RegistrationInfo from '../../../components/modules/controller/registered-service/RegistrationInfo';
@@ -26,6 +26,8 @@ const RegisteredView = () => {
   const { reg_no } = useParams();
   const queryClient = useQueryClient();
   const [actionOptions, setActionOptions] = useState([])
+  const { user } = useSelector((state) => state.user)
+
 
 
   const openEnterCallLogPopUp = ({ customer_id }) => {
@@ -169,9 +171,11 @@ const RegisteredView = () => {
 
   useEffect(() => {
 
-    if (!data?.status?.status) {
+    if (!data?.status?.status || !user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
       return;
     }
+
+
 
     // Actions
     const actions = [
@@ -192,12 +196,13 @@ const RegisteredView = () => {
       )
     }
 
-    if ([1, 2, 3].includes(data?.status?.status)) {
-      if (!data?.about.is_under_rnd && data?.about?.service_type === 'COMPLAINT') {
-        actions[0].items.push(
-          { icon: <TbHomeSearch />, label: 'Convert to R&D', theme: 'info', onClick: () => convertToRND(reg_no) }
-        )
-      }
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin')
+      && !data?.about.is_under_rnd && data?.about?.service_type === 'COMPLAINT') {
+
+      actions[0].items.push(
+        { icon: <TbHomeSearch />, label: 'Convert to R&D', theme: 'info', onClick: () => convertToRND(reg_no) }
+      )
+
     }
 
     if (data?.status?.status === 3) {
@@ -205,13 +210,14 @@ const RegisteredView = () => {
       actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', onClick: () => openUnschedulePopUp({ registrationId: reg_no }) })
     }
 
-    if ([1, 2, 3].includes(data?.status?.status)) {
-      if (data?.about.is_under_rnd) {
-        actions[1].items.push(
-          { icon: <TbHomeSearch />, label: 'Retrieve from R&D', onClick: () => retrieveFromRND(reg_no) }
-        )
-      }
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin') && data?.about.is_under_rnd) {
 
+      actions[1].items.push(
+        { icon: <TbHomeSearch />, label: 'Retrieve from R&D', onClick: () => retrieveFromRND(reg_no) }
+      )
+    }
+
+    if ([1, 2, 3].includes(data?.status?.status)) {
       actions[1].items.push(
         { icon: <TbX />, label: 'Registration', theme: 'danger', onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) }
       )
@@ -223,7 +229,7 @@ const RegisteredView = () => {
   }, [data])
 
 
-  
+
 
   if (isLoading) {
     return <div className="service-registered-view-page-container">
@@ -258,10 +264,11 @@ const RegisteredView = () => {
             onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} />
           <Button label={'Service Jobs'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }}
             onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} />
-          {[1, 2, 3, 4].includes(data?.status?.status) && <Dropdown button={{
-            label: 'Actions', icon: <TbChevronDown />,
-            iconPos: 'right', rounded: true, outlined: true, size: 'small', style: { width: '120px' }
-          }} list={actionOptions} />}
+          {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
+            && <Dropdown button={{
+              label: 'Actions', icon: <TbChevronDown />,
+              iconPos: 'right', rounded: true, outlined: true, size: 'small', style: { width: '120px' }
+            }} list={actionOptions} />}
         </div>
       </div>
       <div className="content">

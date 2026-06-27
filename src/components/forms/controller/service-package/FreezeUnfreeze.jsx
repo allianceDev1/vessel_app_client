@@ -17,6 +17,7 @@ const FreezeUnfreeze = ({ type, packageSrlNo }) => {
         e.preventDefault();
 
         try {
+            setLoading(true)
             const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/${String(type).toLowerCase()}`, { comment })
 
             queryClient.invalidateQueries({
@@ -53,7 +54,7 @@ const FreezeUnfreeze = ({ type, packageSrlNo }) => {
                 <Textarea label={'Comment'} name={'comment'} value={comment} onChange={(e) => setComment(e.target.value)}
                     required />
                 <Button style={{ marginTop: '10px', width: '100%' }} label={toStandardText(type)} rounded
-                    severity={type === 'FREEZE' ? 'danger' : 'primary'} spinIcon={loading} />
+                    severity={type === 'FREEZE' ? 'danger' : 'primary'} spinIcon={loading} disabled={comment?.length < 5 || loading} />
             </form>
         </div>
     )

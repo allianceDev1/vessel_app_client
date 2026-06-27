@@ -5,12 +5,16 @@ import Button from '../../../UI_Primitives/buttons/Button';
 import { api } from '../../../../api';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 
-const AddCallLog = ({ customerId, setCallLogs, isController }) => {
+const AddCallLog = ({ customerId, serviceType, isController }) => {
     const dispatch = useDispatch();
+    const queryClient = useQueryClient()
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState('')
+    const [searchParams] = useSearchParams()
 
 
     const handleSubmit = async (e) => {
@@ -31,16 +35,27 @@ const AddCallLog = ({ customerId, setCallLogs, isController }) => {
             } else {
                 await api.vfTv2Axios.post(`/customer/${customerId}/call-log`, { message })
 
-                setCallLogs(prev => ([{
-                    customer_id: customerId,
-                    called_at: new Date(),
-                    caller_category: 'Technician',
-                    message: message,
-                    call_uuid: '817ac624',
-                    called_by_uuid: '817ac624',
-                    called_by: 'You'
-                },
-                ...prev]))
+                queryClient.setQueryData(
+                    ['tech_service_profile', customerId, serviceType, searchParams.get('reg_id')],
+                    old => {
+                        if (!old) return old
+                        return {
+                            ...old,
+                            callLogs: [
+                                {
+                                    customer_id: customerId,
+                                    called_at: new Date(),
+                                    caller_category: 'Technician',
+                                    message: message,
+                                    call_uuid: '817ac624',
+                                    called_by_uuid: '817ac624',
+                                    called_by: 'You'
+                                },
+                                ...(old.callLogs || [])
+                            ]
+                        }
+                    }
+                )
 
                 dispatch(modal.pull.all())
             }

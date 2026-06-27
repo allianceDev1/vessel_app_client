@@ -64,7 +64,7 @@
 
             .content {
                 display: grid;
-                grid-template-columns: 1fr 200px;
+                grid-template-columns: 1fr 280px;
                 gap: 30px;
 
                 .number-chart {
@@ -169,6 +169,13 @@
                 }
             }
         }
+    }
+
+    .last-update {
+        font-size: 13px;
+        text-align: end;
+        color: var(--text-secondary-2);
+        margin-top: 10px;
     }
 
     @media screen and (max-width:750px) {

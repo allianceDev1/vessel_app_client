@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './controllerLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
-import { TbClipboardText, TbClockStar, TbDropletCog, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbPaperclip } from 'react-icons/tb';
+import { TbClipboardText, TbClockStar, TbCrown, TbDropletCog, TbHome, TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand, TbLogout2, TbMap2, TbMoodSpark, TbPaperclip } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
@@ -84,22 +84,19 @@ const ControllerLayout = ({ children }) => {
                             <TbHome />
                             <span>Home</span>
                         </div>
-                        {user?.allowed_origins?.some(access => ['vfcr_areas_read', 'vfcr_areas_write'].includes(access)) &&
-                            <div className={`item ${activeSegment === 'area-list' && 'active'}`} onClick={() => handleMenuClick('/controller/area-list')}>
-                                <TbMap2 />
-                                <span>Area list</span>
-                            </div>}
-
+                        <div className={`item ${activeSegment === 'area-list' && 'active'}`} onClick={() => handleMenuClick('/controller/area-list')}>
+                            <TbMap2 />
+                            <span>Area list</span>
+                        </div>
                         <div className={`item ${activeSegment === 'customers' && 'active'}`} onClick={() => handleMenuClick('/controller/customers')}>
                             <TbMoodSpark />
                             <span>Customers</span>
                         </div>
-
-                        {user?.allowed_origins?.some(access => ['vfcr_up_service_read', 'vfcr_up_service_write'].includes(access)) && <div className={`item ${activeSegment === 'upcoming' && 'active'}`}
+                        <div className={`item ${activeSegment === 'upcoming' && 'active'}`}
                             onClick={() => handleMenuClick('/controller/upcoming?view_type=product')}>
                             <TbClockStar />
                             <span>Upcoming</span>
-                        </div>}
+                        </div>
                         <div className={`item ${activeSegment === 'registered' && 'active'}`} onClick={() => handleMenuClick('/controller/registered')}>
                             <TbPaperclip />
                             <span>Registered</span>
@@ -108,11 +105,15 @@ const ControllerLayout = ({ children }) => {
                             <TbClipboardText />
                             <span>Completed</span>
                         </div>
-                        {user?.allowed_origins?.includes('vfcr_appConfig_write') &&
-                            <div className={`item ${activeSegment === 'app-config' && 'active'}`} onClick={() => handleMenuClick('/controller/app-config')}>
-                                <TbDropletCog />
-                                <span>App Configuration</span>
-                            </div>}
+                        <div className={`item ${activeSegment === 'subscriptions' && 'active'}`} onClick={() => handleMenuClick('/controller/subscriptions')}>
+                            <TbCrown />
+                            <span>Subscriptions</span>
+                        </div>
+
+                        <div className={`item ${activeSegment === 'app-config' && 'active'}`} onClick={() => handleMenuClick('/controller/app-config')}>
+                            <TbDropletCog />
+                            <span>App Configurations</span>
+                        </div>
                         <div className={`item danger`} onClick={() => window.location.href = `${env.REDIRECT_URL}?page=home`}>
                             <TbLogout2 />
                             <span>Exit</span>

@@ -12,28 +12,41 @@ import StopWork from '../../../components/modules/tech/service-action/StopWork'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../../api'
 import { sfActions } from '../../../redux/features/persisted/applicationSlice'
+import { useQueryClient } from '@tanstack/react-query'
 
 const ActionButtons = ({ regData, setRegData }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const queryClient = useQueryClient()
     const { serviceForm } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
 
 
     const proceedTravel = (visitId) => {
-        setRegData((state) => ({
-            ...(state || []),
-            status: {
-                ...(state.status || {}),
-                status: 4,
-                status_text: 'On Visit'
-            },
-            last_visit: {
-                visit_id: visitId,
-                visit_status: 1,
-                visit_status_text: 'Travel',
+
+        queryClient.setQueryData(
+            ['tech_schedule_profile', regData?.customer?.customer_id, regData?.registration_id],
+            old => {
+                if (!old) return old
+
+                return {
+                    ...old,
+                    regService: {
+                        ...(old?.regService || {}),
+                        status: {
+                            ...(old?.regService.status || {}),
+                            status: 4,
+                            status_text: 'On Visit'
+                        },
+                        last_visit: {
+                            visit_id: visitId,
+                            visit_status: 1,
+                            visit_status_text: 'Travel',
+                        }
+                    }
+                }
             }
-        }))
+        )
     }
 
     const handleUnschedule = () => {
@@ -120,7 +133,7 @@ const ActionButtons = ({ regData, setRegData }) => {
         dispatch(modal.push({
             title: 'Stop Current Work',
             body: <StopWork serviceFormUuid={serviceForm?.service_form_uuid} registrationId={regData?.registration_id}
-                visitId={regData?.last_visit?.visit_id} setRegData={setRegData}
+                visitId={regData?.last_visit?.visit_id} customerId={regData?.customer?.customer_id}
             />
         }))
     }

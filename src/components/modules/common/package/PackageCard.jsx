@@ -1,6 +1,6 @@
 import React from 'react'
 import './package-card.scss'
-import { TbDropletBolt } from 'react-icons/tb'
+import { TbCrown } from 'react-icons/tb'
 import { getPackageProgress, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { PACKAGE_STATUSES_TEXT } from '../../../../assets/javascript/pre_data/package'
 import { useNavigate } from 'react-router-dom'
@@ -21,7 +21,7 @@ const PackageCard = ({ data, redirectUrl }) => {
             <div className="border">
                 <div className="top-section">
                     <div className="icon-box" style={{ backgroundColor: `${data?.color_code || tempColor}38` }}>
-                        <TbDropletBolt style={{ color: `${data?.color_code || tempColor}` }} />
+                        <TbCrown style={{ color: `${data?.color_code || tempColor}` }} />
                     </div>
                     <div className="title-section">
                         <div className="head">

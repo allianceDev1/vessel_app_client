@@ -81,9 +81,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Item Id / Model No</p>
+                        <p className='label'>SKU / Model No</p>
                         <div>
-                            <p className='text-value'>{data?.item_id}</p>
+                            <p className='text-value'>{data?.sku}</p>
                         </div>
                     </div>
                     <div className="item">
@@ -122,12 +122,12 @@ const AboutProduct = () => {
             <div className="reg-content">
                 <div className="list">
                     <div className="item">
-                        <p className='label'>Service Package</p>
+                        <p className='label'>Subscription</p>
                         <div>
                             {data?.package?.package_id
                                 ? <Badge value={data?.package?.package_name}
                                     style={{ backgroundColor: data?.package?.color_code, color: getContrastText(data?.package?.color_code) }} />
-                                : <p className='text-value'>No Package</p>}
+                                : <p className='text-value'>No Subscription</p>}
                         </div>
                     </div>
                     {data?.package?.package_id && <div className="item">

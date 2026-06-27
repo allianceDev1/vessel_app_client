@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import './service-job.scss'
 import { useDispatch } from 'react-redux'
-import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome } from 'react-icons/tb';
+import { TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome, TbRefresh } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -14,6 +14,7 @@ import Badge from '../../../components/UI_Primitives/badge/Badge';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { downloadServiceBill, downloadServiceReceipt } from '../../../utils/services/finance_service';
+import { generateUniqueId } from '../../../utils/helpers/generate_Id';
 
 
 
@@ -45,6 +46,39 @@ const ServiceJob = () => {
         },
         staleTime: 60_000
     })
+
+    const downloadAction = async (type) => {
+
+        const key = generateUniqueId(6)
+
+        try {
+            dispatch(toast.push({
+                id: key,
+                type: null,
+                head: `Fetching ${type}...`,
+                message: 'Place wait for a while',
+                icon: <TbRefresh />,
+                doClose: false,
+                autoClose: false
+            }))
+
+            if (type === 'Bill') {
+                await downloadServiceBill(service_srl_no)
+            } else {
+                await downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+            }
+
+        } catch (error) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: "Downloading Failed",
+                message: error?.message
+            }))
+        } finally {
+            dispatch(toast.pull.single(key))
+        }
+    }
+
 
 
     if (isLoading) {
@@ -104,10 +138,10 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadServiceBill(service_srl_no) },
+                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill') },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
-                                        onClick: () => downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+                                        onClick: () => downloadAction('Receipt')
                                     },
                                 ]
                             }
@@ -170,6 +204,14 @@ const ServiceJob = () => {
                             <p className='label'>IN & OUT</p>
                             <div>
                                 <p className='text-value'>{convertIsoToAmPm(data?.in_time)} - {convertIsoToAmPm(data?.out_time)} ({formatDuration(data?.duration)})</p>
+                            </div>
+                        </div>
+                        <div className="item">
+                            <p className='label'>Call Summery (Applied / Estimate)</p>
+                            <div>
+                                <p className='text-value'>
+                                    <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
+                                </p>
                             </div>
                         </div>
                         <div className="item">

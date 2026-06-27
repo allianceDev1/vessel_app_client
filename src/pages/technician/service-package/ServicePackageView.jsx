@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import '../customer-view/customer-view.scss'
 import { useDispatch } from 'react-redux'
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbDropletBolt, TbPlayCard4 } from 'react-icons/tb';
+import { TbCrown, TbPlayCard4 } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
@@ -33,7 +33,7 @@ const ServicePackageView = () => {
             <div className="menu-box">
                 <div className="slide-menus">
                     <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/product/package/${serial_number}/about`)}>
-                        <TbDropletBolt />
+                        <TbCrown />
                         <p>About</p>
                     </div>
                     <div className={`menu-item ${(activeSegment === 'services') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/product/package/${serial_number}/services`)}>

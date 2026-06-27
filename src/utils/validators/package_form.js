@@ -3,7 +3,7 @@ export const validateUpdatePackageForm = (form) => {
     // package name
     if (!form.package_name?.trim()) {
         errors.package_name = "Package name is required"
-    } else if (form.package_name.trim().length > 5) {
+    } else if (form.package_name.trim().length > 12) {
         errors.package_name = "Max length is 5 characters"
     }
 

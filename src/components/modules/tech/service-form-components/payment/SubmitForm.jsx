@@ -12,12 +12,14 @@ import { useNavigate } from 'react-router-dom'
 import { calculateBillsSummery } from '../../../../../utils/helpers/math-equations'
 import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../../utils/helpers/date-helpers'
 import { getPaymentDisplay } from '../../../../../utils/services/work_services'
+import { useQueryClient } from '@tanstack/react-query'
 
 
 
-const SubmitForm = ({ modalId }) => {
+const SubmitForm = ({ modalId, unenablePayment }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const queryClient = useQueryClient()
     const { internet } = useSelector((state) => state.system)
     const { serviceForm, serviceFormSettings, review, payment } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
@@ -124,9 +126,16 @@ const SubmitForm = ({ modalId }) => {
                     verifiedAmount: result?.verifiedAmount,
                     receiptNo: result?.receiptNo,
                     customerName: result?.customerName,
-                    customerId: result?.customerId
+                    customerId: result?.customerId,
+                    unenable_payment: unenablePayment
                 }
             });
+
+
+            queryClient.removeQueries({
+                queryKey: ['service_form_resources']
+            })
+
 
         } catch (error) {
             setError({

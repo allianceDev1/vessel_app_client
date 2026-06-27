@@ -13,7 +13,7 @@ import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { IoIosArrowDown } from 'react-icons/io'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import ChangeProductStatus from '../../../forms/controller/product/ChangeProductStatus'
 import UpdateProduct from '../../../forms/controller/product/UpdateProduct'
@@ -23,6 +23,8 @@ import UpdateServiceDate from '../../../forms/controller/product/UpdateServiceDa
 const AboutProduct = () => {
     const dispatch = useDispatch();
     const { customer_id, product_id } = useParams();
+    const { user } = useSelector((state) => state.user)
+
 
 
     const { data, isLoading, error } = useQuery({
@@ -99,24 +101,27 @@ const AboutProduct = () => {
 
     return (
         <div className="controller-about-customer-container">
-            <div className="menu-buttons">
-                {data?.product_active
-                    ? <Button icon={<TbX />} label={'Disconnect'} size='small' severity={'danger'} rounded style={{ width: '120px' }}
-                        onClick={() => openStatusChangeModel('DISCONNECT')} />
-                    : <Button icon={<TbCheck />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
-                        onClick={() => openStatusChangeModel('CONNECT')} />}
-                <Dropdown
-                    button={{
-                        icon: <IoIosArrowDown />,
-                        label: 'Action',
-                        size: "small",
-                        rounded: true,
-                        outlined: true,
-                        style: { width: '100px' }
-                    }}
-                    list={dropdownOptions}
-                />
-            </div>
+            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                <div className="menu-buttons">
+                    {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                        {data?.product_active
+                            ? <Button icon={<TbX />} label={'Disconnect'} size='small' severity={'danger'} rounded style={{ width: '120px' }}
+                                onClick={() => openStatusChangeModel('DISCONNECT')} />
+                            : <Button icon={<TbCheck />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
+                                onClick={() => openStatusChangeModel('CONNECT')} />}
+                    </>}
+                    <Dropdown
+                        button={{
+                            icon: <IoIosArrowDown />,
+                            label: 'Action',
+                            size: "small",
+                            rounded: true,
+                            outlined: true,
+                            style: { width: '100px' }
+                        }}
+                        list={dropdownOptions}
+                    />
+                </div>}
             <div className="reg-content">
                 <div className="list">
                     <div className="item">
@@ -148,9 +153,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Item Id / Model No</p>
+                        <p className='label'>SKU</p>
                         <div>
-                            <p className='text-value'>{data?.item_id}</p>
+                            <p className='text-value'>{data?.sku}</p>
                         </div>
                     </div>
                     <div className="item">
@@ -212,7 +217,7 @@ const AboutProduct = () => {
             <div className="reg-content">
                 <div className="list">
                     <div className="item">
-                        <p className='label'>Service Package</p>
+                        <p className='label'>Subscription</p>
                         <div>
                             {data?.package?.package_id
                                 ? <Badge value={data?.package?.package_name}

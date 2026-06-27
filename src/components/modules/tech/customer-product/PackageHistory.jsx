@@ -2,7 +2,7 @@ import React from 'react'
 import './package-history.scss'
 import PackageCard from '../../common/package/PackageCard'
 import Button from '../../../UI_Primitives/buttons/Button'
-import { TbDropletBolt, TbRotate } from 'react-icons/tb'
+import { TbCrown, TbCrownOff, TbRotate } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -58,7 +58,7 @@ const PackageHistory = () => {
     if (error) {
         return <div>
             <ErrorState
-                icon={<TbDropletBolt />}
+                icon={<TbCrown />}
                 title={'Data fetching Failed'}
                 message={error?.message}
                 hight='400px'
@@ -70,14 +70,14 @@ const PackageHistory = () => {
         <div className="tech-customer-package-history-container" style={{ marginTop: '20px' }}>
 
             {!allPackages.length && <ErrorState
-                icon={<TbDropletBolt />}
-                title={'No service packages yet.'}
+                icon={<TbCrownOff />}
+                title={'No Subscriptions yet.'}
                 message={error?.message}
                 hight='400px'
             />}
 
             <div style={{ display: 'flex', flexDirection: "column", gap: "10px" }}>
-                {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack} redirectUrl={`/tech/customer/product/package/${pack.serial_number}/about`}/>)}
+                {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack} redirectUrl={`/tech/customer/product/package/${pack.serial_number}/about`} />)}
             </div>
 
             {hasNextPage &&

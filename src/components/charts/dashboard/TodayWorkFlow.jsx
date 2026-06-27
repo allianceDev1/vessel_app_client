@@ -14,7 +14,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     const now = new Date().getHours() + Number((new Date().getMinutes() / 60).toFixed(2));
     const DAY_START = 6;
     const DAY_END = 19;
-
+    console.log(workFlows,'aaa')
 
     function toHHMM(decimal) {
         const h = Math.floor(decimal);
@@ -33,6 +33,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     function buildChartData(technicians) {
         return technicians.map((tech) => {
             const works = workFlows.filter((w) => w.techId === tech.worker_uuid);
+            console.log(works, 'works')
             const segments = [];
             works.forEach((w) => {
                 const status = getStatus(w);
@@ -51,6 +52,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                 });
             });
             segments.sort((a, b) => a.travelStart - b.travelStart);
+
 
             const bars = [];
             let cursor = DAY_START;
@@ -185,7 +187,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     const TOTAL_HOURS = DAY_END - DAY_START;
     const xTicks = [];
     for (let h = 0; h <= TOTAL_HOURS; h++) xTicks.push(h);
-
+    console.log(chartData)
 
 
     return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import './service-card.scss'
 import { TbHash, TbUser } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
@@ -8,6 +8,8 @@ import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const InstallationCard = ({ data, pointer = false }) => {
     const tempColor = '#004b10'
+    const gradientId = useId();
+
 
     return (
         <div className="service-card-item-container"
@@ -16,7 +18,7 @@ const InstallationCard = ({ data, pointer = false }) => {
             <div className="card-header" style={{ color: 'white' }}>
                 <svg className='gradient-background' viewBox="0 0 700 150">
                     <defs>
-                        <linearGradient id="installGradient">
+                        <linearGradient id={gradientId}>
                             <stop offset="0%" stopColor={tempColor} />
                             <stop offset="100%" stopColor="#000000" />
                         </linearGradient>
@@ -24,7 +26,7 @@ const InstallationCard = ({ data, pointer = false }) => {
 
                     <path
                         d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill="url(#installGradient)"
+                        fill={`url(#${gradientId})`}
                     />
                 </svg>
 
@@ -46,7 +48,7 @@ const InstallationCard = ({ data, pointer = false }) => {
 
                         <div className="badge-container">
                             {data?.repeat ? <Badge value={'Repeat'} severity={'danger'} /> : ""}
-                            {data?.item_id ? <Badge value={`${data?.item_id}`} severity={'info'} /> : ''}
+                            {data?.sku ? <Badge value={`${data?.sku}`} severity={'info'} /> : ''}
                         </div>
                     </div>
                 </div>

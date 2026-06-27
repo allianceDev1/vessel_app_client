@@ -5,7 +5,7 @@ import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
 import { TbDots, TbPencil, TbTrash } from 'react-icons/tb'
 import { isoToDDMonYYYY, isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal, doDialog, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import UpdateSpare from '../../../forms/controller/product/UpdateSpare'
 import { api } from '../../../../api'
@@ -17,7 +17,10 @@ const SpareCard = ({
     warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false
 }) => {
     const dispatch = useDispatch();
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
+    const { user } = useSelector((state) => state.user)
+
+
 
     const dropdownOptions = [
         {
@@ -79,15 +82,16 @@ const SpareCard = ({
                     <h4>{spareName}</h4>
                     <p>{spareId} - {toStandardText(spareCategory)}</p>
                 </div>
-                <div className="right-section">
-                    {!isReadyOnly && <Dropdown button={{
-                        icon: <TbDots />,
-                        size: "small",
-                        text: true
-                    }}
-                        list={dropdownOptions}
-                    />}
-                </div>
+                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                    <div className="right-section">
+                        {!isReadyOnly && <Dropdown button={{
+                            icon: <TbDots />,
+                            size: "small",
+                            text: true
+                        }}
+                            list={dropdownOptions}
+                        />}
+                    </div>}
             </div>
             <div className="section-two">
                 <div className="left-section">

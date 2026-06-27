@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './customer-product-view.scss'
 import { useDispatch } from 'react-redux'
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbCircleCheck, TbDropletBolt, TbDropletStar, TbPlayCard4, TbSquareLetterS } from 'react-icons/tb';
+import { TbCircleCheck, TbCrown, TbDropletStar, TbPlayCard4, TbSmartHome, TbSquareLetterS } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
@@ -34,6 +34,9 @@ const CustomerProductView = () => {
         <div className="customer-product-view-controller-container">
             <div className="menu-box">
                 <div className="slide-menus">
+                    <div className={`menu-item`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/about`)}>
+                        <TbSmartHome />
+                    </div>
                     <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/about`)}>
                         <TbDropletStar />
                         <p>Product</p>
@@ -51,8 +54,8 @@ const CustomerProductView = () => {
                         <p>Service Cards</p>
                     </div>
                     <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/package-history`)}>
-                        <TbDropletBolt />
-                        <p>Package History</p>
+                        <TbCrown />
+                        <p>Subscriptions</p>
                     </div>
                 </div>
             </div>

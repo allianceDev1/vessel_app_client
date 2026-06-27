@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../../api'
 import CancellationCard from '../../common/cards/CancellationCard'
 import Button from '../../../UI_Primitives/buttons/Button'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import ServiceCancellation from '../../../forms/controller/service-package/ServiceCancellation'
 
@@ -16,6 +16,7 @@ const Services = () => {
     const { serial_number } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user)
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
         const res = await api.vfCv2Axios(`/package/${serial_number}/services`)
@@ -58,10 +59,11 @@ const Services = () => {
     return (
         <div className="controller-customer-service-cards-container" >
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
-                    onClick={openCancellationModal} />
-            </div>
+            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+                    <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
+                        onClick={openCancellationModal} />
+                </div>}
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                 <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}>

@@ -23,7 +23,8 @@ const FilterBox = () => {
         id_key: searchParams.get('id_key') || '',
         service_type: searchParams.get('service_type') || '',
         status: searchParams.get('fl') ? (searchParams.get('status')?.split(',')?.map(Number) || []) : [1, 2, 3, 4],
-        city_id: searchParams.get('city_id') || ''
+        city_id: searchParams.get('city_id') || '',
+        rnd: searchParams.get('rnd') || ''
     })
 
     const statusList = [
@@ -81,6 +82,7 @@ const FilterBox = () => {
             form.service_type ? next.set('service_type', form.service_type) : next.delete('service_type')
             form.status?.length ? next.set('status', form.status?.join(',')) : next.delete('status')
             form.city_id ? next.set('city_id', form.city_id) : next.delete('city_id')
+            form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
             return next;
         })
 
@@ -94,7 +96,8 @@ const FilterBox = () => {
             id_key: '',
             service_type: '',
             status: [],
-            city_id: ''
+            city_id: '',
+            rnd: '',
         })
         setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
@@ -105,6 +108,7 @@ const FilterBox = () => {
             next.delete('service_type');
             next.delete('status');
             next.delete('city_id');
+            next.delete('rnd');
             return next;
         })
     }

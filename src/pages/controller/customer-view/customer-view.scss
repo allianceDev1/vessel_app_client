@@ -43,39 +43,37 @@
 
         .slide-menus {
             display: flex;
+            gap: 10px;
             overflow-y: auto;
             max-height: 300px;
             @include scrollBar();
+            background-color: var(--color-natural-2);
+            border-radius: 100px;
+            padding: 5px 5px;
 
             .menu-item {
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                padding: 12px 30px;
+                gap: 5px;
+                padding: 10px 15px;
                 cursor: pointer;
                 border-radius: 8px;
-                font-size: 15px;
+                font-size: 14px;
                 min-width: fit-content;
+                border-radius: 100px;
 
                 svg {
-                    font-size: 21px;
+                    font-size: 18px;
                 }
 
                 &.active {
-                    color: var(--color-primary);
-                    font-weight: 600;
+                    color: var(--color-natural-1);
+                    font-weight: 500;
                     position: relative;
+                    background-color: var(--color-natural-10);
 
-                    &::after {
-                        content: '';
-                        width: 70%;
-                        height: 3px;
-                        position: absolute;
-                        background-color: var(--color-primary-bg);
-                        left: 50%;
-                        bottom: 0;
-                        border-radius: 10px;
-                        transform: translate(-50%, 0%);
+                    &:hover {
+                        background-color: var(--color-natural-9);
                     }
                 }
 

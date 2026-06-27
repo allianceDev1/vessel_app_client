@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './service-profile.scss';
 import NameCard from '../../../components/modules/tech/customer-profile/NameCard';
 import Contacts from '../../../components/modules/tech/customer-profile/Contacts';
@@ -18,6 +18,7 @@ import { modal, page } from '../../../redux/features/non_persisted/miniSystemSli
 import { TbBorderAll, TbCalendarTime, TbCornerUpRightDouble, TbMessage2Plus } from 'react-icons/tb';
 import { api } from '../../../api';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 
 const ServiceProfile = () => {
@@ -25,18 +26,18 @@ const ServiceProfile = () => {
     const navigate = useNavigate();
     const { customer_id, service_type } = useParams();
     const [searchParams] = useSearchParams()
-    const [loading, setLoading] = useState('fetch')
-    const [error, setError] = useState({ error: false, title: null, message: null })
-    const [customer, setCustomer] = useState({})
-    const [upServices, setUpServices] = useState([])
-    const [callLogs, setCallLogs] = useState([])
-    const [regService, setRegService] = useState({})
+  
+   
+   
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
 
+    const {
+        isLoading,
+        data: { customer, upServices, callLogs, regService } = {},
+        error
+    } = useQuery({
+        queryKey: ['tech_service_profile', customer_id, service_type, searchParams.get('reg_id')],
+        queryFn: async () => {
             const apis = [
                 api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
                 api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
@@ -49,30 +50,30 @@ const ServiceProfile = () => {
 
             const [customerRes, upServiceRes, callLogsRes, regServiceRes] = await Promise.all(apis);
 
-            setCustomer(customerRes)
-            setUpServices(upServiceRes)
-            setCallLogs(callLogsRes?.data)
-            setRegService(regServiceRes || {})
+            return {
+                customer: customerRes,
+                upServices: upServiceRes,
+                callLogs: callLogsRes?.data || [],
+                regService: regServiceRes
+            }
+        },
+        staleTime: 30_000
+    })
 
-        } catch (err) {
-            setError({ error: true, title: 'Data fetching failed', message: err.message })
-        } finally {
-            setLoading('')
-        }
-    }
+
 
     const postponeService = () => {
         dispatch(modal.push({
             title: 'Postpone Service',
-            body: <PostponeService customerId={customer_id} products={upServices?.products?.filter(p => p.service.service_type === 'SERVICE') || []}
-                setUpServices={setUpServices} />
+            body: <PostponeService customerId={customer_id} serviceType={service_type}
+                products={upServices?.products?.filter(p => p.service.service_type === 'SERVICE') || []} />
         }))
     }
 
     const addCallLog = () => {
         dispatch(modal.push({
             title: 'Add Call Log',
-            body: <AddCallLog customerId={customer_id} setCallLogs={setCallLogs} />
+            body: <AddCallLog customerId={customer_id} serviceType={service_type} />
         }))
     }
 
@@ -87,14 +88,11 @@ const ServiceProfile = () => {
     useEffect(() => {
         dispatch(page.setTitle({}))
 
-        // initial fetch
-        fetchApi()
-
         // eslint-disable-next-line
     }, [])
 
     // Loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="tech-service-profile-page-load">
             <SkeletonGrid
                 rows={1}
@@ -115,10 +113,10 @@ const ServiceProfile = () => {
     }
 
     // Error
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='400px'
-            title={error?.title}
+            title={'Data fetching Failed!'}
             message={error?.message}
             icon={<TbBorderAll />}
         />

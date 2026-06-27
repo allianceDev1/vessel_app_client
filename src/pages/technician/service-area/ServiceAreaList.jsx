@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './service-area-list.scss'
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
@@ -8,27 +8,22 @@ import { TbMap } from 'react-icons/tb';
 import { api } from '../../../api';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
+import { useQuery } from '@tanstack/react-query';
 
 const ServiceAreaList = () => {
     const dispatch = useDispatch();
-    const [cities, setCities] = useState([])
-    const [loading, setLoading] = useState('fetch');
-    const [error, setError] = useState({ error: false, title: '', message: '' })
+  
 
-    const fetchApi = async () => {
-        setLoading('fetch');
-        setError({ error: false, title: '', message: '' })
+    const { isLoading, data, error } = useQuery({
+        queryKey: ['tech_branch_area_access_list'],
+        queryFn: async () => {
 
-        // api
-        try {
             const cityResponse = await api.vfTv2Axios.get('/service/area')
-            setCities(cityResponse)
-        } catch (error) {
-            setError({ error: true, title: 'City fetching failed', message: error?.message })
-        } finally {
-            setLoading('')
-        }
-    }
+            return cityResponse
+        },
+        staleTime: 60_000 
+    })
+   
 
     const openCity = (city) => {
         dispatch(modal.push({
@@ -39,25 +34,23 @@ const ServiceAreaList = () => {
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Service Area', note: "Service activated area for you." }))
-
-
-        fetchApi();
+       
         // eslint-disable-next-line
     }, [])
 
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="tech-service-page-load">
             <SkeletonGrid rows={10} columns={1} height={60} />
         </div>
     }
 
     // Error
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='70vh'
-            title={error?.title}
+            title={'City fetch failed !'}
             message={error?.message}
             icon={<TbMap />}
         />
@@ -66,9 +59,9 @@ const ServiceAreaList = () => {
     // Success
     return (
         <div className="tech-service-area-list-container">
-            {!cities?.length ? <div>
-                <EmptyState  size='sm' hight='70vh' title={"No Service Area Found"} description={"The service area not assign for you"} icon={<TbMap />} />
-            </div> : cities?.map((city, index) => {
+            {!data?.length ? <div>
+                <EmptyState size='sm' hight='70vh' title={"No Service Area Found"} description={"The service area not assign for you"} icon={<TbMap />} />
+            </div> : data?.map((city, index) => {
                 return <div className='list-item' key={city?.city_id} onClick={() => openCity(city)}>
                     <p className="city-name">{index + 1}. {city?.city_name}</p>
                     <p className="city-date">{isoToDDMonYYYY(city?.from_date)} to {isoToDDMonYYYY(city?.to_date)}</p>

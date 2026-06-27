@@ -53,7 +53,7 @@ const SFormSave = ({ modalId }) => {
             new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
                 return {
                     unique_id: value?.unique_id,
-                    item_uuid: value?.item_uuid,
+                    variant_uuid: value?.variant_uuid,
                     purchase_type: value?.purchase_type,
                     is_zero_fee: value?.is_zero_fee || false,
                     expire_date: value?.expire_date,

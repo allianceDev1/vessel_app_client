@@ -4,6 +4,7 @@ import { TbBrandWhatsapp, TbPhone, TbPhonePlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const UpcomingServiceCard = ({ data }) => {
     const navigate = useNavigate();
@@ -90,7 +91,12 @@ const UpcomingServiceCard = ({ data }) => {
                     {data?.registration?.[0] && <Badge value={'Registered'} severity={'success'} />}
                 </div>
                 <div className="right">
-                    {data?.product_packages?.map((p) => <Badge value={p} />)}
+                    {data?.product_packages?.map((p) => {
+                        if (!p?.package_name) {
+                            return '';
+                        }
+                        return <Badge key={p?.package_name} value={p?.package_name} style={{ backgroundColor: p?.color_code, color: getContrastText(p?.color_code) }} />
+                    })}
                     {text && <Badge value={text} severity={severity} />}
                 </div>
             </div>

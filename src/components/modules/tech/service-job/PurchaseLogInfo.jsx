@@ -34,9 +34,9 @@ const PurchaseLogInfo = () => {
                     </div>
                 </div>
                 <div className="item">
-                    <p className='label'>Product Name & Item / Model Id</p>
+                    <p className='label'>Product Name & SKU</p>
                     <div>
-                        <p className='text-value'>{data?.product_name} - {data?.item_id}</p>
+                        <p className='text-value'>{data?.product_name} - {data?.sku}</p>
                     </div>
                 </div>
                 <div className="item">

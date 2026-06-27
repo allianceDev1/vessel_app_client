@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './search-customer-by-key.scss'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,14 +9,13 @@ import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
 import InputText from '../../../UI_Primitives/inputs/InputText';
 import Select from '../../../UI_Primitives/inputs/Select';
 import Button from '../../../UI_Primitives/buttons/Button';
+import { useQuery } from '@tanstack/react-query';
 
 
 const SearchCustomerByKey = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams()
-    const [loading, setLoading] = useState('')
-    const [cityList, setCityList] = useState([])
     const [cityOptions, setCityOptions] = useState([])
     const [postOptions, setPostOptions] = useState([])
     const [form, setForm] = useState({
@@ -89,35 +88,30 @@ const SearchCustomerByKey = () => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
+    const {
+        data: cityList = [],
+        isLoading: cityLoading
+    } = useQuery({
+        queryKey: ['city_input_list'],
+        queryFn: async () => {
+            const res = await api.cnPv2Axios('/l/location/city?area_type=service')
+            return res
+        },
+        staleTime: 30 * 60_000
+    })
 
-            const areas = await api.cnPv2Axios.get('/l/location/city?area_type=service')
-            setCityList(areas?.map((a) => ({ city_id: a.city_id, city_name: a.city_name, post_offices: a.post_offices })))
-            setCityOptions(areas?.map((a) => ({ label: a.city_name, value: a.city_id })))
-            setPostOptions(areas.reduce((acc, city) => acc.concat(city.post_offices), [])?.sort((a, b) => a.localeCompare(b))?.map(p => ({ label: p, value: p })))
-
-        } catch (error) {
-            dispatch(modal.pull.all())
-            dispatch(toast.push({
-                type: 'danger',
-                head: 'City fetch failed',
-                message: "Try again later"
-            }))
-        } finally {
-            setLoading('')
+    useMemo(() => {
+        if (cityList?.length) {
+            setCityOptions(cityList?.map((a) => ({ label: a.city_name, value: a.city_id })))
+            setPostOptions(cityList?.reduce((acc, city) => acc.concat(city.post_offices), [])?.sort((a, b) => a.localeCompare(b))?.map(p => ({ label: p, value: p })))
         }
-    }
 
-    useEffect(() => {
-        fetchApi()
+    }, [cityList])
 
-        // eslint-disable-next-line
-    }, [])
+
 
     // loading
-    if (loading === 'fetch') {
+    if (cityLoading) {
         return <div className="search-customer-by-key-comp-load" >
             <SkeletonGrid rows={4} columns={1} height={45} />
         </div>

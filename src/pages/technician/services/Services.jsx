@@ -1,96 +1,82 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './services.scss';
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
-import { TbArrowDown, TbArrowsDownUp, TbCategory2, TbFilter, TbRefresh } from 'react-icons/tb';
+import { TbArrowDown, TbArrowsDownUp, TbCategory2, TbFilter, TbRefresh, TbRotate } from 'react-icons/tb';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../../../api';
-import { extractCustomerFieldsInServiceCard } from '../../../utils/services/customer_services';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import UpcomingServiceCard from '../../../components/modules/tech/service-card/UpcomingServiceCard';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import ServiceFilter from '../../../components/forms/tech/tech-services/ServiceFilter';
 import ServiceSort from '../../../components/forms/tech/tech-services/ServiceSort';
-import { isoToYYYYMMDD } from '../../../utils/helpers/date-helpers';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import Button from '../../../components/UI_Primitives/buttons/Button';
+
 
 
 const Services = () => {
     const dispatch = useDispatch();
+    const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [loading, setLoading] = useState('fetch')
-    const [error, setError] = useState({ error: false, title: null, message: null })
-    const [data, setData] = useState({ complaints: [], services: [], renewals: [], overdue: [] })
     const [filterOptions, setFilterOptions] = useState({})
 
 
-    const tabData = useMemo(() => {
-        const valid = searchParams.get("tab") || 'Complaints';
-        return data[valid.toLowerCase()] || [];
-        // eslint-disable-next-line
-    }, [data, searchParams.get("tab")]);
+    const fetchDatas = async ({ pageParam = 0 }) => {
 
-    const finalData = useMemo(() => {
-        let result = [...tabData];
-
-        // apply filters
-        if (searchParams.get('fl') === 'Yes') {
-            if (searchParams.get('customer_id') || null) {
-                result = result.filter(item => item.customer?.[0] === searchParams.get('customer_id'));
-            }
-
-            if ((searchParams.get('city_id')?.split(' ') || []).length > 0) {
-                result = result.filter(item => (searchParams.get('city_id')?.split(' ') || [])?.includes(item.address?.[4]));
-            }
-
-            if ((searchParams.get('post')?.split(' ') || []).length > 0) {
-                result = result.filter(item => (searchParams.get('post')?.split(' ') || [])?.includes(item.address?.[2]));
-            }
-
-            if ((searchParams.get('packages')?.split(' ') || []).length > 0) {
-                result = result.filter(item => (searchParams.get('packages')?.split(' ') || [])?.some(i => item.product_packages?.includes(i)));
-            }
-
-            if (searchParams.get('from_date')) {
-                result = result.filter(i => !isNaN(new Date(i.registration?.[2] || i.service_date)) &&
-                    new Date(i.registration?.[2] || i.service_date) >= new Date(searchParams.get('from_date')))
-            }
-
-            if (searchParams.get('to_date')) {
-                result = result.filter(i => !isNaN(new Date(i.registration?.[2] || i.service_date)) &&
-                    new Date(i.registration?.[2] || i.service_date) <= new Date(searchParams.get('to_date')))
-            }
+        const params = {
+            page: pageParam,
+            limit: 20,
+            service_type: searchParams.get("tab") || 'COMPLAINT',
+            customer_id: searchParams.get('customer_id') || undefined,
+            city_ids: searchParams.get('city_id') || undefined,
+            post_offices: searchParams.get('post')?.split(' ')?.join(',') || undefined,
+            package_ids: searchParams.get('packages')?.split(' ')?.join(',') || undefined,
+            from_date: searchParams.get('from_date') || undefined,
+            to_date: searchParams.get('to_date') || undefined,
+            sort_by: searchParams.get('field') || undefined,
+            sort_dir: searchParams.get('order') || undefined,
         }
 
-        // apply sorting
-        if (searchParams.get('sr') === 'Yes') {
-            result = result.sort((a, b) => {
-                const field = searchParams.get('field');
-                const order = searchParams.get('order') === "asc" ? 1 : -1;
+        const res = await api.vfTv2Axios('/service/upcoming-services', {
+            params
+        })
 
-                if (field === 'customer_id') {
-                    return order * a.customer[0].localeCompare(b.customer[0]);
-                }
-                if (field === 'city') {
-                    return order * a.address[3].localeCompare(b.address[3]);
-                }
-                if (field === 'post') {
-                    return order * a.address[2].localeCompare(b.address[2]); // Added return here
-                }
-                if (field === 'date') {
-                    const dateA = isoToYYYYMMDD(new Date(a.registration?.[2] || a.service_date));
-                    const dateB = isoToYYYYMMDD(new Date(b.registration?.[2] || b.service_date));
-                    return order * dateA.localeCompare(dateB);
-                }
+        return {
+            items: res?.data || [],
+            total: res?.total || 0,
+            currentPage: pageParam
+        };
+    };
 
-                return 0; // Default return when no field matches
-            });
-        }
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        error
+    } = useInfiniteQuery({
+        queryKey: [
+            "pending_services", searchParams.get("tab") || 'COMPLAINT', searchParams.get('customer_id'), searchParams.get('city_id'),
+            searchParams.get('post'), searchParams.get('packages'), searchParams.get('from_date'), searchParams.get('to_date'),
+            searchParams.get('field'), searchParams.get('order')
+        ],
+        queryFn: fetchDatas,
+        initialPageParam: 0,
+        getNextPageParam: (lastPage, allPages) => {
+            const totalLoaded = allPages
+                .flatMap(page => page?.items)
+                .length;
 
-        return result;
+            if (totalLoaded >= lastPage?.total) return undefined;
+            return allPages.length; // next page index
+        },
+        staleTime: 30_000
+    })
 
-        // eslint-disable-next-line
-    }, [tabData, searchParams.get('customer_id'), searchParams.get('city_id'), searchParams.get('post'), searchParams.get('packages'), searchParams.get('from_date'), searchParams.get('to_date'), searchParams.get('field'), searchParams.get('order')]);
+    const serviceItemList = data?.pages?.flatMap(page => page.items) || [];
 
 
     const handleChangeTab = (value) => {
@@ -102,51 +88,35 @@ const Services = () => {
     const handleOpenFilter = () => {
         dispatch(modal.push({
             title: 'Filter Services',
-            body: <ServiceFilter filterFields={filterOptions} />
+            body: <ServiceFilter />
         }))
     }
 
     const handleOpenSort = () => {
         dispatch(modal.push({
             title: 'Sort Services',
-            body: <ServiceSort filterFields={filterOptions} />
+            body: <ServiceSort tab={searchParams.get("tab") || 'COMPLAINT'} />
         }))
     }
 
 
     const subPageOptions = [
-        {
-            items: [
-                { label: 'Complaints', value: 'Complaints', onClick: () => handleChangeTab('Complaints') },
-                { label: 'Services', value: 'Services', onClick: () => handleChangeTab('Services') },
-                { label: 'Renewals', value: 'Renewals', onClick: () => handleChangeTab('Renewals') },
-                { label: 'Overdue', value: 'Overdue', onClick: () => handleChangeTab('Overdue'), }
-            ]
-        }
+        { label: 'Complaints', value: 'COMPLAINT', onClick: () => handleChangeTab('COMPLAINT') },
+        { label: 'Services (Reg)', value: 'REG_SERVICE', onClick: () => handleChangeTab('REG_SERVICE') },
+        { label: 'Services', value: 'SERVICE', onClick: () => handleChangeTab('SERVICE') },
+        { label: 'Renewals (Reg)', value: 'REG_RENEWAL', onClick: () => handleChangeTab('REG_RENEWAL') },
+        { label: 'Renewals', value: 'RENEWAL', onClick: () => handleChangeTab('RENEWAL') },
+        { label: 'Overdue', value: 'OVERDUE', onClick: () => handleChangeTab('OVERDUE'), }
     ]
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
-            const { complaints, services, renewals, overdue } = await api.vfTv2Axios.get('/service/upcoming-services')
-
-
-            setData({ complaints, services, renewals, overdue })
-            setFilterOptions(extractCustomerFieldsInServiceCard([...(complaints || []), ...(services || []), ...(renewals || []), ...(overdue || [])]))
-
-        } catch (error) {
-            setError({ error: true, title: 'Data fetching failed', message: error.message })
-        } finally {
-            setLoading('')
-        }
+    const resetApi = async () => {
+        await queryClient.resetQueries({
+            queryKey: ["pending_services"]
+        });
     }
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Upcoming services', note: "Complaints, services, renewal and Overdue" }))
-
-        // fetch data
-        fetchApi()
 
         // eslint-disable-next-line
     }, [])
@@ -154,7 +124,7 @@ const Services = () => {
 
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="tech-service-page-load">
             <SkeletonGrid rows={1} columns={1} height={50} />
             <SkeletonGrid rows={5} columns={1} height={110} style={{ marginTop: '15px' }} />
@@ -162,10 +132,10 @@ const Services = () => {
     }
 
     // Error
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='70vh'
-            title={error?.title}
+            title={'Data fetching failed!'}
             message={error?.message}
             icon={<TbCategory2 />}
         />
@@ -178,17 +148,19 @@ const Services = () => {
                 <div className="section-one">
                     <Dropdown
                         button={{
-                            label: `${searchParams.get('tab') || 'Complaints'} ${finalData.length ? '| ' + finalData.length : ""}`,
+                            label: `${subPageOptions?.find(a => a?.value === searchParams.get('tab'))?.label || 'Complaints'} ${data?.pages?.[0]?.total ? '| ' + data?.pages?.[0]?.total : ""}`,
                             icon: <TbArrowDown />,
                             iconPos: 'right',
                             rounded: true, text: true, size: 'small',
                         }}
-                        list={subPageOptions}
-                        selected={searchParams.get('tab') || 'Complaints'}
+                        list={[{
+                            items: subPageOptions
+                        }]}
+                        selected={searchParams.get('tab') || 'COMPLAINT'}
                     />
                 </div>
                 <div className="section-two">
-                    <span onClick={fetchApi}>
+                    <span onClick={resetApi}>
                         <TbRefresh />
                     </span>
                     <span className={searchParams.get('sr') === 'Yes' ? 'active' : ''} onClick={handleOpenSort}>
@@ -200,14 +172,23 @@ const Services = () => {
                 </div>
             </div>
             <div className="service-card-container">
-                {!finalData?.length ?
+                {!serviceItemList?.length ?
                     <ErrorState
                         hight='60vh'
                         title='No data found'
                         icon={<TbCategory2 />}
-                    /> : <>
-                        {finalData?.map((card) => <UpcomingServiceCard data={card} key={card.customer[0]} />)}
-                    </>}
+                    />
+                    : <> {serviceItemList?.map((card) => <UpcomingServiceCard data={card} key={card.customer[0]} />)} </>}
+
+                {hasNextPage &&
+                    <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
+                        <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
+                            spinIcon={isFetchingNextPage}
+                            onClick={() => {
+                                if (!isFetchingNextPage) fetchNextPage();
+                            }} />
+                    </div>
+                }
             </div>
         </div>
     )

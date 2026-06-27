@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './service-category.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../api';
 import { TbCarouselHorizontal, TbCheck, TbEdit, TbInfoCircle, TbPointFilled, TbX } from 'react-icons/tb';
@@ -11,46 +11,42 @@ import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import UpdateServiceCategory from '../../../components/forms/controller/update-service-category/UpdateServiceCategory';
 import { serviceCategoryListStretcher } from '../../../utils/services/package_service';
+import { useQuery } from '@tanstack/react-query';
 
 const ServiceCategory = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('fetch')
-    const [data, setData] = useState([])
-    const [error, setError] = useState({ error: false, title: null, message: null })
+
+    const { user } = useSelector((state) => state.user)
 
 
     const handelEditCategory = (item) => {
         dispatch(modal.push({
             title: 'Update Service Category',
-            body: <UpdateServiceCategory serviceCategory={item} setData={setData} />,
+            body: <UpdateServiceCategory serviceCategory={item} />,
             style: { width: '700px' }
         }))
     }
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['service_category_list', 'controller'],
+        queryFn: async () => {
             const fields = 'service_name,service_charges,package_charge_applied,target_package,coverage,service_charge_applied,is_active,package_product_only'
             const res = await api.vfCv2Axios.get(`/config/service-categories/list?hidden=Yes&fields=${fields}`)
-            setData(serviceCategoryListStretcher(res))
-        } catch (error) {
-            setError({ error: true, title: 'Data fetching failed', message: error.message })
-        } finally {
-            setLoading('')
-        }
-    }
+            return serviceCategoryListStretcher(res)
+        },
+        staleTime: 10_000
+    })
+
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Service Categories', note: "Manage and categorize services workflows." }))
 
-        // Initial fetch
-        fetchApi();
         // eslint-disable-next-line
     }, [])
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="service-category-page-load">
             <SkeletonGrid
                 rows={1}
@@ -64,10 +60,10 @@ const ServiceCategory = () => {
         </div>
     }
 
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='80vh'
-            title={error?.title}
+            title={'Data fetching failed!'}
             message={error?.message}
             icon={<TbCarouselHorizontal />}
         />
@@ -174,9 +170,9 @@ const ServiceCategory = () => {
                                 })}
                             </div>}
                             {item?.package_product_only && <div className='info-note'> <TbInfoCircle /> This category only for packages.</div>}
-                            <div className="buttons">
+                            {user?.allowed_origins?.includes('vessel_c_admin') && <div className="buttons">
                                 <Button icon={<TbEdit />} rounded outlined size='small' onClick={() => handelEditCategory(item)} />
-                            </div>
+                            </div>}
                         </div>)
                 })}
             </div>}

@@ -232,3 +232,45 @@ export const getPaymentDisplay = ({ total, paid, verified }) => {
         color
     }
 }
+
+
+export const controllerRunningKmsCalenderData = (monthStr, dailyData = []) => {
+    const monthStart = moment(monthStr, "YYYY-MM").startOf("month");
+    const monthEnd = moment(monthStr, "YYYY-MM").endOf("month");
+    const today = moment().startOf("day");
+
+    // fast lookup map from DB
+    const kmMap = dailyData.reduce((acc, item) => {
+        acc[item.date] = item.value;
+        return acc;
+    }, {});
+
+    const startCalendar = monthStart.clone().startOf("week"); // Sunday
+    const endCalendar = monthEnd.clone().endOf("week"); // Saturday
+    const day = startCalendar.clone();
+    const calendar = [];
+
+    while (day.isBefore(endCalendar)) {
+        const week = [];
+
+        for (let i = 0; i < 7; i++) {
+            const dateStr = day.format("YYYY-MM-DD");
+           
+
+            week.push({
+                date: dateStr,
+                day: day.date(),
+                weekdayIndex: day.day(),
+                km: kmMap[dateStr] ?? 0,
+                isCurrentMonth: day.month() === monthStart.month(),
+                isToday: day.isSame(today, "day")
+            });
+
+            day.add(1, "day");
+        }
+
+        calendar.push(week);
+    }
+
+    return calendar;
+};

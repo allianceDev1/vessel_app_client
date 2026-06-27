@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbDropletBolt } from 'react-icons/tb'
+import { TbCrown } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { getIsoDayDifference, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
@@ -40,7 +40,7 @@ const AboutPackage = () => {
     if (error) {
         return <div>
             <ErrorState
-                icon={<TbDropletBolt />}
+                icon={<TbCrown />}
                 title={'Data fetching Failed'}
                 message={error?.message}
                 hight='400px'

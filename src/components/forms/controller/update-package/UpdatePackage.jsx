@@ -103,7 +103,7 @@ const UpdatePackage = ({ data, setData }) => {
     <div className="update-pack-modal">
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <InputText label={'Package name'} name='package_name' value={form.package_name} onChange={handleChangeForm} required maxLength={5} minLength={1}
+          <InputText label={'Package name'} name='package_name' value={form.package_name} onChange={handleChangeForm} required maxLength={12} minLength={1}
             error={vErr.package_name} />
           <InputText label={'Full form'} name='full_form' value={form.full_form} onChange={handleChangeForm} required
             error={vErr.full_form} />
@@ -124,8 +124,9 @@ const UpdatePackage = ({ data, setData }) => {
         <div className="input-group">
           <InputText label={'Total Price of Package Fund'} name='package_fund' value={form.package_fund} onChange={handleChangeForm} required min={0}
             error={vErr.package_fund} type='number' />
-          <InputText label={'Tax ( Percentage )'} name='gst_rate' value={form.gst_rate} onChange={handleChangeForm} required min={0} max={100}
-            error={vErr.gst_rate} type='number' helperText={'Zero means is non tax package'} disabled={Number(form.package_fund || 0) === 0} />
+          <br></br>
+          {/* <InputText label={'Tax ( Percentage )'} name='gst_rate' value={form.gst_rate} onChange={handleChangeForm} required min={0} max={100}
+            error={vErr.gst_rate} type='number' helperText={'Zero means is non tax package'} disabled={Number(form.package_fund || 0) === 0} /> */}
           <InputText label={'Service Work Fund'} name='service_work_fund' value={form.service_work_fund} onChange={handleChangeForm} min={0}
             error={vErr.service_work_fund} type='number' disabled={Number(form.package_fund || 0) === 0} />
           <InputText label={'Spare Parts Fund'} name='spare_parts_fund' value={form.spare_parts_fund} onChange={handleChangeForm} min={0}

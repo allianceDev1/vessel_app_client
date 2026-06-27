@@ -2,7 +2,7 @@ import React from 'react'
 import './package-history.scss'
 import PackageCard from '../../common/package/PackageCard'
 import Button from '../../../UI_Primitives/buttons/Button'
-import { TbDropletBolt, TbRotate } from 'react-icons/tb'
+import { TbCrown, TbRotate } from 'react-icons/tb'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import { useInfiniteQuery } from '@tanstack/react-query'
@@ -48,17 +48,19 @@ const PackageHistory = () => {
     const allPackages = data?.pages?.flatMap(page => page.items) || [];
 
     if (isLoading) {
-        return <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}>
-                <SkeletonGrid rows={7} columns={1} height={'130px'} gap={'10px'} />
-            </div>
+        return <div style={{ marginTop: '20px' }}>
+            <SkeletonGrid rows={2} columns={3} height={'220px'} gap={'10px'}
+                responsive={{
+                    md: { rows: 2, columns: 2 },
+                    sm: { rows: 4, columns: 1 },
+                }} />
         </div>
     }
 
     if (error) {
         return <div>
             <ErrorState
-                icon={<TbDropletBolt />}
+                icon={<TbCrown />}
                 title={'Data fetching Failed'}
                 message={error?.message}
                 hight='400px'
@@ -70,8 +72,8 @@ const PackageHistory = () => {
         <div className="controller-customer-package-history-container">
 
             {!allPackages.length && <ErrorState
-                icon={<TbDropletBolt />}
-                title={'No service packages yet.'}
+                icon={<TbCrown />}
+                title={'No subscriptions yet.'}
                 message={error?.message}
                 hight='400px'
             />}

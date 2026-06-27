@@ -13,6 +13,7 @@ import Radio from '../../../UI_Primitives/inputs/Radio';
 import Button from '../../../UI_Primitives/buttons/Button';
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 
@@ -24,6 +25,7 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
     const [form, setForm] = useState({})
     const [serviceCharge, setServiceCharge] = useState({})
     const [error, setError] = useState({ error: false, title: null, message: null })
+    const queryClient = useQueryClient();
 
     const fetchApi = async () => {
         try {
@@ -166,37 +168,44 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
 
             await api.vfCv2Axios.put(`/config/service-categories/${serviceCategory?.category_id}`, body)
 
-            setData((state) => state.map((s) => {
-                if (s.category_id === serviceCategory?.category_id) {
-                    return {
-                        ...s,
-                        service_name: form?.service_name,
-                        service_charges: form?.service_charges || [],
-                        target_package: form?.target_package,
-                        package_product_only: form?.package_product_only,
-                        coverage: {
-                            MATERIAL: {
-                                access: form?.materials_access,
-                                price_type: form?.materials_price_type
-                            },
-                            MATERIALS_BAG: {
-                                access: form?.bag_access,
-                                price_type: form?.bag_price_type
-                            },
-                            PRIMARY_SPARES: {
-                                access: form?.primary_spare_access,
-                                price_type: form?.primary_spare_price_type
-                            },
-                            SERVICE_WORK: {
-                                access: form?.service_access,
-                                price_type: form?.service_price_type
+            queryClient.setQueryData(
+                ['service_category_list', 'controller'],
+                (oldData) => {
+                    if (!oldData) return oldData;
+
+                    return oldData?.map((d) => {
+                        if (d?.category_id === serviceCategory?.category_id) {
+                            return {
+                                ...d,
+                                service_name: form?.service_name,
+                                service_charges: form?.service_charges || [],
+                                target_package: form?.target_package,
+                                package_product_only: form?.package_product_only,
+                                coverage: {
+                                    MATERIAL: {
+                                        access: form?.materials_access,
+                                        price_type: form?.materials_price_type
+                                    },
+                                    MATERIALS_BAG: {
+                                        access: form?.bag_access,
+                                        price_type: form?.bag_price_type
+                                    },
+                                    PRIMARY_SPARES: {
+                                        access: form?.primary_spare_access,
+                                        price_type: form?.primary_spare_price_type
+                                    },
+                                    SERVICE_WORK: {
+                                        access: form?.service_access,
+                                        price_type: form?.service_price_type
+                                    }
+                                },
+                                service_charge_applied: form?.service_charge_applied
                             }
-                        },
-                        service_charge_applied: form?.service_charge_applied
-                    }
+                        }
+                        return d
+                    })
                 }
-                return s
-            }))
+            );
 
             dispatch(modal.pull.all())
         } catch (error) {

@@ -203,8 +203,36 @@ export const formatDuration = (totalSeconds) => {
 export const isoToDecimalHour = (isoDate) => {
     const date = new Date(isoDate);
 
-    let hours = date.getHours() % 12 || 12;
+    let hours = date.getHours();
     const minutes = date.getMinutes();
 
     return Number((hours + minutes / 60).toFixed(2));
 };
+
+export const addDurationToDate = (inputDate, duration) => {
+    const date = new Date(inputDate);
+
+    if (isNaN(date.getTime())) {
+        throw new Error("Invalid date provided");
+    }
+
+    const {
+        days = 0,
+        weeks = 0,
+        months = 0,
+        years = 0,
+        hours = 0,
+        minutes = 0
+    } = duration;
+
+    // Clone date to avoid mutation
+    const result = new Date(date);
+
+    result.setFullYear(result.getFullYear() + years);
+    result.setMonth(result.getMonth() + months);
+    result.setDate(result.getDate() + days + (weeks * 7));
+    result.setHours(result.getHours() + hours);
+    result.setMinutes(result.getMinutes() + minutes);
+
+    return result;
+}

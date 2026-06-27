@@ -47,4 +47,35 @@
             }
         }
     }
+
+    .footer-container {
+        margin-top: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        span,
+        p {
+            font-size: 11px;
+            color: var(--text-secondary-4);
+        }
+
+        .link {
+            cursor: pointer;
+
+            &:hover {
+                color: var(--color-primary);
+                text-decoration: underline;
+            }
+        }
+    }
 }

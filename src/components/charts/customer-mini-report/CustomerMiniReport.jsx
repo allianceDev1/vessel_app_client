@@ -12,16 +12,12 @@ import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
 import SearchCustomerByKey from '../../forms/controller/search-customer/SearchCustomerByKey'
+import { useQuery } from '@tanstack/react-query'
 
 
 const CustomerMiniReport = () => {
     const dispatch = useDispatch();
-    const [productChart, setProductChart] = useState([])
-    const [productReport, setProductReport] = useState({})
-    const [customerCount, setCustomerCount] = useState([])
-    const [addOnReport, setAddOnReport] = useState({})
-    const [error, setError] = useState({ error: false, title: null, message: null })
-    const [loading, setLoading] = useState('fetch')
+
 
     const openSearchModal = () => {
         dispatch(modal.push({
@@ -31,11 +27,19 @@ const CustomerMiniReport = () => {
         }))
     }
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
-
+    const {
+        data: {
+            productChart = [],
+            productReport = {},
+            customerCount = [],
+            addOnReport = {},
+        } = {},
+        isLoading: reportLoading,
+        error: reportError,
+        dataUpdatedAt: reportDataUpdatedAt,
+    } = useQuery({
+        queryKey: ['customer_mini_report'],
+        queryFn: async () => {
             const reports = await api.vfCv2Axios.get('/product/mini-report')
 
             // Vessel
@@ -52,44 +56,42 @@ const CustomerMiniReport = () => {
                 out_side: Number((((reports?.addOn_report?.outSide_products || 0) / (reports?.addOn_report?.products || 0)) * 100).toFixed(2))
             }
 
-            setProductChart([
-                { name: 'In-house', value: reports?.vessel_report?.inHouse_products || 0 },
-                { name: 'Outside', value: reports?.vessel_report?.outSide_products || 0 }
-            ])
-            setProductReport({
-                products: reports?.vessel_report?.products || 0,
-                inactive_products: reports?.vessel_report?.inactive_products || 0,
-                new_product_in_30_days: reports?.vessel_report?.new_product_in_30_days || 0,
-                iw_products: reports?.vessel_report?.iw_products || 0,
-                ssp_products: reports?.vessel_report?.ssp_products || 0,
-                package_products: packageProducts,
-                total_package_products: totalPackageProducts
-            })
-            setCustomerCount([
-                { name: 'Vessel Users', value: reports?.customer_report?.vessel_customers || 0 },
-                { name: 'Other Users', value: reports?.customer_report?.total_customers - reports?.customer_report?.vessel_customers || 0, }
-            ])
-            setAddOnReport({
-                products: reports?.addOn_report?.products || 0,
-                inactive_products: reports?.addOn_report?.inactive_products || 0,
-                new_product_in_30_days: reports?.addOn_report?.new_product_in_30_days || 0,
-                in_house_products: addOnProductTypes.in_house,
-                out_side_products: addOnProductTypes.out_side,
-                rental_products: reports?.addOn_report?.rental_products || 0,
-            })
-        } catch (error) {
-            setError({ error: true, title: 'Data fetching failed', message: error.message })
-        } finally {
-            setLoading('')
-        }
-    }
+            // Output
 
-    useEffect(() => {
-        fetchApi()
-    }, [])
+            return {
+                productChart: [
+                    { name: 'In-house', value: reports?.vessel_report?.inHouse_products || 0 },
+                    { name: 'Outside', value: reports?.vessel_report?.outSide_products || 0 }
+                ],
+                productReport: {
+                    products: reports?.vessel_report?.products || 0,
+                    inactive_products: reports?.vessel_report?.inactive_products || 0,
+                    new_product_in_30_days: reports?.vessel_report?.new_product_in_30_days || 0,
+                    iw_products: reports?.vessel_report?.iw_products || 0,
+                    ssp_products: reports?.vessel_report?.ssp_products || 0,
+                    package_products: packageProducts,
+                    total_package_products: totalPackageProducts
+                },
+                customerCount: [
+                    { name: 'Vessel Users', value: reports?.customer_report?.vessel_customers || 0 },
+                    { name: 'Other Users', value: reports?.customer_report?.total_customers - reports?.customer_report?.vessel_customers || 0, }
+                ],
+                addOnReport: {
+                    products: reports?.addOn_report?.products || 0,
+                    inactive_products: reports?.addOn_report?.inactive_products || 0,
+                    new_product_in_30_days: reports?.addOn_report?.new_product_in_30_days || 0,
+                    in_house_products: addOnProductTypes.in_house,
+                    out_side_products: addOnProductTypes.out_side,
+                    rental_products: reports?.addOn_report?.rental_products || 0,
+                }
+            }
+        },
+        staleTime: 30 * 60_000
+    })
+
 
     // loading
-    if (loading === 'fetch') {
+    if (reportLoading) {
         return <div className="customer-mini-report-comp-load">
             <SkeletonGrid rows={1} columns={1} height={165} />
             <SkeletonGrid rows={1} columns={2} height={140} style={{ marginTop: '15px' }}
@@ -104,11 +106,11 @@ const CustomerMiniReport = () => {
     }
 
     // Error
-    if (error?.error) {
+    if (reportError) {
         return <ErrorState
             hight='70vh'
-            title={error?.title}
-            message={error?.message}
+            title={"Report can't Load!"}
+            message={reportError?.message}
             icon={<TbMoodSadDizzy />}
         />
     }
@@ -195,7 +197,7 @@ const CustomerMiniReport = () => {
                                         animationDuration={800}
                                         paddingAngle={5}
                                     >
-                                        {productChart.map((entry, index) => (
+                                        {productChart?.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={chartLabelColors[index % chartLabelColors.length]} stroke='none' />
                                         ))}
                                         <ChartTooltip />
@@ -235,7 +237,7 @@ const CustomerMiniReport = () => {
                                     animationDuration={800}
                                     paddingAngle={5}
                                 >
-                                    {productChart.map((entry, index) => (
+                                    {productChart?.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={chartLabelColors[(index) % chartLabelColors.length]} stroke='none' />
                                     ))}
                                     <ChartTooltip />
@@ -298,6 +300,7 @@ const CustomerMiniReport = () => {
                     </div>
                 </div>
             </div>
+            <p className="last-update">Last update at {new Date(reportDataUpdatedAt).toLocaleString()}</p>
         </div >
     )
 }

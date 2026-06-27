@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './schedule-profile.scss';
 import NameCard from '../../../components/modules/tech/customer-profile/NameCard';
 import Contacts from '../../../components/modules/tech/customer-profile/Contacts';
@@ -15,24 +15,23 @@ import { TbBorderAll, } from 'react-icons/tb';
 import { api } from '../../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice';
+import { useQuery } from '@tanstack/react-query';
 
 
 const ScheduleProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { customer_id, registration_id } = useParams();
-  const [loading, setLoading] = useState('fetch')
-  const [error, setError] = useState({ error: false, title: null, message: null })
-  const [customer, setCustomer] = useState({})
-  const [upServices, setUpServices] = useState([])
-  const [regService, setRegService] = useState({})
   const { serviceForm } = useSelector((state) => state.application)
 
-  const fetchApi = async () => {
-    try {
-      setLoading('fetch')
-      setError({ error: false, title: null, message: null })
 
+  const {
+    isLoading,
+    data: { customer, upServices, regService } = {},
+    error
+  } = useQuery({
+    queryKey: ['tech_schedule_profile', customer_id, registration_id],
+    queryFn: async () => {
       const apis = [
         api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
         api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
@@ -41,24 +40,23 @@ const ScheduleProfile = () => {
 
       const [customerRes, upServiceRes, regServiceRes] = await Promise.all(apis);
 
-      if (![3, 4].includes(regServiceRes?.status?.status)) {
-        navigate('/tech/schedules')
-        return;
+      return {
+        customer: customerRes,
+        upServices: upServiceRes,
+        regService: regServiceRes
       }
+    },
+    staleTime: 30_000
+  })
 
-      setCustomer(customerRes)
-      setUpServices(upServiceRes)
-      setRegService(regServiceRes || {})
-
-
-    } catch (err) {
-      setError({ error: true, title: 'Data fetching failed', message: err.message })
-    } finally {
-      setLoading('')
+  useEffect(() => {
+    if (regService?.status?.status && ![3, 4].includes(regService?.status?.status)) {
+      navigate('/tech/schedules')
+      return;
     }
-  }
 
-
+    // eslint-disable-next-line
+  }, [regService])
 
   const handleResetForm = () => {
 
@@ -78,14 +76,11 @@ const ScheduleProfile = () => {
   useEffect(() => {
     dispatch(page.setTitle({}))
 
-    // initial fetch
-    fetchApi()
-
     // eslint-disable-next-line
   }, [])
 
   // Loading
-  if (loading === 'fetch') {
+  if (isLoading) {
     return <div className="tech-schedule-profile-page-load">
       <SkeletonGrid
         rows={1}
@@ -106,11 +101,11 @@ const ScheduleProfile = () => {
   }
 
   // Error
-  if (error?.error) {
+  if (error) {
     return <ErrorState
       size='sm'
       hight='400px'
-      title={error?.title}
+      title={'Data fetching failed!'}
       message={error?.message}
       icon={<TbBorderAll />}
     />
@@ -177,7 +172,7 @@ const ScheduleProfile = () => {
 
 
       {/* Action buttons */}
-      <ActionButtons regData={regService} setRegData={setRegService} />
+      <ActionButtons regData={regService} />
 
     </div>
   )

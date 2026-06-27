@@ -7,14 +7,22 @@ import { getPreviousServicePageKey } from '../../../../utils/flows/service_form_
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import Button from '../../../UI_Primitives/buttons/Button';
 import StopWatch from './StopWatch';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 
-const FormTopBar = ({ refresh }) => {
+const FormTopBar = () => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient()
   const [currentTime, setCurrentTime] = useState(Date.now());
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
 
+
+  const handleReloadResources = () => {
+    queryClient.invalidateQueries({
+      queryKey: ['service_form_resources']
+    })
+  }
 
   const handleBack = () => {
     const [mainKey, subKey] = getPreviousServicePageKey(serviceFormSettings?.activePage, serviceFormSettings?.activeSubPage)
@@ -68,7 +76,7 @@ const FormTopBar = ({ refresh }) => {
           />
         </div>
         <div className='buttons'>
-          <Button title="Refresh" type='button' rounded size='small' outlined icon={<TbRotate2 />} onClick={refresh} />
+          <Button title="Refresh" type='button' rounded size='small' outlined icon={<TbRotate2 />} onClick={handleReloadResources} />
           <Button title='Stopwatch' type='button' rounded size='small' outlined icon={<TbStopwatch />} onClick={openStopWatch} />
         </div>
       </div>

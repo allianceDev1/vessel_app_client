@@ -7,12 +7,27 @@ import { api } from '../../../../api'
 import { listInactiveAreaWorker } from '../../../../utils/services/area_service'
 import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+
 
 const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('fetch')
     const [form, setForm] = useState({})
-    const [workers, setWorkers] = useState([])
+    const queryClient = useQueryClient();
+
+
+    const {
+        data: techList,
+        isLoading: techLoading
+    } = useQuery({
+        queryKey: ['vessel_staff_list', 'name_only'],
+        queryFn: async () => {
+            const res = await api.ttPv2Axios('/worker/account/list?nameOnly=Yes')
+            return res
+        },
+        staleTime: 10 * 60_000
+    })
 
 
     const handleChange = (e) => {
@@ -31,23 +46,28 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
                 to_date: form?.to_date
             })
 
-            const selectedWorker = workers.filter(w => w.value === form?.worker_uuid)[0]
+            queryClient.setQueryData(
+                ['branch_area_details', cityId],
+                (oldData) => {
+                    if (!oldData) return oldData;
 
-            setData((state) => {
-                return {
-                    ...state,
-                    vf_technicians: [
-                        {
-                            worker_uuid: form?.worker_uuid,
-                            full_name: selectedWorker?.label,
-                            from_date: form?.from_date,
-                            to_date: form?.to_date,
-                            is_deleted: false
-                        },
-                        ...(state?.vf_technicians || [])
-                    ]
+                    const selectedWorker = techList.filter(w => w.worker_uuid === form?.worker_uuid)[0]
+                    console.log(selectedWorker, form?.worker_uuid, techList)
+                    return {
+                        ...oldData,
+                        vf_technicians: [
+                            {
+                                worker_uuid: form?.worker_uuid,
+                                full_name: selectedWorker?.full_name,
+                                from_date: form?.from_date,
+                                to_date: form?.to_date,
+                                is_deleted: false
+                            },
+                            ...(oldData?.vf_technicians || [])
+                        ]
+                    };
                 }
-            })
+            );
 
             dispatch(modal.pull.all())
 
@@ -60,37 +80,10 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
         } finally {
             setLoading('')
         }
-
     }
-
-    const fetchWorkers = async () => {
-        try {
-            setLoading('fetch')
-
-            const list = await api.ttPv2Axios.get(`/worker/account/list?nameOnly=Yes`)
-            const inactiveList = listInactiveAreaWorker(list, activeWorkers)
-            setWorkers(inactiveList)
-
-        } catch (error) {
-            dispatch(toast.push({
-                type: 'danger',
-                head: "Something went wrong",
-                message: error.message,
-            }))
-        } finally {
-            setLoading('')
-        }
-    }
-
-    useEffect(() => {
-        // initial fetch
-        fetchWorkers()
-        //eslint-disable-next-line
-    }, [])
-
 
     // loading
-    if (loading === 'fetch') {
+    if (techLoading) {
         return <div className="">
             <SkeletonGrid rows={4} columns={1} height={50} />
         </div>
@@ -99,8 +92,8 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
     return (
         <div className="update-area-tech-comp">
             <form action="" style={{ display: 'flex', flexDirection: "column", gap: '10px' }} onSubmit={handleSubmit}>
-                <Select label={'Worker'} name={'worker_uuid'} value={form?.worker_uuid} onChange={handleChange} options={[{}, ...workers]}
-                    required />
+                <Select label={'Worker'} name={'worker_uuid'} value={form?.worker_uuid} onChange={handleChange}
+                    options={[{}, ...techList?.map(t => ({ label: t.full_name, value: t.worker_uuid }))]} required />
                 <InputText label={'From date'} type='date' name={'from_date'} value={form?.from_date} onChange={handleChange}
                     required max={form?.to_date || ''} />
                 <InputText label={'To date'} type='date' name={'to_date'} value={form?.to_date} onChange={handleChange} required

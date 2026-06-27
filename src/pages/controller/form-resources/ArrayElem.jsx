@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { useParams } from 'react-router-dom';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
@@ -16,7 +16,8 @@ import ArrayElemCU from '../../../components/forms/controller/resources/ArrayEle
 
 const ArrayElem = ({ deleteData }) => {
     const dispatch = useDispatch();
-    const { title } = useParams()
+    const { title } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, isFetching, error } = useQuery({
         queryKey: ['resources_values', title],
@@ -51,8 +52,11 @@ const ArrayElem = ({ deleteData }) => {
             { header: 'Order', accessorKey: "Order", enableHiding: false },
             ...(data?.title_stretcher?.map((t) => ({
                 header: t, accessorKey: t, enableHiding: false
-            })) || []),
-            {
+            })) || [])
+        ]
+
+        if (user?.allowed_origins?.includes('vessel_c_admin')) {
+            columns.push({
                 header: 'Actions',
                 enableSorting: false,
                 enableColumnFilter: false,
@@ -69,8 +73,8 @@ const ArrayElem = ({ deleteData }) => {
                         />
                     </div>
                 )
-            }
-        ]
+            })
+        }
 
         const tb = data?.values?.map((v) => {
             const c = {
@@ -116,10 +120,11 @@ const ArrayElem = ({ deleteData }) => {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: '15px' }}>
-                <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
-                    onClick={createModel} />
-            </div>
+            {user?.allowed_origins?.includes('vessel_c_admin') &&
+                <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: '15px' }}>
+                    <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
+                        onClick={createModel} />
+                </div>}
             <Table
                 key={'resources_values'}
                 columns={tableColumns}

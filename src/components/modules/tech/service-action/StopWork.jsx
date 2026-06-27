@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../../../../api';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
+import { useQueryClient } from '@tanstack/react-query';
 
-const StopWork = ({ serviceFormUuid, registrationId, visitId, setRegData }) => {
+const StopWork = ({ serviceFormUuid, registrationId, visitId, customerId }) => {
 
     const dispatch = useDispatch();
+    const queryClient = useQueryClient()
     const [loading, setLoading] = useState('')
     const { serviceForm } = useSelector((state) => state.application)
 
@@ -30,14 +32,24 @@ const StopWork = ({ serviceFormUuid, registrationId, visitId, setRegData }) => {
 
             dispatch(modal.pull.all())
 
-            setRegData((state) => ({
-                ...(state || {}),
-                last_visit: {
-                    ...(state.last_visit || {}),
-                    visit_status: 1,
-                    visit_status_text: "Travel"
+            queryClient.setQueryData(
+                ['tech_schedule_profile', customerId, registrationId],
+                old => {
+                    if (!old) return old
+
+                    return {
+                        ...old,
+                        regService: {
+                            ...(old?.regService || {}),
+                            last_visit: {
+                                ...(old?.regService.last_visit || {}),
+                                visit_status: 1,
+                                visit_status_text: 'Travel',
+                            }
+                        }
+                    }
                 }
-            }))
+            )
 
         } catch (error) {
             dispatch(toast.push({
