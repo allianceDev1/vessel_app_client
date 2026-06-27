@@ -15,10 +15,11 @@ export const handleTokenError = async (originalRequest) => {
         );
 
         const cookieOptions = {
-            secure: false,
-            sameSite: "lax",
-            path: "/",
-            expires: 40,
+            secure: true,
+            sameSite: 'None',
+            domain: '.alliancedev.in',
+            path: '/',
+            expires: new Date(Date.now() + 60 * 60 * 1000)
         };
 
         Cookies.set("_acc_tkn", data?.data?.access_token, cookieOptions);

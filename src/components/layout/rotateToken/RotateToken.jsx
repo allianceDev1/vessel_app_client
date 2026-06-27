@@ -12,10 +12,11 @@ const RotateToken = () => {
             api.ttSv2Axios.post('/auth/rotate-token', { refresh_token: refreshToken }).then((response) => {
 
                 const cookieOptions = {
-                    secure: false,
-                    sameSite: 'lax',
+                    secure: true,
+                    sameSite: 'None',
+                    domain: '.alliancedev.in',
                     path: '/',
-                    expires: 40
+                    expires: new Date(Date.now() + 60 * 60 * 1000)
                 };
 
                 Cookies.set('_acc_tkn', response?.access_token, cookieOptions);
