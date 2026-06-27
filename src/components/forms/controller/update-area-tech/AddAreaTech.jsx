@@ -52,7 +52,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
                     if (!oldData) return oldData;
 
                     const selectedWorker = techList.filter(w => w.worker_uuid === form?.worker_uuid)[0]
-                    console.log(selectedWorker, form?.worker_uuid, techList)
+                  
                     return {
                         ...oldData,
                         vf_technicians: [

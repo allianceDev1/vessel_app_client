@@ -65,7 +65,7 @@ const PostponeService = ({ customerId, products, serviceType, isController = fal
                 queryClient.setQueryData(
                     ['tech_service_profile', customerId, serviceType, searchParams.get('reg_id')],
                     old => {
-                        console.log(old, 'old')
+                   
                         if (!old) return old
                         return {
                             ...old,
@@ -74,7 +74,7 @@ const PostponeService = ({ customerId, products, serviceType, isController = fal
                                 products: (old.upServices?.products || [])?.map(p => {
 
                                     if (p.service?.service_type === 'SERVICE' && selectedProducts.includes(p.product_id)) {
-                                        console.log(p)
+                                 
                                         return {
                                             ...p,
                                             service: {

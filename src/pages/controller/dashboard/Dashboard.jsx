@@ -95,7 +95,7 @@ const Dashboard = () => {
         queryKey: ['workers_today_work_flow'],
         queryFn: async () => {
             const res = await api.vfCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
-            console.log(res, 'res')
+
             return res?.map((w, i) => ({
                 techId: w?.technician_uuid,
                 id: w?.customer_id,
