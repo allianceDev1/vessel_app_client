@@ -1,4 +1,4 @@
-@use '../fonts/Config_rounded.scss';
+@use '../fonts/config_rounded';
 
 * {
     margin: 0;
@@ -13,7 +13,7 @@ body {
     background-color: var(--background);
     color: var(--text-primary);
     overflow-x: hidden;
-    
+
 }
 
 
