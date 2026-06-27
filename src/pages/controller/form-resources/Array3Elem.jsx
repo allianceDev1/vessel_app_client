@@ -63,17 +63,6 @@ const Array3Elem = ({ deleteData }) => {
         </div>
     }
 
-    if (error) {
-        return <div>
-            <ErrorState
-                icon={<TbBox />}
-                title={'Data fetching Failed'}
-                message={error?.message}
-                hight='400px'
-            />
-        </div>
-    }
-
     return (
         <div className='array-3-elem-page-container'>
             {user?.allowed_origins?.includes('vessel_c_admin') &&
@@ -81,37 +70,45 @@ const Array3Elem = ({ deleteData }) => {
                     <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
                         onClick={createModel} />
                 </div>}
-            <div class="masonry">
-                {data?.values?.map((box) => {
-                    return <div class="card" key={box?.uuid}>
-                        <div className="top">
-                            <h4>{box?.data?.[0]}</h4>
-                            {user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown
-                                button={{
-                                    icon: <TbDots />,
-                                    size: 'small',
-                                    text: true
-                                }}
-                                list={[
-                                    {
-                                        items: [
-                                            { icon: <TbPencil />, label: 'Update', onClick: () => editModel(box?.uuid) },
-                                            { icon: <TbTrash />, label: 'Remove', theme: 'danger', onClick: () => deleteData(box?.uuid) },
-                                        ],
-                                    }
-                                ]}
-                            />}
-                        </div>
-                        {box?.data?.map((d, index) => {
-                            if (index === 0) return '';
-                            return <div className="section">
-                                <h5>{data?.title_stretcher?.[index]}</h5>
-                                {d?.map((j, i) => <p key={i}> - {j}</p>)}
+            {error ?
+                <ErrorState
+                    icon={<TbBox />}
+                    title={'Data fetching Failed'}
+                    message={error?.message}
+                    hight='400px'
+                />
+                : <div class="masonry">
+                    {data?.values?.map((box) => {
+                        return <div class="card" key={box?.uuid}>
+                            <div className="top">
+                                <h4>{box?.data?.[0]}</h4>
+                                {user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown
+                                    button={{
+                                        icon: <TbDots />,
+                                        size: 'small',
+                                        text: true
+                                    }}
+                                    list={[
+                                        {
+                                            items: [
+                                                { icon: <TbPencil />, label: 'Update', onClick: () => editModel(box?.uuid) },
+                                                { icon: <TbTrash />, label: 'Remove', theme: 'danger', onClick: () => deleteData(box?.uuid) },
+                                            ],
+                                        }
+                                    ]}
+                                />}
                             </div>
-                        })}
-                    </div>
-                })}
-            </div>
+                            {box?.data?.map((d, index) => {
+                                if (index === 0) return '';
+                                return <div className="section">
+                                    <h5>{data?.title_stretcher?.[index]}</h5>
+                                    {d?.map((j, i) => <p key={i}> - {j}</p>)}
+                                </div>
+                            })}
+                        </div>
+                    })}
+                </div>}
+
         </div>
     )
 }

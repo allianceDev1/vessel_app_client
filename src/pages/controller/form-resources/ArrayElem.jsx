@@ -107,17 +107,6 @@ const ArrayElem = ({ deleteData }) => {
         </div>
     }
 
-    if (error) {
-        return <div>
-            <ErrorState
-                icon={<TbBox />}
-                title={'Data fetching Failed'}
-                message={error?.message}
-                hight='400px'
-            />
-        </div>
-    }
-
     return (
         <div>
             {user?.allowed_origins?.includes('vessel_c_admin') &&
@@ -125,12 +114,20 @@ const ArrayElem = ({ deleteData }) => {
                     <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
                         onClick={createModel} />
                 </div>}
-            <Table
-                key={'resources_values'}
-                columns={tableColumns}
-                data={tableData}
-                tableKey="resources_values"
-            />
+            {error ?
+                <ErrorState
+                    icon={<TbBox />}
+                    title={'Data fetching Failed'}
+                    message={error?.message}
+                    hight='400px'
+                />
+                : <Table
+                    key={'resources_values'}
+                    columns={tableColumns}
+                    data={tableData}
+                    tableKey="resources_values"
+                />}
+
         </div>
     )
 }
