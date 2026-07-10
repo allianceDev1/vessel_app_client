@@ -74,7 +74,7 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               {Object.keys(packages || {})?.length && <Line type="monotone" dataKey="Addon" stroke={chartLabelColors[8]} strokeWidth={2} />}
               {
                 Object.keys(packages || {}).map((key, index) => {
-                  return <Bar key={key} dataKey={key} barSize={20} fill={MCPC?.[key]} radius={[10, 10, 0, 0]} />
+                  return <Bar key={key} dataKey={key} barSize={20} fill={MCPC?.[key]} radius={[10, 10, 10, 10]} stackId="Package"/>
                 })
               }
             </ComposedChart>
@@ -141,8 +141,8 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               <YAxis niceTicks="snap125" tick={{ fontSize: 11 }} />
               <ChartTooltip />
               <ChartLegend />
-              <Bar dataKey="Service" barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 0, 0]} />
-              <Bar dataKey="Renewal" barSize={20} fill={chartLabelColors[1]} radius={[10, 10, 0, 0]} />
+              <Bar dataKey="Service" barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 10, 10]} stackId="Count" />
+              <Bar dataKey="Renewal" barSize={20} fill={chartLabelColors[1]} radius={[10, 10, 10, 10]} stackId="Count" />
             </ComposedChart>
           </div>
         </div>

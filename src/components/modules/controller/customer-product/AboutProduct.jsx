@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbAlignLeft, TbCalendarCheck, TbCheck, TbDropletStar, TbX } from 'react-icons/tb'
+import { TbAlignLeft, TbArrowMoveRight, TbCalendarCheck, TbCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, TbX } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
@@ -19,6 +19,7 @@ import ChangeProductStatus from '../../../forms/controller/product/ChangeProduct
 import UpdateProduct from '../../../forms/controller/product/UpdateProduct'
 import EditNote from '../../../forms/controller/product/EditNote'
 import UpdateServiceDate from '../../../forms/controller/product/UpdateServiceDate'
+import TransferOwnership from '../../../forms/controller/product/TransferOwnership'
 
 const AboutProduct = () => {
     const dispatch = useDispatch();
@@ -39,12 +40,27 @@ const AboutProduct = () => {
     const dropdownOptions = [
         {
             items: [
-                { label: 'Update Product', icon: <TbDropletStar />, onClick: () => openUpdateProductModel() },
+                { label: 'Change Service Date', icon: <TbCalendarCheck />, onClick: () => openUpdateServiceDateModel() },
                 { label: 'Edit Note', icon: <TbAlignLeft />, onClick: () => openUpdateNoteModel() },
-                { label: 'Change Service Date', icon: <TbCalendarCheck />, onClick: () => openUpdateServiceDateModel() }
             ]
         }
     ]
+
+    if (user?.allowed_origins?.includes('vessel_c_admin')) {
+        dropdownOptions[0].items.push(
+            { type: "divider" },
+            ...(data?.product_active ? [{ label: 'Disconnect', theme: 'danger', icon: <TbLinkOff />, onClick: () => openStatusChangeModel('DISCONNECT') }] : []),
+            { label: 'Transfer', theme: 'danger', icon: <TbFlagShare />, onClick: () => openTransferOwnerShip() }
+        )
+
+    }
+
+    const openTransferOwnerShip = (status) => {
+        dispatch(modal.push({
+            title: 'Transfer Ownership',
+            body: <TransferOwnership productId={product_id} customerId={customer_id} />
+        }))
+    }
 
     const openStatusChangeModel = (status) => {
         dispatch(modal.push({
@@ -104,12 +120,12 @@ const AboutProduct = () => {
             {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
                 <div className="menu-buttons">
                     {user?.allowed_origins?.includes('vessel_c_admin') && <>
-                        {data?.product_active
-                            ? <Button icon={<TbX />} label={'Disconnect'} size='small' severity={'danger'} rounded style={{ width: '120px' }}
-                                onClick={() => openStatusChangeModel('DISCONNECT')} />
-                            : <Button icon={<TbCheck />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
+                        {!data?.product_active &&
+                            <Button icon={<TbLink />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
                                 onClick={() => openStatusChangeModel('CONNECT')} />}
                     </>}
+                    <Button icon={<TbPencil />} label={'Update'} size='small' outlined rounded style={{ width: '120px' }}
+                        onClick={() => openUpdateProductModel()} />
                     <Dropdown
                         button={{
                             icon: <IoIosArrowDown />,

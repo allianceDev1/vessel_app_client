@@ -8,6 +8,7 @@ const Dropdown = ({ button, list, selected = null }) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const wrapperRef = useRef();
     const menuRef = useRef();
+    const GAP = 8;
 
     const calculatePosition = () => {
         const button = wrapperRef.current;
@@ -20,19 +21,21 @@ const Dropdown = ({ button, list, selected = null }) => {
         const screenWidth = window.innerWidth;
 
         //  vertical fallback
-        let top = btnRect.bottom;
+        let top = btnRect.bottom + GAP;
         if (btnRect.bottom + menuRect.height > screenHeight) {
             if (btnRect.top - menuRect.height > 0) {
-                top = btnRect.top - menuRect.height;
+                top = btnRect.top - menuRect.height - GAP;
             } else {
                 top = screenHeight - menuRect.height - 10; // fallback bottom space
             }
         }
 
         //  horizontal fallback
-        let left = btnRect.left;
-        if (btnRect.left + menuRect.width > screenWidth) {
-            left = screenWidth - menuRect.width - 10;
+        let left = btnRect.right - menuRect.width;
+        if (left < 8) left = 8;
+
+        if (left  + menuRect.width > screenWidth) {
+            left = screenWidth - menuRect.width - 8;
         }
         if (left < 0) left = 10; // fallback left space
 
@@ -77,7 +80,7 @@ const Dropdown = ({ button, list, selected = null }) => {
     const dropDownItem = open ? (
         <div
             className={`dropdown-menu`}
-            style={{ top: `${position.y}px`, left: `${position.x}px`, position: 'absolute', zIndex: 1000 }}
+            style={{ top: `${position.y}px`, left: `${position.x}px`, position: 'fixed', zIndex: 9999 }}
             ref={menuRef}
         >
             {list?.map((section, sectionIndex) => section.items?.length ? (

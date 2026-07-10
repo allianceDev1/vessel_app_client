@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbBike, TbBikeOff, TbCalendarUp, TbCalendarX, TbPlayerPlay, TbPlayerStop } from 'react-icons/tb'
+import { TbBike, TbBikeOff, TbCalendarUp, TbCalendarX, TbCheck, TbDots, TbPlayerPlay, TbPlayerStop } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
-import { modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
+import { doDialog, modal, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
 import RescheduleService from '../../../components/forms/tech/schedule-service/RescheduleService'
 import UnscheduleService from '../../../components/forms/tech/schedule-service/UnscheduleService'
 import StartTravel from '../../../components/modules/tech/service-action/StartTravel'
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../../../api'
 import { sfActions } from '../../../redux/features/persisted/applicationSlice'
 import { useQueryClient } from '@tanstack/react-query'
+import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 
 const ActionButtons = ({ regData, setRegData }) => {
     const dispatch = useDispatch();
@@ -138,6 +139,28 @@ const ActionButtons = ({ regData, setRegData }) => {
         }))
     }
 
+    const handleSelfCloseWork = () => {
+
+        dispatch(doDialog.confirm({
+            message: 'Are you sure you want to self close the work ?',
+            accept: {
+                onClick: () => {
+                    
+                }
+            }
+        }))
+    }
+
+    const dropdownOptions = [
+        {
+            items: [
+                ...(regData?.about?.self_close_enabled ? [{ label: 'Self Close', icon: <TbCheck />, onClick: () => handleSelfCloseWork() }] : []),
+                { label: 'Reschedule', icon: <TbCalendarUp />, onClick: () => handleReschedule() },
+                { label: 'Unschedule', icon: <TbCalendarX />, theme: 'danger', onClick: () => handleUnschedule() },
+            ]
+        }
+    ]
+
     return (
         <div className="schedule-profile-action-buttons">
             <div className="action-buttons" style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
@@ -145,8 +168,13 @@ const ActionButtons = ({ regData, setRegData }) => {
                 {/* On Schedule */}
                 {regData?.status?.status === 3
                     ? <>
-                        <Button icon={<TbCalendarX />} title={'Unschedule'} rounded severity={'danger'} onClick={handleUnschedule} />
-                        <Button icon={<TbCalendarUp />} rounded title={'Reschedule'} onClick={handleReschedule} />
+                        <Dropdown
+                            button={{
+                                icon: <TbDots />,
+                                rounded: true,
+                            }}
+                            list={dropdownOptions}
+                        />
                         <Button icon={<TbBike />} label={'Start Travel'} rounded severity={'primary'} style={{ width: '100%' }}
                             onClick={handleStartTravel} />
                     </> : ''}
