@@ -45,9 +45,14 @@ const CustomerMiniReport = () => {
             // Vessel
             const totalPackageProducts = reports?.vessel_report?.packages_counts?.reduce((t, p) => t + p.count, 0) || 0
             const packageProducts = {}
-            reports?.vessel_report?.packages_counts?.map((p) => {
+            const packageColorCodes = reports?.vessel_report?.packages_counts?.map((p) => {
                 packageProducts[p.package_name] = Number(((p.count / totalPackageProducts) * 100).toFixed(2))
-                return p;
+
+                return {
+                    package_name: p.package_name,
+                    color_code: p?.package_color_code,
+                    value: Number(((p.count / totalPackageProducts) * 100).toFixed(2))
+                };
             })
 
             // Add-on
@@ -70,7 +75,8 @@ const CustomerMiniReport = () => {
                     iw_products: reports?.vessel_report?.iw_products || 0,
                     ssp_products: reports?.vessel_report?.ssp_products || 0,
                     package_products: packageProducts,
-                    total_package_products: totalPackageProducts
+                    total_package_products: totalPackageProducts,
+                    pkg_color_codes: packageColorCodes?.sort((a, b) => b.value - a.value)
                 },
                 customerCount: [
                     { name: 'Vessel Users', value: reports?.customer_report?.vessel_customers || 0 },
@@ -151,16 +157,16 @@ const CustomerMiniReport = () => {
                                     <ResponsiveContainer width="100%" height="35">
                                         <BarChart
                                             layout="vertical"
-                                            data={[{ name: 'Percentage (%)', ...productReport?.package_products }]}
+                                            data={[{ name: 'Percentage', ...productReport?.package_products }]}
                                             stackOffset="none"
                                         >
                                             <XAxis type="number" domain={[0, 100]} hide />
                                             <YAxis type="category" dataKey="name" hide />
-                                            {Object.entries(productReport?.package_products || {}).map(([key, value], index) => (
+                                            {productReport?.pkg_color_codes?.map((p, index) => (
                                                 <Bar
-                                                    dataKey={key}
+                                                    dataKey={p?.package_name}
                                                     stackId="a"
-                                                    fill={chartLabelColors[index + 1]}
+                                                    fill={p?.color_code}
                                                     barSize={15}
                                                     radius={[15, 15, 15, 15]}
                                                     barGap={15}
@@ -169,7 +175,7 @@ const CustomerMiniReport = () => {
                                                 //     radius: 6
                                                 // }}
                                                 >
-                                                    <ChartTooltip />
+                                                    <ChartTooltip valueFormatter={(value) => `${value}%`} labelVisibility={false} />
                                                 </Bar>
                                             ))}
                                         </BarChart>

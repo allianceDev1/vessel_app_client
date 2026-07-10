@@ -1,6 +1,7 @@
 import moment from "moment";
 
 export const upcomingServiceMiniReport = (data) => {
+
     const { summary, city_chart, month_chart } = data;
 
     // Summary pie chart
@@ -47,8 +48,8 @@ export const upcomingServiceMiniReport = (data) => {
     // ------------------ Build Month Range ------------------
     const now = new Date();
 
-    const start = new Date(now.getFullYear(), now.getMonth() - 4, 1);
-    const end = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+    const start = new Date(now.getFullYear(), now.getMonth() - 4, 10);
+    const end = new Date(now.getFullYear(), now.getMonth() + 2, 10);
 
     const monthRange = [];
     let cursor = new Date(start);
@@ -65,7 +66,6 @@ export const upcomingServiceMiniReport = (data) => {
             return [key, m];
         })
     );
-
 
     const monthChart = monthRange.map((date) => {
         const key = formatMonthKey(date);
