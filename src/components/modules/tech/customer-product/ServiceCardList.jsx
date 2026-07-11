@@ -78,8 +78,8 @@ const ServiceCardList = () => {
                 />}
 
                 {allCards.map((card) => (
-                    card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer
-                        onClick={() => navigate(`/controller/completed/service-job/${card?.service_srl_no}`)} /> :
+                    card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
+                        onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}`) : null} /> :
                         card?.card_type === 'INSTALLATION_CARD' ? <InstallationCard key={card.uuid} data={card} /> : ""
                 ))}
 

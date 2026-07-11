@@ -63,7 +63,7 @@ const InstallationCard = ({ data, pointer = false }) => {
                 >
                     <div className="left">
                         <TbHash />
-                        <p>{data?.service_srl_no || 'Not Linked'}</p>
+                        <p>{data?.installation_srl_no || 'Not Linked'}</p>
                     </div>
                     <div className="right">
                         <p>{data?.worker_name}</p>

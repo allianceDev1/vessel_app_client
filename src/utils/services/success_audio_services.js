@@ -6,7 +6,7 @@ const vibrateWave = [80, 15, 80, 15, 40]
 export const initAudio = () => {
     if (!audioInstance) {
         audioInstance = new Audio(SuccessEffect);
-        audioInstance.volume = 0.7;
+        audioInstance.volume = 1;
     }
 };
 
@@ -18,7 +18,7 @@ export const unlockAudio = async () => {
         await audioInstance.play();
         audioInstance.pause();
         audioInstance.currentTime = 0;
-        audioInstance.volume = 0.7;
+        audioInstance.volume = 1;
     } catch {
         console.error("autoplay blocked");
     }
