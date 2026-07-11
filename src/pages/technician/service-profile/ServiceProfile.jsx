@@ -26,9 +26,9 @@ const ServiceProfile = () => {
     const navigate = useNavigate();
     const { customer_id, service_type } = useParams();
     const [searchParams] = useSearchParams()
-  
-   
-   
+
+
+
 
 
     const {
@@ -81,7 +81,7 @@ const ServiceProfile = () => {
         dispatch(modal.push({
             title: 'Schedule service',
             body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id}
-                serviceType={service_type === 'renewals' ? 'RENEWAL' : service_type === 'services' ? 'SERVICE' : service_type === 'overdue' ? 'RENEWAL' : 'COMPLAINT'} />
+                serviceType={['overdue', 'renewal'].includes(service_type) ? 'RENEWAL' : service_type === 'service' ? 'SERVICE' : 'COMPLAINT'} />
         }))
     }
 

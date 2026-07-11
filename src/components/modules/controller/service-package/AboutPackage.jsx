@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
+import { TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
@@ -17,6 +17,7 @@ import PackageExtend from '../../../forms/controller/service-package/PackageExte
 import FreezeUnfreeze from '../../../forms/controller/service-package/FreezeUnfreeze'
 import ActivatePackage from '../../../forms/controller/service-package/ActivatePackage'
 import TokenTopUps from './TokenTopUps'
+import ServiceCancellation from '../../../forms/controller/service-package/ServiceCancellation'
 
 
 const AboutPackage = () => {
@@ -65,6 +66,13 @@ const AboutPackage = () => {
         }))
     }
 
+    const openCancellationModal = () => {
+        dispatch(modal.push({
+            title: "Service Index Cancellation",
+            body: <ServiceCancellation packageSrlNo={serial_number} />
+        }))
+    }
+
     if (isLoading) {
         return <div>
             <SkeletonGrid rows={4} columns={3} height={'60px'} gap={'10px'} responsive={{
@@ -101,6 +109,8 @@ const AboutPackage = () => {
                         onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
                 </>}
                 {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && <>
+                    {data?.package_status === 2 && <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
+                        outlined onClick={() => openCancellationModal()} />}
                     {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
                         onClick={openPackageExtensionModel} />}
                 </>}
