@@ -38,7 +38,11 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
         if (navigator.share && navigator.canShare({ files: [file] })) {
             await navigator.share({
                 title: "Service Completed",
-                text: "Service completion details",
+                text: `🎉 Your service has been completed successfully!
+
+Thank you for choosing Alliance Water Solutions. We're committed to providing reliable water purification solutions and exceptional customer support.
+
+Have a great day! 💙`,
                 files: [file],
             });
         } else {
@@ -126,7 +130,7 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
                         <h3>{formatCurrency(data?.totalBillAmount)}</h3>
                     </div>
                     <div className="amount-note" style={{ marginTop: '10px' }}>
-                        Registration closure is pending. The final bill will be issued once the registration is closed. 
+                        Registration closure is pending. The final bill will be issued once the registration is closed.
                         Any advance amount collected will be adjusted in the final bill.
                     </div>
                 </div>
