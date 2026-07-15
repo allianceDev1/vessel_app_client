@@ -65,7 +65,7 @@ const ProductList = () => {
                 <div className="product-list">
                     {data?.vessels?.map((vessel) => {
                         return <div className="product-item"
-                            onClick={() => navigate('/controller/customer/' + customer_id + '/product/' + vessel?.product_id + '/about')}>
+                            onClick={() => navigate('/controller/product/' + vessel?.product_id + '/about')}>
                             <div className="order-section">
                                 <h4>{vessel?.order_id ? vessel?.order_id : "UN"}</h4>
                             </div>
@@ -95,7 +95,7 @@ const ProductList = () => {
                 <div className="product-list">
                     {data?.addons?.map((vessel) => {
                         return <div className="product-item"
-                            onClick={() => navigate('/controller/customer/' + customer_id + '/product/' + vessel?.product_id + '/about')}>
+                            onClick={() => navigate('/controller/product/' + vessel?.product_id + '/about')}>
                             <div className="order-section">
                                 <h4>{"AD"}</h4>
                             </div>

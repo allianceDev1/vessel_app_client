@@ -37,23 +37,23 @@ const CustomerProductView = () => {
                     <div className={`menu-item`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/about`)}>
                         <TbSmartHome />
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/about`)}>
+                    <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/about`)}>
                         <TbDropletStar />
                         <p>Product</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'spares') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/spares`)}>
+                    <div className={`menu-item ${(activeSegment === 'spares') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/spares`)}>
                         <TbSquareLetterS />
                         <p>spares</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'eligibility') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/eligibility`)}>
+                    <div className={`menu-item ${(activeSegment === 'eligibility') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/eligibility`)}>
                         <TbCircleCheck />
                         <p>Eligibility</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/service-cards`)}>
+                    <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/service-cards`)}>
                         <TbPlayCard4 />
                         <p>Service Cards</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/customer/${customer_id}/product/${product_id}/package-history`)}>
+                    <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/package-history`)}>
                         <TbCrown />
                         <p>Subscriptions</p>
                     </div>

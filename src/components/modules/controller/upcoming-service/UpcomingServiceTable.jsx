@@ -115,7 +115,7 @@ const UpcomingServiceTable = () => {
                         package_name: item.package_name,
                         package_color_code: item.package_color_code,
                         _rowStyle: { cursor: 'pointer' },
-                        _rowNavigateUrl: `/controller/customer/${item?.customer_id}/product/${item.product_id}/about`
+                        _rowNavigateUrl: `/controller/product/${item.product_id}/about`
                     }
 
                 default:

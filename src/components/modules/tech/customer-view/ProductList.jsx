@@ -95,7 +95,7 @@ const ProductList = () => {
                 <div className="product-list">
                     {data?.addons?.map((item) => {
                         return <div className="product-item"
-                            onClick={() => navigate('/controller/customer/' + customer_id + '/product/' + item?.product_id + '/about')}>
+                            onClick={() => navigate('/controller/product/' + item?.product_id + '/about')}>
                             <div className="order-section">
                                 <h4>{"AD"}</h4>
                             </div>

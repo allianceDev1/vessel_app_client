@@ -23,6 +23,7 @@ const StartWork = ({ registrationId, visitId }) => {
 
             // collect location
             const locationData = await getLocation()
+          
             const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
 
             const work = await api.vfTv2Axios.post(`/registered-service/${registrationId}/${visitId}/start-work`, { location })

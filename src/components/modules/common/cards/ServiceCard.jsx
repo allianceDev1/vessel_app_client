@@ -42,17 +42,13 @@ const ServiceCard = ({ data, pointer = false, onClick = () => { } }) => {
 
                     </div>
                     <div className="right">
-                        <p>{toStandardText(data?.reg_mode)} - {toStandardText(data?.work_mode)}</p>
+                        <p>{toStandardText(data?.mode)}</p>
                         <div className="badge-container">
                             {data?.package_id ? <Badge value={data?.package_name} style={{
                                 backgroundColor: data?.package_color_code,
                                 color: getContrastText(data?.package_color_code)
                             }} /> : ''}
                             {data?.repeat ? <Badge value={'Repeat'} severity={'danger'} /> : ""}
-                            {data?.spare_changes ? <Badge value={`${data?.spare_changes} SpC`} severity={'info'} /> : ''}
-                            {data?.spare_removes ? <Badge value={`${data?.spare_removes} SpR`} severity={'info'} /> : ''}
-                            {data?.service_works ? <Badge value={`${data?.service_works} SW`} severity={'info'} /> : ''}
-                            {(!data?.spare_changes && !data?.spare_removes && !data?.service_works) && <Badge value={'No Works'} severity={'info'} />}
                         </div>
                     </div>
                 </div>

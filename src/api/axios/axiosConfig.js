@@ -19,6 +19,10 @@ export const vfTv2Axios = axios.create({
     baseURL: url(env.API.VESSEL, "/t/v2/"),
     headers: apiHeaders,
 });
+export const vfPv1Axios = axios.create({
+    baseURL: url(env.API.VESSEL, "/p/v1/"),
+    headers: apiHeaders,
+});
 export const ttSv2Axios = axios.create({
     baseURL: url(env.API.TIMETRACK, "/s/v2/"),
     headers: apiHeaders,
@@ -50,7 +54,8 @@ const instances = [
     cnAv1Axios,
     vfCv2Axios,
     vfTv2Axios,
-    fnPv1Axios
+    fnPv1Axios,
+    vfPv1Axios
 ];
 
 instances.forEach((instance) => {
@@ -65,7 +70,8 @@ const axiosClients = {
     cnAv1Axios,
     vfCv2Axios,
     vfTv2Axios,
-    fnPv1Axios
+    fnPv1Axios,
+    vfPv1Axios
 };
 
 export default axiosClients;

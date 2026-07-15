@@ -187,7 +187,7 @@ const OtpVerification = ({ resetType }) => {
                 </div>
                 {verification?.otpLogs?.length
                     ? <div className="number-list">
-                        {[...verification?.otpLogs]?.sort((a, b) => a.number_type.localeCompare(b.number_type))?.map((log) => {
+                        {verification?.otpLogs?.map((log) => {
                             return <div className="item">
                                 <div className="icon">
                                     {log?.number_type === 'PRIMARY' ? <TbDeviceSim1 />

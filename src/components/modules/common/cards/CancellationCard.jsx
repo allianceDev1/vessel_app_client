@@ -27,7 +27,7 @@ const CancellationCard = ({ data, pointer = false }) => {
 
                 <div className="left">
                     <h4 style={{ color: getContrastText(tempColor) }}>Service Cancelled</h4>
-                    <p style={{ color: getContrastText(tempColor) }}>By {data?.cancelled_by}</p>
+                    <p style={{ color: getContrastText(tempColor) }}>Service Card</p>
                 </div>
                 <div className="right">
                     <p>{isoToDDMonYYYY(data?.date)}</p>
@@ -48,7 +48,7 @@ const CancellationCard = ({ data, pointer = false }) => {
                         <p>Index : {data?.service_index}</p>
                     </div>
                     <div className="right">
-                        <p>{data?.cancelled_by}</p>
+                        <p>{data?.worker_name}</p>
                         <TbUser />
                     </div>
                 </div>
