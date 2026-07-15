@@ -50,6 +50,9 @@ const FreezeUnfreeze = ({ type, packageSrlNo }) => {
                 The package will continue as a normal non-package product until it is unfrozen.
                 Please provide a reason/comment before continuing.
             </p>
+            <p style={{ fontSize: '13px', marginTop: '10px', color: 'var(--color-warning)' }}>
+                The action does not remove the next service date from the product. Please update the next service date separately in the Product Details section.
+            </p>
             <form action="" style={{ marginTop: '15px' }} onSubmit={handelSubmit}>
                 <Textarea label={'Comment'} name={'comment'} value={comment} onChange={(e) => setComment(e.target.value)}
                     required />

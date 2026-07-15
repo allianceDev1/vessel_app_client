@@ -17,7 +17,7 @@ const FilterCustomerProduct = () => {
     const [searchParams] = useSearchParams();
     const [form, setForm] = useState({
         city_id: searchParams.get('city_id') || '',
-        sku: searchParams.get('sku') || '',
+        product_id: searchParams.get('product_id') || '',
         installation_mode: searchParams.get('installation_mode') || '',
         product_type: searchParams.get('product_type') || '',
         origin_category: searchParams.get('origin_category') || '',
@@ -49,7 +49,7 @@ const FilterCustomerProduct = () => {
 
     const { data: resourcesData,
         //  isLoading: resourcesLoading, error: resourcesError
-         } = useQuery({
+    } = useQuery({
         queryKey: ['customer_filter_resources'],
         queryFn: async () => {
 
@@ -75,7 +75,7 @@ const FilterCustomerProduct = () => {
         e.preventDefault();
 
         // validation
-        if (!form.city_id && !form.sku && !form.installation_mode && !form?.product_type && !form?.origin_category
+        if (!form.city_id && !form.product_id && !form.installation_mode && !form?.product_type && !form?.origin_category
             && !form?.package_ids?.length && !form?.from_date && !form?.end_date
         ) {
             return;
@@ -91,10 +91,10 @@ const FilterCustomerProduct = () => {
             newSearchParams.delete('city_id')
         }
 
-        if (form?.sku) {
-            newSearchParams.set('sku', form?.sku)
+        if (form?.product_id) {
+            newSearchParams.set('product_id', form?.product_id)
         } else {
-            newSearchParams.delete('sku')
+            newSearchParams.delete('product_id')
         }
 
         if (form?.installation_mode) {
@@ -114,7 +114,7 @@ const FilterCustomerProduct = () => {
         } else {
             newSearchParams.delete('origin_category')
         }
-   
+
         if (form?.package_ids?.length) {
             newSearchParams.set('package_ids', form?.package_ids?.join(','))
             newSearchParams.set('package_filter_type', form?.package_filter_type)
@@ -145,7 +145,7 @@ const FilterCustomerProduct = () => {
                 <Select label={'City'} name={'city_id'} value={form?.city_id} options={[{}, ...(resourcesData?.cityList || [])]}
                     onChange={handleChange} />
 
-                <InputText label={'SKU'} name={'sku'} value={form?.sku} onChange={handleChange} />
+                <InputText label={'Product ID'} name={'product_id'} value={form?.product_id} onChange={handleChange} />
 
                 <Select label={'Installation Mode'} options={[{}, ...(resourcesData?.modesList || [])]} name={'installation_mode'}
                     value={form?.installation_mode} onChange={handleChange} />
@@ -176,7 +176,7 @@ const FilterCustomerProduct = () => {
                     required={form?.date_filtration_type || form?.from_date} min={form?.from_date} />
 
                 <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }}
-                    rounded disabled={!form.city_id && !form.sku && !form.installation_mode && !form?.product_type && !form?.origin_category
+                    rounded disabled={!form.city_id && !form.product_id && !form.installation_mode && !form?.product_type && !form?.origin_category
                         && !form?.package_ids?.length && !form?.from_date && !form?.end_date} />
 
 

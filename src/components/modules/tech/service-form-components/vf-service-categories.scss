@@ -5,7 +5,7 @@
 
     .category-border {
         background-color: var(--color-natural-trans-53);
-        backdrop-filter: blur(10px);
+        // backdrop-filter: blur(10px);
         border-radius: 20px;
         padding: 15px 10px;
         display: grid;
@@ -42,7 +42,7 @@
     .disable-category {
         background-color: var(--color-natural-trans-53);
         border-color:var(--border-light);
-        backdrop-filter: blur(10px);
+        // backdrop-filter: blur(10px);
         color: var(--text-secondary-4);
         cursor: not-allowed;
 

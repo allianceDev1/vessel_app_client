@@ -1,0 +1,149 @@
+.public-service-job-list {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    user-select: none;
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-light);
+
+
+            img {
+                width: 40px;
+            }
+
+            h3 {
+                font-size: 22px;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+        }
+
+        .error-border {
+            height: calc(100vh - 200px);
+            min-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .error-box {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 50px 0;
+
+                h4 {
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: var(--color-danger);
+                }
+
+                p {
+                    font-size: 13px;
+                    font-weight: 400;
+                    color: var(--text-secondary-2);
+                    text-align: center;
+
+                    &:last-child {
+                        margin-top: 50px;
+                    }
+
+                }
+            }
+        }
+
+        .content-border {
+            margin-top: 20px;
+
+            .head {
+                text-align: center;
+
+                p {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: var(--text-secondary-2);
+                }
+            }
+
+            .body {
+                .section {
+                    margin-top: 20px;
+
+                    h3 {
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: var(--text-secondary-1);
+                    }
+
+                    >p {
+                        font-size: 13px;
+                        font-weight: 400;
+                        margin-bottom: 10px;
+                        color: var(--text-secondary-3);
+                    }
+
+                    .list {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        gap: 10px;
+
+                        .box {
+                            background-color: var(--color-natural-trans-73);
+                            padding: 10px 12px;
+                            border-radius: 13px;
+                            border: 1px solid var(--border-light);
+                            cursor: pointer;
+
+                            .line-one,
+                            .line-two {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+
+                            }
+
+                            .line-one {
+                                margin-bottom: 10px;
+
+                                p {
+                                    font-size: 15px;
+                                    font-weight: 600;
+
+                                    &.PAID,
+                                    &.PARTIALLY_PAID,
+                                    &.PARTIALLY_VERIFIED,
+                                    &.VERIFIED {
+                                        color: var(--color-success);
+                                    }
+
+                                    &.UNPAID {
+                                        color: var(--color-warning);
+                                    }
+                                }
+
+                            }
+
+                            .line-two {
+                                p {
+                                    font-size: 13px;
+                                    font-weight: 500;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

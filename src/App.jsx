@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { changeThemeColor, connection } from './redux/features/persisted/systemSlice'
 import AppRoutes from './routes/AppRoutes';
 import Cookies from 'js-cookie'
+import PublicRoutes from './routes/PublicRoutes';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
   return (
     <div className="App" >
       <Routes>
+        <Route element={<PublicRoutes />} path='/p/*' />
         <Route element={<AppRoutes />} path='/*' />
       </Routes>
     </div>

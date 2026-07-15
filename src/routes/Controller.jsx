@@ -93,7 +93,7 @@ const Controller = () => {
                         <Route path="call-logs" element={<CustomerCallLogs />} />
                     </Route>
 
-                    <Route path='/customer/:customer_id/product/:product_id' element={<PrivateRoute element={<CustomerProductView />} isAuthenticated={isAuthenticated} />} >
+                    <Route path='/product/:product_id' element={<PrivateRoute element={<CustomerProductView />} isAuthenticated={isAuthenticated} />} >
                         <Route index element={<AboutCustomerProduct />} />
                         <Route path="about" index element={<AboutCustomerProduct />} />
                         <Route path="spares" element={<CustomerProductSpares />} />

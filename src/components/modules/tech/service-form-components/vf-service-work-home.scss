@@ -17,7 +17,7 @@
                 align-items: center;
                 justify-content: center;
                 background-color: var(--color-natural-trans-53);
-                backdrop-filter: blur(10px);
+                // backdrop-filter: blur(10px);
                 border-radius: 15px;
                 cursor: pointer;
 
@@ -36,7 +36,7 @@
 
             .item-selected {
                 background-color: var(--color-success-trans-33);
-                backdrop-filter: blur(10px);
+                // backdrop-filter: blur(10px);
                 color: var(--color-success-text);
 
                 p {

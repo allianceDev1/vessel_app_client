@@ -69,7 +69,7 @@ const AboutPackage = () => {
     const openCancellationModal = () => {
         dispatch(modal.push({
             title: "Service Index Cancellation",
-            body: <ServiceCancellation packageSrlNo={serial_number} />
+            body: <ServiceCancellation packageSrlNo={serial_number} package_id={data?.package_id} />
         }))
     }
 
@@ -132,8 +132,9 @@ const AboutPackage = () => {
                             {data?.package_status === 1 ? <Badge value={'Pending'} /> :
                                 data?.package_status === 2 ? <Badge value={'Active'} severity={'success'} /> :
                                     data?.package_status === 3 ? <Badge value={'Expired'} severity={'danger'} /> :
-                                        data?.package_status === 4 ? <Badge value={'Frozen'} severity={'warning'} />
-                                            : ''}
+                                        data?.package_status === 4 ? <Badge value={'Frozen'} severity={'warning'} /> :
+                                            data?.package_status === 5 ? <Badge value={'Cancelled'} severity={'danger'} />
+                                                : ''}
                         </div>
                     </div>
                     <div className="item">
@@ -142,12 +143,12 @@ const AboutPackage = () => {
                             <p className='text-value'>{data?.full_form} ({data?.package_name}) </p>
                         </div>
                     </div>
-                    <div className="item">
+                    {data?.start_date && <div className="item">
                         <p className='label'>Package Duration</p>
                         <div>
                             <p className='text-value'>{isoToDDMonYYYY(data?.start_date)} to {isoToDDMonYYYY(data?.expire_date)} ( {getIsoDayDifference(new Date(data?.expire_date), new Date(data?.start_date))} Days )</p>
                         </div>
-                    </div>
+                    </div>}
                     <div className="item">
                         <p className='label'>Tokens & Remaining</p>
                         <div>
@@ -168,6 +169,14 @@ const AboutPackage = () => {
                             </div>
                         </div>
                     </>}
+                    {data?.package_status === 1 && <div className="item">
+                        <p className='label'>Auto Activation</p>
+                        <div style={{ display: 'flex', gap: '15px' }}>
+                            {data?.auto_activation
+                                ? <Badge value={'On'} severity={'success'} />
+                                : <Badge value={'Off'} severity={'warning'} />}
+                        </div>
+                    </div>}
                 </div>
             </div>
             <h3 className='sub-title' style={{ marginTop: "25px" }}>Renewal Context</h3>
