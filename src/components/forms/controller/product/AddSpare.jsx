@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
-const AddSpare = ({ customerId, productId }) => {
+const AddSpare = ({  productId }) => {
     const dispatch = useDispatch()
     const queryClient = useQueryClient()
     const [form, setForm] = useState({})
@@ -44,7 +44,7 @@ const AddSpare = ({ customerId, productId }) => {
             await api.vfCv2Axios.post(`/product/${productId}/spare`, form)
 
             queryClient.refetchQueries({
-                queryKey: ['controller_customer_spare_list', customerId, productId],
+                queryKey: ['controller_customer_spare_list',  productId],
             })
 
             dispatch(modal.pull.all())

@@ -50,18 +50,27 @@ const Services = () => {
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                 <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}>
-                    {!data.length && <ErrorState
+                    {!data?.data?.length && <ErrorState
                         icon={<TbPlayCard4 />}
                         title={'No service history yet.'}
                         message={error?.message}
                         hight='400px'
                     />}
 
-                    {data.map((card) => (
-                        card?.type === 'SERVICE' ? <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
-                            onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}`) : null} /> :
-                            card?.type === 'CANCELLATION' ? <CancellationCard key={card.uuid} data={card} /> : ""
-                    ))}
+                    {data?.data?.map((card) => {
+                        switch (card.card_type) {
+                            case "SERVICE_CARD":
+                                return <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
+                                    onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} />
+
+                            case "SERVICE_CANCEL_CARD":
+                                return <CancellationCard key={card.uuid} data={card} />
+
+                            default:
+                                return null;
+                        }
+
+                    })}
                 </div>
             </div>
         </div>

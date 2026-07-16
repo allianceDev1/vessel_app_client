@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
-const UpdateSpare = ({ productId, customerId, spareId, spareUuid, spareName, Qty, warrantyStarted, warrantyPeriod, insertAt }) => {
+const UpdateSpare = ({ productId, spareId, spareUuid, spareName, Qty, warrantyStarted, warrantyPeriod, insertAt }) => {
     const dispatch = useDispatch()
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
@@ -35,7 +35,7 @@ const UpdateSpare = ({ productId, customerId, spareId, spareUuid, spareName, Qty
             await api.vfCv2Axios.put(`/product/${productId}/spare/${spareUuid}`, form)
 
             queryClient.refetchQueries({
-                queryKey: ['controller_customer_spare_list', customerId, productId],
+                queryKey: ['controller_customer_spare_list', productId],
             })
 
             dispatch(modal.pull.all())

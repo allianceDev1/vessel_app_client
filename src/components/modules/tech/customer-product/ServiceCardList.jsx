@@ -86,7 +86,7 @@ const ServiceCardList = () => {
                         case "SERVICE_CARD":
                             return <ServiceCard key={card.uuid} data={card}
                                 pointer={card?.version === 2}
-                                onClick={() => card?.version === 2 ? navigate(`/tech/completed/service-job/${card?.service_srl_no}`) : null} />
+                                onClick={() => card?.version === 2 ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} />
 
                         case "SERVICE_CANCEL_CARD":
                             return <CancellationCard key={card.uuid} data={card} />

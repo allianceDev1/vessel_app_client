@@ -11,10 +11,10 @@ import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
 const Eligibility = () => {
 
-    const { customer_id, product_id } = useParams();
+    const { product_id } = useParams();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['controller_customer_pr_eligibility', customer_id, product_id],
+        queryKey: ['controller_customer_pr_eligibility', product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios(`/product/${product_id}/eligibility`)
             return convertEligibilityToArray(data || {});

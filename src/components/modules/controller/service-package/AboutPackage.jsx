@@ -1,11 +1,11 @@
 import React from 'react'
 import '../customer-view/about-customer.scss'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
+import { TbArrowUpRight, TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
@@ -22,6 +22,7 @@ import ServiceCancellation from '../../../forms/controller/service-package/Servi
 
 const AboutPackage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { serial_number } = useParams();
     const { user } = useSelector((state) => state.user)
 
@@ -119,10 +120,13 @@ const AboutPackage = () => {
             </div>
             <div className="reg-content">
                 <div className="list">
-                    <div className="item">
+                    <div className="item action-button" onClick={() => navigate(`/controller/product/${data?.product_id}/about`)}>
                         <p className='label'>Product Id</p>
                         <div>
                             <p className='text-value'>{data?.product_id}</p>
+                        </div>
+                        <div className="right-icon">
+                            <TbArrowUpRight />
                         </div>
                     </div>
                     <div className="item">

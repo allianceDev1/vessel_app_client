@@ -78,12 +78,6 @@ const ServiceCardList = () => {
                     hight='400px'
                 />}
 
-                {/* (
-                card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
-                    onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}`) : null} /> :
-                card?.card_type === 'INSTALLATION_CARD' ? <InstallationCard key={card.uuid} data={card} /> : ""
-                ) */}
-
                 {allCards.map((card) => {
                     switch (card?.card_type) {
                         case "INSTALLATION_CARD":
@@ -92,7 +86,7 @@ const ServiceCardList = () => {
                         case "SERVICE_CARD":
                             return <ServiceCard key={card.uuid} data={card}
                                 pointer={card?.version === 2}
-                                onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}`) : null} />
+                                onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${product_id}`) : null} />
 
                         case "SERVICE_CANCEL_CARD":
                             return <CancellationCard key={card.uuid} data={card} />
