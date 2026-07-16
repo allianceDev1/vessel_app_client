@@ -14,12 +14,12 @@ import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 const SpareList = () => {
     const dispatch = useDispatch();
-    const { customer_id, product_id } = useParams();
+    const { product_id } = useParams();
     const { user } = useSelector((state) => state.user)
 
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['controller_customer_spare_list', customer_id, product_id],
+        queryKey: ['controller_customer_spare_list', product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios(`/product/${product_id}/spares`)
             return data;
@@ -30,7 +30,7 @@ const SpareList = () => {
     const openAddSpareModal = () => {
         dispatch(modal.push({
             title: "Add New Spare",
-            body: <AddSpare productId={product_id} customerId={customer_id} />
+            body: <AddSpare productId={product_id} />
         }))
     }
 
@@ -67,7 +67,6 @@ const SpareList = () => {
                         {data?.map((spare) => {
                             return <SpareCard
                                 key={spare?.spare_id}
-                                customerId={customer_id}
                                 productId={product_id}
                                 spareUuid={spare?.spare_uuid}
                                 spareId={spare?.spare_id}

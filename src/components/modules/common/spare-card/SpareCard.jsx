@@ -13,7 +13,7 @@ import { useQueryClient } from '@tanstack/react-query'
 
 
 const SpareCard = ({
-    customerId, productId, spareId, spareUuid, spareName, spareCategory, Qty, Unit, warrantyStarted,
+    productId, spareId, spareUuid, spareName, spareCategory, Qty, Unit, warrantyStarted,
     warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false
 }) => {
     const dispatch = useDispatch();
@@ -32,7 +32,6 @@ const SpareCard = ({
                         dispatch(modal.push({
                             title: "Update Spare",
                             body: <UpdateSpare
-                                customerId={customerId}
                                 productId={productId}
                                 spareId={spareId}
                                 spareUuid={spareUuid}
@@ -55,7 +54,7 @@ const SpareCard = ({
                                         await api.vfCv2Axios.delete(`/product/${productId}/spare/${spareUuid}`)
 
                                         queryClient.refetchQueries({
-                                            queryKey: ['controller_customer_spare_list', customerId, productId],
+                                            queryKey: ['controller_customer_spare_list', productId],
                                         })
 
                                     } catch (error) {

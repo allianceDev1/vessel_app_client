@@ -55,7 +55,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    const { data: categoryList, isLoading, error } = useQuery({
+    const { data: categoryList, isLoading } = useQuery({
         queryKey: ['package_sr_category_service_mode_list', package_id],
         queryFn: async () => {
             const res = await api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name`)

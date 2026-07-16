@@ -1,11 +1,11 @@
 import React from 'react'
 import '../customer-view/about-customer.scss'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbAlignLeft, TbArrowMoveRight, TbCalendarCheck, TbCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, TbX } from 'react-icons/tb'
+import { TbAlignLeft, TbArrowUpRight, TbCalendarCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
@@ -23,13 +23,14 @@ import TransferOwnership from '../../../forms/controller/product/TransferOwnersh
 
 const AboutProduct = () => {
     const dispatch = useDispatch();
-    const { customer_id, product_id } = useParams();
+    const navigate = useNavigate();
+    const { product_id } = useParams();
     const { user } = useSelector((state) => state.user)
 
 
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['controller_customer_product_info', customer_id, product_id],
+        queryKey: ['controller_customer_product_info', product_id],
         queryFn: async () => {
             const data = await api.vfCv2Axios(`/product/${product_id}/about`)
             return data;
@@ -58,35 +59,35 @@ const AboutProduct = () => {
     const openTransferOwnerShip = (status) => {
         dispatch(modal.push({
             title: 'Transfer Ownership',
-            body: <TransferOwnership productId={product_id} customerId={customer_id} />
+            body: <TransferOwnership productId={product_id} customerId={data?.customer_id} />
         }))
     }
 
     const openStatusChangeModel = (status) => {
         dispatch(modal.push({
             title: status === 'DISCONNECT' ? 'Disconnect the Product' : 'Reconnect the Product',
-            body: <ChangeProductStatus status={status} productId={product_id} customerId={customer_id} />
+            body: <ChangeProductStatus status={status} productId={product_id} customerId={data?.customer_id} />
         }))
     }
 
     const openUpdateProductModel = () => {
         dispatch(modal.push({
             title: 'Update Product Details',
-            body: <UpdateProduct data={data} productId={product_id} customerId={customer_id} />
+            body: <UpdateProduct data={data} productId={product_id} customerId={data?.customer_id} />
         }))
     }
 
     const openUpdateNoteModel = () => {
         dispatch(modal.push({
             title: 'Edit Note',
-            body: <EditNote note={data?.note} productId={product_id} customerId={customer_id} />
+            body: <EditNote note={data?.note} productId={product_id} customerId={data?.customer_id} />
         }))
     }
 
     const openUpdateServiceDateModel = () => {
         dispatch(modal.push({
             title: 'Change Service Date',
-            body: <UpdateServiceDate data={data} productId={product_id} customerId={customer_id} />
+            body: <UpdateServiceDate data={data} productId={product_id} customerId={data?.customer_id} />
         }))
     }
 
@@ -140,10 +141,13 @@ const AboutProduct = () => {
                 </div>}
             <div className="reg-content">
                 <div className="list">
-                    <div className="item">
+                    <div className="item action-button" onClick={() => navigate(`/controller/customer/${data?.customer_id}/about`)}>
                         <p className='label'>Customer ID & Name</p>
                         <div>
                             <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
+                        </div>
+                        <div className="right-icon">
+                            <TbArrowUpRight />
                         </div>
                     </div>
                     <div className="item">
