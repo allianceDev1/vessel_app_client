@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
-const UpdateServiceDate = ({ data, productId, customerId }) => {
+const UpdateServiceDate = ({ data, productId }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
@@ -33,7 +33,7 @@ const UpdateServiceDate = ({ data, productId, customerId }) => {
             await api.vfCv2Axios.put(`/product/${productId}/service-date`, form)
 
             queryClient.refetchQueries({
-                queryKey: ['controller_customer_product_info', customerId, productId],
+                queryKey: ['controller_customer_product_info', productId],
             })
 
             dispatch(modal.pull.all())

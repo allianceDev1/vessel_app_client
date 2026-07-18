@@ -23,7 +23,7 @@ const FilterBox = () => {
     end_date: searchParams.get('end_date') || '',
   })
 
-  const dateFilterTypes = ['RENEWED_DATE', 'START_DATE', 'EXPIRE_DATE', 'FREEZE_DATE']
+  const dateFilterTypes = ['RENEWED_DATE', 'START_DATE', 'EXPIRE_DATE', 'EXPIRED_AT', 'FREEZE_DATE']
   const statusFilterTypes = Object.entries(PACKAGE_STATUSES).map(([key, value]) => ({ label: toStandardText(key), value: String(value) }))
 
 

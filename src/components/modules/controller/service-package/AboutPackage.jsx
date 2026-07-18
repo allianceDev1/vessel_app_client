@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbArrowUpRight, TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
+import { TbArrowUpRight, TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbHourglassLow, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
@@ -18,6 +18,9 @@ import FreezeUnfreeze from '../../../forms/controller/service-package/FreezeUnfr
 import ActivatePackage from '../../../forms/controller/service-package/ActivatePackage'
 import TokenTopUps from './TokenTopUps'
 import ServiceCancellation from '../../../forms/controller/service-package/ServiceCancellation'
+import ForceExpire from '../../../forms/controller/service-package/ForceExpire'
+import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
+import { IoIosArrowDown } from 'react-icons/io'
 
 
 const AboutPackage = () => {
@@ -34,6 +37,16 @@ const AboutPackage = () => {
         },
         staleTime: 60_000
     })
+
+    const dropdownOptions = [
+        {
+            items: [
+                { label: 'Freeze', icon: <TbSnowflake />, theme: "danger", onClick: () => openFreezeUnFreezeModel('FREEZE') },
+                { label: 'Force Expire', icon: <TbHourglassLow />, theme: "danger", onClick: () => openForceExpire() }
+            ]
+        }
+    ]
+
 
     const openPackageExtensionModel = () => {
         dispatch(modal.push({
@@ -74,6 +87,13 @@ const AboutPackage = () => {
         }))
     }
 
+    const openForceExpire = () => {
+        dispatch(modal.push({
+            title: "Package Force Expire",
+            body: <ForceExpire packageSrlNo={serial_number} />
+        }))
+    }
+
     if (isLoading) {
         return <div>
             <SkeletonGrid rows={4} columns={3} height={'60px'} gap={'10px'} responsive={{
@@ -104,8 +124,6 @@ const AboutPackage = () => {
                 {user?.allowed_origins?.includes('vessel_c_admin') && <>
                     {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
                         onClick={openActivationModel} />}
-                    {data?.package_status === 2 && <Button icon={<TbSnowflake />} label={'Freeze'} size='small' severity={'danger'} rounded style={{ width: '100px' }}
-                        onClick={() => openFreezeUnFreezeModel('FREEZE')} />}
                     {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
                         onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
                 </>}
@@ -117,6 +135,18 @@ const AboutPackage = () => {
                 </>}
                 {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
                     onClick={openTopUpsHistoryModel} />}
+
+                {data?.package_status === 2 && user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown button={{
+                    icon: <IoIosArrowDown />,
+                    label: 'Action',
+                    size: "small",
+                    rounded: true,
+                    outlined: true,
+                    style: { width: '100px' }
+                }}
+                    list={dropdownOptions}
+                />}
+
             </div>
             <div className="reg-content">
                 <div className="list">
@@ -151,6 +181,12 @@ const AboutPackage = () => {
                         <p className='label'>Package Duration</p>
                         <div>
                             <p className='text-value'>{isoToDDMonYYYY(data?.start_date)} to {isoToDDMonYYYY(data?.expire_date)} ( {getIsoDayDifference(new Date(data?.expire_date), new Date(data?.start_date))} Days )</p>
+                        </div>
+                    </div>}
+                    {data?.expired_at && <div className="item">
+                        <p className='label'>Package Expired At</p>
+                        <div>
+                            <p className='text-value'>{isoToDDMonYYYY(data?.expired_at)}</p>
                         </div>
                     </div>}
                     <div className="item">

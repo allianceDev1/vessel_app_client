@@ -98,6 +98,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
                     onCut={(e) => e.preventDefault()}
                     onDrop={(e) => e.preventDefault()}
                     onContextMenu={(e) => e.preventDefault()}
+                    autoComplete={'off'}
                     onKeyDown={(e) => {
                         if (
                             (e.ctrlKey || e.metaKey) &&

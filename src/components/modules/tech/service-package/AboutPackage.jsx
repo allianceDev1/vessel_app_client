@@ -82,6 +82,12 @@ const AboutPackage = () => {
                             <p className='text-value'>{isoToDDMonYYYY(data?.start_date)} to {isoToDDMonYYYY(data?.expire_date)} ( {getIsoDayDifference(new Date(data?.expire_date), new Date(data?.start_date))} Days )</p>
                         </div>
                     </div>
+                    {data?.expired_at && <div className="item">
+                        <p className='label'>Package Expired At</p>
+                        <div>
+                            <p className='text-value'>{isoToDDMonYYYY(data?.expired_at)}</p>
+                        </div>
+                    </div>}
                     <div className="item">
                         <p className='label'>Tokens & Remaining</p>
                         <div>

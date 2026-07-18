@@ -1,7 +1,7 @@
 import React from 'react'
 import './style.scss'
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png'
-import {  TbRefresh } from 'react-icons/tb'
+import { TbRefresh } from 'react-icons/tb'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../api'
 import { useParams } from 'react-router-dom'
@@ -40,7 +40,7 @@ const ServiceJobList = () => {
   })
 
   const downloadAction = async (type, id) => {
-  
+
     const key = generateUniqueId(6)
 
     try {
@@ -102,7 +102,7 @@ const ServiceJobList = () => {
         </div>}
 
         {/* Success */}
-        <div className="content-border">
+        {data?.success && <div className="content-border">
           <div className="head">
             <p>Your service registration no</p>
             <h4>{data?.reg_no}</h4>
@@ -150,7 +150,7 @@ const ServiceJobList = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div >
   )

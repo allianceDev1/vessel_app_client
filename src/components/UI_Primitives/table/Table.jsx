@@ -39,10 +39,12 @@ function useTableUrlState(tableKey = 'table') {
     const sorting = sortBy ? [{ id: sortBy, desc: sortDir === 'desc' }] : []
 
     const setParam = useCallback((updates) => {
+
         setSearchParams(prev => {
             const next = new URLSearchParams(prev)
             Object.entries(updates).forEach(([k, v]) => {
                 const key = `${tableKey}_${k}`
+
                 if (v === '' || v === null || v === undefined) {
                     next.delete(key)
                 } else {
@@ -183,17 +185,12 @@ const Table = ({
         pageCount: isServerMode ? Math.ceil(serverTotal / pageSize) : undefined,
 
         // ── Handlers ─────────────────────────────────────────────────────────
-        onPaginationChange: (updater) => {
-            // TanStack calls this with either a value or an updater function
-            const prev = { pageIndex: page, pageSize }
-            const next = typeof updater === 'function' ? updater(prev) : updater
-            if (next.pageIndex !== prev.pageIndex) {
-                setPage(next.pageIndex)
-            }
-            if (next.pageSize !== prev.pageSize) {
-                setPageSize(next.pageSize)
-            }
-        },
+        onPaginationChange: isServerMode
+            ? undefined : (updater) => {
+                // TanStack calls this with either a value or an updater function
+                const prev = { pageIndex: page, pageSize }
+                const next = typeof updater === 'function' ? updater(prev) : updater
+            },
         onGlobalFilterChange: (val) => {
             if (effectiveSearchMode === 'client') setSearch(val)
         },
@@ -238,6 +235,7 @@ const Table = ({
     useEffect(() => {
         setRowSelection({})
     }, [page, pageSize])
+
 
     return (
         <div className="ui-tanstack-table-div">

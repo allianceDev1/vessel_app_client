@@ -13,6 +13,7 @@ const SubscriptionTable = () => {
 
   const columnVisibility = {
     'Product Id': false,
+    'Expired At': false,
   }
 
   const tableColumns = [
@@ -24,6 +25,7 @@ const SubscriptionTable = () => {
     { header: 'Product Id', accessorKey: 'Product Id' },
     { header: 'Start Date', accessorKey: 'Start Date' },
     { header: 'Expire Date', accessorKey: 'Expire Date' },
+    { header: 'Expired At', accessorKey: 'Expired At' },
     { header: 'Plan', accessorKey: 'Plan' }
   ]
 
@@ -35,6 +37,7 @@ const SubscriptionTable = () => {
     'Product Id': 'product_id',
     'Start Date': 'start_date',
     'Expire Date': 'expire_date',
+    'Expired At': 'expired_at',
     'Plan': 'plan_amount'
   })[id] || id
 
@@ -76,6 +79,7 @@ const SubscriptionTable = () => {
         'Product Id': item.product_id,
         'Start Date': item.start_date ? isoToDDMonYYYY(new Date(item.start_date)) : '',
         'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
+        'Expired At': item.expired_at ? isoToDDMonYYYY(new Date(item.expired_at)) : '',
         'Plan': `₹ ${(item.plan_amount).toLocaleString('en-IN')}`,
         _rowStyle: { cursor: 'pointer' },
         _rowNavigateUrl: `/controller/service-package/${item.serial_number}/about`,
