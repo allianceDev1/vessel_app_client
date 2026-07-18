@@ -11,7 +11,7 @@ import { originCategories } from '../../../../assets/javascript/pre_data/product
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
-const UpdateProduct = ({ data, productId, customerId }) => {
+const UpdateProduct = ({ data, productId }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
@@ -50,7 +50,7 @@ const UpdateProduct = ({ data, productId, customerId }) => {
             await api.vfCv2Axios.put(`/product/${productId}`, form)
 
             queryClient.refetchQueries({
-                queryKey: ['controller_customer_product_info', customerId, productId],
+                queryKey: ['controller_customer_product_info', productId],
             })
 
             dispatch(modal.pull.all())
@@ -86,9 +86,9 @@ const UpdateProduct = ({ data, productId, customerId }) => {
                     onChange={handleChange} options={[{}, ...originCategories?.map(i => ({ label: toStandardText(i), value: i }))]} />
                 <Select label={'Installation Mode'} name={'installation_mode'} options={[{}, ...resourcesData]} required
                     onChange={handleChange} value={form?.installation_mode} />
-                <InputText label={'Product Warranty Start Date'} name={'wr_start_date'} value={form?.wr_start_date} required
+                <InputText label={'Product Warranty Start Date'} name={'wr_start_date'} value={form?.wr_start_date}
                     onChange={handleChange} type='date' />
-                <InputText label={'Product Warranty Period'} name={'wr_period'} value={form?.wr_period} required
+                <InputText label={'Product Warranty Period'} name={'wr_period'} value={form?.wr_period}
                     onChange={handleChange} type='number' />
                 <Button label={'Update Product'} rounded severity={'primary'} spinIcon={loading} disabled={loading} />
             </form>

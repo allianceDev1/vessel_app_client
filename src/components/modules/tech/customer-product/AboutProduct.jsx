@@ -60,12 +60,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Product Id & Status</p>
-                        <div style={{ display: 'flex', gap: '15px' }}>
+                        <p className='label'>Product Id</p>
+                        <div>
                             <p className='text-value'>{data?.product_id} </p>
-                            {data?.product_active
-                                ? <Badge value={'Connected'} severity={'success'} />
-                                : <Badge value={'Disconnected'} severity={'danger'} />}
                         </div>
                     </div>
                     <div className="item">
@@ -78,12 +75,6 @@ const AboutProduct = () => {
                         <p className='label'>Product Type & Origin</p>
                         <div>
                             <p className='text-value'>{toStandardText(data?.product_type)} - {toStandardText(data?.origin_category)}</p>
-                        </div>
-                    </div>
-                    <div className="item">
-                        <p className='label'>SKU / Model No</p>
-                        <div>
-                            <p className='text-value'>{data?.sku}</p>
                         </div>
                     </div>
                     <div className="item">

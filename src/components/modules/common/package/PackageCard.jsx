@@ -10,7 +10,7 @@ const PackageCard = ({ data, redirectUrl }) => {
     const tempColor = '#000000'
 
 
-    const packageProgress = getPackageProgress({ startDate: data?.start_date, endDate: data?.expire_date })
+    const packageProgress = getPackageProgress({ startDate: data?.start_date, endDate: data?.expire_date, currentDate: data?.expired_at ? data?.expired_at : new Date() })
 
     return (
         <div className="package-card-container" style={{
@@ -42,7 +42,7 @@ const PackageCard = ({ data, redirectUrl }) => {
                     </div>
                     <div className="date-graph">
                         <div className="date-status">
-                            <p>{isoToDDMonYYYY(data?.start_date)} to {isoToDDMonYYYY(data?.expire_date)}</p>
+                            {data?.start_date ? <p>{isoToDDMonYYYY(data?.start_date)} to {isoToDDMonYYYY(data?.expire_date)}</p> : <p>Date not assigned</p>}
                             <p className={PACKAGE_STATUSES_TEXT[data?.package_status] || 'Pending'}>
                                 {PACKAGE_STATUSES_TEXT[data?.package_status]}
                             </p>

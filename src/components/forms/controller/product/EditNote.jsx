@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
-const EditNote = ({ note, productId, customerId }) => {
+const EditNote = ({ note, productId }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
     const [newNote, setNewNote] = useState(note)
@@ -22,7 +22,7 @@ const EditNote = ({ note, productId, customerId }) => {
             await api.vfCv2Axios.put(`/product/${productId}/note`, { note: newNote })
 
             queryClient.refetchQueries({
-                queryKey: ['controller_customer_product_info', customerId, productId],
+                queryKey: ['controller_customer_product_info', productId],
             })
 
             dispatch(modal.pull.all())

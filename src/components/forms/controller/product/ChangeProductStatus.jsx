@@ -7,7 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
 
-const ChangeProductStatus = ({ status, productId, customerId }) => {
+const ChangeProductStatus = ({ status, productId }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const [text, setText] = useState('');
@@ -24,7 +24,7 @@ const ChangeProductStatus = ({ status, productId, customerId }) => {
       const res = await api.vfCv2Axios.post(`/product/${productId}/status`, { status })
 
       queryClient.refetchQueries({
-        queryKey: ['controller_customer_product_info', customerId, productId],
+        queryKey: ['controller_customer_product_info', productId],
       })
 
       dispatch(modal.pull.all())
@@ -69,6 +69,7 @@ const ChangeProductStatus = ({ status, productId, customerId }) => {
           onCut={(e) => e.preventDefault()}
           onDrop={(e) => e.preventDefault()}
           onContextMenu={(e) => e.preventDefault()}
+          autoComplete={'off'}
           onKeyDown={(e) => {
             if (
               (e.ctrlKey || e.metaKey) &&

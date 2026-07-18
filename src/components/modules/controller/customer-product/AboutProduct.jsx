@@ -66,28 +66,28 @@ const AboutProduct = () => {
     const openStatusChangeModel = (status) => {
         dispatch(modal.push({
             title: status === 'DISCONNECT' ? 'Disconnect the Product' : 'Reconnect the Product',
-            body: <ChangeProductStatus status={status} productId={product_id} customerId={data?.customer_id} />
+            body: <ChangeProductStatus status={status} productId={product_id} />
         }))
     }
 
     const openUpdateProductModel = () => {
         dispatch(modal.push({
             title: 'Update Product Details',
-            body: <UpdateProduct data={data} productId={product_id} customerId={data?.customer_id} />
+            body: <UpdateProduct data={data} productId={product_id} />
         }))
     }
 
     const openUpdateNoteModel = () => {
         dispatch(modal.push({
             title: 'Edit Note',
-            body: <EditNote note={data?.note} productId={product_id} customerId={data?.customer_id} />
+            body: <EditNote note={data?.note} productId={product_id} />
         }))
     }
 
     const openUpdateServiceDateModel = () => {
         dispatch(modal.push({
             title: 'Change Service Date',
-            body: <UpdateServiceDate data={data} productId={product_id} customerId={data?.customer_id} />
+            body: <UpdateServiceDate data={data} productId={product_id} />
         }))
     }
 
