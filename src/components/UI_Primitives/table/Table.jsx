@@ -157,26 +157,44 @@ const Table = ({
     // ── Decide what data the table renders ──────────────────────────────────
     // Server mode: data comes from API, pagination is manual (manualPagination: true)
     // Client mode: data is the full prop array, TanStack handles pagination
-    const tableData = isServerMode ? serverData : clientData
+    const tableData = React.useMemo(() => {
+        return isServerMode ? serverData : clientData;
+    }, [isServerMode, serverData, clientData]);
+
+    const tableColumns = React.useMemo(() => [
+        ...(rowCheckBox ? [checkboxColumn] : []),
+        ...columns,
+    ], [columns, rowCheckBox]);
+
+    const tableState = React.useMemo(() => ({
+        pagination: {
+            pageIndex: page,
+            pageSize,
+        },
+        globalFilter:
+            effectiveSearchMode === 'client'
+                ? search
+                : undefined,
+        columnVisibility,
+        rowSelection,
+        sorting,
+    }), [
+        page,
+        pageSize,
+        search,
+        effectiveSearchMode,
+        columnVisibility,
+        rowSelection,
+        sorting,
+    ]);
 
     // ── Build TanStack table ─────────────────────────────────────────────────
     const table = useReactTable({
         data: tableData,
-        columns: [
-            ...(rowCheckBox ? [checkboxColumn] : []),
-            ...columns,
-        ],
+        columns: tableColumns,
 
         // ── State ────────────────────────────────────────────────────────────
-        state: {
-            // In server mode: pagination is controlled manually via URL
-            // In client mode: TanStack manages pagination internally but we still mirror URL
-            pagination: { pageIndex: page, pageSize },
-            globalFilter: effectiveSearchMode === 'client' ? search : undefined,
-            columnVisibility,
-            rowSelection,
-            sorting,
-        },
+        state: tableState,
 
         // ── Server-side flags ────────────────────────────────────────────────
         // When true, TanStack won't slice data itself — your API does it

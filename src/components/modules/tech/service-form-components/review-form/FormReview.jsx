@@ -65,18 +65,6 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
                 <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
             </div>
 
-            {/* Verification */}
-            <div className="verification-container">
-                <div>
-                    <TbShieldCheckFilled />
-                    <p>Service verified by {toStandardText(verification?.verification_type)}</p>
-                </div>
-                <div>
-                    {verification?.verification_type !== 'OTP' &&
-                        <p className='action' onClick={() => setVerificationType('OTP')}>Use OTP ?</p>}
-                </div>
-            </div>
-
             {/* Loading */}
             {loading === 'fetch' && <SkeletonGrid
                 rows={2}

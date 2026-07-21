@@ -36,6 +36,7 @@ const ServicesUnderProductPackage = React.lazy(() => import('../components/modul
 const ServiceJob = React.lazy(() => import('../pages/technician/service-job/ServiceJob'))
 const ProductLogInfo = React.lazy(() => import('../components/modules/tech/service-job/ProductLogInfo'))
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/tech/service-job/PurchaseLogInfo'))
+const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/SelfCloseForm'))
 
 
 
@@ -64,6 +65,7 @@ const Technician = () => {
           {/* Service */}
           <Route path='/service/attend-work' element={<PrivateRoute element={<ServiceForm />} isAuthenticated={isAuthenticated} />} />
           <Route path='/service/work-success' element={<PrivateRoute element={<ServiceCompleted />} isAuthenticated={isAuthenticated} />} />
+          <Route path='/service/self-close' element={<PrivateRoute element={<SelfCloseForm />} isAuthenticated={isAuthenticated} />} />
 
           {/* More */}
           <Route path='/more' element={<PrivateRoute element={<More />} isAuthenticated={isAuthenticated} />} />

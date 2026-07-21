@@ -37,7 +37,7 @@ const ServiceSuccess = forwardRef(({ data }, ref) => {
 
         if (navigator.share && navigator.canShare({ files: [file] })) {
             await navigator.share({
-                title: "Service Completed",
+                title: data?.self_close ? "Service Closed" : "Service Completed",
                 text: `🎉 Your service has been completed successfully!
 
 Thank you for choosing Alliance Water Solutions. We're committed to providing reliable water purification solutions and exceptional customer support.
@@ -79,7 +79,7 @@ Have a great day! 💙`,
 
             {/* Title */}
             <div className="title-section">
-                <div className="title">Service Completed</div>
+                <div className="title">{data?.self_close ? "Service Closed" : 'Service Completed'}</div>
                 <div className="subtitle">The service has been successfully closed
                     <br></br> on {data?.date}
                 </div>
@@ -87,9 +87,9 @@ Have a great day! 💙`,
 
             {/* Service Serial Number Card */}
             <div className="card">
-                <div className="card-title">Service Serial Number</div>
+                <div className="card-title">{data?.self_close ? "Service Reg No" : 'Service Serial Number'}</div>
                 <div className="service-number">
-                    <span className="service-value">{data?.serviceNumber}</span>
+                    <span className="service-value">{data?.self_close ? data?.registration_id : data?.serviceNumber}</span>
                 </div>
             </div>
 

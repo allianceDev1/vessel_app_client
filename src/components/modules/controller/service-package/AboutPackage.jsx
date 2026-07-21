@@ -21,6 +21,7 @@ import ServiceCancellation from '../../../forms/controller/service-package/Servi
 import ForceExpire from '../../../forms/controller/service-package/ForceExpire'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
 import { IoIosArrowDown } from 'react-icons/io'
+import ClearOverdue from '../../../forms/controller/service-package/ClearOverdue'
 
 
 const AboutPackage = () => {
@@ -94,6 +95,13 @@ const AboutPackage = () => {
         }))
     }
 
+    const openClearOverdueModel = () => {
+        dispatch(modal.push({
+            title: "Clear from overdue list",
+            body: <ClearOverdue packageSrlNo={serial_number} />
+        }))
+    }
+
     if (isLoading) {
         return <div>
             <SkeletonGrid rows={4} columns={3} height={'60px'} gap={'10px'} responsive={{
@@ -130,6 +138,8 @@ const AboutPackage = () => {
                 {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && <>
                     {data?.package_status === 2 && <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
                         outlined onClick={() => openCancellationModal()} />}
+                    {data?.is_blacklisted && <Button label={'Clear Overdue'} severity={'info'} size='small' rounded style={{ width: '140px' }}
+                        onClick={openClearOverdueModel} />}
                     {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
                         onClick={openPackageExtensionModel} />}
                 </>}

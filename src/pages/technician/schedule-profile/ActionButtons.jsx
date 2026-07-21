@@ -145,7 +145,12 @@ const ActionButtons = ({ regData, setRegData }) => {
             message: 'Are you sure you want to self close the work ?',
             accept: {
                 onClick: () => {
-                    
+                    navigate('/tech/service/self-close', {
+                        state: {
+                            customer_id: regData?.customer?.customer_id,
+                            registration_id: regData?.registration_id,
+                        }
+                    })
                 }
             }
         }))
