@@ -37,8 +37,7 @@ const ServiceCompleted = () => {
     }
 
     useEffect(() => {
-        if (!location?.state?.serviceNumber || !location?.state?.date
-            || !location?.state?.customerName || !location?.state?.customerId) {
+        if (!location?.state?.date || !location?.state?.customerName || !location?.state?.customerId) {
             closePage()
             return;
         }

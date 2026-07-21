@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import RegistrationInfo from '../../../components/modules/controller/registered-service/RegistrationInfo';
-// import VisitInfo from '../../../components/modules/controller/registered-service/VisitInfo';
-// import RegistrationRoute from '../../../components/modules/controller/registered-service/RegistrationRoute';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TbArrowUpRight, TbCalendarUp, TbCalendarX, TbChevronDown, TbExclamationCircle, TbHomeSearch, TbMessage2Plus, TbPencil, TbX } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
@@ -219,7 +217,7 @@ const RegisteredView = () => {
 
     if ([1, 2, 3].includes(data?.status?.status)) {
       actions[1].items.push(
-        { icon: <TbX />, label: 'Registration', theme: 'danger', onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) }
+        { icon: <TbX />, label: 'Registration', theme: 'danger', disabled: data?.last_visit?.service_srl_no ? true : false, onClick: () => openCancelRegistrationPopUp({ registrationId: reg_no }) }
       )
     }
 
