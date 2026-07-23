@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button';
-import { TbFilter, TbPlus, TbReport } from 'react-icons/tb';
+import { TbFilter, TbPlus } from 'react-icons/tb';
 import AddCustomerProduct from '../../../components/forms/controller/product/AddCustomerProduct';
 import FilterCustomerProduct from '../../../components/forms/controller/search-customer/FilterCustomerProduct';
 

@@ -151,6 +151,7 @@ const Table = ({
         staleTime: 30_000, // 30s before refetch
     })
 
+    // eslint-disable-next-line
     const serverData = serverResult?.data ?? []
     const serverTotal = typeof serverResult?.total === 'number' ? serverResult.total : Number(serverResult?.total ?? 0)
 
@@ -207,6 +208,7 @@ const Table = ({
             ? undefined : (updater) => {
                 // TanStack calls this with either a value or an updater function
                 const prev = { pageIndex: page, pageSize }
+                // eslint-disable-next-line
                 const next = typeof updater === 'function' ? updater(prev) : updater
             },
         onGlobalFilterChange: (val) => {

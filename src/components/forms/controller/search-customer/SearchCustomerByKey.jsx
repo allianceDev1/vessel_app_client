@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import './search-customer-by-key.scss'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../../api';
 import { TbGrid3X3, TbLetterCase, TbNumber123 } from 'react-icons/tb';
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';

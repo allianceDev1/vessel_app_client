@@ -3,7 +3,7 @@ import './area-list.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { IoIosArrowDown } from 'react-icons/io';
-import { TbCircleX, TbDownload, TbPencil, TbTrash } from 'react-icons/tb';
+import { TbCircleX, TbPencil, TbTrash } from 'react-icons/tb';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../../api';
 import Table from '../../../components/UI_Primitives/table/Table'

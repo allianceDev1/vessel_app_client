@@ -40,6 +40,7 @@
             border-radius: 50px;
             margin-top: 15px;
             overflow: hidden;
+            position: relative;
 
             .progress {
                 background-color: var(--color-primary);
@@ -47,6 +48,41 @@
                 border-radius: 50px;
                 width: 0%;
                 transition: width 0.2s ease-in-out;
+            }
+
+              .spin {
+                background-color: var(--color-primary);
+                height: 12px;
+                border-radius: 50px;
+                width: 30%;
+                transition: width 0.2s ease-in-out;
+                animation: loaderMove 2s cubic-bezier(.4, 0, .2, 1) infinite;
+                position: absolute;
+            }
+
+            @keyframes loaderMove {
+                0% {
+                    left: -35%;
+                    width: 20%;
+                }
+
+                25% {
+                    width: 35%;
+                }
+
+                50% {
+                    left: 100%;
+                    width: 20%;
+                }
+
+                75% {
+                    width: 35%;
+                }
+
+                100% {
+                    left: -35%;
+                    width: 20%;
+                }
             }
         }
 

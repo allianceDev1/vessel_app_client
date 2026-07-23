@@ -8,7 +8,7 @@ import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { upcomingServiceMiniReport } from '../../../utils/services/chart_service'
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
-import { TbAlertCircle, TbAlertCircleOff, TbPaperclip } from 'react-icons/tb'
+import { TbAlertCircle } from 'react-icons/tb'
 
 const UpcomingReport = ({ data, loading, error, updatedAt }) => {
   const [monthChart, setMonthChart] = useState()

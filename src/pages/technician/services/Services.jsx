@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './services.scss';
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
@@ -20,7 +20,6 @@ const Services = () => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [filterOptions, setFilterOptions] = useState({})
 
 
     const fetchDatas = async ({ pageParam = 0 }) => {

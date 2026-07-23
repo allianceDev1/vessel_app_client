@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import './customer-mini-report.scss'
 import { TbMoodSadDizzy, TbMoodSearch } from 'react-icons/tb'
 import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'

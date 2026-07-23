@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './service-category.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
@@ -15,8 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 
 const ServiceCategory = () => {
     const dispatch = useDispatch();
-    const [loading, setLoading] = useState('fetch')
-
+   
     const { user } = useSelector((state) => state.user)
 
 

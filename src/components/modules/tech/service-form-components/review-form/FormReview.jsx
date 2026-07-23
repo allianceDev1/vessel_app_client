@@ -6,17 +6,16 @@ import { api } from '../../../../../api';
 import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice';
 import SkeletonGrid from '../../../../UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../../UI_Primitives/ui-states/ErrorState';
-import { TbFile, TbShieldCheckFilled } from 'react-icons/tb';
+import { TbFile } from 'react-icons/tb';
 import BillSummery from '../BillSummery';
 import Badge from '../../../../UI_Primitives/badge/Badge';
 import Button from '../../../../UI_Primitives/buttons/Button';
-import { toStandardText } from '../../../../../utils/helpers/text-formatting';
 import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
 
 
 const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
     const dispatch = useDispatch();
-    const { verification, serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
     const [error, setError] = useState({ error: false, title: null, message: null })
 
