@@ -3,9 +3,9 @@ import InputText from '../../../UI_Primitives/inputs/InputText'
 import Button from '../../../UI_Primitives/buttons/Button';
 import { TbCircleCheck, TbFlagShare } from 'react-icons/tb';
 import { api } from '../../../../api';
-import { useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+
 
 const TransferOwnership = ({ status, productId, customerId }) => {
     const [form, setForm] = useState({
@@ -15,7 +15,6 @@ const TransferOwnership = ({ status, productId, customerId }) => {
         reason: ''
     })
     const dispatch = useDispatch();
-    const queryClient = useQueryClient();
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(false)
 
@@ -36,7 +35,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
         }
 
         try {
-            const res = await api.vfCv2Axios.post(`/product/transfer`, form)
+           await api.vfCv2Axios.post(`/product/transfer`, form)
 
             dispatch(modal.pull.all())
             dispatch(toast.push({
@@ -106,7 +105,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
                 <Button
                     label={'Transfer Ownership'}
                     icon={<TbFlagShare />}
-                    severity={'danger'} spinIcon={loading}
+                    severity={'danger'} 
                     rounded disabled={text !== "TRANSFER" || !form?.to_customer_id || !form?.reason}
                     spinIcon={loading}
                 />

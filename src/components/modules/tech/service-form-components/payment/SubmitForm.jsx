@@ -245,7 +245,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 <h4>{apiStatus || 'Wait a moment...'}</h4>
 
                 <div className="progress-bar">
-                    <div className="progress" style={{ width: `${apiProgress}%` }}></div>
+                    <div className={apiProgress ? "progress" : "progress spin"} style={{ width: `${apiProgress}%` }}></div>
                 </div>
 
                 <p>Your request is currently being processed. <br></br>

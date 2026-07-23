@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Verification from '../service-form-components/review-form/Verification'
 import ReviewForm from '../self-close-form-components/review-form/FormReview'
-import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
 import BillReview from '../self-close-form-components/review-form/BillReview'
+
+
 
 const Review = ({ page, review, payment, setReview, setActivePage }) => {
     const [openedBill, setOpenedBill] = useState({})
-
 
 
     return (

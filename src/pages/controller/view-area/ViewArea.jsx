@@ -3,7 +3,7 @@ import './view-area.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import Button from '../../../components/UI_Primitives/buttons/Button';
-import { TbDots, TbMapX, TbPencil, TbPlus, TbReport, TbTrash } from 'react-icons/tb';
+import { TbDots, TbMapX, TbPencil, TbPlus, TbTrash } from 'react-icons/tb';
 import { useParams } from 'react-router-dom';
 import { api } from '../../../api';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';

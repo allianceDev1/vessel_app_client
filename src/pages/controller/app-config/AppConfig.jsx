@@ -20,7 +20,7 @@ const AppConfig = () => {
     }, [])
 
 
-    const { data, isLoading, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ['controller_access'],
         queryFn: async () => {
             return await api.ttPv2Axios.get('/worker/account/filter?origins=vessel_c_reader,vessel_c_writer,vessel_c_admin')

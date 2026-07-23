@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './service-job.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import { TbArrowUpRight, TbChevronDown, TbClipboardText, TbDownload, TbPasswordFingerprint, TbRefresh } from 'react-icons/tb';
