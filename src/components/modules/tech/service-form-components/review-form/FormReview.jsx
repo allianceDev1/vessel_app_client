@@ -6,16 +6,17 @@ import { api } from '../../../../../api';
 import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice';
 import SkeletonGrid from '../../../../UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../../UI_Primitives/ui-states/ErrorState';
-import { TbFile } from 'react-icons/tb';
+import { TbFile, TbShieldCheckFilled } from 'react-icons/tb';
 import BillSummery from '../BillSummery';
 import Badge from '../../../../UI_Primitives/badge/Badge';
 import Button from '../../../../UI_Primitives/buttons/Button';
 import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
+import { toStandardText } from '../../../../../utils/helpers/text-formatting';
 
 
 const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
     const dispatch = useDispatch();
-    const { serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings, review, verification } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
     const [error, setError] = useState({ error: false, title: null, message: null })
 
@@ -83,6 +84,20 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
 
             {/* Content */}
             {!loading && !error?.error && <div className='tech-sf-review-page'>
+
+                {/* Verification */}
+                <div className="verification-container">
+                    <div>
+                        <TbShieldCheckFilled />
+                        <p>Service verified by {toStandardText(verification?.verification_type)}</p>
+                    </div>
+                    <div>
+                        {verification?.verification_type !== 'OTP' &&
+                            <p className='action' onClick={() => setVerificationType('OTP')}>Use OTP ?</p>}
+                    </div>
+                </div>
+
+
                 {/* Bill Summery */}
                 <BillSummery />
 

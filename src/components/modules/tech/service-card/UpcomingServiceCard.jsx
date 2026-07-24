@@ -18,7 +18,14 @@ const UpcomingServiceCard = ({ data }) => {
 
     const handleCallClick = (e, number) => {
         e.stopPropagation();
-        window.open(`tel:${number}`);
+
+        if (!number) return;
+
+        const formattedNumber = String(number).trim().startsWith("+")
+            ? String(number).trim()
+            : `+${String(number).trim()}`;
+
+        window.open(`tel:${formattedNumber}`);
     };
 
     const handleWhatsappClick = (e, number) => {
