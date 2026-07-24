@@ -7,8 +7,13 @@ const Contacts = ({ contacts: { primary, secondary, whatsapp, additional } }) =>
     // const [copied, setCopied] = useState(null);
 
     const handleCallClick = (number) => {
-        if ((number?.length || 0) < 5) return;
-        window.open(`tel:${number}`);
+        if (!number) return;
+
+        const formattedNumber = String(number).trim().startsWith("+")
+            ? String(number).trim()
+            : `+${String(number).trim()}`;
+
+        window.open(`tel:${formattedNumber}`);
     };
 
     const handleWhatsappClick = (number) => {
