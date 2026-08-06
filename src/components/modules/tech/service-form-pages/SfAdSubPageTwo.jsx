@@ -66,13 +66,13 @@ const SfAdSubPageTwo = ({ page, categories, customerProducts, regData, spareList
                 const inForm = productInForm?.work?.components_list?.filter(s => s?.spare_id === i?.spare_id && s?.spare_type === workMenu?.type)?.[0]
                 if (inForm) return inForm
 
-                const spareInCustomer = product?.product?.spares?.filter(s => s?.spare_uuid === i?.spare_uuid)?.[0]
+                const spareInCustomer = product?.product?.spares?.find(s => s?.spare_uuid === i?.spare_uuid)
                 const spareInRemoveList = productInForm?.work?.removed_components_list?.filter(s => s?.spare_uuid === i?.spare_uuid && s?.spare_type === workMenu?.type)?.[0] ? true : false
-
                 const warrantySpare = spareInCustomer?.wr_expire_date &&
                     normalizeDate(new Date(spareInCustomer?.wr_expire_date)) >= normalizeDate(new Date()) ? true : false
 
-                const { reason, ...amountObj } = findSpareTypeAmount(i, "SELLING_RATE", warrantySpare)
+
+                const { reason, ...amountObj } = findSpareTypeAmount(i, "SELLING_RATE", null, warrantySpare)
                     || { list_price: 0, charged: 0, ledger_cost: 0 }
 
                 let obj = {
