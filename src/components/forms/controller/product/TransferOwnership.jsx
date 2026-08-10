@@ -35,7 +35,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
         }
 
         try {
-           await api.vfCv2Axios.post(`/product/transfer`, form)
+            await api.vfCv2Axios.post(`/product/transfer`, form)
 
             dispatch(modal.pull.all())
             dispatch(toast.push({
@@ -86,8 +86,13 @@ const TransferOwnership = ({ status, productId, customerId }) => {
                 <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)' }}>
                     To proceed, Type <b>TRANSFER</b> in the field below to confirm.
                 </p>
-                <InputText label={'Confirmation'} name={'verify_text'} value={text}
-                    required onChange={(e) => setText(e.target.value)} rightIcon={text === 'TRANSFER' && <TbCircleCheck />}
+                <InputText
+                    label={'Confirmation'}
+                    name={'verify_text'}
+                    value={text}
+                    required
+                    onChange={(e) => setText(e.target.value?.toUpperCase())}
+                    rightIcon={text === 'TRANSFER' && <TbCircleCheck />}
                     onPaste={(e) => e.preventDefault()}
                     onCopy={(e) => e.preventDefault()}
                     onCut={(e) => e.preventDefault()}
@@ -105,7 +110,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
                 <Button
                     label={'Transfer Ownership'}
                     icon={<TbFlagShare />}
-                    severity={'danger'} 
+                    severity={'danger'}
                     rounded disabled={text !== "TRANSFER" || !form?.to_customer_id || !form?.reason}
                     spinIcon={loading}
                 />

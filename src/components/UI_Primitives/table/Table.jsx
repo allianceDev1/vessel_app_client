@@ -210,6 +210,7 @@ const Table = ({
                 const prev = { pageIndex: page, pageSize }
                 // eslint-disable-next-line
                 const next = typeof updater === 'function' ? updater(prev) : updater
+                
             },
         onGlobalFilterChange: (val) => {
             if (effectiveSearchMode === 'client') setSearch(val)
