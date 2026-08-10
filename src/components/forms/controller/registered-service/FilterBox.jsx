@@ -55,6 +55,19 @@ const FilterBox = () => {
         staleTime: 30 * 60_000
     })
 
+    const {
+        data: techList,
+        isLoading: techLoading,
+        error: techError,
+    } = useQuery({
+        queryKey: ['vessel_staff_list', 'name_only'],
+        queryFn: async () => {
+            const res = await api.ttPv2Axios('/worker/account/list?nameOnly=Yes')
+            return res
+        },
+        staleTime: 10 * 60_000
+    })
+
     const handleChange = (e) => {
         setForm({
             ...form,
@@ -69,7 +82,7 @@ const FilterBox = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.status?.length && !form.city_id) {
+        if (!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.status?.length && !form.city_id && !form.technician_uuid) {
             return;
         }
 
@@ -83,6 +96,7 @@ const FilterBox = () => {
             form.status?.length ? next.set('status', form.status?.join(',')) : next.delete('status')
             form.city_id ? next.set('city_id', form.city_id) : next.delete('city_id')
             form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
+            form.technician_uuid ? next.set('technician_uuid', form.technician_uuid) : next.delete('technician_uuid')
             return next;
         })
 
@@ -115,14 +129,14 @@ const FilterBox = () => {
 
     return (
         <div className="filter-services-box-container">
-            {cityLoading &&
+            {(cityLoading || techLoading) &&
                 <SkeletonGrid rows={9} columns={1} height={'50px'} gap={'10px'} />}
 
-            {cityError &&
+            {(cityError || techError) &&
                 <ErrorState icon={<TbLocation />} message={'Resources fetching failed.'}
                     hight='300px' />}
 
-            {(!cityLoading && !cityError) &&
+            {(!cityLoading && !techLoading && !cityError && !techError) &&
                 <form action="" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleSubmit}>
 
                     <InputText label={'Reg No / Customer Id'} name={'id_key'} style={{ textTransform: "uppercase" }} type='text' value={form.id_key} onChange={handleChange} />
@@ -136,12 +150,15 @@ const FilterBox = () => {
                     <Select label={'City'} name={'city_id'} options={[{ label: '', value: '' }, ...(cityList || [])?.map((city) => ({ label: city.city_name, value: city.city_id }))]}
                         value={form.city_id} onChange={handleChange} />
 
+                    <Select label={'Technician'} name={'technician_uuid'} options={[{ label: '', value: '' }, ...(techList || [])?.map((worker) => ({ label: worker.full_name, value: worker.worker_uuid }))]}
+                        value={form.technician_uuid} onChange={handleChange} />
+
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <InputText label={'From Date'} name={'from_date'} type='date' value={form.from_date} onChange={handleChange}
-                            max={form.end_date} required={form.service_type || form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
+                            max={form.end_date} required={form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
 
                         <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
-                            min={form.from_date} required={form.service_type || form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
+                            min={form.from_date} required={form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
                     </div>
 
                     <ButtonGroup style={{ dispatch: "grid", }} rounded>
