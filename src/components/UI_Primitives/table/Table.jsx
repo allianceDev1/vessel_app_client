@@ -210,7 +210,7 @@ const Table = ({
                 const prev = { pageIndex: page, pageSize }
                 // eslint-disable-next-line
                 const next = typeof updater === 'function' ? updater(prev) : updater
-                
+
             },
         onGlobalFilterChange: (val) => {
             if (effectiveSearchMode === 'client') setSearch(val)
@@ -243,7 +243,19 @@ const Table = ({
         dispatch(modal.push({
             show: true,
             title: 'Edit Columns',
-            body: <ColumnsList table={table} columnVisibility={columnVisibility} columnListing={columnListing} />,
+            body: <ColumnsList
+                columns={tableColumns.map(c => ({
+                    id: c.id ?? c.accessorKey,
+                    enableHiding: c.enableHiding,
+                }))}
+                columnVisibility={columnVisibility}
+                columnListing={columnListing}
+                onToggle={(colId) =>
+                    setColumnVisibility(prev => ({
+                        ...prev,
+                        [colId]: !(prev[colId] ?? true),
+                    }))
+                } />,
         }))
     }
 
