@@ -236,3 +236,16 @@ export const addDurationToDate = (inputDate, duration) => {
 
     return result;
 }
+
+
+export const formatSecondsToHHMM = (totalSeconds) => {
+    totalSeconds = Math.floor(totalSeconds);
+
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+    return [
+        hours > 0 ? `${hours}h` : '',
+        minutes > 0 ? `${minutes}m` : ''
+    ].join('') || '0m';
+};

@@ -1,0 +1,65 @@
+.vms-quick-actions {
+
+
+  &__scroller {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scroll-snap-type: x proximity;
+    // hide scrollbar while keeping scroll behavior
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  &__icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 9999px;
+    background-color: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-medium);
+    color: var(--color-primary);
+    transition: transform 0.15s ease;
+
+    svg {
+      font-size: 23px;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--primary {
+      background-color: var(--color-primary);
+      border: none;
+      color: var(--color-primary-bg);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: center;
+    line-height: 1.2;
+  }
+}

@@ -1,0 +1,55 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+
+.vms-performance {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__title {
+    @include subTitleSmall();
+  }
+
+  &__card {
+    background-color: var(--background);
+    border: 1px solid var(--border-light);
+    border-radius: 1.5rem;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__tab {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: #0b1c30;
+    background-color: #e5eeff;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &--active {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 16px;
+      letter-spacing: 0.05em;
+      background-color: #39b8fd;
+      color: #004666;
+    }
+  }
+
+  &__chart {
+    position: relative;
+    width: 100%;
+    height: 160px;
+  }
+
+ 
+}
