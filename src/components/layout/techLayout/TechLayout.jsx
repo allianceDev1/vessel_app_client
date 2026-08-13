@@ -5,8 +5,9 @@ import env from '../../../config/env';
 import { IoChevronBack } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { TbCalendarStats, TbCategory2, TbHome, TbMenu2 } from 'react-icons/tb';
+import { TbCalendarWeek, TbDropletCheck, TbDropletHalf2, TbHome } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const TechLayout = ({ children }) => {
     const location = useLocation();
@@ -56,17 +57,17 @@ const TechLayout = ({ children }) => {
                         <TbHome />
                         <p>Home</p>
                     </div>
-                    <div className={`item ${activeSegment === 'schedules' && 'active'}`} onClick={() => navigate('/tech/schedules')}>
-                        <TbCalendarStats />
-                        <p>Schedules</p>
-                    </div>
                     <div className={`item ${activeSegment === 'services' && 'active'}`} onClick={() => navigate('/tech/services')}>
-                        <TbCategory2 />
+                        <TbDropletHalf2 />
                         <p>Services</p>
                     </div>
-                    <div className={`item ${activeSegment === 'more' && 'active'}`} onClick={() => navigate('/tech/more')}>
-                        <TbMenu2 />
-                        <p>More</p>
+                    <div className={`item ${activeSegment === 'schedules' && 'active'}`} onClick={() => navigate('/tech/schedules')}>
+                        <TbCalendarWeek />
+                        <p>Schedules</p>
+                    </div>
+                    <div className={`item ${activeSegment === 'completed' && 'active'}`} onClick={() => navigate(`/tech/completed?fl=Yes&from_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`)}>
+                        <TbDropletCheck />
+                        <p>Completed</p>
                     </div>
                 </div>
             </div>

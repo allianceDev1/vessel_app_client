@@ -58,7 +58,10 @@
      * Uses the same vibrant mid-shade as the light theme, but text color is white.
      */
     --color-primary: var(--color-primary-dark-500);
+    --color-primary-2: var(--color-primary-dark-200);
+    --color-primary-3: var(--color-primary-dark-300);
     --color-primary-6: var(--color-primary-dark-600);
+    --color-primary-8: var(--color-primary-dark-800);
     --color-primary-bg: var(--color-primary-dark-900);
     --color-primary-text: var(--color-primary-dark-600);
     --color-primary-hover: var(--color-primary-dark-400);
@@ -76,7 +79,7 @@
     --color-success-3: var(--color-success-dark-300);
     --color-success-6: var(--color-success-dark-600);
     --color-success-bg: var(--color-success-dark-900);
-    --color-success-text: var(--color-success-dark-100);
+    --color-success-text: var(--color-success-dark-300);
     --color-success-trans-33: color-mix(in srgb, var(--color-success-dark-300) 30%, transparent);
 
     /* Danger */

@@ -1,0 +1,146 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.vms-todays-report {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__title {
+    @include subTitleSmall();
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  &__tile {
+    background-color: var(--background);
+    border: 1px solid var(--border-light);
+    border-radius: 1rem;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__tile-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+    color: var(--text-primary);
+  }
+
+  &__tile-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--text-secondary-2);
+  }
+
+  &__summary {
+    grid-column: span 2;
+    background-color: var(--background);
+    border: 1px solid var(--border-light);
+    border-radius: 1.5rem;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__summary-col {
+    display: flex;
+    flex-direction: column;
+
+    &--right {
+      align-items: flex-end;
+    }
+  }
+
+  &__summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 32px;
+
+    &--success {
+      color: var(--color-success-text);
+    }
+  }
+
+  &__summary-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--text-secondary-2);
+  }
+
+  &__distribution {
+    padding-top: 12px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__distribution-title {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary-4);
+  }
+
+  &__bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__bar-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    font-size: 10px;
+    color: var(--text-secondary-2);
+    width: 40px;
+  }
+
+  &__bar-track {
+    flex: 1;
+    height: 8px;
+    background-color: var(--color-natural-trans-73);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+
+    &--work {
+      background-color: var(--color-primary-8);
+    }
+
+    &--travel {
+      background-color: var(--text-secondary-2);
+    }
+  }
+
+  &__bar-value {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    font-size: 10px;
+    color: var(--color-primary-8);
+    ;
+    text-align: right;
+    width: 48px;
+  }
+}
