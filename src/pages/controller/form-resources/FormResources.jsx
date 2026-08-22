@@ -25,7 +25,7 @@ const FormResources = () => {
     })
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Form Resources', note: "Form choice options list, create and update form resources." }))
+        dispatch(page.setTitle({ title: 'Form resources', note: "Form choice options list, create and update form resources." }))
 
         // eslint-disable-next-line
     }, [])

@@ -1,6 +1,6 @@
 {
-  "name": "vl_client",
-  "version": "2.0.0",
+  "name": "service_client",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "@piotr-cz/redux-persist-idb-storage": "^1.1.3",

@@ -1,0 +1,36 @@
+.create-update-rule-page-container {
+    margin-top: 20px;
+
+    .note-section {
+        margin-bottom: 15px;
+
+        p {
+            font-size: 13px;
+            color: var(--text-secondary-2);
+        }
+    }
+
+    form {
+        .rule-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .conditions-list {
+            margin-top: 10px;
+
+            .condition-form {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr 45px;
+                gap: 10px;
+            }
+        }
+
+        .add-condition {
+            display: flex;
+            // justify-content: flex-end;
+            margin-top: 20px;
+        }
+    }
+
+}

@@ -11,7 +11,7 @@ import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGri
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button';
-import UpdatePackage from '../../../components/forms/controller/update-package/UpdatePackage';
+import UpdatePackage from '../../../components/forms/controller/update-package/CreateUpdatePackage';
 import UpdatePackageService from '../../../components/forms/controller/update-package/UpdatePackageService';
 import Message from '../../../components/UI_Primitives/message/Message'
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
@@ -144,12 +144,12 @@ const ViewServicePackage = () => {
                 <div className="top-section">
                     <div className="action-buttons">
                         <Button label={'Update'} icon={<TbPencil />} size='small' outlined rounded style={{ width: '100px' }}
-                            onClick={() => openModal('Update package', <UpdatePackage data={packageInfo} setData={setPackageInfo} />, { width: "800px" })} />
+                            onClick={() => openModal('Update package', <UpdatePackage action={'UPDATE'} data={packageInfo} setData={setPackageInfo} />, { width: "800px" })} />
                         {packageInfo?.is_active
                             ? <Button label={'Disable'} icon={<TbEyeClosed />} severity={'danger'} size='small' rounded style={{ width: '100px' }}
                                 onClick={() => updateActiveStatus(false)} />
                             : <Button label={'Enable'} icon={<TbEye />} severity={'info'} size='small' rounded style={{ width: '100px' }}
-                                onClick={() => updateActiveStatus(true)} />}
+                                onClick={() => updateActiveStatus(true)} disabled={!serviceList?.length} />}
                     </div>
                 </div>}
             <div className="package-title" style={{
@@ -303,10 +303,10 @@ const ViewServicePackage = () => {
                                             )
                                         })}
                                     </div>}
-                                    {user?.allowed_origins?.includes('vessel_c_admin') && 
-                                    <div className="buttons">
-                                        <Button icon={<TbEdit />} rounded outlined size='small' onClick={() => handelEditService(item)} />
-                                    </div>}
+                                    {user?.allowed_origins?.includes('vessel_c_admin') &&
+                                        <div className="buttons">
+                                            <Button icon={<TbEdit />} rounded outlined size='small' onClick={() => handelEditService(item)} />
+                                        </div>}
                                 </div>)
                         })}
                     </div>}

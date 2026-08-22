@@ -2,6 +2,14 @@
     margin-top: 20px;
     padding-bottom: 50px;
 
+    .action-section {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
     .content {
         display: grid;
         gap: 15px;

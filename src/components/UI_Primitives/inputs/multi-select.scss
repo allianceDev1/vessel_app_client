@@ -1,4 +1,4 @@
-@use '../../../assets/scss/mixins/mixin.scss'as *;
+@use '../../../assets/scss/mixins/mixin.scss' as *;
 
 .ui-multiselect-container {
   position: relative;
@@ -31,6 +31,7 @@
         font-size: 12px;
         font-weight: 400;
         top: 10px;
+
       }
     }
 
@@ -53,6 +54,10 @@
       transform: translate(0, -50%);
       height: fit-content;
       @include threeDots();
+
+      .required {
+        color: var(--color-danger);
+      }
     }
 
     .icon-container {
@@ -89,11 +94,11 @@
     margin-top: 4px;
 
 
-    .no-options{
+    .no-options {
       padding: 13px 10px;
       text-align: center;
 
-      p{
+      p {
         font-size: 13px;
         font-weight: 500;
         color: var(--text-secondary-2);

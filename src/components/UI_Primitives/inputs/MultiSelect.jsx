@@ -18,6 +18,7 @@ function MultiSelectInput({
   selected = [],
   searchable = false, // Enable/disable search
   searchPlaceholder = 'Search',
+  required = false,
   ...props
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +92,7 @@ function MultiSelectInput({
         tabIndex={0}
         {...props}
       >
-        <span className="multiselect-label">{label}</span>
+        <span className="multiselect-label">{label}  {required && <span className="required">*</span>}</span>
         {displayText}
         {rightIcon && (
           <div className="icon-container" onClick={rightIconAction}>

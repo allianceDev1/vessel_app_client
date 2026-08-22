@@ -75,8 +75,8 @@ const ControllerLayout = ({ children }) => {
                             <img src={BrandLogo} alt='brand-logo' />
                         </div>
                         <div className='head-text'>
-                            <h3>Alliance</h3>
-                            <p>Vessel Controller App</p>
+                            <h3>Service</h3>
+                            <p>Service controller app</p>
                         </div>
                     </div>
                     <div className="items-section">
@@ -112,7 +112,7 @@ const ControllerLayout = ({ children }) => {
 
                         <div className={`item ${activeSegment === 'app-config' && 'active'}`} onClick={() => handleMenuClick('/controller/app-config')}>
                             <TbDropletCog />
-                            <span>App Configurations</span>
+                            <span>App config</span>
                         </div>
                         <div className={`item danger`} onClick={() => window.location.href = `${env.REDIRECT_URL}?page=home`}>
                             <TbLogout2 />

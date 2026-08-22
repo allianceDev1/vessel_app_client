@@ -45,7 +45,8 @@ const ProductLogInfo = React.lazy(() => import('../components/modules/controller
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/controller/service-job/PurchaseLogInfo'))
 const Subscriptions = React.lazy(() => import("../pages/controller/subscriptions/Subscriptions"))
 const RunningKms = React.lazy(() => import("../pages/controller/running-kms/RunningKms"))
-
+const EligibilityRules = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRules"))
+const CreateUpdateRule = React.lazy(() => import("../pages/controller/eligibility-rules/CreateUpdateRule"))
 
 
 
@@ -143,12 +144,17 @@ const Controller = () => {
                     <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
 
+                    {/* eligibility rules */}
+                    <Route path='/app-config/eligibility-rules' element={<PrivateRoute element={<EligibilityRules />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/eligibility-rules/new' element={<PrivateRoute element={<CreateUpdateRule action={'CREATE'} />} isAuthenticated={isAuthenticated} />} />
+
+
                     {/* Running Kms */}
                     <Route path='/running-kms/:month' element={<PrivateRoute element={<RunningKms />} isAuthenticated={isAuthenticated} />} />
 
                     {/* 404 */}
                     <Route path="/*" element={<Page404 />} />
-                    
+
                 </Routes>
             </Suspense>
         </ControllerLayout>

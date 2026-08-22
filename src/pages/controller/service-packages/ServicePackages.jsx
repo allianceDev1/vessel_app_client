@@ -1,38 +1,53 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './service-packages.scss'
 import { useDispatch } from 'react-redux';
-import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbCarouselHorizontal, TbCheck, TbX } from "react-icons/tb";
+import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { TbCarouselHorizontal, TbCheck, TbPlus, TbX } from "react-icons/tb";
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
+import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
+import { TbChevronDown } from 'react-icons/tb';
+import Button from '../../../components/UI_Primitives/buttons/Button';
 import { api } from '../../../api';
 import { hexToRgba } from '../../../utils/helpers/color-utils';
 import { useQuery } from '@tanstack/react-query';
+import { parent_product_types } from '../../../config/app_config';
+import { toStandardText } from '../../../utils/helpers/text-formatting';
+import CreateUpdatePackage from '../../../components/forms/controller/update-package/CreateUpdatePackage';
 
 
 const ServicePackages = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-   
-   
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['service_package_list', 'controller'],
+        queryKey: ['cn', 'service_packages', (searchParams.get('parent_product') || parent_product_types[0])],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/config/service-package/list?product_type=VESSEL_FILTER&hidden=Yes')
+            const res = await api.vfCv2Axios.get(`/config/service-package/list?product_type=${searchParams.get('parent_product')}&hidden=Yes`)
             return res
         },
         staleTime: 10_000
     })
 
-  
+    const openCreateModal = () => {
+        dispatch(modal.push({
+            title: 'Create new package',
+            body: <CreateUpdatePackage action={'CREATE'} />,
+            style: { width: '800px' }
+        }))
+    }
+
+    const handleChangeParentProduct = (type) => {
+        setSearchParams({ parent_product: type })
+    }
 
     useEffect(() => {
         dispatch(page.setTitle({ title: 'Service Packages', note: "Manage the vessel system service packages & services." }))
-       
+
         // eslint-disable-next-line
     }, [])
 
@@ -62,18 +77,37 @@ const ServicePackages = () => {
         />
     }
 
-    if (!data.length) {
-        return <EmptyState
-            hight='80vh'
-            title={'No service packages found'}
-            icon={<TbCarouselHorizontal />}
-        />
-    }
-
     // content
     return (
         <div className="service-packages-page">
-            <div className="content">
+            <div className="action-section">
+                <Dropdown
+                    button={{
+                        label: toStandardText(searchParams.get('parent_product') || parent_product_types[0]),
+                        icon: < TbChevronDown />, iconPos: 'right',
+                        rounded: true, outlined: true, size: 'small', style: { width: '150px' }
+                    }}
+                    list={[{
+                        items: parent_product_types?.map((t) => ({
+                            label: toStandardText(t),
+                            value: t,
+                            onClick: () => handleChangeParentProduct(t)
+                        }))
+                    }]}
+                    selected={searchParams.get('parent_product') || parent_product_types[0]} />
+
+                <Button label={'Package'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '120px' }}
+                    onClick={openCreateModal}
+                />
+            </div>
+
+            {!data.length && <EmptyState
+                hight='70vh'
+                title={'No service packages found'}
+                icon={<TbCarouselHorizontal />}
+            />}
+
+            {data?.length > 0 && <div className="content">
                 {data?.map((p, i) => (
                     <div className="pack-card" key={p.package_id}
                         onClick={() => navigate(`/controller/app-config/service-packages/${p.package_id}`)}
@@ -104,7 +138,7 @@ const ServicePackages = () => {
                     </div>
                 ))}
 
-            </div>
+            </div>}
         </div>
     )
 }

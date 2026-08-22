@@ -1,11 +1,21 @@
-export const toStandardText = (text = "") => {
-    return text
-        .toLowerCase()                // approval_pending
-        .split("_")                   // ["approval", "pending"]
-        .map(word =>
-            word?.charAt(0).toUpperCase() + word.slice(1)
-        )                             // ["Approval", "Pending"]
-        .join(" ");                   // "Approval Pending"
+export const toStandardText = (text = "", capitalizeAll = false) => {
+    const words = text
+        .toLowerCase()
+        .split("_");
+
+    if (capitalizeAll) {
+        return words
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    }
+
+    return words
+        .map((word, index) =>
+            index === 0
+                ? word.charAt(0).toUpperCase() + word.slice(1)
+                : word
+        )
+        .join(" ");
 };
 
 export const serviceChargeSort = (chargeType) => {

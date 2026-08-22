@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
 
-    .content {
+    .ui-state-content {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -11,13 +11,13 @@
         gap: 20px;
         text-align: center;
 
-        .icon {
+        .ui-state-icon {
             svg {
                 font-size: 45px;
             }
         }
 
-        .text {
+        .ui-state-text {
             h2 {
                 font-size: 19px;
                 font-weight: 600;
@@ -32,16 +32,16 @@
     }
 
     &.state-size-lg {
-        .content {
+        .ui-state-content {
             gap: 20px;
 
-            .icon {
+            .ui-state-icon {
                 svg {
                     font-size: 50px;
                 }
             }
 
-            .text {
+            .ui-state-text {
                 h2 {
                     font-size: 21px;
                     font-weight: 600;
@@ -56,16 +56,16 @@
     }
 
     &.state-size-md {
-        .content {
+        .ui-state-content {
             gap: 20px;
 
-            .icon {
+            .ui-state-icon {
                 svg {
                     font-size: 45px;
                 }
             }
 
-            .text {
+            .ui-state-text {
                 h2 {
                     font-size: 19px;
                     font-weight: 600;
@@ -80,16 +80,16 @@
     }
 
     &.state-size-sm {
-        .content {
+        .ui-state-content {
             gap: 20px;
 
-            .icon {
+            .ui-state-icon {
                 svg {
                     font-size: 40px;
                 }
             }
 
-            .text {
+            .ui-state-text {
                 h2 {
                     font-size: 17px;
                     font-weight: 500;

@@ -15,8 +15,8 @@ const InputColor = ({
     required
 }) => {
     const [colorList, setColorList] = useState(preColors)
-    const [selectedColor, setSelectedColor] = useState(value)
-
+    const [selectedColor, setSelectedColor] = useState('')
+    console.log(value, 'color')
     const handleChange = (colorCode) => {
         setSelectedColor(colorCode)
         onChange({ target: { name, value: colorCode } })
@@ -29,6 +29,12 @@ const InputColor = ({
         // eslint-disable-next-line
     }, [])
 
+    useEffect(() => {
+        if (value) {
+            setSelectedColor(value)
+        }
+    }, [value])
+
     return (
         <div className="ui-input-color-container">
             <div className={`border-input ${error ? 'error' : ''}`}>
@@ -37,7 +43,7 @@ const InputColor = ({
                     {required && <span className="required">*</span>}
                 </label>}
                 <div className="color-inputs">
-                    {!colorList?.includes(selectedColor) &&
+                    {!colorList?.includes(selectedColor) && selectedColor &&
                         <label className="color-option">
                             <input type="radio" name="color" value={selectedColor} checked={true} />
                             <span className="color-circle" style={{ backgroundColor: value }}></span>
@@ -51,7 +57,8 @@ const InputColor = ({
                         )
                     })}
                     {customColors && <label className="color-option custom-picker" data-name="Advanced" title="Advanced Color">
-                        <input type="color" name="color" id="customColor" aria-label="Advanced color picker" onChange={(e) => handleChange(e.target.value)} />
+                        <input type="color" name="color" id="customColor" aria-label="Advanced color picker"
+                            onChange={(e) => handleChange(e.target.value)} required={true} />
                         <span className="color-circle rainbow"></span>
                     </label>}
                 </div>
