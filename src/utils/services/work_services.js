@@ -255,7 +255,7 @@ export const controllerRunningKmsCalenderData = (monthStr, dailyData = []) => {
 
         for (let i = 0; i < 7; i++) {
             const dateStr = day.format("YYYY-MM-DD");
-           
+
 
             week.push({
                 date: dateStr,
@@ -274,3 +274,44 @@ export const controllerRunningKmsCalenderData = (monthStr, dailyData = []) => {
 
     return calendar;
 };
+
+export const findCriteriaInputType = (subject, condition) => {
+
+    let inputType = null
+
+    switch (condition?.criteria) {
+        case "subject":
+
+            switch (subject?.type) {
+                case "date":
+                    inputType = 'date'
+                    break;
+
+                case "string":
+                    inputType = 'select'
+                    break;
+
+                case "number":
+                    inputType = 'number'
+                    break;
+
+                default:
+                    break;
+            }
+
+            break;
+        case "array":
+            inputType = 'multi-select'
+            break;
+
+        case "number":
+            inputType = 'number'
+            break;
+
+        default:
+            break;
+    }
+
+    return inputType
+
+}

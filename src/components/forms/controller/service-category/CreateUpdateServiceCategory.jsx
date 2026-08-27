@@ -17,7 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 
 
-const UpdateServiceCategory = ({ serviceCategory, setData }) => {
+const CreateUpdateServiceCategory = ({ serviceCategory, setData }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('')
     const [vErr, setVErr] = useState({})
@@ -339,4 +339,4 @@ const UpdateServiceCategory = ({ serviceCategory, setData }) => {
     )
 }
 
-export default UpdateServiceCategory
+export default CreateUpdateServiceCategory

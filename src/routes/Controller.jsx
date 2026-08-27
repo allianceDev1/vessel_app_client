@@ -46,7 +46,8 @@ const PurchaseLogInfo = React.lazy(() => import('../components/modules/controlle
 const Subscriptions = React.lazy(() => import("../pages/controller/subscriptions/Subscriptions"))
 const RunningKms = React.lazy(() => import("../pages/controller/running-kms/RunningKms"))
 const EligibilityRules = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRules"))
-const CreateUpdateRule = React.lazy(() => import("../pages/controller/eligibility-rules/CreateUpdateRule"))
+const CreateRule = React.lazy(() => import("../pages/controller/eligibility-rules/CreateRule"))
+const EligibilityRuleView = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRuleView"))
 
 
 
@@ -146,7 +147,8 @@ const Controller = () => {
 
                     {/* eligibility rules */}
                     <Route path='/app-config/eligibility-rules' element={<PrivateRoute element={<EligibilityRules />} isAuthenticated={isAuthenticated} />} />
-                    <Route path='/app-config/eligibility-rules/new' element={<PrivateRoute element={<CreateUpdateRule action={'CREATE'} />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/eligibility-rules/new' element={<PrivateRoute element={<CreateRule />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/eligibility-rule/:rule_uuid' element={<PrivateRoute element={<EligibilityRuleView />} isAuthenticated={isAuthenticated} />} />
 
 
                     {/* Running Kms */}

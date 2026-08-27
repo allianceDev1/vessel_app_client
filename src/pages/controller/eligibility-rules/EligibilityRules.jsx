@@ -21,7 +21,7 @@ const EligibilityRules = () => {
     const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['eligibility-rules'],
+        queryKey: ['cn', 'eligibility-rules'],
         queryFn: async () => {
             const res = await api.vfCv2Axios.get('/config/eligibility-rules')
             return res || []
@@ -68,7 +68,7 @@ const EligibilityRules = () => {
 
             {data?.length
                 ? <div className="content">
-                    {data.map((rule) => (<div className="rule-item" key={rule.uuid}>
+                    {data.map((rule) => (<div className="rule-item" key={rule.uuid} onClick={() => navigate(`/controller/app-config/eligibility-rule/${rule.uuid}`)}>
                         <h4>{rule?.rule_name}</h4>
                         <div className="sub-line">
                             <p>Conditions : {rule?.conditions || 0}</p>
