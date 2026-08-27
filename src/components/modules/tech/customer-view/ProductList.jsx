@@ -77,9 +77,10 @@ const ProductList = () => {
                                 <h3>{item?.product_name}</h3>
                                 <div className="x3">
                                     {item?.product_warranty && <Badge severity={'info'} value={'Warranty'} />}
-                                    {item?.package?.has_service_package && < Badge
+                                    {item?.package?.has_service_package ? < Badge
                                         value={item?.package?.package_name}
-                                        style={{ backgroundColor: item?.package?.color_code, color: getContrastText(item?.package?.color_code) }} />}
+                                        style={{ backgroundColor: item?.package?.color_code, color: getContrastText(item?.package?.color_code) }} />
+                                        : <Badge value={'No subscription'} />}
                                     {item?.rental && <Badge value={'Rental'} />}
                                     {!item?.active && <Badge severity={'danger'} value={'Disconnected'} />}
                                 </div>

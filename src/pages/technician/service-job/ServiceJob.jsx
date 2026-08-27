@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome, TbRefresh } from 'react-icons/tb';
+import { TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome, TbRefresh, TbArrowUpRight } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -128,6 +128,8 @@ const ServiceJob = () => {
                     />}
                 </div>
                 <div className='action-buttons'>
+                    <Button icon={<TbArrowUpRight />} label={'Customer'} rounded outlined size='small'
+                        iconPos='right' onClick={() => navigate(`/tech/customer/${data?.customer_id}/about`)} />
                     <Dropdown button={{
                         icon: <TbDots />,
                         size: 'small',

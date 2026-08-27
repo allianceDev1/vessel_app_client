@@ -8,6 +8,7 @@ import InputText from '../../../UI_Primitives/inputs/InputText'
 import Checkbox from '../../../UI_Primitives/inputs/Checkbox'
 import Button from '../../../UI_Primitives/buttons/Button'
 
+
 const SfSubPageOne = ({ page, resources, changeSubmitStatus }) => {
     const dispatch = useDispatch();
     const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
@@ -163,8 +164,8 @@ const SfSubPageOne = ({ page, resources, changeSubmitStatus }) => {
                 <div className="submit-section">
                     <Button label={'Next'} rounded style={{ width: '100%' }} />
                 </div>
-
             </form>
+          
         </div>
     )
 }

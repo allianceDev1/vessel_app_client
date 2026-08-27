@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import {  TbDropletStar} from 'react-icons/tb'
+import { TbDropletStar } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
@@ -63,6 +63,9 @@ const AboutProduct = () => {
                         <p className='label'>Product Id</p>
                         <div>
                             <p className='text-value'>{data?.product_id} </p>
+                            {data?.product_active
+                                ? <Badge value={'Connected'} severity={'success'} />
+                                : <Badge value={'Disconnected'} severity={'danger'} />}
                         </div>
                     </div>
                     <div className="item">

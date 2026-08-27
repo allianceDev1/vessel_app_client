@@ -39,6 +39,7 @@
                 background-color: var(--color-natural-trans-53);
                 padding: 10px 15px;
                 border-radius: 10px;
+                position: relative;
 
                 .label {
                     font-size: 13px;
@@ -51,6 +52,18 @@
                     .text-value {
                         font-size: 14px;
                         font-weight: 500;
+                    }
+                }
+
+                .right-icon {
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translate(0, -50%);
+
+                    svg {
+                        font-size: 25px;
+                        color: var(--text-secondary-2);
                     }
                 }
             }

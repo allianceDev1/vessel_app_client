@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import './techLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
 import env from '../../../config/env';
-import { IoChevronBack } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TbCalendarWeek, TbDropletCheck, TbDropletHalf2, TbHome } from 'react-icons/tb';
@@ -32,9 +31,8 @@ const TechLayout = ({ children }) => {
 
             <div className="layout-header">
                 <div className="section-one">
-                    <IoChevronBack onClick={() => navigate(-1)} />
-                    <img src={BrandLogo} alt='brand-logo' onClick={() => navigate(-1)} />
-                    <h3>Alliance</h3>
+                    <img src={BrandLogo} alt='brand-logo' />
+                    <h3>VF Service</h3>
                 </div>
                 <div className="section-two">
                     <div className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)}>

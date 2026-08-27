@@ -26,8 +26,10 @@ const VesselServiceCard = ({ product, serviceType }) => {
             <div className="service-card__item">
                 <div className="header__left">
                     <p className="item__text">VESSEL FILTER</p>
-                    {product?.package?.package_id ? <Badge value={product?.package?.name}
-                        style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} /> : ''}
+                    {product?.package?.package_id
+                        ? <Badge value={product?.package?.name}
+                            style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} />
+                        : <Badge value={'No subscription'} />}
                 </div>
                 <div className="header__right">
                     <p className="item__text" style={{ color: `${(product?.service?.service_type || '').toLowerCase()}s` === (serviceType || '').toLowerCase() ? 'var(--color-info)' : '' }}>
@@ -61,7 +63,7 @@ const VesselServiceCard = ({ product, serviceType }) => {
                         })}
                     </div>
                 </div>
-                : <EmptyState  size='sm' description={'No information'} hight={'120px'} />}
+                : <EmptyState size='sm' description={'No information'} hight={'120px'} />}
 
 
         </div>
