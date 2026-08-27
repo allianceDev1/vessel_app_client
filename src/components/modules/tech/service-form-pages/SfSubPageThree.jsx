@@ -8,6 +8,7 @@ import VfComponentsList from '../service-form-components/VfComponentsList'
 import { findSpareTypeAmount } from '../../../../utils/flows/service_form_utils'
 import { normalizeDate } from '../../../../utils/helpers/date-helpers'
 import VfServiceList from '../service-form-components/VfServiceList'
+import AmountCard from '../service-form-components/AmountCard'
 
 
 const SfSubPageThree = ({
@@ -294,6 +295,8 @@ const SfSubPageThree = ({
         </>
       }
 
+
+      <AmountCard product={productInForm} />
     </div>
   )
 }

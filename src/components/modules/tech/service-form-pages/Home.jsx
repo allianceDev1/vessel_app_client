@@ -254,8 +254,9 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                                         <div className="id-status">
                                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                                 <p>{product?.product_id}</p>
-                                                {productPackage?.package_id && <Badge value={productPackage?.package_name}
-                                                    style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} />}
+                                                {productPackage?.package_id ? <Badge value={productPackage?.package_name}
+                                                    style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} />
+                                                    : <Badge value={'No subscription'} />}
                                             </div>
                                             <p>
                                                 {upcomingServiceType}

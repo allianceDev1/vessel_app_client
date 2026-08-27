@@ -187,10 +187,13 @@ const ServiceJob = () => {
                 </div>
                 : <div className='about-content'>
                     <div className="text-content">
-                        <div className="item">
+                        <div className="item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/controller/customer/${data?.customer_id}/about`)}>
                             <p className='label'>Customer Id & Customer Name</p>
                             <div>
                                 <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
+                            </div>
+                            <div className="right-icon">
+                                <TbArrowUpRight />
                             </div>
                         </div>
                         <div className="item">

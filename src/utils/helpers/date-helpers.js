@@ -245,7 +245,7 @@ export const formatSecondsToHHMM = (totalSeconds) => {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
 
     return [
-        hours > 0 ? `${hours}h` : '',
+        hours > 0 ? `${hours}h ` : '',
         minutes > 0 ? `${minutes}m` : ''
     ].join('') || '0m';
 };

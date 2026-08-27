@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './product-log.scss'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import {   isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
+import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
@@ -123,7 +123,7 @@ const ProductLogInfo = () => {
                     </div>
                 </div>
                 <div className="item">
-                    <p className='label'>Package On Service</p>
+                    <p className='label'>Subscription on service</p>
                     <div style={{ display: 'flex', gap: '10px' }}>
                         {data?.service_package?.has_service_package
                             ? <>
@@ -131,7 +131,7 @@ const ProductLogInfo = () => {
                                     style={{ backgroundColor: data?.service_package?.color_code, color: getContrastText(data?.service_package?.color_code) }} />
                                 <p className='text-value'>{data?.service_package?.package_srl_no}</p>
                             </>
-                            : <p className='text-value'>No Service Package</p>}
+                            : <p className='text-value'>No subscription</p>}
                     </div>
                 </div>
                 <div className="item">

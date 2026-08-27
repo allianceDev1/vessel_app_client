@@ -195,7 +195,6 @@ export const calculateBillsSummery = (bills = [], zeroFeeItems = [], maxDiscount
 
 }
 
-
 export const getGrowthPercentage = (current, previous) => {
     // handle edge case
     if (previous === 0) {
@@ -208,3 +207,41 @@ export const getGrowthPercentage = (current, previous) => {
     return Number(growth.toFixed(2)); // 2 decimal
 }
 
+export const productFormTotalAmount = ({ components = [], serviceWorks = [], serviceCharge = {}, packageRate = 0 }) => {
+   
+    let estimate = 0, applied = 0
+
+    // Package rate
+    estimate += packageRate
+    applied += packageRate
+
+    // Service charge
+    estimate += serviceCharge?.estimate
+    applied += serviceCharge?.applied
+
+    // Service work
+    serviceWorks?.map((work) => {
+        if (work?.service_type === 'RENEWAL_SERVICE') {
+            return work;
+        }
+
+        estimate += work?.pricing?.list_price
+        applied += work?.pricing?.charged
+    })
+
+    // components
+    components?.map((spare) => {
+        if (spare?.service_type === 'RENEWAL_SPARE') {
+            return spare;
+        }
+
+        estimate += spare?.pricing?.list_price * (spare?.qty || 1)
+        applied += spare?.pricing?.charged * (spare?.qty || 1)
+    })
+
+
+    return {
+        estimate: Number(estimate || 0)?.toLocaleString('en-IN'),
+        applied: Number(applied || 0)?.toLocaleString('en-IN')
+    }
+}

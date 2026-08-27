@@ -4,7 +4,13 @@
     position: relative;
 
     .components-action {
-        height: 45px;
+        // height: 45px;
+        position: sticky;
+        top: 140px;
+        z-index: 1;
+        background-color: var(--background);
+        padding: 10px 0;
+
 
         .menu-section,
         .search-section {
@@ -124,7 +130,7 @@
     .fixed-section {
         position: fixed;
         width: 100%;
-        bottom: 55px;
+        bottom: 122px;
         left: 0;
         padding: 5px 0;
         display: flex;
