@@ -2,7 +2,7 @@ import React, { useEffect, } from 'react'
 import './customers.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import { TbFilter, TbPlus } from 'react-icons/tb';
 import AddCustomerProduct from '../../../components/forms/controller/product/AddCustomerProduct';
@@ -10,7 +10,10 @@ import FilterCustomerProduct from '../../../components/forms/controller/search-c
 
 const Customers = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const { user } = useSelector((state) => state.user)
+
+    const isSearchPage = location.pathname.endsWith('/search');
 
 
     const openAddProductPopUp = () => {
@@ -41,7 +44,7 @@ const Customers = () => {
                 {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && < Button label={'Product'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
                     onClick={openAddProductPopUp} />}
                 <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                    onClick={openFilterCustomerProductPopUp} />
+                    onClick={openFilterCustomerProductPopUp} severity={'secondary'} disabled={isSearchPage} />
                 {/* <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} /> */}
             </div>
             <div className="outlet">

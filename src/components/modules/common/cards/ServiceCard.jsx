@@ -8,12 +8,13 @@ import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const ServiceCard = ({ data, pointer = false, onClick = () => { } }) => {
     const tempColor = '#464646'
-    const gradientId = useId();
+    const rawId = useId();
+    const gradientId = `service-grad-${rawId.replace(/:/g, '')}`;
 
     return (
         <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }} onClick={onClick}>
             <div className="card-header" style={{ color: 'white' }}>
-                <svg className='gradient-background' viewBox="0 0 700 150">
+                <svg className='gradient-background' viewBox="0 0 700 150" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id={gradientId}>
                             <stop offset="0%" stopColor={data?.package_color_code || tempColor} />

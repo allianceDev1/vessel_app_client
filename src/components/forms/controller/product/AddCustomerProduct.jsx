@@ -4,7 +4,7 @@ import InputText from '../../../UI_Primitives/inputs/InputText'
 import Select from '../../../UI_Primitives/inputs/Select'
 import { originCategories, parentProductTypes } from '../../../../assets/javascript/pre_data/product'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
@@ -18,6 +18,7 @@ import { modal, toast } from '../../../../redux/features/non_persisted/miniSyste
 
 const AddCustomerProduct = ({ customerId }) => {
     const dispatch = useDispatch();
+    const queryClient = useQueryClient();
     const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({
         customer_id: customerId || ''
@@ -90,6 +91,13 @@ const AddCustomerProduct = ({ customerId }) => {
                 message: "New product added to customer."
             }))
 
+            const targetCustomerId = customerId || form?.customer_id;
+            if (targetCustomerId) {
+                queryClient.refetchQueries({
+                    queryKey: ['controller_customer_products', targetCustomerId]
+                })
+            }
+
             dispatch(modal.pull.all())
         } catch (error) {
 
@@ -153,7 +161,7 @@ const AddCustomerProduct = ({ customerId }) => {
                 </div>
 
                 {form?.product_warranty &&
-                    <div className="input-group">
+                    <div className="input-group" style={{ marginBottom: "20px" }}>
                         <InputText label={'Warranty Start Date'} name={'product_warranty_start_date'} value={form?.product_warranty_start_date || ''} onChange={handleChange} required
                             type='date' />
 
@@ -163,8 +171,8 @@ const AddCustomerProduct = ({ customerId }) => {
 
                 <Button label={'Create Product'} severity={'primary'} rounded style={{ width: '100%' }} spinIcon={loading}
                     disabled={loading} />
-            </form>
-        </div>
+            </form >
+        </div >
     )
 }
 

@@ -312,7 +312,6 @@ const AreaList = () => {
                     queryKey={['area-data', viewType]}
                     tableKey="area"
                     data={[]}
-                    rowCheckBox={true}
                     bulkActions={(selectedRows, clearSelection) => (
                         <Button icon={<TbTrash />} label={'Delete'} text
                             onClick={() => handleDeleteTech(

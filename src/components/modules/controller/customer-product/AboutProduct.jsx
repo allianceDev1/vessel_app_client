@@ -126,7 +126,7 @@ const AboutProduct = () => {
                                 onClick={() => openStatusChangeModel('CONNECT')} />}
                     </>}
                     <Button icon={<TbPencil />} label={'Update'} size='small' outlined rounded style={{ width: '120px' }}
-                        onClick={() => openUpdateProductModel()} />
+                        onClick={() => openUpdateProductModel()} severity={"secondary"} />
                     <Dropdown
                         button={{
                             icon: <IoIosArrowDown />,
@@ -173,9 +173,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>SKU</p>
+                        <p className='label'>Variant code</p>
                         <div>
-                            <p className='text-value'>{data?.sku}</p>
+                            <p className='text-value'>{data?.variant_code}</p>
                         </div>
                     </div>
                     <div className="item">

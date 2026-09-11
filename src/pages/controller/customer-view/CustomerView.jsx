@@ -70,9 +70,9 @@ const CustomerView = () => {
                         <Button label={'Product'} icon={<TbPlus />} size='small' severity={'primary'} rounded style={{ width: '100px' }}
                             onClick={openAddProductPopUp} />
                         <Button label={'Call Log'} icon={<TbMessagePlus />} size='small' outlined rounded style={{ width: '110px' }}
-                            onClick={() => openEnterCallLogPopUp({ customer_id })} />
+                            onClick={() => openEnterCallLogPopUp({ customer_id })} severity={'secondary'} />
                         <Button label={'Registration'} icon={<TbPencilPlus />} size='small' outlined rounded style={{ width: '130px' }}
-                            onClick={() => openRegistrationPopUp({ customer_id })} />
+                            onClick={() => openRegistrationPopUp({ customer_id })} severity={'secondary'} />
                     </div>}
             </div>
             <div className="menu-box">
