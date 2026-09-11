@@ -78,7 +78,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
 
     return (
         <div className="">
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 After cancellation, one service will be removed from the customer's package. This action cannot be undone.
             </p>
 
@@ -88,7 +88,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
                 <Textarea label={'Comment'} name={'comment'} value={form?.comment} onChange={handleChange}
                     required />
 
-                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)', marginBottom: '10px' }}>
+                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-tertiary)', marginBottom: '10px' }}>
                     To cancel the package service, Type <b>CANCEL</b> in the field below to confirm.
                 </p>
                 <InputText label={'Confirmation'} name={'verify_text'} value={text}

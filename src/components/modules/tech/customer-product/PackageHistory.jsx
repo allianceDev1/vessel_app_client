@@ -83,7 +83,7 @@ const PackageHistory = () => {
             {hasNextPage &&
                 <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                     <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                        spinIcon={isFetchingNextPage}
+                        spinIcon={isFetchingNextPage} severity={'secondary'} 
                         onClick={() => {
                             if (!isFetchingNextPage) fetchNextPage();
                         }} />

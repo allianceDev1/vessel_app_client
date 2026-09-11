@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import ControllerLayout from '../components/layout/controllerLayout/ControllerLayout'
+// import ControllerLayout from '../components/layout/controllerLayout/ControllerLayout'
 import { useSelector } from 'react-redux';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
 import { Route, Routes } from 'react-router-dom';
@@ -48,6 +48,9 @@ const RunningKms = React.lazy(() => import("../pages/controller/running-kms/Runn
 const EligibilityRules = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRules"))
 const CreateRule = React.lazy(() => import("../pages/controller/eligibility-rules/CreateRule"))
 const EligibilityRuleView = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRuleView"))
+const ControllerLayout = React.lazy(() => import('../components/layout/controllerLayout/ControllerLayout'));
+const ServiceCategoryView = React.lazy(() => import("../pages/controller/service-category/ServiceCategoryView"))
+const PackageServiceCategoryView = React.lazy(() => import("../pages/controller/package-service-category/PackageServiceCategoryView"))
 
 
 
@@ -70,8 +73,8 @@ const Controller = () => {
 
 
     return (
-        <ControllerLayout>
-            <Suspense fallback={<SkeletonPage />}>
+        <Suspense fallback={<SkeletonPage />}>
+            <ControllerLayout>
                 <Routes>
                     {/* Dashboard */}
                     <Route path='/' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
@@ -137,9 +140,11 @@ const Controller = () => {
                     {/* Package */}
                     <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/service-packages/:package_id/service-category/:service_id' element={<PrivateRoute element={<PackageServiceCategoryView />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Category */}
                     <Route path='/app-config/service-categories' element={<PrivateRoute element={<ServiceCategory />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/service-categories/:category_id' element={<PrivateRoute element={<ServiceCategoryView />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Form Resources */}
                     <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
@@ -158,8 +163,8 @@ const Controller = () => {
                     <Route path="/*" element={<Page404 />} />
 
                 </Routes>
-            </Suspense>
-        </ControllerLayout>
+            </ControllerLayout>
+        </Suspense>
     )
 }
 

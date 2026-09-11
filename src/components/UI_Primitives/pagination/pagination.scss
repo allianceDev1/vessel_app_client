@@ -27,8 +27,7 @@
     }
 
     .bulk-actions {
-        background-color: var(--color-natural-trans-73);
-        backdrop-filter: blur(5px);
+        background-color: var(--surface);
         margin-bottom: 15px;
         margin-top: 14px;
         min-height: 45px;
@@ -67,8 +66,8 @@
             align-items: center;
 
             p {
-                font-size: 14px;
-                color: var(--text-secondary-2);
+                font-size: 13px;
+                color: var(--text-secondary);
             }
         }
 

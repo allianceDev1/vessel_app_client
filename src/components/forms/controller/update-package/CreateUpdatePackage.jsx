@@ -15,7 +15,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { parent_product_types } from '../../../../config/app_config'
 
 
-const CreateUpdatePackage = ({ action = 'CREATE', data, setData }) => {
+const CreateUpdatePackage = ({ action = 'CREATE', data }) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams()
@@ -85,21 +85,11 @@ const CreateUpdatePackage = ({ action = 'CREATE', data, setData }) => {
     } else {
       try {
         await api.vfCv2Axios.put(`/config/service-package/${form?.package_id}`, form)
-        setData((state) => ({
-          ...state,
-          package_name: form?.package_name || '',
-          full_form: form?.full_form || '',
-          color_code: form?.color_code || '',
-          package_duration_months: Number(form?.package_duration_months) || 0,
-          number_of_services: Number(form?.number_of_services) || 0,
-          tokens_count: Number(form?.tokens_count) || 0,
-          expire_types: form?.expire_types || [],
-          et_query_operator: form?.et_query_operator || null,
-          package_fund: form?.package_fund || 0,
-          gst_rate: form?.gst_rate || null,
-          service_work_fund: form?.service_work_fund || null,
-          spare_parts_fund: form?.spare_parts_fund || null
-        }))
+
+        queryClient.refetchQueries({
+          queryKey: ['cn', 'service_package', form?.package_id],
+        })
+
         dispatch(modal.pull.all())
       } catch (error) {
         dispatch(toast.push({

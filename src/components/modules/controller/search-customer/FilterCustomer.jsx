@@ -119,7 +119,7 @@ const FilterCustomer = () => {
                     searchParams.get('from_date'), searchParams.get('end_date')]}
                 topComponents={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Button label={'Excel'} rounded outlined size='small' icon={<TbDownload />} />
+                        <Button label={'Excel'} rounded outlined size='small' severity={'secondary'}  icon={<TbDownload />} />
                     </div>
                 }
             />

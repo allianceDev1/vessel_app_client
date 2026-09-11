@@ -8,7 +8,7 @@
         gap: 10px;
 
         .count-card {
-            background-color: var(--color-natural-2);
+            background-color: var(--surface-1);
             padding: 20px 15px 15px 15px;
             border-radius: 10px;
             position: relative;
@@ -24,13 +24,13 @@
             h4 {
                 font-size: 14px;
                 font-weight: 500;
-                color: var(--text-secondary-1);
+                color: var(--text-secondary-alt);
             }
 
             p {
                 font-size: 12px;
                 font-weight: 500;
-                color: var(--text-secondary-4);
+                color: var(--text-disabled);
                 margin-top: 3px;
             }
 
@@ -44,7 +44,7 @@
         margin-top: 10px;
 
         .button-card {
-            background-color: var(--color-natural-2);
+            background-color: var(--surface-1);
             padding: 20px 20px;
             border-radius: 10px;
             position: relative;
@@ -57,7 +57,7 @@
             h4 {
                 font-size: 16px;
                 font-weight: 500;
-                color: var(--text-secondary-1);
+                color: var(--text-secondary-alt);
             }
 
             svg {
@@ -71,8 +71,8 @@
         margin-top: 20px;
 
         .report-box {
-            background-color: var(--color-natural-trans-53);
-            backdrop-filter: blur(5px);
+            background-color: var(--surface-2);
+            // backdrop-filter: blur(5px);
             padding: 10px 15px;
             border-radius: 15px;
             position: relative;
@@ -86,13 +86,13 @@
                 h4 {
                     font-size: 14px;
                     font-weight: 500;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
 
                 p {
                     font-size: 13px;
                     font-weight: 400;
-                    color: var(--text-secondary-4);
+                    color: var(--text-disabled);
                     margin-right: 45px;
                     text-align: end;
                 }
@@ -120,7 +120,7 @@
     .last-update {
         font-size: 13px;
         text-align: end;
-        color: var(--text-secondary-2);
+        color: var(--text-tertiary);
         margin-top: 10px;
     }
 
@@ -141,7 +141,7 @@
         span,
         p {
             font-size: 12px;
-            color: var(--text-secondary-4);
+            color: var(--text-disabled);
         }
 
         .link {

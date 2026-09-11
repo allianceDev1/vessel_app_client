@@ -24,11 +24,11 @@
                 font-size: 13px;
                 font-weight: 500;
                 margin-top: 5px;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
             }
 
             &.disable-button {
-                opacity: .5;
+                // opacity: .5;
                 cursor: not-allowed;
             }
         }

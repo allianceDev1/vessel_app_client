@@ -18,7 +18,7 @@ import MultiSelectInput from '../../../components/UI_Primitives/inputs/MultiSele
 
 
 
-const CreateRule = ({ }) => {
+const CreateRule = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -131,7 +131,7 @@ const CreateRule = ({ }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!ruleName || !ruleConditions?.length) {
+        if (!String(ruleName).trim() || !ruleConditions?.length) {
             return;
         }
 
@@ -168,10 +168,6 @@ const CreateRule = ({ }) => {
         }
 
     }
-
-    useEffect(() => {
-        console.log(ruleConditions)
-    }, [ruleConditions])
 
     useEffect(() => {
         dispatch(page.setTitle({
@@ -275,7 +271,7 @@ const CreateRule = ({ }) => {
 
                 <div className="add-condition">
                     <Button icon={<TbPlus />} label={'New condition'} outlined rounded size='small' style={{ width: '150px' }}
-                        type='button' onClick={addNewCondition} />
+                        type='button' onClick={addNewCondition} severity={'secondary'} />
                 </div>
 
                 <Button label={'Create rule'} severity={'primary'} rounded style={{ width: '100%', marginTop: '40px' }}

@@ -1,6 +1,6 @@
 .tech-registration-info-comp {
-    background-color: var(--color-natural-trans-53);
-    // backdrop-filter: blur(5px);
+    background-color: var(--surface-2);
+    // // backdrop-filter: blur(5px);
     border-radius: 20px;
 
     .title {
@@ -12,11 +12,11 @@
 
         svg {
             font-size: 20px;
-            color: var(--text-secondary-2);
+            color: var(--text-tertiary);
         }
 
         h4 {
-            color: var(--text-secondary-2);
+            color: var(--text-tertiary);
             font-weight: 500;
             font-size: 16px;
         }
@@ -34,7 +34,7 @@
 
             >:first-child {
                 font-size: 18px;
-                color: var(--text-secondary-1);
+                color: var(--text-secondary-alt);
             }
 
             p {
@@ -52,7 +52,7 @@
             font-size: 13px;
             text-align: justify;
             font-weight: 400;
-            color: var(--text-secondary-2);
+            color: var(--text-tertiary);
 
             span {
                 font-weight: 600;

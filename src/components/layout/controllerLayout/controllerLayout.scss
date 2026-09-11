@@ -5,77 +5,9 @@
     position: relative;
     min-height: 100vh;
     min-height: 100dvh;
-    color: var(--text-primary);
-
-    // Background Container
-    .color-temp-div {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.8;
-        will-change: transform;
-        z-index: -1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-
-
-        // Common Ball Style
-        .box {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.8;
-            will-change: transform;
-            z-index: 0;
-        }
-
-        .box-one {
-            background: radial-gradient(circle, rgba(0, 219, 193, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 195vh;
-            width: 195dvh;
-            height: 95vh;
-            height: 95dvh;
-            left: -40%;
-            top: -10vh;
-            top: -10dvh;
-        }
-
-        .box-two {
-            background: radial-gradient(circle, rgba(255, 0, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 210vh;
-            width: 210dvh;
-            height: 110vh;
-            height: 110dvh;
-            right: -50%;
-            bottom: -40%;
-        }
-
-        .box-three {
-            background: radial-gradient(circle, rgba(170, 100, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 230vh;
-            width: 230dvh;
-            height: 130vh;
-            height: 130dvh;
-            left: -10%;
-            bottom: -60%;
-        }
-
-        .box-four {
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 175vh;
-            width: 175dvh;
-            height: 75vh;
-            height: 75dvh;
-            right: -20%;
-            top: -20%;
-        }
-    }
 
     .layout-navbar {
-        background-color: var(--color-natural-trans-18);
-        backdrop-filter: blur(5px);
+        background-color: var(--background-alt);
         border-right: 1px solid var(--border-light);
         color: var(--text-primary);
         position: fixed;
@@ -113,7 +45,7 @@
                     -moz-border-radius: 100%;
                     -ms-border-radius: 100%;
                     -o-border-radius: 100%;
-                    border: 1px solid var(--border-medium);
+                    border: 1px solid var(--border-light);
                     overflow: hidden;
 
                     img {
@@ -125,7 +57,7 @@
                     h3 {
                         font-size: 28px;
                         font-weight: 600;
-                        color: var(--text-secondary);
+                        color: var(--text-primary);
                         transition: ease-in-out .3s;
                         -webkit-transition: ease-in-out .3s;
                         -moz-transition: ease-in-out .3s;
@@ -136,7 +68,7 @@
                     p {
                         font-size: 13px;
                         margin-top: -5px;
-                        color: var(--text-secondary-2);
+                        color: var(--text-secondary);
                         transition: ease-in-out .3s;
                         -webkit-transition: ease-in-out .3s;
                         -moz-transition: ease-in-out .3s;
@@ -180,26 +112,25 @@
                     }
 
                     &:hover {
-                        background-color: var(--color-natural-trans-53);
+                        background-color: var(--surface-1);
                     }
 
                     &.active {
-                        background-color: var(--nav-active-bg);
-                        color: var(--nav-active-text);
+                        background-color: var(--color-primary-bg);
+                        color: var(--color-primary-text);
                     }
 
                     &.danger {
-                        color: var(--color-danger);
+                        color: var(--color-danger-text);
 
                         &:hover,
                         &:focus {
-                            background-color: var(--color-danger-trans-81);
+                            background-color: var(--color-danger-bg);
                         }
                     }
                 }
-
-
             }
+
 
             .footer-section {
                 display: flex;
@@ -282,7 +213,7 @@
                     p {
                         font-size: 15px;
                         font-weight: 500;
-                        color: var(--text-secondary-2);
+                        color: var(--text-tertiary);
                     }
                 }
 
@@ -290,8 +221,7 @@
                     position: fixed;
                     top: 20px;
                     right: 20px;
-                    background-color: var(--color-natural-trans-53);
-                    backdrop-filter: blur(5px);
+                    background-color: var(--background);
                     border: 1px solid var(--border-light);
                     color: var(--text-primary);
                     width: 45px;
@@ -343,7 +273,7 @@
 
         &.show-navbar {
             .layout-navbar {
-                backdrop-filter: blur(11px);
+                // backdrop-filter: blur(11px);
                 left: 0;
             }
         }

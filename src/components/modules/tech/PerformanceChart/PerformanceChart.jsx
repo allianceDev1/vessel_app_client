@@ -28,7 +28,7 @@ const PerformanceChart = ({ data }) => {
         <div className="vms-performance__tabs">
           {TABS.map((tab) => (
             <Button label={tab?.label} key={tab?.key} onClick={() => setActiveTab(tab?.key)} size='small' rounded outlined={activeTab !== tab?.key}
-              style={{ fontSize: '12px', padding: '3px 10px' }} />
+              style={{ fontSize: '12px', padding: '3px 10px' }} severity={'secondary'} />
           ))}
         </div>
 

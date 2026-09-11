@@ -1,5 +1,24 @@
+.eligibility-rule-view-page-container {
+    margin-top: 20px;
+    margin-bottom: 40px;
 
+    .action-section {
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+    }
 
-.eligibility-rule-view-page-container{
-    
+    .content {
+        margin-top: 20px;
+
+        .content-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 {
+            font-weight: 600;
+        }
+    }
 }

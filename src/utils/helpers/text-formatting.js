@@ -64,3 +64,68 @@ export const convertAmount = (amount) => {
         return (amount / 10000000).toFixed(2) + "Cr"; // Convert to Crores (Cr)
     }
 }
+
+export const getExpiryMessage = ({
+    packageDuration = false,
+    remainingTokens = false,
+    operator = 'OR',
+}) => {
+    const conditions = [];
+
+    if (packageDuration) {
+        conditions.push('the package duration ends');
+    }
+
+    if (remainingTokens) {
+        conditions.push('all remaining tokens are used');
+    }
+
+    if (conditions.length === 0) {
+        return '';
+    }
+
+    if (conditions.length === 1) {
+        return `The package will expire when ${conditions[0]}.`;
+    }
+
+    const joiner = operator === 'AND' ? ' and ' : ' or ';
+
+    return `The package will expire when ${conditions.join(joiner)}.`;
+};
+
+
+export const textSortFormate = (text) => {
+    if (!text) {
+        return ''
+    }
+
+    let short = null
+
+    switch (text) {
+        case 'PURCHASE_COST':
+            short = 'PC'
+            break;
+
+        case 'PACKAGE_PRICE':
+            short = 'P2'
+            break;
+
+        case 'SELLING_RATE':
+            short = 'SR'
+            break;
+
+        case 'WATER_PURIFIER':
+            short = 'WP'
+            break;
+
+        case 'VESSEL_FILTER':
+            short = 'VF'
+            break;
+
+        default:
+            short = null
+            break;
+    }
+
+    return short
+}

@@ -171,7 +171,7 @@ const CustomerMiniReport = () => {
                                                     radius={[15, 15, 15, 15]}
                                                     barGap={15}
                                                 // background={{
-                                                //     fill: "var(--color-natural-trans-73)",
+                                                //     fill: "var(--surface-3)",
                                                 //     radius: 6
                                                 // }}
                                                 >
@@ -268,14 +268,14 @@ const CustomerMiniReport = () => {
                                         <YAxis type="category" dataKey="name" hide />
                                         <Bar dataKey="In house" stackId="a" fill={chartLabelColors[0]} barSize={10} radius={[6, 6, 6, 6]}
                                             background={{
-                                                fill: "var(--color-natural-trans-73)",
+                                                fill: "var(--surface-3)",
                                                 radius: 6,
                                                 pointerEvents: "none"
                                             }} >
                                         </Bar>
                                         <Bar dataKey="Outside" stackId="a" fill={chartLabelColors[1]} barSize={10} radius={[6, 6, 6, 6]}
                                             background={{
-                                                fill: "var(--color-natural-trans-73)",
+                                                fill: "var(--surface-3)",
                                                 radius: 6,
                                                 pointerEvents: "none"
                                             }} >

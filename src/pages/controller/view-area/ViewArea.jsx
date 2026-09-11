@@ -13,12 +13,12 @@ import AddAreaTech from '../../../components/forms/controller/update-area-tech/A
 import UpdateAreaTech from '../../../components/forms/controller/update-area-tech/UpdateAreaTech';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { textSortFormate } from '../../../utils/helpers/text-formatting';
 
 const ViewArea = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user)
     const queryClient = useQueryClient();
-
     const { city_id } = useParams()
     const [loading, setLoading] = useState('')
 
@@ -50,12 +50,13 @@ const ViewArea = () => {
 
                             return {
                                 ...oldData,
-                                vf_technicians: oldData?.vf_technicians?.map((w) => {
+                                service_technicians: oldData?.service_technicians?.map((w) => {
                                     if (w?.worker_uuid === techData?.worker_uuid) {
                                         return {
                                             ...w,
                                             from_date: updateForm?.from_date,
-                                            to_date: updateForm?.to_date
+                                            to_date: updateForm?.to_date,
+                                            product_types: updateForm?.product_types,
                                         };
                                     }
                                     return w;
@@ -85,7 +86,7 @@ const ViewArea = () => {
 
                                 return {
                                     ...oldData,
-                                    vf_technicians: oldData?.vf_technicians?.filter(
+                                    service_technicians: oldData?.service_technicians?.filter(
                                         w => w.worker_uuid !== worker_uuid
                                     )
                                 };
@@ -160,7 +161,7 @@ const ViewArea = () => {
                     {/* <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} /> */}
                     {user?.allowed_origins?.includes('vessel_c_admin') && <Button label={'Worker'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
                         onClick={() => openCreateModal('Add new city worker', <AddAreaTech cityId={data?.city_id}
-                            activeWorkers={data?.vf_technicians} />)} />}
+                            activeWorkers={data?.service_technicians} />)} />}
                 </div>
             </div>
             <div className="contents">
@@ -198,19 +199,21 @@ const ViewArea = () => {
                 <div className="section-two">
                     <div className="item-list">
                         <h4>Workers</h4>
-                        {data?.vf_technicians?.length
+                        {data?.service_technicians?.length
                             ? <>
                                 <div className="item header" >
                                     <p>Name</p>
                                     <p>From date</p>
                                     <p>To Date</p>
+                                    <p>Products</p>
                                     <p></p>
                                 </div>
-                                {data?.vf_technicians?.sort((a, b) => a.full_name?.localeCompare(b?.full_name))?.map((worker, index) => {
+                                {data?.service_technicians?.sort((a, b) => a.full_name?.localeCompare(b?.full_name))?.map((worker, index) => {
                                     return <div className="item" key={worker?.worker_uuid}>
                                         <p>{worker?.full_name}</p>
                                         <p>{worker?.from_date ? isoToDDMonYYYY(new Date(worker?.from_date)) : 'Nil'}</p>
                                         <p>{worker?.to_date ? isoToDDMonYYYY(new Date(worker?.to_date)) : 'Nil'}</p>
+                                        <p>{worker?.product_types?.map(i => textSortFormate(i))?.join(', ')}</p>
                                         {user?.allowed_origins?.some(origin => ['vessel_c_writer', 'vessel_c_admin']?.includes(origin)) &&
                                             <Dropdown button={{
                                                 icon: < TbDots />,

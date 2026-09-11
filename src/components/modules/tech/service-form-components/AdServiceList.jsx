@@ -87,7 +87,7 @@ const AdServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
             </div>
             <div className="fixed-section">
                 <div className="submit-button">
-                    <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setWorkMenu({ type: null, id: null })} />
+                    <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setWorkMenu({ type: null, id: null })} severity={'secondary'} />
                 </div>
             </div>
         </div>

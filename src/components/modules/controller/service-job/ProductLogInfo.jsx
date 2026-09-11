@@ -208,7 +208,7 @@ const ProductLogInfo = () => {
                         <p className='label'>Call for the product (Applied / Estimate)</p>
                         <div>
                             <p className='text-value'>
-                                {data?.service_data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.service_data?.call_summery?.call_rate_estimate || 0} Call</span>
+                                {data?.service_data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-muted)' }}> /  {data?.service_data?.call_summery?.call_rate_estimate || 0} Call</span>
                             </p>
                         </div>
                     </div>}
@@ -405,11 +405,11 @@ const ProductLogInfo = () => {
             {(data?.spare_changes?.length || data?.removed_spares?.length || data?.service_works?.length) ?
                 <div className="table-list">
                     <div className="table-menu">
-                        {data?.spare_changes?.length ? <Button label={'Spare Changes'} rounded outlined={activeSection === 'spare_changes' ? false : true} size='small'
+                        {data?.spare_changes?.length ? <Button severity={'secondary'}  label={'Spare Changes'} rounded outlined={activeSection === 'spare_changes' ? false : true} size='small'
                             style={{ width: '130px' }} onClick={() => setActionSection('spare_changes')} /> : ""}
-                        {data?.service_works?.length ? <Button label={'Service Works'} rounded outlined={activeSection === 'service_works' ? false : true} size='small'
+                        {data?.service_works?.length ? <Button severity={'secondary'}  label={'Service Works'} rounded outlined={activeSection === 'service_works' ? false : true} size='small'
                             style={{ width: '130px' }} onClick={() => setActionSection('service_works')} /> : ''}
-                        {data?.removed_spares?.length ? <Button label={'Removed Spares'} rounded outlined={activeSection === 'removed_spares' ? false : true} size='small'
+                        {data?.removed_spares?.length ? <Button severity={'secondary'}  label={'Removed Spares'} rounded outlined={activeSection === 'removed_spares' ? false : true} size='small'
                             style={{ width: '150px' }} onClick={() => setActionSection('removed_spares')} /> : ''}
                     </div>
 

@@ -160,7 +160,7 @@ const UpcomingServiceTable = () => {
                                     icon={<TbPencilPlus />} size='small' severity={'primary'}
                                     onClick={() => openRegistrationPopUp({ customer_id: row.original.CID, customer_name: row.original['Customer name'] })}
                                 />
-                                <Button rounded title='Enter Call Log'
+                                <Button rounded title='Enter Call Log' severity={'secondary'} 
                                     icon={<TbMessagePlus />} size='small' outlined
                                     onClick={() => openEnterCallLogPopUp({ customer_id: row.original.CID })}
                                 />
@@ -227,7 +227,7 @@ const UpcomingServiceTable = () => {
                                         service_type: row.original.service_type
                                     })}
                                 />
-                                <Button rounded title='Enter Call Log'
+                                <Button rounded title='Enter Call Log' severity={'secondary'} 
                                     icon={<TbMessagePlus />} size='small' outlined
                                     onClick={() => openEnterCallLogPopUp({ customer_id: row.original.CID })}
                                 />

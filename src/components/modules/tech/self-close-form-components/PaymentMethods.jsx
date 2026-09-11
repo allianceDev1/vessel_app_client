@@ -20,7 +20,7 @@ const PaymentMethods = ({ payment, setPayment }) => {
 
 
 
-    
+
     const handleChange = (e) => {
         if (e.target.name === 'method') {
             setForm({ [e.target.name]: e.target.value })
@@ -81,7 +81,7 @@ const PaymentMethods = ({ payment, setPayment }) => {
                 </>}
 
                 {/* Button */}
-                <Button label={'Add Method'} rounded style={{ marginTop: '20px', width: '100%' }} />
+                <Button label={'Add Method'} rounded style={{ marginTop: '20px', width: '100%' }} severity={'secondary'} />
 
 
             </form>

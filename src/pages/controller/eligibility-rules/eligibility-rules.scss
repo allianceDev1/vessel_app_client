@@ -23,8 +23,7 @@
         margin-top: 20px;
 
         .rule-item {
-            background-color: var(--background);
-            box-shadow: var(--shadow-md) 1px 1px 8px 0px;
+            background-color: var(--surface-1);
             border-radius: 10px;
             padding: 10px;
             cursor: pointer;
@@ -40,13 +39,21 @@
 
                 p {
                     font-size: 14px;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
             }
 
         }
     }
 
+    .note-section {
+        margin-top: 25px;
+
+        p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+    }
 
 
     @media screen and (max-width:650px) {

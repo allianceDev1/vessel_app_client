@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import './view-service-package.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../../api';
-import { TbCarouselHorizontal, TbCheck, TbEdit, TbEye, TbEyeClosed, TbPencil, TbPointFilled, TbX } from 'react-icons/tb';
+import { TbCarouselHorizontal, TbCheck, TbChevronDown, TbEye, TbEyeClosed, TbPencil, TbPlus, TbPointFilled, TbTrash, TbX } from 'react-icons/tb';
 import { hexToRgba } from '../../../utils/helpers/color-utils';
 import { modal, doDialog, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
@@ -12,20 +12,19 @@ import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import UpdatePackage from '../../../components/forms/controller/update-package/CreateUpdatePackage';
-import UpdatePackageService from '../../../components/forms/controller/update-package/UpdatePackageService';
 import Message from '../../../components/UI_Primitives/message/Message'
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
-import { serviceChargeSort, toStandardText } from '../../../utils/helpers/text-formatting';
-import { serviceCategoryListStretcher } from '../../../utils/services/package_service';
+import { getExpiryMessage, toStandardText } from '../../../utils/helpers/text-formatting';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
+import CreatePackageService from '../../../components/forms/controller/update-package/CreatePackageService';
 
 
 const ViewServicePackage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { package_id } = useParams();
-    const [packageInfo, setPackageInfo] = useState({})
-    const [serviceList, setServiceList] = useState([])
-    const [loading, setLoading] = useState('fetch')
-    const [error, setError] = useState({ error: false, title: null, message: null })
     const { user } = useSelector((state) => state.user)
 
     const openModal = (title, body, style) => {
@@ -37,77 +36,114 @@ const ViewServicePackage = () => {
         }))
     }
 
-    const fetchApi = async () => {
-        try {
-            setLoading('fetch')
-            setError({ error: false, title: null, message: null })
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['cn', 'service_package', package_id],
+        queryFn: async () => {
 
             const [packageRes, serviceRes] = await Promise.all([
                 api.vfCv2Axios.get(`/config/service-package/${package_id}`),
-                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,coverage,service_policy,package_charge_applied,target_package,service_charge_applied,service_charges,service_limit`)
+                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,is_active`)
             ]);
 
             const { pricing_config, ...pInfo } = packageRes;
 
-            setPackageInfo({
-                ...pInfo,
-                package_fund: pricing_config?.base_price || 0,
-                gst_rate: pricing_config?.gst?.rate || null,
-                service_work_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value_type || null,
-                service_work_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value || null,
-                spare_parts_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value_type || null,
-                spare_parts_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value || null
-            })
-            setServiceList(serviceCategoryListStretcher(serviceRes))
+            return {
+                packageInfo: {
+                    ...pInfo,
+                    package_fund: pricing_config?.base_price || 0,
+                    gst_rate: pricing_config?.gst?.rate || null,
+                    service_work_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value_type || null,
+                    service_work_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SERVICE_WORK')?.[0]?.value || null,
+                    spare_parts_fund_type: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value_type || null,
+                    spare_parts_fund: pricing_config?.fund_distribution?.filter((a) => a.fund_type === 'SPARE_PARTS')?.[0]?.value || null
+                },
+                serviceCategoryList: serviceRes
+            }
 
-        } catch (err) {
-            setError({ error: true, title: 'Data fetching failed', message: err.message })
-        } finally {
-            setLoading('')
-        }
-    }
+
+        },
+        staleTime: 60_000
+    })
 
     const updateActiveStatus = (is_active) => {
         dispatch(doDialog.confirm({
-            message: 'This action will disable the package. Do you want to continue?',
+            message: is_active ?
+                'Do you want to continue?'
+                : 'This action will disable the package. Do you want to continue?',
             accept: {
                 onClick: async () => {
                     try {
-                        setLoading('update')
+
                         await api.vfCv2Axios.patch(`/config/service-package/${package_id}/active-status`, { is_active })
-                        setPackageInfo({ ...packageInfo, is_active })
+
+                        queryClient.setQueryData(
+                            ['cn', 'service_package', package_id],
+                            (oldData) => {
+                                if (!oldData) return oldData;
+
+                                return {
+                                    ...oldData,
+                                    packageInfo: {
+                                        ...oldData?.packageInfo,
+                                        is_active
+                                    }
+                                };
+                            }
+                        );
                     } catch (error) {
                         dispatch(toast.push({
                             type: 'danger',
                             head: 'Update failed',
                             message: error.message
                         }))
-                    } finally {
-                        setLoading('')
                     }
                 }
             }
         }))
     }
 
-    const handelEditService = (item) => {
-        dispatch(modal.push({
-            title: 'Update Package Service',
-            body: <UpdatePackageService packageId={package_id} serviceData={item} setServiceList={setServiceList} />
+    const handleRemovePackage = () => {
+        dispatch(doDialog.confirm({
+            message: 'This action will be remove this service package and package service categories. Do you want to continue?',
+            accept: {
+                onClick: async () => {
+                    try {
+
+                        await api.vfCv2Axios.delete(`/config/service-package/${package_id}`)
+
+                        queryClient.refetchQueries({
+                            queryKey: ['cn', 'service_packages', data?.packageInfo?.product_type]
+                        })
+
+                        dispatch(toast.push({
+                            type: 'success',
+                            head: 'Package removed!',
+                            message: 'Service package and package service categories removed.'
+                        }))
+
+                        navigate(`/controller/app-config/service-packages?parent_product=${data?.packageInfo?.product_type}`)
+
+                    } catch (error) {
+                        dispatch(toast.push({
+                            type: 'danger',
+                            head: 'Package remove failed',
+                            message: error.message
+                        }))
+                    }
+                }
+            }
         }))
     }
 
     useEffect(() => {
         dispatch(page.setTitle({}))
 
-        // Initial fetch
-        fetchApi();
         // eslint-disable-next-line
     }, [])
 
 
     // loading
-    if (loading === 'fetch') {
+    if (isLoading) {
         return <div className="view-service-packages-page-load">
             <div className="top-section">
                 <SkeletonGrid
@@ -129,10 +165,10 @@ const ViewServicePackage = () => {
     }
 
     // Error
-    if (error?.error) {
+    if (error) {
         return <ErrorState
             hight='80vh'
-            title={error?.title}
+            title={'Data fetching failed!'}
             message={error?.message}
             icon={<TbCarouselHorizontal />}
         />
@@ -143,170 +179,126 @@ const ViewServicePackage = () => {
             {user?.allowed_origins?.includes('vessel_c_admin') &&
                 <div className="top-section">
                     <div className="action-buttons">
-                        <Button label={'Update'} icon={<TbPencil />} size='small' outlined rounded style={{ width: '100px' }}
-                            onClick={() => openModal('Update package', <UpdatePackage action={'UPDATE'} data={packageInfo} setData={setPackageInfo} />, { width: "800px" })} />
-                        {packageInfo?.is_active
-                            ? <Button label={'Disable'} icon={<TbEyeClosed />} severity={'danger'} size='small' rounded style={{ width: '100px' }}
-                                onClick={() => updateActiveStatus(false)} />
-                            : <Button label={'Enable'} icon={<TbEye />} severity={'info'} size='small' rounded style={{ width: '100px' }}
-                                onClick={() => updateActiveStatus(true)} disabled={!serviceList?.length} />}
+
+                        <Button label={'Service Category'} icon={<TbPlus />} size='small' severity={'primary'} rounded style={{ width: '170px' }}
+                            onClick={() => openModal('Add Service Category', <CreatePackageService productType={data?.packageInfo?.product_type} packageId={package_id} />)} />
+
+                        <Dropdown
+                            button={{
+                                label: 'Action',
+                                icon: < TbChevronDown />, iconPos: 'right',
+                                rounded: true, outlined: true, size: 'small', style: { width: '110px' }
+                            }}
+                            list={[
+                                {
+                                    items: [
+                                        {
+                                            icon: <TbPencil />,
+                                            label: 'Update package',
+                                            onClick: () => openModal('Update package', <UpdatePackage action={'UPDATE'} data={data?.packageInfo} />, { width: "800px" })
+                                        },
+                                        (
+                                            data?.packageInfo?.is_active
+                                                ? {
+                                                    icon: <TbEyeClosed />,
+                                                    label: 'Disable',
+                                                    theme: "danger",
+                                                    onClick: () => updateActiveStatus(false)
+                                                }
+                                                : {
+                                                    icon: <TbEye />,
+                                                    label: 'Enable',
+                                                    theme: "info",
+                                                    onClick: () => updateActiveStatus(true),
+                                                    disabled: !data?.serviceCategoryList?.length
+                                                }
+                                        ),
+                                        {
+                                            icon: <TbTrash />,
+                                            label: 'Remove',
+                                            theme: "danger",
+                                            onClick: () => handleRemovePackage()
+                                        }
+                                    ]
+                                }
+                            ]} />
                     </div>
                 </div>}
             <div className="package-title" style={{
-                borderColor: packageInfo?.color_code,
+                borderColor: data?.packageInfo?.color_code,
                 background: `linear-gradient(50deg,
-                    ${hexToRgba(packageInfo?.color_code, 0.3)} 25%,
-                    ${hexToRgba(packageInfo?.color_code, 0.5)} 60%,
-                    ${hexToRgba(packageInfo?.color_code, 0.7)} 85%)`
+                    ${hexToRgba(data?.packageInfo?.color_code, 0.3)} 25%,
+                    ${hexToRgba(data?.packageInfo?.color_code, 0.5)} 60%,
+                    ${hexToRgba(data?.packageInfo?.color_code, 0.7)} 85%)`
             }}>
-                <h1 style={{ color: packageInfo.color_code }}>{packageInfo?.package_name}</h1>
-                <p>( {packageInfo?.full_form} )</p>
+                <h1 style={{ color: data?.packageInfo.color_code }}>{data?.packageInfo?.package_name}</h1>
+                <p>( {data?.packageInfo?.full_form} )</p>
                 <div className="sub-items">
                     <div className="sub-item">
-                        <h4>{packageInfo?.package_duration_months ? `${packageInfo?.package_duration_months} mo` : 'Nil'}</h4>
+                        <h4>{data?.packageInfo?.package_duration_months ? `${data?.packageInfo?.package_duration_months} mo` : 'Nil'}</h4>
                         <p>Duration</p>
                     </div>
                     <div className="sub-item">
-                        <h4>{packageInfo?.tokens_count ? `${packageInfo?.tokens_count}` : 'Nil'}</h4>
+                        <h4>{data?.packageInfo?.tokens_count ? `${data?.packageInfo?.tokens_count}` : 'Nil'}</h4>
                         <p>Tokens</p>
                     </div>
                     <div className="sub-item">
-                        <h4>{packageInfo?.number_of_services ? `${packageInfo?.number_of_services}` : '0'}</h4>
+                        <h4>{data?.packageInfo?.number_of_services ? `${data?.packageInfo?.number_of_services}` : '0'}</h4>
                         <p>SR In Duration</p>
                     </div>
                     <div className="sub-item">
-                        <h4>{packageInfo?.package_fund ? `₹ ${packageInfo?.package_fund}` : '₹ 0'}</h4>
+                        <h4>{data?.packageInfo?.package_fund ? `₹ ${data?.packageInfo?.package_fund}` : '₹ 0'}</h4>
                         <p>Package Fund</p>
                     </div>
                 </div>
-                <div className={`status-fold ${packageInfo.is_active ? 'active' : 'inactive'}`}>
-                    {packageInfo.is_active ? <TbCheck /> : <TbX />}
-                    <p>{packageInfo.is_active ? 'Active' : 'Inactive'}</p>
+
+                <p className='expire-note'>{getExpiryMessage({
+                    packageDuration: data?.packageInfo?.expire_types?.find(i => i === "PACKAGE_DURATION"),
+                    remainingTokens: data?.packageInfo?.expire_types?.find(i => i === "REMAINING_TOKENS"),
+                    operator: data?.packageInfo?.et_query_operator || null,
+                })}</p>
+                <div className={`status-fold ${data?.packageInfo.is_active ? 'active' : 'inactive'}`}>
+                    {data?.packageInfo.is_active ? <TbCheck /> : <TbX />}
+                    <p>{data?.packageInfo.is_active ? 'Active' : 'Inactive'}</p>
                 </div>
             </div>
 
-            <p>The package is updated at {isoToDDMonYYYY(new Date(packageInfo?.updated_at))} by {packageInfo?.updated_by}</p>
+            <p>The package is updated at {isoToDDMonYYYY(new Date(data?.packageInfo?.updated_at))} by {data?.packageInfo?.updated_by}</p>
 
-            {!Number(packageInfo?.package_fund ?? 0) &&
+            {!Number(data?.packageInfo?.package_fund ?? 0) &&
                 <Message type={'info'} head={'Zero-Fee Package'} message={`This package is configured as a Zero-Fee Package. 
                 The renewal charge is set to zero, and no amount will be collected at renewal time.`} />}
 
             <div className="service-section">
+
                 <h3 className='sub-title'>Package Service Categories</h3>
-                {serviceList?.length === 0
+
+                {data?.serviceCategoryList?.length === 0
                     ? <EmptyState icon={<TbCarouselHorizontal />} title={'No services available'} description={'The package related service not created'}
                         hight='300px' />
                     : <div className="service-list">
-                        {serviceList?.map((item, index) => {
+                        {data?.serviceCategoryList?.map((item) => {
                             return (
-                                <div className="item" key={item?.category_uuid}>
+                                <div
+                                    className="item"
+                                    key={item?.category_uuid || item?.service_id}
+                                    onClick={() => navigate(`/controller/app-config/service-packages/${package_id}/service-category/${item?.service_id}`)}
+                                >
                                     <div className="head">
                                         <h3>{item?.service_name}</h3>
                                         <div>
-                                            <p>{item?.category_id}</p>
+                                            <p>Cat. ID : {item?.category_id}</p>
                                             <TbPointFilled />
                                             <p>Mode : {toStandardText(item?.mode)}</p>
                                         </div>
-                                    </div>
-                                    <div className="list-section">
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Materials Charge & Access</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.coverage?.MATERIAL?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIAL?.price_type)}</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.coverage?.MATERIAL?.access ? 'success' : 'danger'}`}>
-                                                {item?.coverage?.MATERIAL?.access ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Bag Charge & Access</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.coverage?.MATERIALS_BAG?.access ? <p>{serviceChargeSort(item?.coverage?.MATERIALS_BAG?.price_type)}</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.coverage?.MATERIALS_BAG?.access ? 'success' : 'danger'}`}>
-                                                {item?.coverage?.MATERIALS_BAG?.access ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Spare Charge & Access</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.coverage?.PRIMARY_SPARES?.access ? <p>{serviceChargeSort(item?.coverage?.PRIMARY_SPARES?.price_type)}</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.coverage?.PRIMARY_SPARES?.access ? 'success' : 'danger'}`}>
-                                                {item?.coverage?.PRIMARY_SPARES?.access ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Service Work & Access</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.coverage?.SERVICE_WORK?.access ? <p>{serviceChargeSort(item?.coverage?.SERVICE_WORK?.price_type)}</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.coverage?.SERVICE_WORK?.access ? 'success' : 'danger'}`}>
-                                                {item?.coverage?.SERVICE_WORK?.access ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Package Fund</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.package_charge_applied ? <p>{item?.target_package}*</p> : ''}
-                                            </div>
-                                            <div className={`part part-three ${item?.package_charge_applied ? 'success' : 'danger'}`}>
-                                                {item?.package_charge_applied ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Service Charge</p>
-                                            </div>
-                                            <div className={`part part-two`}></div>
-                                            <div className={`part part-three ${item?.service_charge_applied ? 'success' : 'danger'}`}>
-                                                {item?.service_charge_applied ? <TbCheck /> : <TbX />}
-                                            </div>
-                                        </div>
-                                        <div className="list-item">
-                                            <div className={`part part-one`}>
-                                                <p>Service Limit</p>
-                                            </div>
-                                            <div className={`part part-two`}>
-                                                {item?.service_limit ? <p>{item?.service_limit}</p> : <p>Unlimit</p>}
-                                            </div>
-                                            <div className={`part part-three ${item?.service_limit ? 'success' : 'danger'}`}>
-                                                {item?.service_limit ? <TbCheck /> : <TbX />}
-                                            </div>
+                                        <div>
+                                            <p>PSC ID : {item?.service_id}</p>
                                         </div>
                                     </div>
-                                    {item?.service_charges?.length && <div className="list-section">
-                                        <h4 className='section-title'>Service Charges</h4>
-                                        {item?.service_charges?.map((charge, index) => {
-                                            return (
-                                                <div className="list-item" key={index}>
-                                                    <div className={`part part-one`}>
-                                                        <p>Charge {index + 1}</p>
-                                                    </div>
-                                                    <div className={`part part-two`}>
-                                                        <p>₹ {charge?.charge_amount}</p>
-                                                    </div>
-                                                    <div className={`part part-three`}>
-                                                        <p>{charge?.call_count} Call</p>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>}
-                                    {user?.allowed_origins?.includes('vessel_c_admin') &&
-                                        <div className="buttons">
-                                            <Button icon={<TbEdit />} rounded outlined size='small' onClick={() => handelEditService(item)} />
-                                        </div>}
+                                    <div className={`status-fold ${item.is_active ? 'active' : 'inactive'}`}>
+                                        {item.is_active ? <TbCheck /> : <TbX />}
+                                        <p>{item.is_active ? 'Active' : 'Inactive'}</p>
+                                    </div>
                                 </div>)
                         })}
                     </div>}

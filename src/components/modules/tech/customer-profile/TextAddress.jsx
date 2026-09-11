@@ -28,7 +28,7 @@ const TextAddress = ({
                 <p>{address}</p>
             </div>
             <div className="buttons-div" style={{ gridTemplateColumns: viewMapButton && directionButton ? '1fr 1fr' : '1fr' }}>
-                {viewMapButton && <Button label={'View on Google Map'} size='small' style={{ width: '100%' }} rounded
+                {viewMapButton && <Button label={'View on Google Map'} size='small' style={{ width: '100%' }} rounded severity={'secondary'} 
                     onClick={handleViewLocation} disabled={!location?.placeId && (!location?.lat && !location?.lng)} />}
                 {directionButton && <Button label={'Get Directions'} severity={'primary'} size='small' style={{ width: '100%' }} rounded
                     onClick={handleDirection} disabled={!location?.placeId && (!location?.lat && !location?.lng)} />}

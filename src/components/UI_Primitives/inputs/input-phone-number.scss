@@ -18,10 +18,9 @@
             font-weight: 500;
             padding: 28px 15px 18px 70px;
             outline: none;
-            border: 1px solid var(--color-natural-4);
+            border: 1px solid var(--border-light);
             border-radius: 10px;
-            background-color: var(--color-natural-trans-53);
-            backdrop-filter: blur(5px);
+            background-color: var(--surface-1);
             color: var(--text-primary);
         }
 
@@ -30,20 +29,17 @@
             top: 0;
             bottom: 0;
             padding: 0;
-            background-color: var(--color-natural-trans-53);
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--color-natural-4);
+            background-color: var(--surface-1);
+            border: 1px solid var(--border-light);
             border-radius: 10px 0 0 10px;
 
             &.open {
                 z-index: 2;
-                background-color: var(--color-natural-trans-53);
-                backdrop-filter: blur(5px);
+                background-color: var(--surface-1);
                 border-radius: 3px 0 0 0;
 
                 .selected-flag {
-                    background-color: var(--color-natural-trans-73);
-                    backdrop-filter: blur(5px);
+                    background-color: var(--surface-2);
                     border-radius: 3px 0 0 0;
                 }
             }
@@ -59,8 +55,7 @@
 
             &:hover,
             &:focus {
-                background-color: var(--color-natural-trans-53);
-                backdrop-filter: blur(5px);
+                background-color: var(--surface-1);
             }
 
             .arrow {
@@ -72,11 +67,11 @@
                 height: 0;
                 border-left: 3px solid transparent;
                 border-right: 3px solid transparent;
-                border-top: 4px solid var(--color-natural-8);
+                border-top: 4px solid var(--border-light);
 
                 &.up {
                     border-top: none;
-                    border-bottom: 4px solid var(--color-natural-8);
+                    border-bottom: 4px solid var(--border-light);
                 }
             }
         }
@@ -89,40 +84,40 @@
             padding: 0;
             margin: 10px 0 10px -1px;
             box-shadow: var(--shadow-sm);
-            background-color: var(--color-natural-2);
+            background-color: var(--surface-1);
             width: 300px;
             max-height: 200px;
             overflow-y: scroll;
             border-radius: 8px;
-            border: 1px solid var(--color-natural-4);
+            border: 1px solid var(--border-light);
             @include scrollBar();
 
             .divider {
                 padding-bottom: 5px;
                 margin-bottom: 5px;
-                border-bottom: 1px solid var(--color-natural-4);
+                border-bottom: 1px solid var(--border-light);
             }
 
             .country {
                 padding: 7px 9px;
 
                 .dial-code {
-                    color: var(--text-secondary-3);
+                    color: var(--text-muted);
                 }
 
                 &:hover {
-                    background-color: var(--color-natural-3);
+                    background-color: var(--surface-2);
                 }
 
                 &.highlight {
-                    background-color: var(--color-natural-4);
+                    background-color: var(--surface-3);
                 }
             }
 
             .search {
                 position: sticky;
                 top: 0;
-                background-color: var(--color-natural-2);
+                background-color: var(--surface-1);
                 padding: 10px 0 6px 10px;
             }
 
@@ -131,8 +126,8 @@
             }
 
             .search-box {
-                border: 1px solid var(--color-natural-5);
-                background-color: var(--color-natural-1);
+                border: 1px solid var(--border-light);
+                background-color: var(--surface);
                 border-radius: 3px;
                 font-size: 15px;
                 line-height: 15px;
@@ -151,7 +146,7 @@
             top: -8px;
             background: var(--color-danger-bg);
             padding: 0 2px;
-            color: var(--color-danger);
+            color: var(--color-danger-text);
         }
 
         .special-label {
@@ -161,7 +156,7 @@
             font-size: 13px;
             left: 46px;
             top: -8px;
-            background: var(--color-natural-1);
+            background: var(--surface);
             padding: 0 2px;
             white-space: nowrap;
         }
@@ -174,7 +169,6 @@
         left: 0px;
         top: 1px;
         color: var(--text-secondary);
-        backdrop-filter: blur(5px);
         padding: 13px 0px 13px 15px;
         font-size: 16px;
         font-weight: 500;
@@ -184,7 +178,7 @@
         @include threeDots();
 
         .required {
-            color: var(--color-danger);
+            color: var(--color-danger-text);
             margin-left: 2px;
             font-size: 18px;
             position: absolute;
@@ -206,7 +200,7 @@
         font-size: 12px;
         margin-top: 2px;
         margin-left: 8px;
-        color: var(--color-natural-6);
+        color: var(--text-secondary);
     }
 
     &.focus {
@@ -228,7 +222,6 @@
         label {
             background: none;
             padding: 0;
-            backdrop-filter: blur(0px);
             border: none;
             left: 70px;
             top: 3px;
@@ -241,19 +234,19 @@
         position: relative;
 
         label {
-            color: var(--color-danger);
+            color: var(--color-danger-text);
         }
 
         .react-tel-input {
 
             .flag-dropdown,
             .form-control {
-                border-color: var(--color-danger);
+                border-color: var(--color-danger-text);
             }
         }
 
         .helper-text {
-            color: var(--color-danger);
+            color: var(--color-danger-text);
         }
     }
 

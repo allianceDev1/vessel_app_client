@@ -9,8 +9,8 @@
         border: 1px solid var(--border-light);
         border-radius: 20px;
         padding: 25px 10px;
-        background-color: var(--color-natural-trans-51);
-        backdrop-filter: blur(5px);
+        background-color: var(--surface-1);
+        // backdrop-filter: blur(5px);
 
 
         .sub-item {
@@ -70,7 +70,7 @@
                     font-size: 14px;
                     font-weight: 500;
                     padding: 10px 10px;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
 
                     &:first-child {
                         color: var(--color-danger);
@@ -126,7 +126,7 @@
                     }
 
                     &.today {
-                        background-color: var(--color-primary-trans-53);
+                        background-color: var(--color-primary-bg);
                     }
                 }
 
@@ -161,7 +161,7 @@
                 p {
                     font-size: 14px;
                     font-weight: 500;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
 
                 &:last-child {

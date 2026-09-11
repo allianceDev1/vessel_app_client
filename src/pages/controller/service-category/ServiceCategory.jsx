@@ -1,35 +1,27 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import './service-category.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { api } from '../../../api';
-import { TbCarouselHorizontal, TbCheck, TbChevronDown, TbEdit, TbInfoCircle, TbPlus, TbPointFilled, TbX } from 'react-icons/tb';
-import { serviceChargeSort, toStandardText } from '../../../utils/helpers/text-formatting';
+import { TbCarouselHorizontal, TbCheck, TbChevronDown, TbInfoCircle, TbPlus, TbPointFilled, TbX } from 'react-icons/tb';
+import { toStandardText } from '../../../utils/helpers/text-formatting';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import CreateUpdateServiceCategory from '../../../components/forms/controller/service-category/CreateUpdateServiceCategory';
-import { serviceCategoryListStretcher } from '../../../utils/services/package_service';
 import { useQuery } from '@tanstack/react-query';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { parent_product_types } from '../../../config/app_config';
+
+
 
 const ServiceCategory = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
     const { user } = useSelector((state) => state.user)
-
-
-    const openCreateModal = (item) => {
-        dispatch(modal.push({
-            title: 'Create service category',
-            body: <CreateUpdateServiceCategory action={'CREATE'} serviceCategory={item} />,
-            style: { width: '700px' }
-        }))
-    }
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_category_list', (searchParams.get('parent_product') || parent_product_types[0])],
@@ -41,6 +33,14 @@ const ServiceCategory = () => {
         },
         staleTime: 10_000
     })
+
+    const openCreateModal = (item) => {
+        dispatch(modal.push({
+            title: 'Create service category',
+            body: <CreateUpdateServiceCategory action={'CREATE'} serviceCategory={item} />,
+            style: { width: '700px' }
+        }))
+    }
 
     const handleChangeParentProduct = (type) => {
         setSearchParams({ parent_product: type })
@@ -83,7 +83,7 @@ const ServiceCategory = () => {
                 <Dropdown
                     button={{
                         label: toStandardText(searchParams.get('parent_product') || parent_product_types[0]),
-                        icon: < TbChevronDown />, iconPos: 'right',
+                        icon: < TbChevronDown />, iconPos: 'right', severity: 'secondary',
                         rounded: true, outlined: true, size: 'small', style: { width: '150px' }
                     }}
                     list={[{
@@ -106,7 +106,7 @@ const ServiceCategory = () => {
             {data?.length > 0 && <div className="items-container">
                 {data?.map((item) => {
                     return (
-                        <div className="item" key={item?.category_uuid}>
+                        <div className="item" key={item?.category_uuid} onClick={() => navigate(`/controller/app-config/service-categories/${item?.category_id}`)}>
                             <div className="head">
                                 <h3>{item?.service_name}</h3>
                                 <div>
@@ -116,6 +116,10 @@ const ServiceCategory = () => {
                                 </div>
                             </div>
                             {item?.package_product_only && <div className='info-note'> <TbInfoCircle /> This category only for packages.</div>}
+                            <div className={`status-fold ${item.is_active ? 'active' : 'inactive'}`}>
+                                {item.is_active ? <TbCheck /> : <TbX />}
+                                <p>{item.is_active ? 'Active' : 'Inactive'}</p>
+                            </div>
                         </div>)
                 })}
             </div>}

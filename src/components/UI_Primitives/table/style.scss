@@ -1,4 +1,10 @@
 .ui-tanstack-table-div {
+
+    --table-tr-bg: var(--background);
+    --table-tr-text: var(--text-primary);
+    --table-tr-hover: var(--surface-1);
+
+
     margin-top: 15px;
 
     .table-filter-top {
@@ -29,8 +35,7 @@
     }
 
     .bulk-actions {
-        background-color: var(--color-natural-trans-73);
-        backdrop-filter: blur(5px);
+        background-color: var(--surface);
         margin-bottom: 15px;
         margin-top: 14px;
         min-height: 45px;
@@ -72,7 +77,7 @@
 
             thead {
                 .sort-icon {
-                    color: var(--color-natural-8);
+                    color: var(--text-secondary);
                     margin-left: 10px;
                     margin-top: 5px;
                     cursor: pointer;
@@ -80,7 +85,7 @@
 
                 .ascent-sort,
                 .descent-sort {
-                    color: var(--color-natural-8);
+                    color: var(--text-secondary);
                 }
             }
 
@@ -98,13 +103,11 @@
                     }
 
                     &:checked+.checkbox-box {
-                        background: var(--color-natural-9);
-                        border-color: var(--color-natural-9);
+                        background: var(--surface-inverse);
+                        border-color: var(--surface-inverse);
                     }
 
                     &:disabled+.checkbox-box {
-                        background-color: var(--color-natural-9);
-                        border-color: var(--color-natural-9);
                         opacity: .5;
                     }
                 }
@@ -112,7 +115,7 @@
                 .checkbox-box {
                     width: 20px;
                     height: 20px;
-                    border: 2px solid var(--color-natural-9);
+                    border: 2px solid var(--border-dark);
                     border-radius: 4px;
                     display: flex;
                     align-items: center;
@@ -122,13 +125,13 @@
                     &::after {
                         content: "✔";
                         font-size: 14px;
-                        color: var(--color-natural-2);
+                        color: var(--text-inverse-alt);
                         opacity: 0;
                         transition: opacity 0.2s ease;
                     }
 
-                    &:hover .checkbox-box {
-                        border-color: var(--color-natural-7);
+                    &:hover {
+                        border-color: var(--text-primary);
                     }
                 }
             }
@@ -145,10 +148,11 @@
             }
 
             tr {
-                background-color: var(--color-natural-trans-18);
+                background-color: var(--table-tr-bg);
+                color: var(--table-tr-text);
 
                 &:hover {
-                    background-color: var(--color-natural-trans-53);
+                    background-color: var(--table-tr-hover);
                 }
 
                 &:last-child {
@@ -162,7 +166,7 @@
                 padding-top: 10px;
                 padding-bottom: 12px;
                 text-align: left;
-                background-color: var(--color-natural-3);
+                background-color: var(--surface-1);
                 color: var(--text-primary);
                 text-align: center;
                 font-weight: 600;
@@ -181,39 +185,38 @@
             }
 
             .danger-row {
-                color: var(--color-danger-text);
-                background-color: var(--color-danger-trans-83);
+                --table-tr-bg: var(--color-danger-bg);
+                --table-tr-text: var(--color-danger-text);
+                --table-tr-hover: var(--color-danger-bg-hover);
             }
 
             .warning-row {
-                color: var(--color-warning);
-                background-color: var(--color-warning-bg);
+                --table-tr-bg: var(--color-warning-bg);
+                --table-tr-text: var(--color-warning-text);
+                --table-tr-hover: var(--color-warning-bg-hover);
             }
 
             .info-row {
-                color: var(--color-info);
-                background-color: var(--color-info-bg);
+                --table-tr-bg: var(--color-info-bg);
+                --table-tr-text: var(--color-info-text);
+                --table-tr-hover: var(--color-info-bg-hover);
             }
 
             .success-row {
-                color: var(--color-success);
-                background-color: var(--color-success-bg);
-            }
-
-            .secondary-row {
-                color: var(--text-primary);
-                background-color: var(--surface-1);
+                --table-tr-bg: var(--color-success-bg);
+                --table-tr-text: var(--color-success-text);
+                --table-tr-hover: var(--color-success-bg-hover);
             }
 
             .selected-td {
-                background-color: var(--color-natural-2);
+                background-color: var(--surface-1);
             }
 
             .no-data-row {
                 text-align: center;
                 padding: 20px;
                 font-size: 14px;
-                color: var(--text-secondary-3);
+                color: var(--text-secondary);
                 height: calc(5 * 48px);
                 vertical-align: middle;
             }

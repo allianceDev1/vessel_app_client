@@ -47,12 +47,12 @@ const ActivatePackage = ({ packageSrlNo }) => {
 
     return (
         <div>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 This package is currently not activated. You can force activate the package. The package can only be activated if no other package is currently active.
                 Once activated, the package status cannot be changed back to Pending.
             </p>
 
-            <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 To activate the package, Type <b>ACTIVATE</b> in the field below to confirm.
             </p>
 

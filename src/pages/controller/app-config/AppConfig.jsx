@@ -7,6 +7,7 @@ import { app_version, parent_product_types } from '../../../config/app_config';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../api';
 import { useQuery } from '@tanstack/react-query';
+import Badge from '../../../components/UI_Primitives/message/Message';
 
 const AppConfig = () => {
     const dispatch = useDispatch();
@@ -54,7 +55,7 @@ const AppConfig = () => {
                         <h3>System essentials</h3>
                     </div>
                     <div className="content">
-                        <div className="list-item" onClick={() => navigate('/controller/app-config/eligibility-rules')}>
+                        <div className="list-item hover" onClick={() => navigate('/controller/app-config/eligibility-rules')}>
                             <div className="l">
                                 <h4>Eligibility rules</h4>
                                 <p className='description'>Define which rules are eligible for this service workflow.</p>
@@ -63,7 +64,7 @@ const AppConfig = () => {
                                 <TbArrowLeft className='arrow' />
                             </div>
                         </div>
-                        <div className="list-item" onClick={() => navigate('/controller/app-config/service-categories')}>
+                        <div className="list-item hover" onClick={() => navigate('/controller/app-config/service-categories')}>
                             <div className="l">
                                 <h4>Service categories</h4>
                                 <p className='description'>Categorize services workflows</p>
@@ -72,7 +73,7 @@ const AppConfig = () => {
                                 <TbArrowLeft className='arrow' />
                             </div>
                         </div>
-                        <div className="list-item" onClick={() => navigate(`/controller/app-config/service-packages?parent_product=${parent_product_types[0]}`)}>
+                        <div className="list-item hover" onClick={() => navigate(`/controller/app-config/service-packages?parent_product=${parent_product_types[0]}`)}>
                             <div className="l">
                                 <h4>Service packages</h4>
                                 <p className='description'>Manage service packages, validity, pricing, and included benefits</p>
@@ -81,7 +82,7 @@ const AppConfig = () => {
                                 <TbArrowLeft className='arrow' />
                             </div>
                         </div>
-                        <div className="list-item" onClick={() => navigate('/controller/app-config/form-resources')}>
+                        <div className="list-item hover" onClick={() => navigate('/controller/app-config/form-resources')}>
                             <div className="l">
                                 <h4>Form resources</h4>
                                 <p className='description'>Maintain reusable form data and configurations used across the application</p>
@@ -113,6 +114,7 @@ const AppConfig = () => {
                         })}
                     </div>
                 </div>
+
             </div>
         </div >
     )

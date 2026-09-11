@@ -47,17 +47,17 @@ const ChangeProductStatus = ({ status, productId }) => {
 
   return (
     <div>
-      {status === 'CONNECT' && <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+      {status === 'CONNECT' && <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
         Current product currently disconnected from customer products list. Verify and continue the product
         connection to customer.
       </p>}
 
-      {status === 'DISCONNECT' && <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+      {status === 'DISCONNECT' && <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
         The disconnection remove the product from customer product list. the technician and customer
         can access to the product after disconnection.
       </p>}
 
-      <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+      <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
         To proceed, Type <b>{status}</b> in the field below to confirm.
       </p>
 

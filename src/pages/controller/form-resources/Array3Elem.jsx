@@ -86,6 +86,7 @@ const Array3Elem = ({ deleteData }) => {
                                     button={{
                                         icon: <TbDots />,
                                         size: 'small',
+                                        severity: 'secondary',
                                         text: true
                                     }}
                                     list={[

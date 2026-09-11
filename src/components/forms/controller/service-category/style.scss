@@ -3,19 +3,17 @@
 .update-service-category-modal {
     form {
         .inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 10px;
 
             .section {
-                display: flex;
-                flex-direction: column;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
 
                 .radio-input-label {
                     font-size: 14px;
                     font-weight: 500;
-                    color: var(--text-secondary-1);
+                    color: var(--text-secondary-alt);
                 }
 
                 .required-span {
@@ -25,7 +23,8 @@
 
             .sub-title {
                 @include subTitleSmall();
-                margin-top: 8px;
+                margin-top: 20px;
+                margin-bottom: 10px;
             }
 
             @media screen and (max-width:500px) {
@@ -47,7 +46,7 @@
     .description {
         font-size: 13px;
         text-align: justify;
-        color: var(--text-secondary-2);
+        color: var(--text-tertiary);
         margin: 20px 0 5px 0;
     }
 }

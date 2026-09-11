@@ -2,7 +2,7 @@
 
 .spare-card-item-container {
     max-width: 500px;
-    background-color: var(--color-natural-trans-53);
+    background-color: var(--surface-2);
     padding: 10px 15px;
     border-radius: 10px;
     border: var(--border-light) 1px solid;
@@ -26,7 +26,7 @@
             p {
                 font-size: 13px;
                 margin-top: 8px;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
             }
         }
 
@@ -54,7 +54,7 @@
             .warranty-label {
                 font-size: 13px;
                 margin-top: 8px;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
             }
 
             .date {
@@ -79,7 +79,7 @@
             .date-label {
                 font-size: 13px;
                 margin-top: 8px;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
             }
 
             .date {

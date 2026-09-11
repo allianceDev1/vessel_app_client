@@ -27,7 +27,9 @@ const ServicePackages = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_packages', (searchParams.get('parent_product') || parent_product_types[0])],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/config/service-package/list?product_type=${searchParams.get('parent_product')}&hidden=Yes`)
+            const res = await api.vfCv2Axios.get(
+                `/config/service-package/list?product_type=${searchParams.get('parent_product')}&hidden=Yes&fields=package_name,color_code,tokens_count,package_duration_months,is_active,number_of_services`
+            )
             return res
         },
         staleTime: 10_000
@@ -120,15 +122,18 @@ const ServicePackages = () => {
                         }}
                     >
                         <h2 style={{ color: p.color_code }}>{p?.package_name}</h2>
-                        <p>( {p?.full_form} )</p>
                         <div className="section">
                             <div className="box">
-                                <h3>{p?.package_duration_months ? `${p?.package_duration_months} mo` : 'Nil'}</h3>
+                                <h3>{p?.package_duration_months ? `${p?.package_duration_months} mo` : '0 mo'}</h3>
                                 <p>Duration</p>
                             </div>
                             <div className="box">
                                 <h3>{p?.tokens_count ? `${p?.tokens_count}` : 'Nil'}</h3>
                                 <p>Tokens</p>
+                            </div>
+                            <div className="box">
+                                <h3>{p?.number_of_services ? `${p?.number_of_services}` : '0'}</h3>
+                                <p>Services</p>
                             </div>
                         </div>
                         <div className={`status-fold ${p.is_active ? 'active' : 'inactive'}`}>

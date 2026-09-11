@@ -1,15 +1,18 @@
 .alert-message {
+
+    --message-bg: var(--background-alt);
+    --message-text: var(--text-primary);
+
     display: flex;
     gap: 10px;
     padding: 15px 13px 15px 18px;
-    background-color: var(--color-danger-trans-73);
-    backdrop-filter: blur(5px);
-    color: var(--text-primary);
+    background-color: var(--message-bg);
+    color: var(--message-text);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px var(--shadow-sm);
 
-     .icon {
+    .icon {
         font-size: 24px;
     }
 
@@ -31,38 +34,28 @@
 }
 
 
-.alert-message-danger {
-    background-color: var(--color-danger-trans-33);
-    color: var(--color-danger-text);
+.alert-message-secondary {
+    --message-bg: var(--text-tertiary);
+    --message-text: var(--text-inverse);
 
-    .line {
-        background-color: var(--color-danger);
-    }
+}
+
+.alert-message-danger {
+    --message-bg: var(--color-danger-bg);
+    --message-text: var(--color-danger-text);
 }
 
 .alert-message-success {
-    background-color: var(--color-success-trans-33);
-    color: var(--color-success-text);
-
-    .line {
-        background-color: var(--color-success);
-    }
+    --message-bg: var(--color-success-bg);
+    --message-text: var(--color-success-text);
 }
 
 .alert-message-info {
-    background-color: var(--color-info-trans-33);
-    color: var(--color-info-text);
-
-    .line {
-        background-color: var(--color-info);
-    }
+    --message-bg: var(--color-info-bg);
+    --message-text: var(--color-info-text);
 }
 
 .alert-message-warning {
-    background-color: var(--color-warning-trans-33);
-    color: var(--color-warning-text);
-
-    .line {
-        background-color: var(--color-warning);
-    }
+    --message-bg: var(--color-warning-bg);
+    --message-text: var(--color-warning-text);
 }

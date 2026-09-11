@@ -21,14 +21,14 @@
         grid-template-columns: 1fr 1fr 1fr;
         gap: 15px;
         width: 100%;
-        @include scrollBar();
 
         .item {
-            background-color: var(--color-natural-trans-53);
+            background-color: var(--surface-1);
             padding: 25px 10px 30px 10px;
             border-radius: 15px;
             border: solid 1px var(--border-light);
             position: relative;
+            cursor: pointer;
 
             .head {
                 display: flex;
@@ -44,7 +44,7 @@
                     display: flex;
                     gap: 5px;
                     align-items: center;
-                    color: var(--text-secondary-1);
+                    color: var(--text-secondary-alt);
                     margin-top: 5px;
 
                     p {
@@ -70,6 +70,37 @@
 
                 svg {
                     font-size: 13px;
+                }
+            }
+
+
+            .status-fold {
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: var(--color-white);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 5px 15px;
+                border-radius: 0px 15px 0 25px;
+                gap: 10px;
+
+                svg {
+                    font-size: 18px;
+                }
+
+                p {
+                    font-size: 13px;
+                }
+
+
+                &.active {
+                    background-color: var( --color-success-text);
+                }
+
+                &.inactive {
+                    background-color: var(--color-danger-text);
                 }
             }
         }

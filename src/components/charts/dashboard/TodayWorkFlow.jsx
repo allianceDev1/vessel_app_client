@@ -123,19 +123,19 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                     </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "4px 12px", fontSize: 12 }}>
-                    <span style={{ color: "var(--text-secondary-3)" }}>Travel Start</span>
+                    <span style={{ color: "var(--text-muted)" }}>Travel Start</span>
                     <span style={{ color: "var(--text_secondary-1)", fontWeight: 600 }}>{toHHMM(data.travelStart)}</span>
-                    <span style={{ color: "var(--text-secondary-3)" }}>Work Start</span>
+                    <span style={{ color: "var(--text-muted)" }}>Work Start</span>
                     <span style={{ color: data.workStart ? "var(--text_secondary-1)" : "#38bdf8", fontWeight: 600 }}>
                         {data.workStart ? toHHMM(data.workStart) : "En route…"}
                     </span>
-                    <span style={{ color: "var(--text-secondary-3)" }}>Work Close</span>
+                    <span style={{ color: "var(--text-muted)" }}>Work Close</span>
                     <span style={{ color: data.workClose ? "var(--text_secondary-1)" : "#f97316", fontWeight: 600 }}>
                         {data.workClose ? toHHMM(data.workClose) : data.workStart ? "In progress…" : "—"}
                     </span>
                     {data.workClose && (
                         <>
-                            <span style={{ color: "var(--text-secondary-3)" }}>Duration</span>
+                            <span style={{ color: "var(--text-muted)" }}>Duration</span>
                             <span style={{ color: "var(--text_secondary-1)", fontWeight: 600 }}>{Math.round((data.workClose - data.travelStart) * 60)} min</span>
                         </>
                     )}
@@ -150,7 +150,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
 
         return (
             <g transform={`translate(${x},${y})`}>
-                <text x={-114} y={tech?.attendance_status ? -4 : 4} textAnchor="start" fontSize={12} fill="var(--text-secondary-1)" fontWeight={500} fontFamily="sans-serif">
+                <text x={-114} y={tech?.attendance_status ? -4 : 4} textAnchor="start" fontSize={12} fill="var(--text-secondary-alt)" fontWeight={500} fontFamily="sans-serif">
                     {tech.worker_name}
                 </text>
                 {tech?.attendance_status && (
@@ -201,7 +201,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                         <CartesianGrid
                             horizontal={false}
                             vertical={true}
-                            stroke="var(--color-natural-trans-51)"
+                            stroke="var(--surface-1)"
                             strokeDasharray="0"
                         />
                         <XAxis
@@ -214,7 +214,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                                 const h12 = realHour === 0 ? 12 : realHour > 12 ? realHour - 12 : realHour;
                                 return `${h12}${ampm}`;
                             }}
-                            tick={{ fontSize: 11, fill: "var(--text-secondary-1)", fontWeight: 500 }}
+                            tick={{ fontSize: 11, fill: "var(--text-secondary-alt)", fontWeight: 500 }}
                             tickLine={false}
                             axisLine={{ stroke: "var(--border-light)" }}
                             interval={0}
@@ -227,12 +227,12 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                             tickLine={false}
                             axisLine={false}
                         />
-                        <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--color-natural-trans-51)" }} />
+                        <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--surface-1)" }} />
 
                         {showNow && (
                             <ReferenceLine
                                 x={now - DAY_START}
-                                stroke="var(--color-warning-6)"
+                                stroke="var(--color-warning-hover)"
                                 strokeWidth={1.5}
                                 strokeDasharray="4 3"
                                 label={false}
@@ -257,7 +257,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                                             <Cell
                                                 key={ri}
                                                 fill={tech.color}
-                                                opacity={0.3}
+                                                // opacity={0.3}
                                                 stroke={tech.color}
                                                 strokeWidth={0.5}
                                                 strokeDasharray="3 2"
@@ -270,7 +270,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                                         <Cell
                                             key={ri}
                                             fill={tech.color}
-                                            opacity={0.85}
+                                            // opacity={0.85}
                                             stroke={tech.color}
                                             strokeWidth={0.5}
                                             radius={meta.status === "Completed" ? [0, 10, 10, 0] : [0, 0, 0, 0]}

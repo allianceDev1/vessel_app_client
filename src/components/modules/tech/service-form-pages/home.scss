@@ -99,7 +99,7 @@
                             font-weight: 500;
 
                             &:nth-child(2) {
-                                color: var(--text-secondary-2);
+                                color: var(--text-tertiary);
                             }
 
                         }
@@ -134,7 +134,7 @@
         p {
             font-size: 13px;
             margin-top: 10px;
-            color: var(--text-secondary-2);
+            color: var(--text-tertiary);
             margin-bottom: 10px;
         }
     }
@@ -168,7 +168,7 @@
 
                 p {
                     font-size: 13px;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                     font-weight: 500;
                 }
 

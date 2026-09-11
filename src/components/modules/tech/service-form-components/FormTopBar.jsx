@@ -70,14 +70,14 @@ const FormTopBar = () => {
     <div className="tech-service-form-top-bar-container">
       <div className="action-section">
         <div className='buttons'>
-          <Button title={'Back'} type='button' rounded size='small' icon={<TbChevronLeft />} onClick={handleBack}
+          <Button title={'Back'} type='button' rounded size='small' icon={<TbChevronLeft />} onClick={handleBack} severity={'secondary'} 
             disabled={serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage} />
           <Button title={'Timer'} type='button' rounded size='small' outlined icon={<TbClockHour5 />} label={elapsedTime} style={{ minWidth: '110px', cursor: 'not-allowed' }}
-          />
+       severity={'secondary'}    />
         </div>
         <div className='buttons'>
-          <Button title="Refresh" type='button' rounded size='small' outlined icon={<TbRotate2 />} onClick={handleReloadResources} />
-          <Button title='Stopwatch' type='button' rounded size='small' outlined icon={<TbStopwatch />} onClick={openStopWatch} />
+          <Button title="Refresh" type='button' rounded size='small' outlined icon={<TbRotate2 />} onClick={handleReloadResources} severity={'secondary'} />
+          <Button title='Stopwatch' type='button' rounded size='small' outlined icon={<TbStopwatch />} onClick={openStopWatch} severity={'secondary'} />
         </div>
       </div>
       <div className="name-section">

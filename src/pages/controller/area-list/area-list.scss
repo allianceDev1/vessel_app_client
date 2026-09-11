@@ -9,8 +9,8 @@
         border: 1px solid var(--border-light);
         border-radius: 20px;
         padding: 25px 10px;
-        background-color: var(--color-natural-trans-51);
-        backdrop-filter: blur(5px);
+        background-color: var(--surface-1);
+        // backdrop-filter: blur(5px);
 
 
         .sub-item {
@@ -34,7 +34,7 @@
         p {
             font-size: 12px;
             font-weight: 300;
-            color: var(--text-secondary-3);
+            color: var(--text-muted);
         }
     }
 }

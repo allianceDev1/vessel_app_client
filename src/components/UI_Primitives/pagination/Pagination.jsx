@@ -334,11 +334,11 @@ const Pagination = ({
                     <p>  {startRow}–{endRow}{' '}of{' '}{totalRows} </p>
                     <Button
                         size="small" icon={<IoIosArrowBack />} onClick={() => setPage(page - 1)}
-                        disabled={!canPrevPage} rounded outlined
+                        disabled={!canPrevPage} rounded outlined severity={'secondary'}
                     />
                     <Button
                         size="small" icon={<IoIosArrowForward />} onClick={() => setPage(page + 1)}
-                        disabled={!canNextPage} rounded outlined
+                        disabled={!canNextPage} rounded outlined severity={'secondary'}
                     />
                 </div>
             </div>

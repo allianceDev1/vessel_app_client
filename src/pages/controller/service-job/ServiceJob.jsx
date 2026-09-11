@@ -234,7 +234,7 @@ const ServiceJob = () => {
                         <div className="item">
                             <p className='label'>Call Summery (Applied / Estimate)</p>
                             <div>
-                                <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
+                                <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-muted)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
                             </div>
                         </div>
                         <div className="item">

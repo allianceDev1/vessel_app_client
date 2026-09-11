@@ -8,7 +8,7 @@
         gap: 10px;
 
         .count-card {
-            background-color: var(--color-natural-trans-53);
+            background-color: var(--surface-2);
             padding: 20px 15px 15px 15px;
             border-radius: 10px;
             border: 1px solid var(--color-primary-bg);
@@ -28,7 +28,7 @@
                     width: 50px;
                     height: 50px;
                     border-radius: 50%;
-                    background-color: var(--color-primary-trans-53);
+                    background-color: var(--color-primary-bg);
                     border: 1px solid var(--color-primary-bg);
                     color: var(--color-primary-text);
                     font-size: 30px;
@@ -45,7 +45,7 @@
                     p {
                         font-size: 14px;
                         font-weight: 500;
-                        color: var(--color-natural-trans-73)
+                        color: var(--surface-3)
                     }
                 }
             }
@@ -91,8 +91,8 @@
         justify-content: space-between;
 
         .report-box {
-            background-color: var(--color-natural-trans-53);
-            backdrop-filter: blur(5px);
+            background-color: var(--surface-2);
+            // backdrop-filter: blur(5px);
             padding: 10px 15px;
             border-radius: 15px;
 
@@ -102,7 +102,7 @@
                 h4 {
                     font-size: 14px;
                     font-weight: 500;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
             }
 
@@ -117,7 +117,7 @@
     .last-update {
         font-size: 13px;
         text-align: end;
-        color: var(--text-secondary-2);
+        color: var(--text-tertiary);
         margin-top: 10px;
     }
 

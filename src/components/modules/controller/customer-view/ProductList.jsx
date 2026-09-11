@@ -23,8 +23,9 @@ const ProductList = () => {
             let vessels = data?.filter(i => i.product_type === 'VESSEL_FILTER')
             vessels = vessels.sort((a, b) => a.order_id.localeCompare(b.order_id))
             const addons = data?.filter(i => i.product_type === 'ADD_ON')
+            const purifier = data?.filter(i => i.product_type === 'WATER_PURIFIER')
 
-            return { vessels, addons };
+            return { vessels, addons, purifier };
         },
         staleTime: 60_000
     })
@@ -48,11 +49,11 @@ const ProductList = () => {
         </div>
     }
 
-    if (!data?.vessels?.length && !data?.addons?.length) {
+    if (!data?.vessels?.length && !data?.addons?.length && !data?.purifier?.length) {
         return <div>
             <EmptyState
                 icon={<TbManualGearbox />}
-                title={'No Product Existed'}
+                title={'No product existed'}
                 hight='400px'
             />
         </div>
@@ -60,6 +61,35 @@ const ProductList = () => {
 
     return (
         <div className="controller-customer-products-container">
+            {data?.purifier?.length ? <>
+                <h3 className='sub-title' style={{ marginTop: "25px" }}>Water purifier</h3>
+                <div className="product-list">
+                    {data?.purifier?.map((product) => {
+                        return <div className="product-item"
+                            onClick={() => navigate('/controller/product/' + product?.product_id + '/about')}>
+                            <div className="order-section">
+                                <h4>{product?.order_id ? product?.order_id : "UN"}</h4>
+                            </div>
+                            <div className="content">
+                                <div className="x1">
+                                    <p className='text-1'>ID : {product?.product_id}</p>
+                                    <p className='text-2'>{toStandardText(product?.origin_category)}</p>
+                                </div>
+                                <h3>{product?.product_name}</h3>
+                                <div className="x3">
+                                    {product?.product_warranty && <Badge severity={'info'} value={'Warranty'} />}
+                                    {product?.package?.has_service_package && < Badge
+                                        value={product?.package?.package_name}
+                                        style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} />}
+                                    {product?.rental && <Badge value={'Rental'} />}
+                                    {!product?.active && <Badge severity={'danger'} value={'Disconnected'} />}
+                                </div>
+                            </div>
+                        </div>
+                    })}
+                </div>
+            </> : ''}
+
             {data?.vessels?.length ? <>
                 <h3 className='sub-title' style={{ marginTop: "25px" }}>Vessel Filters</h3>
                 <div className="product-list">

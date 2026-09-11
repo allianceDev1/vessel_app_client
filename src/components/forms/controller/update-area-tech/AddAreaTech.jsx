@@ -3,10 +3,13 @@ import InputText from '../../../UI_Primitives/inputs/InputText'
 import Button from '../../../UI_Primitives/buttons/Button'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import Select from '../../../UI_Primitives/inputs/Select'
+import MultiSelect from '../../../UI_Primitives/inputs/MultiSelect'
 import { api } from '../../../../api'
 import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { parentProductTypes } from '../../../../assets/javascript/pre_data/product'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 
 const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
@@ -20,7 +23,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
         data: techList,
         isLoading: techLoading
     } = useQuery({
-        queryKey: ['vessel_staff_list', 'name_only'],
+        queryKey: ['workers_list', 'name_only'],
         queryFn: async () => {
             const res = await api.ttPv2Axios('/worker/account/list?nameOnly=Yes')
             return res
@@ -33,8 +36,16 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
+    const handleMultiInputChange = (e) => {
+        setForm({ ...form, [e.name]: e.selectedValues?.map((c) => c.value) })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!form?.product_types?.length) {
+            return;
+        }
 
         // action
         try {
@@ -42,7 +53,8 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
             await api.vfCv2Axios.post(`/branch-area/${cityId}/technician`, {
                 worker_uuid: form?.worker_uuid,
                 from_date: form?.from_date,
-                to_date: form?.to_date
+                to_date: form?.to_date,
+                product_types: form?.product_types || []
             })
 
             queryClient.setQueryData(
@@ -51,10 +63,10 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
                     if (!oldData) return oldData;
 
                     const selectedWorker = techList.filter(w => w.worker_uuid === form?.worker_uuid)[0]
-                  
+
                     return {
                         ...oldData,
-                        vf_technicians: [
+                        service_technicians: [
                             {
                                 worker_uuid: form?.worker_uuid,
                                 full_name: selectedWorker?.full_name,
@@ -62,7 +74,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
                                 to_date: form?.to_date,
                                 is_deleted: false
                             },
-                            ...(oldData?.vf_technicians || [])
+                            ...(oldData?.service_technicians || [])
                         ]
                     };
                 }
@@ -93,6 +105,11 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
             <form action="" style={{ display: 'flex', flexDirection: "column", gap: '10px' }} onSubmit={handleSubmit}>
                 <Select label={'Worker'} name={'worker_uuid'} value={form?.worker_uuid} onChange={handleChange}
                     options={[{}, ...techList?.map(t => ({ label: t.full_name, value: t.worker_uuid }))]} required />
+                <MultiSelect label={'Product types'} name={'product_types'}
+                    onChange={handleMultiInputChange} required
+                    options={parentProductTypes?.map(r => ({ label: toStandardText(r), value: r }))}
+                    selected={parentProductTypes.filter(item => form?.product_types?.includes(item))?.map(r => ({ label: toStandardText(r), value: r }))}
+                />
                 <InputText label={'From date'} type='date' name={'from_date'} value={form?.from_date} onChange={handleChange}
                     required max={form?.to_date || ''} />
                 <InputText label={'To date'} type='date' name={'to_date'} value={form?.to_date} onChange={handleChange} required

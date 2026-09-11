@@ -183,7 +183,7 @@ const OtpVerification = ({ resetType }) => {
             <div className="status-section">
                 <div className="head">
                     <h3>Mobile numbers</h3>
-                    <Button icon={<TbRefresh />} disabled={loading === 'refetch'} spinIcon={loading === 'refetch'} size='small' rounded onClick={refetchOtpLogs} />
+                    <Button icon={<TbRefresh />} disabled={loading === 'refetch'} severity={'secondary'} spinIcon={loading === 'refetch'} size='small' rounded onClick={refetchOtpLogs} />
                 </div>
                 {verification?.otpLogs?.length
                     ? <div className="number-list">
@@ -216,6 +216,7 @@ const OtpVerification = ({ resetType }) => {
                             rounded
                             outlined
                             size='small'
+                            severity={'secondary'}
                             disabled={cooldowns.SMS > 0}
                             onClick={() => resendOtp('SMS', 'PRIMARY')} />
                         <Button icon={<TbBrandWhatsapp />}
@@ -224,6 +225,7 @@ const OtpVerification = ({ resetType }) => {
                                     ? `${formatTimer(cooldowns.WHATSAPP)}`
                                     : 'Retry'
                             }
+                            severity={'secondary'}
                             rounded
                             outlined
                             size='small'

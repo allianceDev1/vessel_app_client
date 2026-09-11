@@ -23,14 +23,14 @@
             gap: 10px;
 
             .item {
-                background-color: var(--color-natural-trans-53);
+                background-color: var(--surface-2);
                 padding: 10px 15px;
                 border-radius: 10px;
                 position: relative;
 
                 .label {
                     font-size: 13px;
-                    color: var((--text-secondary-2));
+                    color: var((--text-tertiary));
                 }
 
                 div {
@@ -50,7 +50,7 @@
 
                     svg {
                         font-size: 25px;
-                        color: var(--text-secondary-2);
+                        color: var(--text-tertiary);
                     }
                 }
 

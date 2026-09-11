@@ -4,18 +4,18 @@
     padding: 10px;
     border-radius: 15px;
     border: 1px solid var(--border-medium);
-    background-color: var(--color-natural-trans-53);
-    // backdrop-filter: blur(5px);
+    background-color: var(--surface-2);
+    // // backdrop-filter: blur(5px);
     cursor: pointer;
 
     &.warning-border {
-        background-color: var(--color-warning-trans-82);
-        border: 1px solid var(--color-warning-6);
+        background-color: var(--color-warning-bg);
+        border: 1px solid var(--color-warning-hover);
     }
 
     &.danger-border {
-        background-color: var(--color-danger-trans-82);
-        border: 1px solid var(--color-danger-6);
+        background-color: var(--color-danger-bg);
+        border: 1px solid var(--color-danger-text);
     }
 
     .s-one {
@@ -31,7 +31,7 @@
             h5 {
                 font-size: 14px;
                 font-weight: 600;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
                 @include threeDots();
             }
         }
@@ -91,7 +91,7 @@
             p {
                 font-size: 13px;
                 font-weight: 500;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
                 @include threeDots();
             }
         }

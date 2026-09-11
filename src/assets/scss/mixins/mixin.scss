@@ -1,4 +1,4 @@
-@mixin scrollBar($width: 6px, $thumb-color: var(--color-natural-4), $track-color: transparent, $thumb-hover-color: var(--color-natural-6)) {
+@mixin scrollBar($width: 6px, $thumb-color: var(--surface-3), $track-color: transparent, $thumb-hover-color: var(--text-disabled)) {
     &::-webkit-scrollbar {
         width: $width;
         height: $width;
@@ -59,13 +59,13 @@
 @mixin subTitleMedium() {
     font-size: 19px;
     font-weight: 500;
-    color: var(--text-secondary-3);
+    color: var(--text-muted);
 }
 
 @mixin subTitleSmall() {
     font-size: 17px;
     font-weight: 500;
-    color: var(--text-secondary-1);
+    color: var(--text-secondary-alt);
 }
 
 

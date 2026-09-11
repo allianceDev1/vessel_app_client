@@ -185,7 +185,7 @@ const Array3ElemCU = ({ uuid, title, stretcher, data, isEditMode = false }) => {
 
                         <div className="action">
                             <InputText size='small' label={s} name={s} value={sectionForm?.[s]} onChange={handleChangeSection} />
-                            <Button type='button' label={<TbSend />} rounded outlined size='small' onClick={() => handleSectionButton(s)} />
+                            <Button type='button' severity={'secondary'}  label={<TbSend />} rounded outlined size='small' onClick={() => handleSectionButton(s)} />
                         </div>
                     </div>
                 })}

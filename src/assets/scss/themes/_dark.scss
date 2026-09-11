@@ -4,147 +4,171 @@
 
 
 @mixin dark-theme {
-    /*
-     * == TEXT AND FOREGROUND COLORS ==
-     * Uses lightest neutrals for high contrast against dark backgrounds.
-     */
-    --text-primary: var(--color-neutral-50);
+
+    // =========================================================
+    // TEXT
+    // =========================================================
+
+    --text-primary: var(--color-neutral-0);
     --text-primary-alt: var(--color-neutral-50);
 
-    --text-secondary: var(--color-neutral-150);
-    --text-secondary-1: var(--color-neutral-250);
-    --text-secondary-2: var(--color-neutral-350);
-    --text-secondary-3: var(--color-neutral-450);
-    --text-secondary-4: var(--color-neutral-550);
+    --text-secondary: var(--color-neutral-200);
+    --text-secondary-alt: var(--color-neutral-300);
 
-    --text-muted: var(--color-neutral-650);
+    --text-tertiary: var(--color-neutral-400);
+    --text-muted: var(--color-neutral-500);
 
-    /*
-     * == BACKGROUND AND SURFACE COLORS ==
-     * Uses the darkest neutrals for depth.
-     */
-    --background: var(--color-neutral-1000);
-    // #111827 // plan to change
+    --text-disabled: var(--color-neutral-600);
+    --text-placeholder: var(--color-neutral-550);
 
+    --text-inverse: var(--color-neutral-1000);
+    --text-inverse-alt: var(--color-neutral-900);
+
+
+    // =========================================================
+    // BACKGROUND
+    // =========================================================
+
+    --background: var(--color-neutral-950);
+
+    --background-alt: var(--color-neutral-900);
 
     --surface: var(--color-neutral-900);
     --surface-1: var(--color-neutral-850);
     --surface-2: var(--color-neutral-800);
     --surface-3: var(--color-neutral-750);
-    --surface-4: var(--color-neutral-700);
+
+    --surface-disabled: var(--color-neutral-800);
+
+    --surface-inverse: var(--color-neutral-0);
 
 
-    /*
-     * == BORDER COLORS (4 VARIANTS) ==
-     * Progressing from darkest to lightest.
-     */
-    --border-light: var(--color-neutral-800);
+    // =========================================================
+    // BORDER
+    // =========================================================
+
+    --border-light: var(--color-neutral-750);
     --border-default: var(--color-neutral-700);
-    --border-medium: var(--color-neutral-600);
-    --border-dark: var(--color-neutral-500);
+    --border-medium: var(--color-neutral-650);
+    --border-dark: var(--color-neutral-600);
 
-    /*
-     * == SHADOW COLORS (4 VARIANTS) ==
-     * All use the lightest neutral's RGB (255, 255, 255) with very low opacity, or black with low opacity.
-     * We'll stick to a very dark, low-opacity shadow as is common for modern dark themes.
-     */
-    --shadow-xs: rgba(0, 0, 0, 0.15);
-    --shadow-sm: rgba(0, 0, 0, 0.25);
-    --shadow-md: rgba(0, 0, 0, 0.45);
-    --shadow-lg: rgba(0, 0, 0, 0.65);
+    --border-disabled: var(--color-neutral-700);
+    --border-focus: var(--color-primary);
 
-    /*
-     * == PRIMARY ACCENT COLOR ==
-     * Uses the same vibrant mid-shade as the light theme, but text color is white.
-     */
+
+    // =========================================================
+    // PRIMARY
+    // =========================================================
+
     --color-primary: var(--color-primary-dark-500);
-    --color-primary-2: var(--color-primary-dark-200);
-    --color-primary-3: var(--color-primary-dark-300);
-    --color-primary-6: var(--color-primary-dark-600);
-    --color-primary-8: var(--color-primary-dark-800);
+    --color-primary-hover: var(--color-primary-dark-600);
+    --color-primary-active: var(--color-primary-dark-700);
+
     --color-primary-bg: var(--color-primary-dark-900);
-    --color-primary-text: var(--color-primary-dark-600);
-    --color-primary-hover: var(--color-primary-dark-400);
+    --color-primary-bg-hover: var(--color-primary-dark-800);
 
-    --color-primary-trans-53: color-mix(in srgb, var(--color-primary-dark-500) 30%, transparent);
-    --color-primary-trans-33: color-mix(in srgb, var(--color-primary-dark-300) 30%, transparent);
+    --color-primary-text: var(--color-primary-dark-500);
 
-    /*
-     * == STATUS AND ACCENT COLORS ==
-     * Uses the same colors for consistency, with white text for solid backgrounds.
-     */
+    --color-primary-border: var(--color-primary-dark-500);
+    --color-primary-border-hover: var(--color-primary-dark-600);
 
-    /* Success */
+
+    // =========================================================
+    // SUCCESS
+    // =========================================================
+
     --color-success: var(--color-success-dark-500);
-    --color-success-3: var(--color-success-dark-300);
-    --color-success-6: var(--color-success-dark-600);
+    --color-success-hover: var(--color-success-dark-600);
+    --color-success-active: var(--color-success-dark-700);
+
     --color-success-bg: var(--color-success-dark-900);
-    --color-success-text: var(--color-success-dark-300);
-    --color-success-trans-33: color-mix(in srgb, var(--color-success-dark-300) 30%, transparent);
+    --color-success-bg-hover: var(--color-success-dark-800);
 
-    /* Danger */
+    --color-success-text: var(--color-success-dark-500);
+
+    --color-success-border: var(--color-success-dark-500);
+    --color-success-border-hover: var(--color-success-dark-600);
+
+
+    // =========================================================
+    // DANGER
+    // =========================================================
+
     --color-danger: var(--color-danger-dark-500);
-    --color-danger-6: var(--color-danger-dark-600);
+    --color-danger-hover: var(--color-danger-dark-600);
+    --color-danger-active: var(--color-danger-dark-700);
+
     --color-danger-bg: var(--color-danger-dark-900);
-    --color-danger-text: var(--color-danger-dark-300);
-    --color-danger-trans-33: color-mix(in srgb, var(--color-danger-dark-300) 30%, transparent);
-    --color-danger-trans-81: color-mix(in srgb, var(--color-danger-dark-800) 10%, transparent);
-    --color-danger-trans-82: color-mix(in srgb, var(--color-danger-dark-800) 20%, transparent);
-    --color-danger-trans-83: color-mix(in srgb, var(--color-danger-dark-800) 30%, transparent);
-    --color-danger-trans-13: color-mix(in srgb, var(--color-danger-dark-100) 30%, transparent);
+    --color-danger-bg-hover: var(--color-danger-dark-800);
 
-    /* Warning */
+    --color-danger-text: var(--color-danger-dark-500);
+
+    --color-danger-border: var(--color-danger-dark-500);
+    --color-danger-border-hover: var(--color-danger-dark-600);
+
+
+    // =========================================================
+    // WARNING
+    // =========================================================
+
     --color-warning: var(--color-warning-dark-500);
-    --color-warning-6: var(--color-warning-dark-600);
+    --color-warning-hover: var(--color-warning-dark-600);
+    --color-warning-active: var(--color-warning-dark-700);
+
     --color-warning-bg: var(--color-warning-dark-900);
-    --color-warning-text: var(--color-warning-dark-100);
-    --color-warning-trans-33: color-mix(in srgb, var(--color-warning-dark-300) 30%, transparent);
-    --color-warning-trans-82: color-mix(in srgb, var(--color-warning-dark-800) 20%, transparent);
-    --color-warning-trans-13: color-mix(in srgb, var(--color-warning-dark-500) 30%, transparent);
+    --color-warning-bg-hover: var(--color-warning-dark-800);
 
-    /* Info */
+    --color-warning-text: var(--color-warning-dark-500);
+
+    --color-warning-border: var(--color-warning-dark-500);
+    --color-warning-border-hover: var(--color-warning-dark-600);
+
+
+    // =========================================================
+    // INFO
+    // =========================================================
+
     --color-info: var(--color-info-dark-500);
-    --color-info-6: var(--color-info-dark-600);
+    --color-info-hover: var(--color-info-dark-600);
+    --color-info-active: var(--color-info-dark-700);
+
     --color-info-bg: var(--color-info-dark-900);
-    --color-info-text: var(--color-info-dark-100);
-    --color-info-trans-33: color-mix(in srgb, var(--color-info-dark-300) 30%, transparent);
-    --color-info-trans-81: color-mix(in srgb, var(--color-info-dark-800) 10%, transparent);
+    --color-info-bg-hover: var(--color-info-dark-800);
+
+    --color-info-text: var(--color-info-dark-500);
+
+    --color-info-border: var(--color-info-dark-500);
+    --color-info-border-hover: var(--color-info-dark-600);
 
 
-    /*
-     * == UTILITY COLORS ==
-     */
+    // =========================================================
+    // NEUTRAL / UTILITY
+    // =========================================================
+
     --color-white: var(--color-neutral-0);
     --color-black: var(--color-neutral-1000);
 
-    //** == NATURAL SHADES (NEUTRALS) == **//
-    --color-natural-1: var(--color-neutral-950);
-    --color-natural-2: var(--color-neutral-900);
-    --color-natural-3: var(--color-neutral-850);
-    --color-natural-4: var(--color-neutral-800);
-    --color-natural-5: var(--color-neutral-750);
-    --color-natural-6: var(--color-neutral-600);
-    --color-natural-7: var(--color-neutral-500);
-    --color-natural-8: var(--color-neutral-350);
-    --color-natural-9: var(--color-neutral-200);
-    --color-natural-10: var(--color-neutral-50);
+    --color-neutral: var(--color-neutral-500);
+    --color-neutral-hover: var(--color-neutral-400);
 
 
-    --color-natural-trans-73: color-mix(in srgb, var(--color-natural-7) 30%, transparent);
-    --color-natural-trans-53: color-mix(in srgb, var(--color-natural-5) 30%, transparent);
-    --color-natural-trans-51: color-mix(in srgb, var(--color-natural-5) 10%, transparent);
-    --color-natural-trans-18: color-mix(in srgb, var(--color-natural-1) 80%, transparent);
+    // =========================================================
+    // SHADOW
+    // =========================================================
 
-    // Button
-    --button-primary-bg: var(--color-primary-dark-100);
-    --button-primary-text: var(--color-primary-dark-900);
-    --button-primary-bg-hover: var(--color-primary-dark-200);
-    --button-primary-outline: var(--color-primary-dark-100);
-    --button-primary-outline-hover: var(--color-primary-dark-200);
+    --shadow-xs: rgba(0, 0, 0, 0.10);
+    --shadow-sm: rgba(0, 0, 0, 0.20);
+    --shadow-md: rgba(0, 0, 0, 0.30);
+    --shadow-lg: rgba(0, 0, 0, 0.40);
 
-    //  Nav button
-    --nav-active-bg: color-mix(in srgb, var(--color-primary-dark-100) 20%, transparent);
-    --nav-active-text: var(--color-primary-dark-500);
+
+    // =========================================================
+    // OVERLAY / ALPHA
+    // =========================================================
+
+    --overlay-light: color-mix(in srgb, var(--color-neutral-0) 10%, transparent);
+
+    --overlay-dark: color-mix(in srgb, var(--color-neutral-1000) 60%, transparent);
 
 
 }

@@ -140,11 +140,11 @@ const AboutPackage = () => {
                         outlined onClick={() => openCancellationModal()} />}
                     {data?.is_blacklisted && <Button label={'Clear Overdue'} severity={'info'} size='small' rounded style={{ width: '140px' }}
                         onClick={openClearOverdueModel} />}
-                    {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
+                    {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} severity={'secondary'} size='small' outlined rounded style={{ width: '110px' }}
                         onClick={openPackageExtensionModel} />}
                 </>}
                 {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
-                    onClick={openTopUpsHistoryModel} />}
+                    onClick={openTopUpsHistoryModel} severity={'secondary'} />}
 
                 {data?.package_status === 2 && user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown button={{
                     icon: <IoIosArrowDown />,

@@ -13,11 +13,6 @@
 
         h3 {
             @include subTitleSmall();
-
-            &:hover {
-                background-color: var(--color-natural-trans-73);
-                backdrop-filter: blur(5px);
-            }
         }
 
         .folders-border {
@@ -30,16 +25,14 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                color: var(--text-c1);
+                color: var(--text-primary);
                 width: 120px;
                 height: 150px;
                 cursor: pointer;
                 border-radius: 5px;
 
                 &:hover {
-                    color: var(--text-primary);
-                    background-color: var(--color-natural-trans-73);
-                    backdrop-filter: blur(5px);
+                    background-color: var(--surface-1);
                 }
 
                 svg {

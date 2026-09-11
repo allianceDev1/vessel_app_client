@@ -19,7 +19,7 @@
             overflow-y: auto;
             max-height: 300px;
             @include scrollBar();
-            background-color: var(--color-natural-2);
+            background-color: var(--surface-1);
             border-radius: 100px;
             padding: 5px 5px;
 
@@ -39,18 +39,18 @@
                 }
 
                 &.active {
-                    color: var(--color-natural-1);
+                    color: var(--surface);
                     font-weight: 500;
                     position: relative;
-                    background-color: var(--color-natural-10);
+                    background-color: var(--surface-inverse);
 
                     &:hover {
-                        background-color: var(--color-natural-9);
+                        background-color: var(--text-primary-alt);
                     }
                 }
 
                 &:hover {
-                    background-color: var(--color-natural-3);
+                    background-color: var(--surface-2);
                 }
             }
         }

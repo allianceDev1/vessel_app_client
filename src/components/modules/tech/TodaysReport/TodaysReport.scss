@@ -35,7 +35,7 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    color: var(--text-secondary-2);
+    color: var(--text-tertiary);
   }
 
   &__summary {
@@ -78,7 +78,7 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 16px;
-    color: var(--text-secondary-2);
+    color: var(--text-tertiary);
   }
 
   &__distribution {
@@ -94,7 +94,7 @@
     font-weight: 600;
     line-height: 16px;
     letter-spacing: 0.05em;
-    color: var(--text-secondary-4);
+    color: var(--text-disabled);
   }
 
   &__bar-row {
@@ -108,14 +108,14 @@
     font-weight: 500;
     line-height: 16px;
     font-size: 10px;
-    color: var(--text-secondary-2);
+    color: var(--text-tertiary);
     width: 40px;
   }
 
   &__bar-track {
     flex: 1;
     height: 8px;
-    background-color: var(--color-natural-trans-73);
+    background-color: var(--surface-3);
     border-radius: 9999px;
     overflow: hidden;
   }
@@ -125,11 +125,11 @@
     border-radius: 9999px;
 
     &--work {
-      background-color: var(--color-primary-8);
+      background-color: var(--color-primary-active);
     }
 
     &--travel {
-      background-color: var(--text-secondary-2);
+      background-color: var(--text-tertiary);
     }
   }
 
@@ -138,7 +138,7 @@
     font-weight: 500;
     line-height: 16px;
     font-size: 10px;
-    color: var(--color-primary-8);
+    color: var(--color-primary-active);
     ;
     text-align: right;
     width: 48px;

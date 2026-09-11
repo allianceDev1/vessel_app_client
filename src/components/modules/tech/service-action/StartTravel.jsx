@@ -42,7 +42,7 @@ const StartTravel = ({ registrationId, proceedTravel }) => {
                     <div className="text-section">
                         <h2>Your Travel Started</h2>
                     </div>
-                    <Button label={'Close'} rounded style={{ width: '100%' }} onClick={() => dispatch(modal.pull.all())} />
+                    <Button label={'Close'} rounded severity={'secondary'}  style={{ width: '100%' }} onClick={() => dispatch(modal.pull.all())} />
                 </>
                 : <>
                     <div className="text-section">

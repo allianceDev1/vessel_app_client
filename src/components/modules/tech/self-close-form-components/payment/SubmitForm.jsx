@@ -175,7 +175,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
 
                 {/* Buttons */}
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'}  onClick={closeModal} />
                     <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
                 </div>
@@ -200,7 +200,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'}  onClick={closeModal} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
 

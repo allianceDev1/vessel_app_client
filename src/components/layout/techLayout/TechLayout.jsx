@@ -34,7 +34,7 @@ const TechLayout = ({ children }) => {
                 <div className="section-one">
                     <IoChevronBack onClick={() => navigate(-1)} />
                     <img src={BrandLogo} alt='brand-logo' onClick={() => navigate(-1)} />
-                    <h3>Alliance</h3>
+                    <h3>Service</h3>
                 </div>
                 <div className="section-two">
                     <div className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)}>

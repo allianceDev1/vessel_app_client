@@ -26,8 +26,8 @@
             margin-bottom: 100px;
 
             .item {
-                background-color: var(--color-natural-2);
-                border: 1px solid var(--color-natural-2);
+                background-color: var(--surface-1);
+                border: 1px solid var(--surface-1);
                 border-radius: 15px;
                 padding: 10px;
                 display: flex;
@@ -41,7 +41,7 @@
 
                     .id {
                         font-size: 12px;
-                        color: var(--text-secondary-2);
+                        color: var(--text-tertiary);
                         margin-bottom: 5px;
                     }
 
@@ -63,7 +63,7 @@
                         }
 
                         .hash-price {
-                            color: var(--text-secondary-2);
+                            color: var(--text-tertiary);
                             font-weight: 400;
                             text-decoration: line-through;
                         }
@@ -91,11 +91,11 @@
                 }
 
                 &.select-box {
-                    border: 1px solid var(--color-natural-8);
+                    border: 1px solid var(--text-secondary-alt);
                 }
 
                 .warranty-badge {
-                    background-color: var(--color-info-trans-33);
+                    background-color: var(--color-info-bg);
                     padding: 3px 13px;
                     border-radius: 15px;
                     margin-top: 5px;
@@ -111,7 +111,7 @@
             }
 
             .blue-box {
-                background-color: var(--color-info-trans-33);
+                background-color: var(--color-info-bg);
 
                 &.select-box {
                     border: 1px solid var(--color-info-text);

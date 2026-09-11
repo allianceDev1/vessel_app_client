@@ -92,7 +92,7 @@ const TokenTopUp = ({ fetchCustomerApi, doTopUpApi, redirectUrl = '/404', prePag
                     hight='400px'
                     footer={<div>
                         <Button label={'Close'} rounded style={{ width: '200px', marginTop: '15px' }}
-                            onClick={() => navigate(redirectUrl || '/404')} />
+                            severity={'secondary'} onClick={() => navigate(redirectUrl || '/404')} />
                     </div>}
                 />
             </div>}
@@ -152,7 +152,7 @@ const TopUpForm = ({ fetchCustomerApi, topUpForm, setTopUpForm, readyToPay }) =>
                 <InputText label={"Enter Customer Id"} name={'customer_id'} value={customerId}
                     type='number' onChange={(e) => setCustomerId(e.target.value)} required={true} />
                 <Button icon={<TbChevronRight />} type='submit' spinIcon={loading === 'fetch-customer'}
-                    disabled={loading === 'fetch-customer'} />
+                    disabled={loading === 'fetch-customer'} severity={'secondary'} />
             </form>
 
             {/* Customer Details */}
@@ -217,7 +217,7 @@ const TopUpForm = ({ fetchCustomerApi, topUpForm, setTopUpForm, readyToPay }) =>
                     </div>
                 </div>}
 
-                {topUpForm?.number_of_tokens && <Button label={'Ready to Pay'} rounded style={{ width: '100%' }} onClick={readyToPay} />}
+                {topUpForm?.number_of_tokens && <Button label={'Ready to Pay'} severity={'secondary'}  rounded style={{ width: '100%' }} onClick={readyToPay} />}
             </div>}
         </div>
     )

@@ -62,7 +62,7 @@ const ArrayElem = ({ deleteData }) => {
                 enableColumnFilter: false,
                 cell: ({ row }) => (
                     <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
-                        <Button rounded title={'Edit'}
+                        <Button rounded title={'Edit'} severity={'secondary'}
                             icon={<TbPencil />} size='small' outlined
                             onClick={() => editModel(row?.original?.uuid)}
                         />

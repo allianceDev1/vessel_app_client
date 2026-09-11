@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/features/persisted/userSlice';
 import { api } from "../api";
 import Cookies from 'js-cookie';
 import RotateToken from '../components/layout/rotateToken/RotateToken'
-import Technician from './Technician';
-import Controller from './Controller';
+// import Technician from './Technician';
+// import Controller from './Controller';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
 import Layout404 from '../components/layout/404/Layout404';
 import env from '../config/env';
+
+const Technician = React.lazy(() => import('./Technician'));
+const Controller = React.lazy(() => import('./Controller'));
 
 
 
@@ -49,17 +52,24 @@ const Master = () => {
     return (
         <>
             <RotateToken />
-            <Routes>
-                {/* Without Header and Footer */}
+            <Suspense fallback={<SkeletonPage />}>
+                <Routes>
+                    <Route
+                        path="/tech/*"
+                        element={<Technician />}
+                    />
 
-                {/* Main Root */}
-                <Route path="/tech/*" element={<Technician />} />
-                <Route path="/controller/*" element={<Controller />} />
+                    <Route
+                        path="/controller/*"
+                        element={<Controller />}
+                    />
 
-
-                <Route path="/*" element={<Layout404 />} />
-
-            </Routes>
+                    <Route
+                        path="*"
+                        element={<Layout404 />}
+                    />
+                </Routes>
+            </Suspense>
         </>
     )
 }

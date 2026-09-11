@@ -188,7 +188,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
                 <div className="buttons">
                     <Button type='button' label={'Reset Work'} rounded severity={'danger'} onClick={resetWorkCategory} />
-                    <Button label={'Next'} rounded />
+                    <Button label={'Next'} rounded severity={'secondary'} />
                 </div>
             </form>
 

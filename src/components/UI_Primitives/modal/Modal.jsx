@@ -8,7 +8,7 @@ const Modal = () => {
     const dispatch = useDispatch();
     const { modals } = useSelector((state) => state.miniSystem)
 
-    const mouseDownOnBackdrop = useRef(false)
+    const mouseDownOnbackdrop = useRef(false)
 
     const closeModal = (data) => {
         if (data?.freezeClose) return;
@@ -22,16 +22,16 @@ const Modal = () => {
                     key={modal?.id}
                     className={modal?.show ? "ui-modal open" : 'ui-modal'}
                     onMouseDown={(e) => {
-                        mouseDownOnBackdrop.current = e.target === e.currentTarget
+                        mouseDownOnbackdrop.current = e.target === e.currentTarget
                     }}
                     onMouseUp={(e) => {
                         if (
-                            mouseDownOnBackdrop.current &&
+                            mouseDownOnbackdrop.current &&
                             e.target === e.currentTarget
                         ) {
                             closeModal(modal)
                         }
-                        mouseDownOnBackdrop.current = false
+                        mouseDownOnbackdrop.current = false
                     }}
 
                 >

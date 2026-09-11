@@ -44,7 +44,7 @@ const RunningKms = () => {
     const {
         data: techList
     } = useQuery({
-        queryKey: ['vessel_staff_list', 'name_only'],
+        queryKey: ['workers_list', 'name_only'],
         queryFn: async () => {
             const res = await api.ttPv2Axios('/worker/account/list?nameOnly=Yes')
             return res

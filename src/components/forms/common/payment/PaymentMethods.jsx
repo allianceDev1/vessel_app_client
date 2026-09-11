@@ -96,7 +96,7 @@ const PaymentMethods = ({ balanceAmount, payments, setPayments }) => {
                 </>}
 
                 {/* Button */}
-                <Button label={'Add Method'} rounded style={{ marginTop: '20px', width: '100%' }} />
+                <Button label={'Add Method'} rounded severity={'secondary'} style={{ marginTop: '20px', width: '100%' }} />
 
             </form>
         </div>

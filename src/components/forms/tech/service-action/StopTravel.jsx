@@ -53,7 +53,7 @@ const StopTravel = ({ registrationId, visitId }) => {
     return (
         <div className="tech-stop-travel-comp">
             <form action="" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleSubmit}>
-                <p style={{ fontSize: '14px', textAlign: 'justify', color: 'var(--text-secondary-2)' }}>
+                <p style={{ fontSize: '14px', textAlign: 'justify', color: 'var(--text-tertiary)' }}>
                     Once you submit the reason, a cancellation message will be sent to the customer, and the service will
                     return to the schedule list with a scheduled status, allowing you to create a new visit at a later time.
                 </p>

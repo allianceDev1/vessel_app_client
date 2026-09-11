@@ -61,7 +61,7 @@ const UpdateSpare = ({ productId, spareId, spareUuid, spareName, Qty, warrantySt
 
                 <div style={{ padding: '25px 0 ' }}>
                     <h3 style={{ textAlign: 'center', fontSize: '17px', fontWeight: '500' }}>{spareName}</h3>
-                    <p style={{ textAlign: 'center', fontSize: '14px', color: 'var(--text-secondary-2)' }}>{spareId} </p>
+                    <p style={{ textAlign: 'center', fontSize: '14px', color: 'var(--text-tertiary)' }}>{spareId} </p>
                 </div>
 
                 <InputText label={'Quantity'} name={'qty'} value={form?.qty} onChange={handleChange} type={'number'} min={1} required />

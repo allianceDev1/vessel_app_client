@@ -16,8 +16,8 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                background-color: var(--color-natural-trans-53);
-                // backdrop-filter: blur(10px);
+                background-color: var(--surface-2);
+                // // backdrop-filter: blur(10px);
                 border-radius: 15px;
                 cursor: pointer;
 
@@ -29,14 +29,14 @@
                 p {
                     font-size: 12px;
                     margin-top: 5px;
-                    color: var(--text-secondary-1);
+                    color: var(--text-secondary-alt);
                 }
 
             }
 
             .item-selected {
-                background-color: var(--color-success-trans-33);
-                // backdrop-filter: blur(10px);
+                background-color: var(--color-success-bg);
+                // // backdrop-filter: blur(10px);
                 color: var(--color-success-text);
 
                 p {

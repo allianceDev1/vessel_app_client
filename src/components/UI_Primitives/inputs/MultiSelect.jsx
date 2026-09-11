@@ -28,7 +28,19 @@ function MultiSelectInput({
   const searchRef = useRef(null);
 
   useEffect(() => {
-    setSelectedValues(selected || []);
+    const nextSelected = selected ?? [];
+
+    setSelectedValues(prevSelected => {
+      const isSame =
+        prevSelected.length === nextSelected.length &&
+        prevSelected.every(
+          (prev, index) =>
+            prev.value === nextSelected[index]?.value &&
+            prev.label === nextSelected[index]?.label
+        );
+
+      return isSame ? prevSelected : nextSelected;
+    });
   }, [selected]);
 
   const handleToggle = () => {

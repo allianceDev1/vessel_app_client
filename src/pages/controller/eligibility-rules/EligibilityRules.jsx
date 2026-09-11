@@ -5,7 +5,7 @@ import InputText from '../../../components/UI_Primitives/inputs/InputText';
 import Badge from '../../../components/UI_Primitives/badge/Badge';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import { useDispatch, useSelector } from 'react-redux';
-import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
+import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbAlertCircle, TbPlus } from 'react-icons/tb'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -26,7 +26,7 @@ const EligibilityRules = () => {
             const res = await api.vfCv2Axios.get('/config/eligibility-rules')
             return res || []
         },
-        staleTime: 60_000
+        staleTime: 30_000
     })
 
 
@@ -72,7 +72,7 @@ const EligibilityRules = () => {
                         <h4>{rule?.rule_name}</h4>
                         <div className="sub-line">
                             <p>Conditions : {rule?.conditions || 0}</p>
-                            <Badge value={rule?.enabled ? 'Enabled' : 'Disabled'} severity={rule?.enabled ? 'success' : 'danger'} size={'small'} />
+                            <Badge value={rule?.enabled ? 'Enabled' : 'Disabled'} severity={rule?.enabled ? 'primary' : 'danger'} size={'small'} />
                         </div>
                     </div>))}
                 </div>
@@ -82,6 +82,17 @@ const EligibilityRules = () => {
                     description={'Create the first rule using button.'}
                     hight='70vh'
                 />}
+
+            <div className="note-section">
+                <p>
+                    Eligibility rules are not required for a service category by default. However, if one or more
+                    eligibility rules are configured for a service category, the category must satisfy at least
+                    one of the configured rules before the service can be provided to a customer. When multiple
+                    rules are assigned to the same service category, the service is allowed as long as any one
+                    of the rules passes. If none of the configured rules are satisfied, the service will not be
+                    available to the customer.
+                </p>
+            </div>
         </div>
     )
 }

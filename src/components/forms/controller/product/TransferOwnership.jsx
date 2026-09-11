@@ -57,12 +57,12 @@ const TransferOwnership = ({ status, productId, customerId }) => {
 
     return (
         <div>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 By transferring the ownership of this product to a new Customer ID, only the product's current ownership details,
                 active warranty information, and any available service packages will be transferred.
             </p>
 
-            <p style={{ marginTop: '15px', fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ marginTop: '15px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 The following records will not be transferred and will remain associated with the previous customer:
                 previous service job records, R&D work reports, postponement records and related logs.
                 All historical data will continue to be linked to the original Customer ID to maintain data integrity and
@@ -83,7 +83,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
                 <p style={{ fontSize: '13px', color: 'var(--color-warning)' }}>
                     The transfer may take up to 5 minutes to be reflected across all systems.
                 </p>
-                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-tertiary)' }}>
                     To proceed, Type <b>TRANSFER</b> in the field below to confirm.
                 </p>
                 <InputText

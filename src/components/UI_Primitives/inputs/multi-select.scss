@@ -8,10 +8,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid var(--color-natural-4);
+    border: 1px solid var(--border-light);
     border-radius: 10px;
-    background-color: var(--color-natural-trans-53);
-    backdrop-filter: blur(5px);
+    background-color: var(--surface-1);
     cursor: pointer;
     outline: none;
     transition: border-color 0.2s ease-in-out;
@@ -24,10 +23,10 @@
     overflow: hidden;
 
     &:focus {
-      border-color: var(--color-primary);
+      border-color: var(--color-primary-border);
 
       .multiselect-label {
-        color: var(--color-primary);
+        color: var(--color-primary-text);
         font-size: 12px;
         font-weight: 400;
         top: 10px;
@@ -35,18 +34,15 @@
       }
     }
 
-
-
     &.disabled {
-      background-color: var(--color-natural-5);
+      background-color: var(--surface-3);
       cursor: not-allowed;
-      border: 1px solid var(--color-natural-4);
     }
 
     .multiselect-label {
       position: absolute;
       user-select: none;
-      color: var(--text-secondary-1);
+      color: var(--text-secondary);
       font-weight: 500;
       @include threeDots();
       transition: all 0.2s ease-in-out;
@@ -56,7 +52,7 @@
       @include threeDots();
 
       .required {
-        color: var(--color-danger);
+        color: var(--color-danger-text);
       }
     }
 
@@ -77,7 +73,7 @@
     font-size: 12px;
     margin-top: 2px;
     margin-left: 8px;
-    color: var(--color-natural-6);
+    color: var(--text-placeholder);
   }
 
   .multiselect-options {
@@ -85,9 +81,9 @@
     top: 100%;
     left: 0;
     width: 100%;
-    border: 1px solid var(--color-natural-4);
+    border: 1px solid var(--border-light);
     border-radius: 7px;
-    background-color: var(--color-natural-2);
+    background-color: var(--background-alt);
     max-height: 200px;
     overflow-y: auto;
     z-index: 10;
@@ -101,7 +97,7 @@
       p {
         font-size: 13px;
         font-weight: 500;
-        color: var(--text-secondary-2);
+        color: var(--text-primary);
       }
     }
 
@@ -112,22 +108,22 @@
       cursor: pointer;
 
       &:hover {
-        background-color: var(--color-natural-1);
+        background-color: var(--surface-1);
       }
     }
   }
 
   &.error {
     .multiselect-trigger {
-      border-color: var(--color-danger);
+      border-color: var(--color-danger-border);
 
       .multiselect-label {
-        color: var(--color-danger);
+        color: var(--color-danger-text);
       }
     }
 
     .helper-text {
-      color: var(--color-danger);
+      color: var(--color-danger-text);
     }
   }
 

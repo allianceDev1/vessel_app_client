@@ -45,7 +45,7 @@
 
                     .description {
                         font-size: 13px;
-                        color: var(--text-secondary-2);
+                        color: var(--text-tertiary);
                         margin-top: 3px;
                     }
 
@@ -61,10 +61,11 @@
                         transform: rotate(180deg);
                     }
 
-                    &:hover {
-                        background-color: var(--color-natural-trans-53);
-                        backdrop-filter: blur(5px);
-                        cursor: pointer;
+                    &.hover {
+                        &:hover {
+                            background-color: var(--surface);
+                            cursor: pointer;
+                        }
                     }
                 }
             }

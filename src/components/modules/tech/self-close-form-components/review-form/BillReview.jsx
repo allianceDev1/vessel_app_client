@@ -10,7 +10,7 @@ const BillReview = ({ bill, review, setReview, setOpenedBill }) => {
     const [billItems, setBillItems] = useState([])
 
 
-    
+
     const clickCheckBox = (itemUUID, isDisabled) => {
         if (isDisabled) return;
 
@@ -89,7 +89,7 @@ const BillReview = ({ bill, review, setReview, setOpenedBill }) => {
 
             </div>
 
-            <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setOpenedBill({})} />
+            <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setOpenedBill({})} severity={'secondary'} />
         </div>
     )
 }

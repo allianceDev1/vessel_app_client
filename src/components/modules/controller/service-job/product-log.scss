@@ -8,13 +8,13 @@
         gap: 10px;
 
         .item {
-            background-color: var(--color-natural-trans-53);
+            background-color: var(--surface-2);
             padding: 10px 15px;
             border-radius: 10px;
 
             .label {
                 font-size: 13px;
-                color: var((--text-secondary-2));
+                color: var((--text-tertiary));
             }
 
             div {
@@ -68,7 +68,7 @@
             h4 {
                 font-size: 16px;
                 font-weight: 600;
-                color: var(--text-secondary-3);
+                color: var(--text-muted);
                 margin-bottom: 10px;
             }
 
@@ -86,7 +86,7 @@
                 }
 
                 .label {
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
             }
         }

@@ -254,7 +254,7 @@ const AddNewAddOn = ({ availableAddOns, addOnSpareList, serviceCharges }) => {
                     onChange={handleChange} required value={form?.service_charge} />
 
 
-                <Button label={'Add Product'} rounded style={{ marginTop: '20px' }} />
+                <Button label={'Add Product'} rounded style={{ marginTop: '20px' }} severity={'secondary'} />
 
             </form>
         </div>
