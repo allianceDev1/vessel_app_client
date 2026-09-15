@@ -70,7 +70,7 @@ const RegisteredView = () => {
         onClick: async () => {
           try {
             await api.cnAv1Axios.post('/service/registration/rnd/convert', {
-              product_type: "VESSEL_FILTER",
+              product_type: data?.about?.product_type,
               registration_id: regNo
             })
 
@@ -91,7 +91,8 @@ const RegisteredView = () => {
 
             dispatch(toast.push({
               type: 'success',
-              head: 'Converted to R&D',
+              head: 'Converted',
+              message: "Registration converted to R&D"
             }))
 
           } catch (error) {
@@ -113,7 +114,7 @@ const RegisteredView = () => {
         onClick: async () => {
           try {
             await api.cnAv1Axios.post('/service/registration/rnd/retrieve', {
-              product_type: "VESSEL_FILTER",
+              product_type: data?.about?.product_type,
               registration_id: regNo
             })
 
@@ -134,7 +135,8 @@ const RegisteredView = () => {
 
             dispatch(toast.push({
               type: 'success',
-              head: 'Retrieved from R&D',
+              head: 'Retrieved',
+              message: 'Registration retrieved from R&D'
             }))
 
           } catch (error) {
@@ -258,10 +260,12 @@ const RegisteredView = () => {
           <p>{data?.customer?.address?.address} House, {data?.customer?.address?.place}, P.O {data?.customer?.address?.post}</p>
         </div>
         <div className="right-section">
+          <Button label={'Workflow'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
+            onClick={() => navigate(`/controller/registered/${reg_no}/workflow`)} severity={'secondary'} />
           <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
-            onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} />
+            onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} severity={'secondary'} />
           <Button label={'Service Jobs'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }}
-            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} />
+            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} severity={'secondary'} />
           {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
             && <Dropdown button={{
               label: 'Actions', icon: <TbChevronDown />,

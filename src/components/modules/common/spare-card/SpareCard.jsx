@@ -13,14 +13,15 @@ import { useQueryClient } from '@tanstack/react-query'
 
 
 const SpareCard = ({
-    productId, spareId, spareUuid, spareName, spareCategory, Qty, Unit, warrantyStarted,
-    warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false
+    productId, spareId, componentUuid, spareName, trackingType, spareCategory, warrantyStarted,
+    warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false, Qty, Unit
 }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const { user } = useSelector((state) => state.user)
 
-
+    const uniqueId = componentUuid ? String(componentUuid).slice(-3).toLowerCase() : null
+    const isGroup = trackingType?.toUpperCase() === 'GROUP'
 
     const dropdownOptions = [
         {
@@ -34,12 +35,12 @@ const SpareCard = ({
                             body: <UpdateSpare
                                 productId={productId}
                                 spareId={spareId}
-                                spareUuid={spareUuid}
+                                componentUuid={componentUuid}
                                 spareName={spareName}
-                                Qty={Qty}
                                 warrantyStarted={isoToYYYYMMDD(warrantyStarted)}
                                 warrantyPeriod={warrantyPeriod}
                                 insertAt={isoToYYYYMMDD(insertAt)}
+                                isGroup={isGroup}
                             />
                         }))
                     }
@@ -51,7 +52,7 @@ const SpareCard = ({
                             accept: {
                                 onClick: async () => {
                                     try {
-                                        await api.vfCv2Axios.delete(`/product/${productId}/spare/${spareUuid}`)
+                                        await api.vfCv2Axios.delete(`/product/${productId}/spare/${componentUuid}`)
 
                                         queryClient.refetchQueries({
                                             queryKey: ['controller_customer_spare_list', productId],
@@ -79,7 +80,7 @@ const SpareCard = ({
             <div className="section-one">
                 <div className="left-section">
                     <h4>{spareName}</h4>
-                    <p>{spareId} - {toStandardText(spareCategory)}</p>
+                    <p>{spareId} {uniqueId ? `(${uniqueId}) ` : ''}- {toStandardText(spareCategory)}</p>
                 </div>
                 {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
                     <div className="right-section">
@@ -94,14 +95,31 @@ const SpareCard = ({
             </div>
             <div className="section-two">
                 <div className="left-section">
-                    <p className='qty-label'>Qty available</p>
-                    <p className='warranty-label'>Warranty expiry</p>
-                    <p className={`date ${new Date(warrantyExpiry) >= new Date() ? 'success' : 'danger'}`}>
-                        {warrantyExpiry ? isoToDDMonYYYY(warrantyExpiry) : 'Nil'}
-                    </p>
+                    {uniqueId && (
+                        <div>
+                            <p className='unique-id-label'>Unique id</p>
+                            <p className='unique-id'>{uniqueId}</p>
+                        </div>
+                    )}
+                    {!isGroup && (
+                        <div>
+                            <p className='warranty-label'>Warranty expiry</p>
+                            <p className={`date ${warrantyExpiry ? (new Date(warrantyExpiry) >= new Date() ? 'success' : 'danger') : ''}`}>
+                                {warrantyExpiry ? isoToDDMonYYYY(warrantyExpiry) : 'Nil'}
+                            </p>
+                        </div>
+                    )}
                 </div>
                 <div className="right-section">
-                    <Badge value={`${Qty} ${Unit || ''}`} size={'md'} />
+                    {trackingType ? (
+                        <Badge
+                            value={trackingType.toUpperCase()}
+                            size={'md'}
+                            severity={isGroup ? 'secondary' : 'info'}
+                        />
+                    ) : Qty ? (
+                        <Badge value={`${Qty} ${Unit || ''}`} size={'md'} />
+                    ) : null}
                     <p className='date-label'>Insert at</p>
                     <p className='date'>{insertAt ? isoToDDMonYYYY(insertAt) : 'Nil'}</p>
                 </div>

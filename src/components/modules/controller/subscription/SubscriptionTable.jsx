@@ -4,6 +4,7 @@ import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { api } from '../../../../api'
 import Table from '../../../UI_Primitives/table/Table'
 import { PACKAGE_STATUSES_LIST, PACKAGE_STATUSES_TEXT } from '../../../../assets/javascript/pre_data/package'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 
 
@@ -20,6 +21,7 @@ const SubscriptionTable = () => {
     { header: 'Idx', accessorKey: 'Idx', enableSorting: false },
     { header: 'Srl No', accessorKey: 'Srl No', enableHiding: false },
     { header: 'Title', accessorKey: 'Title' },
+    { header: 'Product Type', accessorKey: 'Product Type' },
     { header: 'Status', accessorKey: 'Status' },
     { header: 'CID', accessorKey: 'CID' },
     { header: 'Product Id', accessorKey: 'Product Id' },
@@ -32,6 +34,7 @@ const SubscriptionTable = () => {
   const getSortField = (id) => ({
     'Srl No': 'serial_number',
     'Title': 'package_name',
+    'Product Type': 'product_type',
     'Status': 'package_status',
     'CID': 'customer_id',
     'Product Id': 'product_id',
@@ -74,6 +77,7 @@ const SubscriptionTable = () => {
         Idx: globalIndex,
         'Srl No': item.serial_number,
         'Title': item.package_name,
+        'Product Type': item.product_type ? toStandardText(item.product_type) : '',
         'Status': PACKAGE_STATUSES_TEXT?.[item?.package_status],
         'CID': item.customer_id,
         'Product Id': item.product_id,
@@ -97,7 +101,7 @@ const SubscriptionTable = () => {
 
     return { data: transformed, total: res.total }
     // eslint-disable-next-line
-  }, [navigate, searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')])
+  }, [navigate, searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')])
 
 
 
@@ -108,7 +112,7 @@ const SubscriptionTable = () => {
         columns={tableColumns}
         fetchFn={fetchServiceData}
         columnVisible={columnVisibility}
-        queryKey={['subsc_table', searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')]}
+        queryKey={['subsc_table', searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')]}
         tableKey="subsc_table"
       />
     </div>

@@ -4,6 +4,7 @@ import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { api } from '../../../../api'
 import Table from '../../../UI_Primitives/table/Table'
 import { SERVICE_REG_STATUS_LIST } from '../../../../assets/javascript/pre_data/service'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 
 
@@ -21,7 +22,8 @@ const RegisteredServiceTable = () => {
         'Place': 'place',
         'Post': 'post',
         'Status': 'registration_status',
-        'Action Date': 'action_date'
+        'Action Date': 'action_date',
+        'Product Type': 'product_type'
     })[id] || id
 
     const allowedKeys = ['fl'];
@@ -63,10 +65,12 @@ const RegisteredServiceTable = () => {
                 'Place': item.place,
                 'Post': item.post,
                 'City': item.city_name,
+                'Product Type': (item.product_type || item.registration_type) ? toStandardText(item.product_type || item.registration_type) : '',
                 'Service Type': item.service_type,
                 'Technician': item.technician,
                 'Status': item.status_text,
                 'Action Date': isoToDDMonYYYY(new Date(item.action_date)),
+                product_type: item.product_type,
                 registration_status: item.registration_status,
                 _rowStyle: { cursor: 'pointer' },
                 _rowNavigateUrl: `/controller/registered/${item.reg_no}`,
@@ -81,7 +85,7 @@ const RegisteredServiceTable = () => {
 
         return { data: transformed, total: res.total }
         // eslint-disable-next-line
-    }, [navigate, searchParams.get('id_key'), searchParams.get('service_type'), searchParams.get('status'), searchParams.get('city_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('rnd'), searchParams.get('technician_uuid')])
+    }, [navigate, searchParams.get('id_key'), searchParams.get('service_type'), searchParams.get('product_type'), searchParams.get('status'), searchParams.get('city_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('rnd'), searchParams.get('technician_uuid')])
 
     const tableColumns = useMemo(() => {
 
@@ -101,6 +105,7 @@ const RegisteredServiceTable = () => {
             { header: 'Place', accessorKey: 'Place' },
             { header: 'Post', accessorKey: 'Post' },
             { header: 'City', accessorKey: 'City', enableSorting: false },
+            { header: 'Product Type', accessorKey: 'Product Type', enableSorting: false },
             { header: 'Service Type', accessorKey: 'Service Type', enableSorting: false },
             { header: 'Technician', accessorKey: 'Technician', enableSorting: false },
             { header: 'Status', accessorKey: 'Status' },
@@ -121,7 +126,7 @@ const RegisteredServiceTable = () => {
                 fetchFn={fetchServiceData}
                 columnVisible={columnVisibility}
                 queryKey={['registered_service_table_list', searchParams.get('status'), searchParams.get('id_key'),
-                    searchParams.get('service_type'), searchParams.get('city_id'),
+                    searchParams.get('service_type'), searchParams.get('product_type'), searchParams.get('city_id'),
                     searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('rnd'), searchParams.get('technician_uuid')]}
                 tableKey="registered_service"
             />

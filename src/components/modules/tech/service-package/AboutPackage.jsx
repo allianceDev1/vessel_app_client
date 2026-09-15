@@ -61,13 +61,18 @@ const AboutPackage = () => {
                     </div>
                     <div className="item">
                         <p className='label'>Serial Number & Status</p>
-                        <div style={{ display: 'flex', gap: '15px' }}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                             <p className='text-value'>{data?.serial_number} </p>
                             {data?.package_status === 1 ? <Badge value={'Pending'} /> :
                                 data?.package_status === 2 ? <Badge value={'Active'} severity={'success'} /> :
                                     data?.package_status === 3 ? <Badge value={'Expired'} severity={'danger'} /> :
                                         data?.package_status === 4 ? <Badge value={'Frozen'} severity={'warning'} />
                                             : ''}
+                            {(data?.is_current_subscription ?? data?.current_subscription) ? (
+                                <Badge value={'Current Subscription'} severity={'success'} />
+                            ) : (data?.is_last_subscription ?? data?.last_subscription) ? (
+                                <Badge value={'Last Subscription'} severity={'info'} />
+                            ) : null}
                         </div>
                     </div>
                     <div className="item">

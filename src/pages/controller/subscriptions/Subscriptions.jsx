@@ -52,7 +52,7 @@ const Subscriptions = () => {
 
                 <div className="right">
                     <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                        onClick={onClickFilter} />
+                        onClick={onClickFilter} severity={'secondary'} />
                 </div>
             </div>
 

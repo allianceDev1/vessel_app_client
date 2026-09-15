@@ -18,20 +18,21 @@ import Checkbox from '../../../UI_Primitives/inputs/Checkbox'
 import TextArea from '../../../UI_Primitives/inputs/TextArea'
 import Button from '../../../UI_Primitives/buttons/Button'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
+import { REGISTRATION_TYPES } from '../../../../assets/javascript/pre_data/product'
 
 
-const ServiceRegistration = ({ customerId, customerName, serviceType, }) => {
+const ServiceRegistration = ({ customerId, customerName, serviceType, productType }) => {
     const dispatch = useDispatch()
-    const [form, setForm] = useState({ service_type: serviceType || '', priority: '1' })
+    const [form, setForm] = useState({ product_type: productType || '', service_type: serviceType || '', priority: '1' })
     const [vErr, setVErr] = useState({})
     const [loading, setLoading] = useState('')
 
     const fetchResources = async () => {
         const [workers, inputs] = await Promise.all([
             await vfCv2Axios.get('/resources/service-workers/VESSEL_FILTER'),
-            await vfCv2Axios.get('/resources/form-resources?titles=vf_complaint_reasons')
+            await vfCv2Axios.get('/resources/form-resources?titles=complaint_registration_reasons')
         ])
-        return { workers, inputs: inputs?.find(i => i?.title === 'vf_complaint_reasons')?.values?.map(i => i?.data?.[0]) }
+        return { workers, inputs: inputs?.find(i => i?.title === 'complaint_registration_reasons')?.values?.map(i => i?.data?.[0]) }
     }
 
     const handleChange = (e) => {
@@ -90,7 +91,7 @@ const ServiceRegistration = ({ customerId, customerName, serviceType, }) => {
                 complaint_category: form?.service_type === 'COMPLAINT' ? form?.complaint_category : [],
                 priority: Number(form?.priority) || 1,
                 assigned_technician_uuid: form?.assigned_technician_uuid || null,
-                product_type: 'VESSEL_FILTER',
+                product_type: form?.product_type,
                 schedule_with_registration: form?.schedule_with_registration || false,
                 schedule_slot_start_at: form?.schedule_with_registration ? new Date(form?.schedule_date + ' ' + form?.start_time) : null,
                 schedule_slot_finish_at: form?.schedule_with_registration ? new Date(form?.schedule_date + ' ' + form?.end_time) : null,
@@ -138,6 +139,9 @@ const ServiceRegistration = ({ customerId, customerName, serviceType, }) => {
                     <h5>Customer ID : {customerId || '____'}</h5>
                     {customerName && <h3>{customerName}</h3>}
                 </div>
+
+                <Select label={'Product type'} name={'product_type'} required value={form?.product_type || ''} onChange={handleChange}
+                    options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]} />
 
                 <Select label={'Service Type'} name={'service_type'} required value={form?.service_type || ''} onChange={handleChange}
                     options={[{ label: '', value: '' }, ...SERVICE_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]} />

@@ -2,12 +2,11 @@ import React, { useEffect } from 'react'
 import './app-config.scss'
 import { useDispatch } from 'react-redux';
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbArrowLeft } from 'react-icons/tb';
+import { TbArrowLeft, TbPlus } from 'react-icons/tb';
 import { app_version, parent_product_types } from '../../../config/app_config';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../api';
 import { useQuery } from '@tanstack/react-query';
-import Badge from '../../../components/UI_Primitives/message/Message';
 
 const AppConfig = () => {
     const dispatch = useDispatch();
@@ -114,7 +113,6 @@ const AppConfig = () => {
                         })}
                     </div>
                 </div>
-
             </div>
         </div >
     )

@@ -46,6 +46,19 @@
         align-items: flex-end;
 
         .left-section {
+            .unique-id-label {
+                font-size: 13px;
+                color: var(--text-tertiary);
+            }
+
+            .unique-id {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-secondary);
+                margin-top: 2px;
+                text-transform: lowercase;
+            }
+
             .qty-label {
                 font-size: 14px;
                 color: var(--text-secondary);

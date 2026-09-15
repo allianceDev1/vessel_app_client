@@ -37,10 +37,10 @@ const UpcomingServiceTable = () => {
         )
     );
 
-    const openRegistrationPopUp = ({ customer_id, customer_name, service_type }) => {
+    const openRegistrationPopUp = ({ customer_id, customer_name, service_type, product_type }) => {
         dispatch(modal.push({
             show: true, title: "Register Service",
-            body: <ServiceRegistration customerName={customer_name} customerId={customer_id} serviceType={service_type || ''} />
+            body: <ServiceRegistration productType={product_type} customerName={customer_name} customerId={customer_id} serviceType={service_type || ''} />
         }))
     }
 
@@ -109,6 +109,7 @@ const UpcomingServiceTable = () => {
                         'Service Date': item.next_service_date ? isoToDDMonYYYY(new Date(item.next_service_date)) : '',
                         'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
                         package_id: item.package_id,
+                        product_type: item.product_type,
                         product_id: item.product_id,
                         product_name: item.product_name,
                         service_type: item.service_type,
@@ -160,7 +161,7 @@ const UpcomingServiceTable = () => {
                                     icon={<TbPencilPlus />} size='small' severity={'primary'}
                                     onClick={() => openRegistrationPopUp({ customer_id: row.original.CID, customer_name: row.original['Customer name'] })}
                                 />
-                                <Button rounded title='Enter Call Log' severity={'secondary'} 
+                                <Button rounded title='Enter Call Log' severity={'secondary'}
                                     icon={<TbMessagePlus />} size='small' outlined
                                     onClick={() => openEnterCallLogPopUp({ customer_id: row.original.CID })}
                                 />
@@ -224,14 +225,15 @@ const UpcomingServiceTable = () => {
                                     icon={<TbPencilPlus />} size='small' severity={'primary'}
                                     onClick={() => openRegistrationPopUp({
                                         customer_id: row.original.CID, customer_name: row.original['Customer name'],
-                                        service_type: row.original.service_type
+                                        service_type: row.original.service_type,
+                                        product_type: row.original.product_type,
                                     })}
                                 />
-                                <Button rounded title='Enter Call Log' severity={'secondary'} 
+                                <Button rounded title='Enter Call Log' severity={'secondary'}
                                     icon={<TbMessagePlus />} size='small' outlined
                                     onClick={() => openEnterCallLogPopUp({ customer_id: row.original.CID })}
                                 />
-                                <Button rounded severity={row.original.service_type !== 'SERVICE' ? '' : 'danger'}
+                                <Button rounded severity={row.original.service_type !== 'SERVICE' ? 'secondary' : 'danger'}
                                     outlined title='Postpone' icon={<TbArrowForwardUpDouble />} size='small'
                                     onClick={() => openPostponePopUp({
                                         customer_id: row.original.CID,

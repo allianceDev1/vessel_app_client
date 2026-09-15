@@ -37,6 +37,14 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: start;
+                    gap: 8px;
+
+                    .title-left {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        flex-wrap: wrap;
+                    }
 
                     h3 {
                         font-size: 20px;
@@ -48,6 +56,7 @@
                         font-size: 13px;
                         font-weight: 500;
                         color: var(--text-secondary-alt);
+                        white-space: nowrap;
                     }
                 }
 

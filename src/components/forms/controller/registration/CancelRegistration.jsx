@@ -31,7 +31,8 @@ const CancelRegistration = ({ registrationId }) => {
 
             dispatch(toast.push({
                 type: 'success',
-                head: 'Registration Cancelled'
+                head: 'Cancelled',
+                message: "The registration fully cancelled"
             }))
 
         } catch (error) {

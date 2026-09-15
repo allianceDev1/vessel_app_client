@@ -78,6 +78,9 @@ const PackageHistory = () => {
                 hight='400px'
             />}
 
+
+
+
             <div className="history-list">
                 {allPackages.map((pack) => <PackageCard key={pack.serial_number} data={pack}
                     redirectUrl={`/controller/service-package/${pack.serial_number}/about`} />)}
@@ -86,7 +89,7 @@ const PackageHistory = () => {
             {hasNextPage &&
                 <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                     <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                        spinIcon={isFetchingNextPage} severity={'secondary'} 
+                        spinIcon={isFetchingNextPage} severity={'secondary'}
                         onClick={() => {
                             if (!isFetchingNextPage) fetchNextPage();
                         }} />

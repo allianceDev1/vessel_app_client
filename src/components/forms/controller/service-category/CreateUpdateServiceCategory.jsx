@@ -14,7 +14,7 @@ import Radio from '../../../UI_Primitives/inputs/Radio';
 import Button from '../../../UI_Primitives/buttons/Button';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { parentProductTypes } from '../../../../assets/javascript/pre_data/product';
+import { parentProductTypes, productTypes } from '../../../../assets/javascript/pre_data/product';
 import { toStandardText } from '../../../../utils/helpers/text-formatting';
 import { work_modes } from '../../../../assets/javascript/pre_data/package';
 
@@ -291,7 +291,7 @@ const CreateUpdateServiceCategory = ({ action = 'CREATE', data }) => {
                     <div className="section">
                         <InputText label={'Service name'} name='service_name' value={form.service_name} onChange={handleChangeForm} required error={vErr.service_name} />
                         {action === 'CREATE' && <>
-                            <Select label={'Product type'} name={'product_type'} options={[{}, ...parentProductTypes?.map((a) => ({ label: toStandardText(a), value: a }))]}
+                            <Select label={'Product type'} name={'product_type'} options={[{}, ...productTypes?.map((a) => ({ label: toStandardText(a), value: a }))]}
                                 required onChange={handleChangeForm} value={form.product_type} />
                             <Select label={'Mode'} name={'mode'} options={[{}, ...work_modes?.map((a) => ({ label: toStandardText(a), value: a }))]} required
                                 onChange={handleChangeForm} value={form.mode} />

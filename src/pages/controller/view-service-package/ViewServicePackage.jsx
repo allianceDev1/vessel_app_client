@@ -233,6 +233,7 @@ const ViewServicePackage = () => {
             }}>
                 <h1 style={{ color: data?.packageInfo.color_code }}>{data?.packageInfo?.package_name}</h1>
                 <p>( {data?.packageInfo?.full_form} )</p>
+                <p className='package-id'>Package ID : {package_id || data?.packageInfo?.package_id}</p>
                 <div className="sub-items">
                     <div className="sub-item">
                         <h4>{data?.packageInfo?.package_duration_months ? `${data?.packageInfo?.package_duration_months} mo` : 'Nil'}</h4>

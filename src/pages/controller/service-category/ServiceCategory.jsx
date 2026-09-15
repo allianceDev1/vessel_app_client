@@ -13,7 +13,7 @@ import CreateUpdateServiceCategory from '../../../components/forms/controller/se
 import { useQuery } from '@tanstack/react-query';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { parent_product_types } from '../../../config/app_config';
+import { product_types } from '../../../config/app_config';
 
 
 
@@ -24,10 +24,10 @@ const ServiceCategory = () => {
     const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['cn', 'service_category_list', (searchParams.get('parent_product') || parent_product_types[0])],
+        queryKey: ['cn', 'service_category_list', (searchParams.get('product_product') || product_types[0])],
         queryFn: async () => {
             const fields = 'service_name,is_active,package_product_only'
-            const productType = (searchParams.get('parent_product') || parent_product_types[0])
+            const productType = (searchParams.get('product_product') || product_types[0])
             const res = await api.vfCv2Axios.get(`/config/service-categories/list?product_type=${productType}&hidden=Yes&fields=${fields}`)
             return res
         },
@@ -43,7 +43,7 @@ const ServiceCategory = () => {
     }
 
     const handleChangeParentProduct = (type) => {
-        setSearchParams({ parent_product: type })
+        setSearchParams({ product_product: type })
     }
 
     useEffect(() => {
@@ -82,18 +82,18 @@ const ServiceCategory = () => {
             <div className="action-section">
                 <Dropdown
                     button={{
-                        label: toStandardText(searchParams.get('parent_product') || parent_product_types[0]),
+                        label: toStandardText(searchParams.get('product_product') || product_types[0]),
                         icon: < TbChevronDown />, iconPos: 'right', severity: 'secondary',
                         rounded: true, outlined: true, size: 'small', style: { width: '150px' }
                     }}
                     list={[{
-                        items: parent_product_types?.map((t) => ({
+                        items: product_types?.map((t) => ({
                             label: toStandardText(t),
                             value: t,
                             onClick: () => handleChangeParentProduct(t)
                         }))
                     }]}
-                    selected={searchParams.get('parent_product') || parent_product_types[0]} />
+                    selected={searchParams.get('product_product') || product_types[0]} />
 
                 <Button label={'Category'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '130px' }}
                     onClick={openCreateModal}

@@ -80,11 +80,11 @@ const CompletedServices = () => {
                         }} list={viewTypeOptions}
                             selected={searchParams.get('view_type') || 'customer'} />
 
-                        <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} />
+                        <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} severity={'secondary'} />
                     </>}
 
                     <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                        onClick={onClickFilter} />
+                        onClick={onClickFilter} severity={'secondary'} />
                 </div>
             </div>
 

@@ -56,21 +56,18 @@ const SpareList = () => {
 
     return (
         <div className="controller-spares-customer-container">
-            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
-                && <div className="menu-buttons">
-                    <Button icon={<TbPlus />} label={'Spare'} size='small' severity={'primary'} rounded style={{ width: '100px' }}
-                        onClick={openAddSpareModal} />
-                </div>}
             <div className="content">
                 {data?.length > 0
                     ? <div className='list-items'>
                         {data?.map((spare) => {
                             return <SpareCard
-                                key={spare?.spare_id}
+                                key={spare?.component_uuid || spare?.spare_id || spare?.spare_uuid}
                                 productId={product_id}
                                 spareUuid={spare?.spare_uuid}
+                                componentUuid={spare?.component_uuid || spare?.componentUuid}
                                 spareId={spare?.spare_id}
                                 spareName={spare?.spare_name}
+                                trackingType={spare?.tracking_type || spare?.trackingType}
                                 spareCategory={spare?.spare_category}
                                 Qty={spare?.qty}
                                 Unit={spare?.unit}

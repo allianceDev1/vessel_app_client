@@ -12,6 +12,8 @@ import { api } from '../../../../api'
 import { TbLocation } from 'react-icons/tb'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
+import { REGISTRATION_TYPES } from '../../../../assets/javascript/pre_data/product'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 
 const FilterBox = () => {
@@ -22,8 +24,10 @@ const FilterBox = () => {
         end_date: searchParams.get('end_date') || '',
         id_key: searchParams.get('id_key') || '',
         service_type: searchParams.get('service_type') || '',
+        product_type: searchParams.get('product_type') || '',
         status: searchParams.get('fl') ? (searchParams.get('status')?.split(',')?.map(Number) || []) : [1, 2, 3, 4],
         city_id: searchParams.get('city_id') || '',
+        technician_uuid: searchParams.get('technician_uuid') || '',
         rnd: searchParams.get('rnd') || ''
     })
 
@@ -82,7 +86,7 @@ const FilterBox = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.status?.length && !form.city_id && !form.technician_uuid) {
+        if (!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.product_type && !form.status?.length && !form.city_id && !form.technician_uuid) {
             return;
         }
 
@@ -93,6 +97,7 @@ const FilterBox = () => {
             form.end_date ? next.set('end_date', form.end_date) : next.delete('end_date')
             form.id_key ? next.set('id_key', form.id_key) : next.delete('id_key')
             form.service_type ? next.set('service_type', form.service_type) : next.delete('service_type')
+            form.product_type ? next.set('product_type', form.product_type) : next.delete('product_type')
             form.status?.length ? next.set('status', form.status?.join(',')) : next.delete('status')
             form.city_id ? next.set('city_id', form.city_id) : next.delete('city_id')
             form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
@@ -109,8 +114,10 @@ const FilterBox = () => {
             end_date: '',
             id_key: '',
             service_type: '',
+            product_type: '',
             status: [],
             city_id: '',
+            technician_uuid: '',
             rnd: '',
         })
         setSearchParams((prev) => {
@@ -120,8 +127,10 @@ const FilterBox = () => {
             next.delete('end_date');
             next.delete('id_key');
             next.delete('service_type');
+            next.delete('product_type');
             next.delete('status');
             next.delete('city_id');
+            next.delete('technician_uuid');
             next.delete('rnd');
             return next;
         })
@@ -145,6 +154,8 @@ const FilterBox = () => {
                         selected={statusList.filter(item => form.status.includes(item.value))}
                     />
 
+                    <Select label={'Product type'} name={'product_type'} options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map((i) => ({ label: toStandardText(i), value: i }))]} value={form.product_type} onChange={handleChange} />
+
                     <Select label={'Service type'} name={'service_type'} options={[{ label: '', value: '' }, ...serviceTypes]} value={form.service_type} onChange={handleChange} />
 
                     <Select label={'City'} name={'city_id'} options={[{ label: '', value: '' }, ...(cityList || [])?.map((city) => ({ label: city.city_name, value: city.city_id }))]}
@@ -164,7 +175,7 @@ const FilterBox = () => {
                     <ButtonGroup style={{ dispatch: "grid", }} rounded>
                         <Button label={'Clear'} type={'button'} severity={'primary'} outlined style={{ width: '100%' }} disabled={searchParams.get('fl') !== 'Yes'}
                             onClick={handleClear} />
-                        <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }} disabled={(!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.status?.length && !form.city_id)} />
+                        <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }} disabled={(!form.from_date && !form.end_date && !form.id_key && !form.service_type && !form.product_type && !form.status?.length && !form.city_id && !form.technician_uuid)} />
                     </ButtonGroup>
                 </form>}
         </div>

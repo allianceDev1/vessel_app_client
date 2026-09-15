@@ -4,6 +4,7 @@ import { TbCrown } from 'react-icons/tb'
 import { getPackageProgress, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { PACKAGE_STATUSES_TEXT } from '../../../../assets/javascript/pre_data/package'
 import { useNavigate } from 'react-router-dom'
+import Badge from '../../../UI_Primitives/badge/Badge'
 
 const PackageCard = ({ data, redirectUrl }) => {
     const navigate = useNavigate();
@@ -12,8 +13,11 @@ const PackageCard = ({ data, redirectUrl }) => {
 
     const packageProgress = getPackageProgress({ startDate: data?.start_date, endDate: data?.expire_date, currentDate: data?.expired_at ? data?.expired_at : new Date() })
 
+    const isCurrentSubscription = Boolean(data?.is_current_subscription ?? data?.current_subscription);
+    const isLastSubscription = Boolean(data?.is_last_subscription ?? data?.last_subscription);
+
     return (
-        <div className="package-card-container" style={{
+        <div className={`package-card-container ${isCurrentSubscription ? 'current-subscription' : ''} ${isLastSubscription ? 'last-subscription' : ''}`} style={{
             borderColor: `${data?.color_code || tempColor}a8`,
             backgroundImage: `radial-gradient(${data?.color_code || tempColor}4b 0.7000000000000001px, #ffffff0e 0.7000000000000001px)`,
             cursor: redirectUrl ? 'pointer' : ''
@@ -25,7 +29,14 @@ const PackageCard = ({ data, redirectUrl }) => {
                     </div>
                     <div className="title-section">
                         <div className="head">
-                            <h3 style={{ color: `${data?.color_code || tempColor}` }}>{data?.package_name}</h3>
+                            <div className="title-left">
+                                <h3 style={{ color: `${data?.color_code || tempColor}` }}>{data?.package_name}</h3>
+                                {isCurrentSubscription ? (
+                                    <Badge value={'Current Subscription'} severity={'success'} />
+                                ) : isLastSubscription ? (
+                                    <Badge value={'Last Subscription'} severity={'info'} />
+                                ) : null}
+                            </div>
                             <p>{data?.serial_number}</p>
                         </div>
                         <p>{data?.full_form}</p>

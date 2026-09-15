@@ -10,14 +10,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { PACKAGE_STATUSES } from '../../../../assets/javascript/pre_data/package'
+import { parentProductTypes } from '../../../../assets/javascript/pre_data/product'
 
 const FilterBox = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [form, setForm] = useState({
-    statuses: searchParams.get('statuses')?.split(',') || [],
-    package_ids: searchParams.get('package_ids')?.split(',') || [],
+    product_type: searchParams.get('product_type') || '',
+    statuses: searchParams.get('statuses')?.split(',').filter(Boolean) || [],
+    package_ids: searchParams.get('package_ids')?.split(',').filter(Boolean) || [],
     date_type: searchParams.get('date_type') || '',
     from_date: searchParams.get('from_date') || '',
     end_date: searchParams.get('end_date') || '',
@@ -28,26 +30,35 @@ const FilterBox = () => {
 
 
   const handleChange = (e) => {
-
-    let value = e.target.value
-    setForm({
-      ...form,
-      [e.target.name]: value
-    })
+    const { name, value } = e.target
+    if (name === 'product_type') {
+      setForm((prev) => ({
+        ...prev,
+        product_type: value,
+        package_ids: []
+      }))
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
   const handleMultiInputChange = (e) => {
     setForm({ ...form, [e.name]: e.selectedValues?.map((c) => c.value) })
   }
 
-  const { data: packageIdOptions,
-    //  isLoading: resourcesLoading, error: resourcesError
-  } = useQuery({
-    queryKey: ['package_ids'],
+  const { data: packageIdOptions = [] } = useQuery({
+    queryKey: ['package_ids', form?.product_type],
     queryFn: async () => {
-      const res = await api.vfCv2Axios.get(`/config/service-package/list?product_type=VESSEL_FILTER&fields=package_id,package_name`)
-      return res?.map(p => ({ label: p?.package_name, value: p?.package_id }))
+      if (!form?.product_type || !parentProductTypes.includes(form?.product_type)) return []
+      const res = await api.vfCv2Axios.get(
+        `/config/service-package/list?product_type=${form.product_type}&fields=package_id,package_name`
+      )
+      return res?.map((p) => ({ label: p?.package_name, value: p?.package_id })) || []
     },
+    enabled: Boolean(form?.product_type && parentProductTypes.includes(form?.product_type)),
     staleTime: 30_000
   })
 
@@ -55,13 +66,19 @@ const FilterBox = () => {
     e.preventDefault();
 
     // validation
-    if (!form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date) {
+    if (!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date) {
       return;
     }
 
     const newSearchParams = new URLSearchParams(searchParams)
 
     newSearchParams.set('fl', 'Yes')
+
+    if (form?.product_type) {
+      newSearchParams.set('product_type', form?.product_type)
+    } else {
+      newSearchParams.delete('product_type')
+    }
 
     if (form?.black_listed) {
       newSearchParams.set('black_listed', form?.black_listed)
@@ -99,8 +116,22 @@ const FilterBox = () => {
   return (
     <div className="controller-customer-product-filter-comp-container">
       <form action="" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <MultiSelectInput label={'Packages'} options={packageIdOptions} name={'package_ids'} onChange={handleMultiInputChange}
-          selected={packageIdOptions?.filter(item => form.package_ids?.includes(item.value))} />
+        <Select
+          label={'Product Type'}
+          name={'product_type'}
+          value={form?.product_type}
+          options={[{}, ...parentProductTypes.map(i => ({ label: toStandardText(i, true), value: i }))]}
+          onChange={handleChange}
+        />
+
+        <MultiSelectInput
+          label={'Packages'}
+          options={packageIdOptions}
+          name={'package_ids'}
+          disabled={!form?.product_type}
+          onChange={handleMultiInputChange}
+          selected={packageIdOptions?.filter(item => form.package_ids?.includes(item.value))}
+        />
 
         <MultiSelectInput label={'Status'} options={statusFilterTypes} name={'statuses'} onChange={handleMultiInputChange}
           selected={statusFilterTypes?.filter(item => form.statuses?.includes(item.value))} />
@@ -115,7 +146,7 @@ const FilterBox = () => {
           required={form?.date_type || form?.from_date} min={form?.from_date} />
 
         <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }}
-          rounded disabled={!form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date} />
+          rounded disabled={!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date} />
       </form>
     </div>
   )

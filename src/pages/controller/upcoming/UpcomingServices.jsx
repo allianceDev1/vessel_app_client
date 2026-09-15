@@ -71,7 +71,7 @@ const UpcomingServices = () => {
                 }} list={viewTypeOptions}
                     selected={searchParams.get('view_type') || 'product'} />
                 <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                    onClick={onClickFilter} />
+                    onClick={onClickFilter} severity={'secondary'} />
             </div>
             <div className="content">
                 {searchParams.get('fl') !== "Yes" && <UpcomingReport data={reportData} loading={reportLoading} error={reportError} updatedAt={reportDataUpdatedAt} />}

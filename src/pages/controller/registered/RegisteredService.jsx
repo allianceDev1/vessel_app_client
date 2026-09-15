@@ -30,7 +30,7 @@ const RegisteredService = () => {
         <div className="registered-services-page-controller">
             <div className="top-section">
                 <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                    onClick={onClickFilter} />
+                    onClick={onClickFilter} severity={'secondary'} />
             </div>
             <div className="content">
                 {searchParams.get('fl') !== "Yes" && <RegisteredReport />}

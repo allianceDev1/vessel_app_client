@@ -8,11 +8,10 @@ import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 
 
-const UpdateSpare = ({ productId, spareId, spareUuid, spareName, Qty, warrantyStarted, warrantyPeriod, insertAt }) => {
+const UpdateSpare = ({ productId, componentUuid, spareId, spareName, warrantyStarted, warrantyPeriod, insertAt, isGroup }) => {
     const dispatch = useDispatch()
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
-        qty: String(Qty),
         insert_at: insertAt,
         wr_start_date: warrantyStarted,
         wr_period: Number(warrantyPeriod) > 0 ? String(warrantyPeriod) : ''
@@ -32,7 +31,7 @@ const UpdateSpare = ({ productId, spareId, spareUuid, spareName, Qty, warrantySt
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.put(`/product/${productId}/spare/${spareUuid}`, form)
+            await api.vfCv2Axios.put(`/product/${productId}/spare/${componentUuid}`, form)
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_spare_list', productId],
@@ -64,12 +63,13 @@ const UpdateSpare = ({ productId, spareId, spareUuid, spareName, Qty, warrantySt
                     <p style={{ textAlign: 'center', fontSize: '14px', color: 'var(--text-tertiary)' }}>{spareId} </p>
                 </div>
 
-                <InputText label={'Quantity'} name={'qty'} value={form?.qty} onChange={handleChange} type={'number'} min={1} required />
                 <InputText label={'Insert Date'} name={'insert_at'} value={form?.insert_at} onChange={handleChange} type={'date'} required />
-                <InputText label={'Warranty Start Date'} name={'wr_start_date'} value={form?.wr_start_date} onChange={handleChange} type={'date'}
-                    min={form?.insert_at} max={isoToYYYYMMDD(new Date())} required={form?.wr_period ? true : false} />
-                <InputText label={'Warranty Period (Months)'} name={'wr_period'} value={form?.wr_period} onChange={handleChange} type={'number'} min={1}
-                    required={form?.wr_start_date ? true : false} />
+                {!isGroup && <>
+                    <InputText label={'Warranty Start Date'} name={'wr_start_date'} value={form?.wr_start_date} onChange={handleChange} type={'date'}
+                        min={form?.insert_at} max={isoToYYYYMMDD(new Date())} required={form?.wr_period ? true : false} />
+                    <InputText label={'Warranty Period (Months)'} name={'wr_period'} value={form?.wr_period} onChange={handleChange} type={'number'} min={1}
+                        required={form?.wr_start_date ? true : false} />
+                </>}
                 <Button label={'Update Spare'} severity={'primary'} rounded spinIcon={loading} disabled={loading} />
             </form>
         </div>

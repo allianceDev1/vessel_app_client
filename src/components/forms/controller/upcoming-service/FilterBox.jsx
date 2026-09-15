@@ -12,6 +12,8 @@ import { TbLocation } from 'react-icons/tb'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
+import { productTypes } from '../../../../assets/javascript/pre_data/product';
+import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
 const FilterBox = () => {
   const dispatch = useDispatch();
@@ -26,10 +28,7 @@ const FilterBox = () => {
     end_date: searchParams.get('end_date') || moment().endOf('month').format('YYYY-MM-DD'),
   })
 
-  const productTypes = [
-    { label: "Vessel Filter", value: "VESSEL_FILTER" },
-    { label: "Add On", value: "ADD_ON" },
-  ]
+
 
   const serviceTypes = [
     { label: "Service", value: "SERVICE" },
@@ -54,15 +53,24 @@ const FilterBox = () => {
     isLoading: packageLoading,
     error: packageError,
   } = useQuery({
-    queryKey: ['package_input_list'],
+    queryKey: ['cn', 'package_input_list'],
     queryFn: async () => {
-      const res = await api.vfCv2Axios.get('/config/service-package/list?product_type=VESSEL_FILTER&fields=package_name')
+      const res = await api.vfCv2Axios.get('/config/service-package/list?fields=package_name')
       return res
     },
     staleTime: 30 * 60_000
   })
 
   const handleChange = (e) => {
+    if (e.target.name === 'product_type') {
+      setForm({
+        ...form,
+        product_id: '',
+        [e.target.name]: e.target.value
+      })
+      return;
+    }
+
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -126,9 +134,9 @@ const FilterBox = () => {
           <Select label={'City'} name={'city_id'} options={[{ label: '', value: '' }, ...(cityList || [])?.map((city) => ({ label: city.city_name, value: city.city_id }))]}
             value={form.city_id} onChange={handleChange} />
 
-          <Select label={'Product type'} name={'product_type'} options={[{ label: '', value: '' }, ...productTypes]} value={form.product_type} onChange={handleChange} />
+          <Select label={'Product type'} name={'product_type'} options={[{ label: '', value: '' }, ...productTypes?.map(i => ({ label: toStandardText(i), value: i }))]} value={form.product_type} onChange={handleChange} />
 
-          <Select label={'Package'} name={'package_id'} options={[{ label: '', value: '' }, ...(packageList || [])?.map((pkg) => ({ label: pkg.package_name, value: pkg.package_id }))]}
+          <Select label={'Package'} name={'package_id'} options={[{ label: '', value: '' }, ...(packageList || [])?.filter(i => i?.product_type === form?.product_type)?.map((pkg) => ({ label: pkg.package_name, value: pkg.package_id }))]}
             value={form.package_id} onChange={handleChange} />
 
           <Select label={'Service type'} name={'service_type'} options={[{ label: '', value: '' }, ...serviceTypes]} value={form.service_type} onChange={handleChange} />

@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbAlignLeft, TbArrowUpRight, TbCalendarCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, } from 'react-icons/tb'
+import { TbAlignLeft, TbArrowUpRight, TbCalendarCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, TbPlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
@@ -20,6 +20,9 @@ import UpdateProduct from '../../../forms/controller/product/UpdateProduct'
 import EditNote from '../../../forms/controller/product/EditNote'
 import UpdateServiceDate from '../../../forms/controller/product/UpdateServiceDate'
 import TransferOwnership from '../../../forms/controller/product/TransferOwnership'
+import AddProductSubscription from '../../../forms/controller/product/AddProductSubscription'
+import { parentProductTypes } from '../../../../assets/javascript/pre_data/product'
+import AddSpare from '../../../forms/controller/product/AddSpare'
 
 const AboutProduct = () => {
     const dispatch = useDispatch();
@@ -50,10 +53,26 @@ const AboutProduct = () => {
     if (user?.allowed_origins?.includes('vessel_c_admin')) {
         dropdownOptions[0].items.push(
             { type: "divider" },
+            { label: 'New Spare', icon: <TbPlus />, onClick: () => openAddSpareModal() },
+            ...(data?.product_active && parentProductTypes?.includes(data?.product_type) ? [{ label: 'New Subscription', icon: <TbPlus />, onClick: () => openAddSubscriptionModal() }] : []),
             ...(data?.product_active ? [{ label: 'Disconnect', theme: 'danger', icon: <TbLinkOff />, onClick: () => openStatusChangeModel('DISCONNECT') }] : []),
             { label: 'Transfer', theme: 'danger', icon: <TbFlagShare />, onClick: () => openTransferOwnerShip() }
         )
 
+    }
+
+    const openAddSubscriptionModal = () => {
+        dispatch(modal.push({
+            title: 'New Subscription',
+            body: <AddProductSubscription productId={product_id} productType={data?.product_type} />
+        }))
+    }
+
+    const openAddSpareModal = () => {
+        dispatch(modal.push({
+            title: 'New Spare',
+            body: <AddSpare productId={product_id} productType={data?.product_type} />
+        }))
     }
 
     const openTransferOwnerShip = (status) => {
