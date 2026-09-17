@@ -1,6 +1,5 @@
 import React from 'react'
 import './upcoming-service-card.scss'
-import { TbBrandWhatsapp, TbPhone, TbPhonePlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -15,23 +14,6 @@ const UpcomingServiceCard = ({ data }) => {
     const severity = diff <= 10 ? "danger" : diff <= 20 ? "warning" : null;
     const text = diff < 0 ? `${Math.abs(diff)} Days Ago` : diff === 0 ? "Today" : diff === 1 ? "Tomorrow" : diff ? `${Math.abs(diff)} Days Left` : null;
 
-
-    const handleCallClick = (e, number) => {
-        e.stopPropagation();
-
-        if (!number) return;
-
-        const formattedNumber = String(number).trim().startsWith("+")
-            ? String(number).trim()
-            : `+${String(number).trim()}`;
-
-        window.open(`tel:${formattedNumber}`);
-    };
-
-    const handleWhatsappClick = (e, number) => {
-        e.stopPropagation();
-        window.open(`https://wa.me/${number}`);
-    };
 
     const navigateTo = () => {
         let url = `/tech/services/${searchParams.get('tab')?.toLowerCase() || 'complaints'}/${data?.customer?.[0]}`
@@ -74,26 +56,11 @@ const UpcomingServiceCard = ({ data }) => {
                 <div className="text">
                     <p>{data?.address?.[0]}, {data?.address?.[1]}, P.O {data?.address?.[2]}, {data?.address?.[3]} City</p>
                 </div>
-                <div className="contacts">
-                    <div className="icons">
-                        {data?.contacts?.[0]?.length > 4
-                            ? <span title='Primary number' onClick={(e) => handleCallClick(e, data?.contacts?.[0])} >
-                                <TbPhone />
-                            </span> : ''}
-                        {data?.contacts?.[3]?.length > 4
-                            ? <span title='Additional number' onClick={(e) => handleCallClick(e, data?.contacts?.[3])} >
-                                <TbPhonePlus />
-                            </span> : ''}
-                        {data?.contacts?.[2]?.length > 4
-                            ? <span title='Whatsapp number' onClick={(e) => handleWhatsappClick(e, data?.contacts?.[2])} >
-                                <TbBrandWhatsapp />
-                            </span> : ''}
-                    </div>
-                </div>
             </div>
             <div className="s-three">
                 <div className="left">
-                    {data?.total_products > 0 ? <Badge value={`V - ${data?.total_products} `} severity={'info'} /> : ''}
+                    {data?.total_purifiers > 0 ? <Badge value={`P - ${data?.total_purifiers} `} severity={'info'} /> : ''}
+                    {data?.total_vessels > 0 ? <Badge value={`V - ${data?.total_vessels} `} severity={'info'} /> : ''}
                     {data?.total_add_ons > 0 ? <Badge value={`A - ${data?.total_add_ons} `} severity={'info'} /> : ''}
                     {data?.registration?.[0] && <Badge value={'Registered'} severity={'success'} />}
                 </div>
@@ -104,7 +71,7 @@ const UpcomingServiceCard = ({ data }) => {
                         }
                         return <Badge key={p?.package_name} value={p?.package_name} style={{ backgroundColor: p?.color_code, color: getContrastText(p?.color_code) }} />
                     })}
-                    {text && <Badge value={text} severity={severity} />}
+                    {text && <Badge value={text} severity={severity || 'secondary'} />}
                 </div>
             </div>
         </div>

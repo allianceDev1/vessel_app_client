@@ -5,7 +5,6 @@
     border-radius: 15px;
     border: 1px solid var(--border-medium);
     background-color: var(--surface-2);
-    // // backdrop-filter: blur(5px);
     cursor: pointer;
 
     &.warning-border {
@@ -47,11 +46,6 @@
     }
 
     .s-two {
-        display: grid;
-        grid-template-columns: auto 100px;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
         margin: 5px 0;
 
         >.text {
@@ -59,19 +53,6 @@
                 font-size: 13px;
                 font-weight: 500;
                 @include threeDots(2);
-            }
-        }
-
-        .contacts {
-            .icons {
-                cursor: pointer;
-                display: flex;
-                justify-content: flex-end;
-                gap: 7px;
-
-                svg {
-                    font-size: 20px;
-                }
             }
         }
     }

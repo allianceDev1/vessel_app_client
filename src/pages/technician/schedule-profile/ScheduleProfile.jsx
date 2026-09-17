@@ -145,7 +145,8 @@ const ScheduleProfile = () => {
         ? <RegistrationInfo
           regId={regService?.registration_id}
           regStatus={regService?.status?.status_text}
-          regType={regService?.about?.service_type}
+          regType={regService?.about?.product_type}
+          serviceType={regService?.about?.service_type}
           regTime={new Date(regService?.registered_at).toDateString()}
           priority={regService?.about?.priority || 0}
           complaints={regService?.about?.complaint_category?.map((c) => `${c}, `)}

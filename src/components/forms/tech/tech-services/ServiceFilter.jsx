@@ -14,21 +14,24 @@ import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 import { TbInfoCircle } from 'react-icons/tb';
 import Select from '../../../UI_Primitives/inputs/Select';
 import { addDurationToDate, isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
+import { productTypes } from '../../../../assets/javascript/pre_data/product';
+import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
 const ServiceFilter = () => {
     const dispatch = useDispatch();
     const [searchParams, setSearchParams] = useSearchParams();
+    const initialProductType = searchParams.get('product_type') || '';
     const [form, setForm] = useState({
         customer_id: searchParams.get('customer_id') || '',
         city_id: searchParams.get('city_id') || '',
-        post: searchParams.get('post')?.split(' ') || [],
-        packages: searchParams.get('packages')?.split(' ') || [],
+        product_type: initialProductType,
+        post: searchParams.get('post')?.split(' ').filter(Boolean) || [],
+        packages: initialProductType ? (searchParams.get('packages')?.split(' ').filter(Boolean) || []) : [],
         from_date: searchParams.get('from_date') || '',
         to_date: searchParams.get('to_date') || ''
     })
     const [cityOptions, setCityOptions] = useState([])
     const [postOptions, setPostOptions] = useState([])
-    const [packageOptions, setPackageOptions] = useState([])
 
 
     const {
@@ -39,45 +42,71 @@ const ServiceFilter = () => {
         queryKey: ['city_list_and_service_packages'],
         queryFn: async () => {
             const cities = await api.vfTv2Axios('/service/area')
-            const packages = await api.vfTv2Axios('/package/list?product_type=VESSEL_FILTER&fields=package_id,package_name')
+            const packages = await api.vfTv2Axios('/package/list?fields=package_id,package_name,product_type')
 
             return {
                 cityList: cities,
                 packageList: packages
             }
         },
-        staleTime: 30 * 60_000
+        staleTime: 60_000
     })
 
     useMemo(() => {
         if (data?.cityList?.length) {
             setCityOptions(data?.cityList?.map((a) => ({ label: a.city_name, value: a.city_id })))
-            setPostOptions(data?.cityList?.reduce((acc, city) => acc.concat(city.post_offices), [])?.sort((a, b) => a.localeCompare(b))?.map(p => ({ label: p, value: p })))
+            const initialCity = form.city_id ? data.cityList.find((c) => c.city_id === form.city_id) : null
+            if (initialCity) {
+                setPostOptions(initialCity?.post_offices?.sort((a, b) => a.localeCompare(b))?.map((p) => ({ value: p, label: p })) || [])
+            } else {
+                setPostOptions(data?.cityList?.reduce((acc, city) => acc.concat(city.post_offices), [])?.sort((a, b) => a.localeCompare(b))?.map(p => ({ label: p, value: p })))
+            }
         }
-
-        if (data?.packageList?.length) {
-            setPackageOptions(data?.packageList?.map((a) => ({ label: a.package_name, value: a.package_id })))
-        }
-
     }, [data])
 
+    const packageOptions = useMemo(() => {
+        if (!form?.product_type || !data?.packageList?.length) return []
+        return data.packageList
+            .filter((pkg) => pkg?.product_type === form.product_type)
+            .map((a) => ({ label: a.package_name, value: a.package_id }))
+    }, [data?.packageList, form?.product_type])
+
+    const productTypeOptions = useMemo(() => {
+        return [
+            { label: '', value: '' },
+            ...productTypes.map((type) => ({
+                label: toStandardText(type, true),
+                value: type
+            }))
+        ]
+    }, [])
+
     const handleChangeForm = e => {
+        if (e.target.name === 'product_type') {
+            setForm(prev => ({
+                ...prev,
+                product_type: e.target.value,
+                packages: []
+            }))
+            return;
+        }
+
         if (e.target.name === 'city_id' && e.target.value) {
-            setForm({ ...form, [e.target.name]: e.target.value, post: [] })
+            setForm(prev => ({ ...prev, [e.target.name]: e.target.value, post: [] }))
             const selectedCity = data?.cityList?.find((c) => c.city_id === e.target.value)
             setPostOptions(selectedCity?.post_offices?.sort((a, b) => a.localeCompare(b))?.map((p) => ({ value: p, label: p })) || [])
             return;
         } else if (e.target.name === 'city_id' && !e.target.value) {
-            setForm({ ...form, [e.target.name]: "", post: [] })
+            setForm(prev => ({ ...prev, [e.target.name]: "", post: [] }))
             setPostOptions(data?.cityList?.reduce((acc, city) => acc.concat(city.post_offices), [])?.sort((a, b) => a.localeCompare(b))?.map(p => ({ label: p, value: p })))
             return;
         }
 
-        setForm({ ...form, [e.target.name]: e.target.value })
+        setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
     const handleMultiInputChange = (e) => {
-        setForm({ ...form, [e.name]: e.selectedValues?.map((c) => c.value) })
+        setForm(prev => ({ ...prev, [e.name]: e.selectedValues?.map((c) => c.value) }))
     }
 
     const handleSubmit = (e) => {
@@ -94,6 +123,13 @@ const ServiceFilter = () => {
             newSearchParams.delete('customer_id')
         }
 
+        if (form?.product_type) {
+            newSearchParams.set('product_type', form?.product_type)
+            filterFlag = true
+        } else {
+            newSearchParams.delete('product_type')
+        }
+
         if (form?.city_id) {
             newSearchParams.set('city_id', form?.city_id)
             filterFlag = true
@@ -101,14 +137,14 @@ const ServiceFilter = () => {
             newSearchParams.delete('city_id')
         }
 
-        if (form?.post.length > 0) {
+        if (form?.post?.length > 0) {
             newSearchParams.set('post', form?.post?.join(' '))
             filterFlag = true
         } else {
             newSearchParams.delete('post')
         }
 
-        if (form?.packages.length > 0) {
+        if (form?.product_type && form?.packages?.length > 0) {
             newSearchParams.set('packages', form?.packages?.join(' '))
             filterFlag = true
         } else {
@@ -134,6 +170,7 @@ const ServiceFilter = () => {
     const clearFilter = () => {
         let newSearchParams = new URLSearchParams(searchParams)
         newSearchParams.delete('customer_id')
+        newSearchParams.delete('product_type')
         newSearchParams.delete('city_id')
         newSearchParams.delete('post')
         newSearchParams.delete('packages')
@@ -147,7 +184,7 @@ const ServiceFilter = () => {
     // loading
     if (isLoading) {
         return <div className="search-customer-by-key-comp-load" >
-            <SkeletonGrid rows={6} columns={1} height={45} />
+            <SkeletonGrid rows={7} columns={1} height={45} />
         </div>
     }
 
@@ -169,8 +206,11 @@ const ServiceFilter = () => {
                 <Select label={'Cities'} name={'city_id'} options={[{ label: '', value: '' }, ...cityOptions]} onChange={handleChangeForm} value={form.city_id} />
                 <MultiSelectInput label={'Post offices'} name={'post'} options={postOptions} onChange={handleMultiInputChange}
                     selected={postOptions?.filter((p) => form?.post?.includes(p.value)) || []} />
+                <Select label={'Product type'} name={'product_type'} options={productTypeOptions} onChange={handleChangeForm} value={form.product_type} />
                 <MultiSelectInput label={'Packages'} name={'packages'} options={packageOptions} onChange={handleMultiInputChange}
-                    selected={packageOptions?.filter((p) => form?.packages?.includes(p.value)) || []} />
+                    selected={packageOptions?.filter((p) => form?.packages?.includes(p.value)) || []}
+                    disabled={!form?.product_type}
+                    helperText={!form?.product_type ? 'Select product type first' : ''} />
                 <div className="date-range">
                     <InputText label={'From Date'} type='date' name={'from_date'} value={form?.from_date} onChange={handleChangeForm} max={form.to_date} />
                     <InputText label={'End Date'} type='date' name={'to_date'} value={form?.to_date} onChange={handleChangeForm} min={form.from_date}

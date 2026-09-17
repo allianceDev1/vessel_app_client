@@ -4,13 +4,14 @@ import { TbBrandWhatsapp, TbPhone, TbPhonePlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { convertIsoToAmPm } from '../../../../utils/helpers/date-helpers'
 import { useNavigate } from 'react-router-dom'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 const ScheduleServiceCard = ({ data, pickup = false }) => {
     const navigate = useNavigate();
 
     const handleCallClick = (e, number) => {
         e.stopPropagation();
-        
+
         if (!number) return;
 
         const formattedNumber = String(number).trim().startsWith("+")
@@ -72,7 +73,8 @@ const ScheduleServiceCard = ({ data, pickup = false }) => {
             </div>
             <div className="s-three">
                 <div className="left">
-                    <Badge value={data?.service_type} />
+                    <Badge value={`Type : ${toStandardText(data?.product_type)}`} severity={'secondary'} />
+                    <Badge value={toStandardText(data?.service_type)} severity={'secondary'} />
                     {data?.total_service_forms > 1 && <Badge value={'Revisit'} severity={'warning'} />}
                 </div>
                 <div className="right">

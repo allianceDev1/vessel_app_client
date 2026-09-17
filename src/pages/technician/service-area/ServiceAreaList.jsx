@@ -9,6 +9,8 @@ import { api } from '../../../api';
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { useQuery } from '@tanstack/react-query';
+import Badge from '../../../components/UI_Primitives/badge/Badge';
+import { toStandardText } from '../../../utils/helpers/text-formatting';
 
 const ServiceAreaList = () => {
     const dispatch = useDispatch();
@@ -63,7 +65,16 @@ const ServiceAreaList = () => {
                 <EmptyState size='sm' hight='70vh' title={"No Service Area Found"} description={"The service area not assign for you"} icon={<TbMap />} />
             </div> : data?.map((city, index) => {
                 return <div className='list-item' key={city?.city_id} onClick={() => openCity(city)}>
-                    <p className="city-name">{index + 1}. {city?.city_name}</p>
+                    <div className="city-header">
+                        <p className="city-name">{index + 1}. {city?.city_name}</p>
+                        {city?.product_types?.length > 0 && (
+                            <div className="product-badges">
+                                {city.product_types.map((type) => (
+                                    <Badge key={type} value={toStandardText(type, true)} severity="primary" />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                     <p className="city-date">{isoToDDMonYYYY(city?.from_date)} to {isoToDDMonYYYY(city?.to_date)}</p>
                 </div>
             })}
@@ -79,6 +90,20 @@ export default ServiceAreaList
 const CityView = ({ data }) => {
     return (
         <div className="tech-city-view-container">
+            {/* Product Types */}
+            <div className="list-border">
+                <h4>Product Types</h4>
+                <div className="product-badges">
+                    {data?.product_types?.length ? (
+                        data.product_types.map((type) => (
+                            <Badge key={type} value={toStandardText(type, true)} severity="primary" />
+                        ))
+                    ) : (
+                        <p className="empty-item">Not specified</p>
+                    )}
+                </div>
+            </div>
+
             {/* Post Offices */}
             <div className="list-border">
                 <h4>Post Offices</h4>

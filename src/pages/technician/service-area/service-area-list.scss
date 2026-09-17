@@ -6,9 +6,24 @@
         cursor: pointer;
         border-bottom: 1px solid var(--border-light);
 
-        .city-name {
-            font-size: 16px;
-            font-weight: 600;
+        .city-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .city-name {
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .product-badges {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
         }
 
         .city-date {
@@ -37,6 +52,20 @@
 
         h4 {
             @include subTitleSmall();
+        }
+
+        .product-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .empty-item {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            margin-top: 5px;
         }
 
         ol {

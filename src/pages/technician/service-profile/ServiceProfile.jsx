@@ -29,8 +29,6 @@ const ServiceProfile = () => {
 
 
 
-
-
     const {
         isLoading,
         data: { customer, upServices, callLogs, regService } = {},
@@ -80,7 +78,7 @@ const ServiceProfile = () => {
     const handleSchedule = () => {
         dispatch(modal.push({
             title: 'Schedule service',
-            body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id}
+            body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id} serviceProducts={upServices?.products}
                 serviceType={['overdue', 'renewal'].includes(service_type) ? 'RENEWAL' : service_type === 'service' ? 'SERVICE' : 'COMPLAINT'} />
         }))
     }
@@ -158,7 +156,8 @@ const ServiceProfile = () => {
                 ? <RegistrationInfo
                     regId={regService?.registration_id}
                     regStatus={regService?.status?.status_text}
-                    regType={regService?.about?.service_type}
+                    serviceType={regService?.about?.service_type}
+                    regType={regService?.about?.product_type}
                     regTime={new Date(regService?.registered_at).toDateString()}
                     priority={regService?.about?.priority || 0}
                     complaints={regService?.about?.complaint_category?.map((c) => `${c}, `)}
@@ -166,6 +165,7 @@ const ServiceProfile = () => {
                 /> : ''}
 
             <ServiceInfo serviceProducts={upServices?.products || []}
+                totalPurifiers={customer?.total_purifiers || 0}
                 totalVessels={customer?.total_vessels || 0}
                 totalAddOns={customer?.total_add_ons || 0}
                 serviceType={service_type}
@@ -177,7 +177,7 @@ const ServiceProfile = () => {
             <div className="action-buttons">
                 <Button icon={<TbCornerUpRightDouble />} rounded severity={'danger'} onClick={postponeService}
                     disabled={(regService?.registration_id || service_type === 'renewals' || upServices?.products?.filter(p => p.service.service_type === 'SERVICE').length === 0) ? true : false} />
-                <Button icon={<TbMessage2Plus />} rounded onClick={addCallLog} />
+                <Button icon={<TbMessage2Plus />} rounded onClick={addCallLog} severity={'secondary'} />
                 <Button icon={<TbCalendarTime />} label={'Schedule'} rounded severity={'primary'} style={{ width: '100%' }}
                     onClick={handleSchedule} />
             </div>

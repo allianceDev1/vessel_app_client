@@ -7,7 +7,29 @@ import { modal, toast } from '../../../../redux/features/non_persisted/miniSyste
 import { useNavigate } from 'react-router-dom'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 
-const TechScheduleService = ({ registrationId, customerId, serviceType }) => {
+const getProductType = (products) => {
+    const parentTypes = new Set();
+    (products || []).forEach((p) => {
+        const pType = p?.parent_type ;
+        const normalized = pType?.toUpperCase();
+        if (normalized === 'WATER_PURIFIER' || normalized === 'VESSEL_FILTER') {
+            parentTypes.add(normalized);
+        }
+    });
+
+    if (parentTypes.has('WATER_PURIFIER') && parentTypes.has('VESSEL_FILTER')) {
+        return 'DEFAULT';
+    }
+    if (parentTypes.has('WATER_PURIFIER')) {
+        return 'WATER_PURIFIER';
+    }
+    if (parentTypes.has('VESSEL_FILTER')) {
+        return 'VESSEL_FILTER';
+    }
+    return 'DEFAULT';
+};
+
+const TechScheduleService = ({ registrationId, customerId, serviceType, serviceProducts }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState('')
@@ -23,10 +45,12 @@ const TechScheduleService = ({ registrationId, customerId, serviceType }) => {
         try {
             setLoading('submit')
 
+            const productType = getProductType(serviceProducts);
+
             await api.cnAv1Axios.post(`/customer/service/technician/schedule`, {
                 registration_id: registrationId || null,
                 customer_id: customerId,
-                product_type: "VESSEL_FILTER",
+                product_type: productType,
                 service_type: serviceType,
                 schedule_slot_start_at: startTime,
                 schedule_slot_finish_at: endTime

@@ -32,6 +32,7 @@ const Services = () => {
             city_ids: searchParams.get('city_id') || undefined,
             post_offices: searchParams.get('post')?.split(' ')?.join(',') || undefined,
             package_ids: searchParams.get('packages')?.split(' ')?.join(',') || undefined,
+            product_type: searchParams.get('product_type') || undefined,
             from_date: searchParams.get('from_date') || undefined,
             to_date: searchParams.get('to_date') || undefined,
             sort_by: searchParams.get('field') || undefined,
@@ -60,7 +61,7 @@ const Services = () => {
         queryKey: [
             "pending_services", searchParams.get("tab") || 'COMPLAINT', searchParams.get('customer_id'), searchParams.get('city_id'),
             searchParams.get('post'), searchParams.get('packages'), searchParams.get('from_date'), searchParams.get('to_date'),
-            searchParams.get('field'), searchParams.get('order')
+            searchParams.get('field'), searchParams.get('order'), searchParams.get("product_type")
         ],
         queryFn: fetchDatas,
         initialPageParam: 0,
@@ -182,7 +183,7 @@ const Services = () => {
                 {hasNextPage &&
                     <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                         <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                            spinIcon={isFetchingNextPage}
+                            spinIcon={isFetchingNextPage} severity={'secondary'}
                             onClick={() => {
                                 if (!isFetchingNextPage) fetchNextPage();
                             }} />
