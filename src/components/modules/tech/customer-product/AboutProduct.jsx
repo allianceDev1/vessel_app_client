@@ -1,11 +1,11 @@
 import React from 'react'
 import '../customer-view/about-customer.scss'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import {  TbDropletStar} from 'react-icons/tb'
+import { TbArrowUpRight, TbDropletStar } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
@@ -13,6 +13,7 @@ import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 
 const AboutProduct = () => {
+    const navigate = useNavigate();
     const { customer_id, product_id } = useParams();
 
     const { data, isLoading, error } = useQuery({
@@ -53,16 +54,22 @@ const AboutProduct = () => {
         <div className="tech-about-customer-container">
             <div className="reg-content">
                 <div className="list">
-                    <div className="item">
+                    <div className="item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/tech/customer/${data?.customer_id}/about`)}>
                         <p className='label'>Customer ID & Name</p>
                         <div>
                             <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
                         </div>
+                        <div className="right-icon">
+                            <TbArrowUpRight />
+                        </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Product Id</p>
-                        <div>
+                        <p className='label'>Product Id & Status</p>
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: "space-between" }}>
                             <p className='text-value'>{data?.product_id} </p>
+                            {data?.product_active
+                                ? <Badge value={'Connected'} severity={'success'} />
+                                : <Badge value={'Disconnected'} severity={'danger'} />}
                         </div>
                     </div>
                     <div className="item">

@@ -9,31 +9,26 @@
     .product-list {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 10px;
-        margin-top: 5px;
+        gap: 15px;
+        margin-top: 10px;
 
         .product-item {
             display: flex;
             align-items: center;
             gap: 20px;
+            border: 1px solid var(--border-light);
             padding: 10px 10px;
             border-radius: 15px;
             cursor: pointer;
-            border: 1px solid var(--border-light);
 
             .order-section {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 background-color: var(--surface-2);
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 border-radius: 100%;
-
-                h4 {
-                    font-size: 15px;
-                    font-weight: 500;
-                }
             }
 
             .content {
@@ -47,12 +42,9 @@
                     align-items: center;
 
                     p {
-                        font-size: 12px;
+                        font-size: 13px;
                         font-weight: 500;
-                    }
 
-                    .text-1 {
-                       white-space: nowrap;
                     }
 
                     .text-2 {

@@ -23,17 +23,10 @@ const TechLayout = ({ children }) => {
 
     return (
         <div className="technician-layout">
-            <div className="color-temp-div">
-                <div className="box box-one"></div>
-                <div className="box box-two"></div>
-                <div className="box box-three"></div>
-                <div className="box box-four"></div>
-            </div>
 
             <div className="layout-header">
                 <div className="section-one">
-                    <IoChevronBack onClick={() => navigate(-1)} />
-                    <img src={BrandLogo} alt='brand-logo' onClick={() => navigate(-1)} />
+                    <img src={BrandLogo} alt='brand-logo'  />
                     <h3>Service</h3>
                 </div>
                 <div className="section-two">

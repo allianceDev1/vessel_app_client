@@ -70,6 +70,12 @@ const AboutCustomer = () => {
                         </div>
                     </div>
                     <div className="item">
+                        <p className='label'>City name</p>
+                        <div>
+                            <p className='text-value'>{data?.address?.city_name || 'No assigned'}</p>
+                        </div>
+                    </div>
+                    <div className="item">
                         <p className='label'>Landmark</p>
                         <div>
                             <p className='text-value'>{data?.address?.land_mark}</p>

@@ -60,7 +60,7 @@ const Services = () => {
 
                     {data.data?.map((card) => (
                         card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
-                            onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} /> :
+                            onClick={() => card?.version === 2 ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} /> :
                             card?.card_type === 'SERVICE_CANCEL_CARD' ? <CancellationCard key={card.uuid} data={card} /> : ""
                     ))}
                 </div>

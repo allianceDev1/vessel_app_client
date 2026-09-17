@@ -53,7 +53,7 @@ const AboutPackage = () => {
 
             <div className="reg-content">
                 <div className="list">
-                    <div className="item">
+                    <div className="item" >
                         <p className='label'>Product Id</p>
                         <div>
                             <p className='text-value'>{data?.product_id}</p>

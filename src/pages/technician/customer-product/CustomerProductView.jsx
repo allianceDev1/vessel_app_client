@@ -34,9 +34,6 @@ const CustomerProductView = () => {
         <div className="tech-customer-view-container">
             <div className="menu-box">
                 <div className="slide-menus">
-                    <div className={`menu-item`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/about`)}>
-                        <TbSmartHome />
-                    </div>
                     <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/about`)}>
                         <TbDropletStar />
                         <p>Product</p>
