@@ -8,11 +8,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { TbCalendarWeek, TbDropletCheck, TbDropletHalf2, TbHome } from 'react-icons/tb';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import SkeletonPage from '../../UI_Primitives/skeleton/SkeletonPage';
 
 const TechLayout = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('')
+    const [isNavigating, setIsNavigating] = useState(false);
     const { pageTitle } = useSelector((state) => state.miniSystem)
 
 
@@ -20,6 +22,12 @@ const TechLayout = ({ children }) => {
         const firstSegment = location?.pathname?.split("/")[2] || ''
         setActiveSegment(firstSegment)
     }, [location?.pathname])
+
+    useEffect(() => {
+        setIsNavigating(true);
+        const timer = setTimeout(() => setIsNavigating(false), 0);
+        return () => clearTimeout(timer);
+    }, [location.pathname, location.search]);
 
     return (
         <div className="technician-layout">
@@ -41,7 +49,7 @@ const TechLayout = ({ children }) => {
                         {pageTitle?.title && <h3>{pageTitle?.title}</h3>}
                         {pageTitle.note && <p>{pageTitle.note}</p>}
                     </div>}
-                    {children}
+                    {isNavigating ? <SkeletonPage /> : children}
                 </div>
             </div>
             <div className="layout-menu">

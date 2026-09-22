@@ -28,13 +28,14 @@ export const appDataSlice = createSlice({
             state.payment = {}
         },
         startServiceWork: (state, action) => {
+            const payload = action.payload || {}
             state.serviceForm = {
-                service_form_uuid: action.payload.service_form_uuid,
-                customer_id: action.payload.customer_id,
-                registration_id: action.payload.registration_id,
-                visit_uuid: action.payload.visit_uuid,
-                technician_uuid: action.payload.technician_uuid,
-                in_time: new Date(action.payload.attended.in_time).toISOString(),
+                work_key : payload?.work_key,
+                customer_id: payload.customer_id,
+                registration_id: payload.registration_id,
+                visit_uuid: payload.visit_uuid,
+                technician_uuid: payload.technician_uuid,
+                in_time: new Date(payload.attended.in_time).toISOString(),
                 out_time: null,
             }
         },

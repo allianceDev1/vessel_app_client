@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getUserProfileImagePath } from '../../../utils/helpers/image-helpers';
 import env from '../../../config/env';
+import SkeletonPage from '../../UI_Primitives/skeleton/SkeletonPage';
 
 const ControllerLayout = ({ children }) => {
     const navigate = useNavigate()
@@ -13,6 +14,7 @@ const ControllerLayout = ({ children }) => {
     const navbarRef = useRef(null);
     const [activeSegment, setActiveSegment] = useState('');
     const [navbarShow, setNavbarShow] = useState(false)
+    const [isNavigating, setIsNavigating] = useState(false);
     const { pageTitle } = useSelector((state) => state.miniSystem)
     const { user } = useSelector((state) => state.user)
     const userProfileImage = getUserProfileImagePath(user?.first_name);
@@ -27,6 +29,12 @@ const ControllerLayout = ({ children }) => {
         const firstSegment = location?.pathname?.split("/")[2] || ''
         setActiveSegment(firstSegment)
     }, [location?.pathname])
+
+    useEffect(() => {
+        setIsNavigating(true);
+        const timer = setTimeout(() => setIsNavigating(false), 0);
+        return () => clearTimeout(timer);
+    }, [location.pathname, location.search]);
 
     // Outside click close (only when visible)
     useEffect(() => {
@@ -65,7 +73,7 @@ const ControllerLayout = ({ children }) => {
                                 <TbLayoutSidebarLeftExpand />
                             </div>}
                     </div>
-                    {children}
+                    {isNavigating ? <SkeletonPage /> : children}
                 </div>
             </div>
             <div className="layout-navbar" ref={navbarRef}>
