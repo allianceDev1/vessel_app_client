@@ -164,7 +164,7 @@ const RegisteredView = () => {
   })
 
   useEffect(() => {
-    dispatch(page.setTitle({ title: 'Registration Info', note: "Registration info by reg number." }))
+    dispatch(page.config({ title: 'Registration Info', note: "Registration info by reg number." }))
 
     // eslint-disable-next-line
   }, [])

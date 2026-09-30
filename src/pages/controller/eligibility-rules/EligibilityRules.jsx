@@ -31,7 +31,7 @@ const EligibilityRules = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Eligibility rules', note: "Define which rules are eligible for this service workflow." }))
+        dispatch(page.config({ title: 'Eligibility rules', note: "Define which rules are eligible for this service workflow." }))
 
         // eslint-disable-next-line
     }, [])

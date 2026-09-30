@@ -1,7 +1,6 @@
 import './service-category-view.scss'
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import {
-    TbArrowLeft,
     TbCarouselHorizontal,
     TbCheck,
     TbEye,
@@ -112,7 +111,7 @@ const ServiceCategoryView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Service Category', note: "View and manage service category configuration" }))
+        dispatch(page.config({ title: 'Service Category', note: "View and manage service category configuration" }))
         // eslint-disable-next-line
     }, [])
 
@@ -140,15 +139,6 @@ const ServiceCategoryView = () => {
 
     return (
         <div className="service-category-view-page-container">
-            <div className="back-nav">
-                <Button
-                    label="Back to Service Categories"
-                    icon={<TbArrowLeft />}
-                    text
-                    size="small"
-                    onClick={() => navigate(`/controller/app-config/service-categories?parent_product=${data?.product_type || ''}`)}
-                />
-            </div>
 
             {data?.package_product_only && (
                 <Message

@@ -116,7 +116,7 @@ const Services = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Upcoming services', note: "Complaints, services, renewal and Overdue" }))
+        dispatch(page.config({ title: 'Upcoming services', note: "Complaints, services, renewal and Overdue" }))
 
         // eslint-disable-next-line
     }, [])

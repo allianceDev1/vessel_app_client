@@ -6,6 +6,7 @@ import systemSlice from '../features/persisted/systemSlice'
 import applicationSlice from '../features/persisted/applicationSlice'
 import controllerSlice from '../features/persisted/controllerSlice'
 import miniSystemSlice from '../features/non_persisted/miniSystemSlice';
+import mapSlice from '../../modules/map/store/mapSlice';
 
 
 // Create IndexedDB storage
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
     controller: controllerSlice,
 
     // Non persisted
-    miniSystem: miniSystemSlice
+    miniSystem: miniSystemSlice,
+    map: mapSlice
 });
 
 

@@ -35,7 +35,7 @@ const ServiceAreaList = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Service Area', note: "Service activated area for you." }))
+        dispatch(page.config({ title: 'Service Area', note: "Service activated area for you." }))
        
         // eslint-disable-next-line
     }, [])

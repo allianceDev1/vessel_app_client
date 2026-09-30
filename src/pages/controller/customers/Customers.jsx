@@ -32,7 +32,7 @@ const Customers = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Customers', note: "Vessel filter customers list and reports." }))
+        dispatch(page.config({ title: 'Customers', note: "Vessel filter customers list and reports." }))
 
         // eslint-disable-next-line
     }, [])

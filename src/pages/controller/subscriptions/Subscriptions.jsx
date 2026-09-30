@@ -39,7 +39,7 @@ const Subscriptions = () => {
     })
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Customer Subscriptions', note: "All product service subscription plan details." }))
+        dispatch(page.config({ title: 'Customer Subscriptions', note: "All product service subscription plan details." }))
 
         // eslint-disable-next-line
     }, [])

@@ -75,7 +75,7 @@ const Home = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: '', note: "" }))
+        dispatch(page.config({ title: '', note: "" }))
 
         // eslint-disable-next-line
     }, [])

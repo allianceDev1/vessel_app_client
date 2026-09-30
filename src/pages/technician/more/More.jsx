@@ -18,7 +18,7 @@ const More = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'More Options', note: "" }))
+        dispatch(page.config({ title: 'More Options', note: "" }))
 
         // eslint-disable-next-line
     }, [])

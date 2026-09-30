@@ -142,7 +142,7 @@ const EligibilityRuleView = () => {
   }
 
   useEffect(() => {
-    dispatch(page.setTitle({ title: 'Eligibility rule', note: "Define eligibility rules and take actions" }))
+    dispatch(page.config({ title: 'Eligibility rule', note: "Define eligibility rules and take actions" }))
 
     // eslint-disable-next-line
   }, [])

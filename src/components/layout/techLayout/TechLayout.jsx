@@ -15,7 +15,7 @@ const TechLayout = ({ children }) => {
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('')
     const [isNavigating, setIsNavigating] = useState(false);
-    const { pageTitle } = useSelector((state) => state.miniSystem)
+    const { page } = useSelector((state) => state.miniSystem)
 
 
     useEffect(() => {
@@ -45,9 +45,9 @@ const TechLayout = ({ children }) => {
             </div>
             <div className="layout-body">
                 <div className="body-container">
-                    {(pageTitle?.title || pageTitle.note) && <div className="body-title">
-                        {pageTitle?.title && <h3>{pageTitle?.title}</h3>}
-                        {pageTitle.note && <p>{pageTitle.note}</p>}
+                    {(page?.title || page.note) && <div className="body-title">
+                        {page?.title && <h3>{page?.title}</h3>}
+                        {page.note && <p>{page.note}</p>}
                     </div>}
                     {isNavigating ? <SkeletonPage /> : children}
                 </div>

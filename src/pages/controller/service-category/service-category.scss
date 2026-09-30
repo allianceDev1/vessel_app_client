@@ -1,13 +1,9 @@
 @use '../../../assets/scss/mixins/mixin.scss' as *;
 
-.service-category-page-load {
-    margin-top: 20px;
-}
+
 
 .service-category-page-container {
-    margin-top: 20px;
-    margin-bottom: 40px;
-
+   
     .action-section {
         display: flex;
         justify-content: flex-end;

@@ -14,7 +14,7 @@ import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import UpdateAreaTech from '../../../components/forms/controller/update-area-tech/UpdateAreaTech';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { textSortFormate, toStandardText } from '../../../utils/helpers/text-formatting';
+import { textSortFormate } from '../../../utils/helpers/text-formatting';
 
 
 const AreaList = () => {
@@ -36,7 +36,7 @@ const AreaList = () => {
     })[id] || id
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Area List', note: "View all cities and related information." }))
+        dispatch(page.config({ title: 'Area List', note: "View all cities and related information." }))
         // eslint-disable-next-line
     }, [])
 
@@ -232,7 +232,7 @@ const AreaList = () => {
                             return (
                                 <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
                                     <Button rounded title={'Edit'}
-                                        icon={<TbPencil />} size='small' outlined
+                                        icon={<TbPencil />} size='small' outlined severity={'secondary'}
                                         onClick={() => openEditModal(row.original)}
                                     />
                                     {user?.allowed_origins?.includes('vessel_c_admin') &&

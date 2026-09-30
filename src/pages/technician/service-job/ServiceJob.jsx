@@ -25,7 +25,7 @@ const ServiceJob = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: service_srl_no, note: "Service Job View" }))
+        dispatch(page.config({ title: service_srl_no, note: "Service Job View" }))
         // eslint-disable-next-line
     }, [])
 

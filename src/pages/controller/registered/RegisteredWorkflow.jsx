@@ -151,7 +151,7 @@ const RegisteredWorkflow = () => {
 
     useEffect(() => {
         dispatch(
-            page.setTitle({})
+            page.config({})
         )
         // eslint-disable-next-line
     }, [])

@@ -48,7 +48,7 @@ const ServicePackages = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Service Packages', note: "Manage the vessel system service packages & services." }))
+        dispatch(page.config({ title: 'Service Packages', note: "Manage the vessel system service packages & services." }))
 
         // eslint-disable-next-line
     }, [])

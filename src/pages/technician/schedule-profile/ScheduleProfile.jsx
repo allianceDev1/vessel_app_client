@@ -74,7 +74,7 @@ const ScheduleProfile = () => {
   }
 
   useEffect(() => {
-    dispatch(page.setTitle({}))
+    dispatch(page.config({}))
 
     // eslint-disable-next-line
   }, [])

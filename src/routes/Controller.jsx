@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 // import ControllerLayout from '../components/layout/controllerLayout/ControllerLayout'
 import { useSelector } from 'react-redux';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Page404 from '../components/layout/404/Page404';
 import env from '../config/env';
 
@@ -52,6 +52,7 @@ const EligibilityRuleView = React.lazy(() => import("../pages/controller/eligibi
 const ControllerLayout = React.lazy(() => import('../components/layout/controllerLayout/ControllerLayout'));
 const ServiceCategoryView = React.lazy(() => import("../pages/controller/service-category/ServiceCategoryView"))
 const PackageServiceCategoryView = React.lazy(() => import("../pages/controller/package-service-category/PackageServiceCategoryView"))
+const ControllerMap = React.lazy(() => import('../pages/controller/map/ControllerMap'));
 
 
 
@@ -78,7 +79,11 @@ const Controller = () => {
             <ControllerLayout>
                 <Routes>
                     {/* Dashboard */}
-                    <Route path='/' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
+                    <Route path="/" element={<Navigate to="/controller/home" replace />} />
+                    <Route path='/home' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
+
+                    {/* Live Map */}
+                    <Route path='/map' element={<PrivateRoute element={<ControllerMap />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Area */}
                     <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />

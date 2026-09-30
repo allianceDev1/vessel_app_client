@@ -9,7 +9,7 @@ export const redirectViewLocation = (placeId = null, customerLat, customerLng, p
     if (placeId) {
         mapsUrl = `https://www.google.com/maps/place/?q=place_id:${placeId}`;
     } else if (customerLat && customerLng) {
-       
+
         mapsUrl = `https://www.google.com/maps/search/?api=1&query=${customerLat},${customerLng}&z=12&t=m`;
     }
 
@@ -67,12 +67,15 @@ export const getLocation = () => {
 
         navigator.geolocation.getCurrentPosition(
             (pos) => {
-                const { latitude, longitude } = pos.coords;
+                const { latitude, longitude, speed, accuracy } = pos.coords;
 
                 resolve({
                     success: true,
                     latitude,
-                    longitude
+                    longitude,
+                    speed,
+                    accuracy,
+                    timestamp: pos?.timestamp || Date.now()
                 });
             },
             (err) => {

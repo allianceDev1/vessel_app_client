@@ -170,7 +170,7 @@ const CreateRule = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({
+        dispatch(page.config({
             title: 'Create rule',
             note: 'Create new eligibility rule'
         }))

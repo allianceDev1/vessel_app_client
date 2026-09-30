@@ -48,7 +48,7 @@ const Array3Elem = ({ deleteData }) => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({
+        dispatch(page.config({
             title: toStandardText(title),
             note: 'Add, update and delete the resources'
         }))

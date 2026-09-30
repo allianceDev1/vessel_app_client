@@ -27,7 +27,7 @@ const CustomerView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: `Customer Id : ${customer_id}`, note: "Customer View" }))
+        dispatch(page.config({ title: `Customer Id : ${customer_id}`, note: "Customer View" }))
         // eslint-disable-next-line
     }, [])
 

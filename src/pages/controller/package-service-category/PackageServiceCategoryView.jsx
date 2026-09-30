@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react';
 import './package-service-category-view.scss';
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import {
-    TbArrowLeft,
     TbCarouselHorizontal,
     TbCheck,
     TbEye,
@@ -120,7 +119,7 @@ const PackageServiceCategoryView = () => {
     };
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Package Service Category', note: "View and manage service category configurations" }));
+        dispatch(page.config({ title: 'Package Service Category', note: "View and manage service category configurations" }));
         // eslint-disable-next-line
     }, []);
 
@@ -170,15 +169,6 @@ const PackageServiceCategoryView = () => {
 
     return (
         <div className="package-service-category-view-page-container">
-            <div className="back-nav">
-                <Button
-                    label="Back to Package"
-                    icon={<TbArrowLeft />}
-                    text
-                    size="small"
-                    onClick={() => navigate(`/controller/app-config/service-packages/${package_id}`)}
-                />
-            </div>
 
             <div className="top-section">
                 <div className="title-section">

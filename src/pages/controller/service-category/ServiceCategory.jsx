@@ -47,7 +47,7 @@ const ServiceCategory = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Service Categories', note: "Manage and categorize services workflows." }))
+        dispatch(page.config({ title: 'Service Categories', note: "Manage and categorize services workflows." }))
 
         // eslint-disable-next-line
     }, [])

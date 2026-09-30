@@ -14,7 +14,7 @@ const AppConfig = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'App configuration', note: "Manage and customize the vessel filter software settings." }))
+        dispatch(page.config({ title: 'App configuration', note: "Manage and customize the vessel filter software settings." }))
 
         // eslint-disable-next-line
     }, [])

@@ -71,7 +71,7 @@ const RunningKms = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Running Kilometers', note: "Workers daily running kilometers." }))
+        dispatch(page.config({ title: 'Running Kilometers', note: "Workers daily running kilometers." }))
         // eslint-disable-next-line
     }, [])
 

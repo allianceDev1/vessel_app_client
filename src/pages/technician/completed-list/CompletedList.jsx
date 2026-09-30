@@ -20,7 +20,7 @@ const CompletedList = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Completed Services', note: "All your closed service jobs" }))
+        dispatch(page.config({ title: 'Completed Services', note: "All your closed service jobs" }))
 
         // eslint-disable-next-line
     }, [])

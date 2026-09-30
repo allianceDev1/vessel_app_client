@@ -56,7 +56,7 @@ const UpcomingServices = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Upcoming Services', note: "Vessel filter upcoming service and renewal list." }))
+        dispatch(page.config({ title: 'Upcoming Services', note: "Vessel filter upcoming service and renewal list." }))
 
         // eslint-disable-next-line
     }, [])

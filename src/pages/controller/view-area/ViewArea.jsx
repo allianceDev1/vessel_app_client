@@ -122,7 +122,7 @@ const ViewArea = () => {
     })
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'View Area', note: "View city and related information." }))
+        dispatch(page.config({ title: 'View Area', note: "View city and related information." }))
 
         // eslint-disable-next-line
     }, [])

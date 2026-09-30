@@ -57,7 +57,7 @@ const CompletedServices = () => {
     })
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Completed Services', note: "Completed service list and tracking." }))
+        dispatch(page.config({ title: 'Completed Services', note: "Completed service list and tracking." }))
 
         // eslint-disable-next-line
     }, [])

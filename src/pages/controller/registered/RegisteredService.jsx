@@ -21,7 +21,7 @@ const RegisteredService = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Registered Services', note: "Registered service list and tracking." }))
+        dispatch(page.config({ title: 'Registered Services', note: "Registered service list and tracking." }))
 
         // eslint-disable-next-line
     }, [])
