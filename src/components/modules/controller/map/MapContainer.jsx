@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MapContext } from './MapContext';
-import { clearSelection, clearFitBoundsRequest } from '../store/mapSlice';
+import { clearSelection, clearFitBoundsRequest } from '../../../../redux/features/mapSlice';
 
 // Clean, modern enterprise map styles
 const MAP_STYLES = [

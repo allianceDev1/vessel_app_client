@@ -60,7 +60,6 @@ const StartTravel = ({ registrationId, proceedTravel }) => {
     return (
         <div className="tech-start-travel-container">
 
-
             {actionError?.error ? <>
                 <div className="text-section">
                     <TbInfoCircle size={60} color='red' />

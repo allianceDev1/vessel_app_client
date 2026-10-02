@@ -5,8 +5,8 @@ import {
     toggleVisibility,
     setTechnicianFilter,
     requestFitBounds,
-} from '../store/mapSlice';
-import { getLocation } from '../../../utils/services/location_services';
+} from '../../../../redux/features/mapSlice';
+import { getLocation } from '../../../../utils/services/location_services';
 import {
     TbPlus,
     TbMinus,

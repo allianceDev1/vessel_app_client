@@ -15,13 +15,15 @@ import {
     MapControls,
     MapLegend,
     MapSidebar,
+} from '../../../components/modules/controller/map';
+import {
     useGoogleMapsLoader,
     useMapBounds,
     useMapCustomers,
     useTechnicianLocations,
     useActiveTravels,
     useMapSocket,
-} from '../../../modules/map';
+} from '../../../hooks';
 import { TbMapOff } from 'react-icons/tb';
 
 const ControllerMap = () => {

@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 import Cookies from 'js-cookie';
-import env from '../../../config/env';
-import { setSocketStatus } from '../store/mapSlice';
+import env from '../config/env';
+import { setSocketStatus } from '../redux/features/mapSlice';
 
 /**
  * Custom hook to connect to the Map Real-Time Gateway via Socket.IO

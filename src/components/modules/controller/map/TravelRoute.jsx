@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useGoogleMap } from './MapContext';
-import { decodePolyline, geoPointToLatLng, createOriginIcon, createDestinationIcon } from '../utils/map.utils';
+import { decodePolyline, geoPointToLatLng, createOriginIcon, createDestinationIcon } from '../../../../utils/map.utils';
 
 export const TravelRoute = ({ travel }) => {
     const { map } = useGoogleMap();

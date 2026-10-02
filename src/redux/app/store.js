@@ -6,7 +6,7 @@ import systemSlice from '../features/persisted/systemSlice'
 import applicationSlice from '../features/persisted/applicationSlice'
 import controllerSlice from '../features/persisted/controllerSlice'
 import miniSystemSlice from '../features/non_persisted/miniSystemSlice';
-import mapSlice from '../../modules/map/store/mapSlice';
+import mapSlice from '../features/non_persisted/mapSlice';
 
 
 // Create IndexedDB storage

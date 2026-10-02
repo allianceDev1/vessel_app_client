@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGoogleMap } from './MapContext';
-import { createTechnicianIcon, geoPointToLatLng } from '../utils/map.utils';
-import { setSelectedTechnician } from '../store/mapSlice';
+import { createTechnicianIcon, geoPointToLatLng } from '../../../../utils/map.utils';
+import { setSelectedTechnician } from '../../../../redux/features/mapSlice';
 
 export const TechnicianMarkers = ({ technicians = [] }) => {
     const { map } = useGoogleMap();

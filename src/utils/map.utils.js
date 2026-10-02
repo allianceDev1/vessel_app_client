@@ -152,24 +152,33 @@ export const formatRelativeTime = (isoDate) => {
  * Format distance in meters to friendly display
  */
 export const formatDistance = (meters) => {
-    if (meters === null || meters === undefined || isNaN(meters)) return '-';
-    if (meters < 1000) {
-        return `${Math.round(meters)} m`;
+    if (meters === null || meters === undefined || meters === '') return null;
+    if (typeof meters === 'string' && isNaN(Number(meters))) return meters;
+    const num = Number(meters);
+    if (isNaN(num)) return null;
+    if (num < 1000) {
+        return `${Math.round(num)} m`;
     }
-    return `${(meters / 1000).toFixed(1)} km`;
+    return `${(num / 1000).toFixed(1)} km`;
 };
 
 /**
  * Format duration in seconds to friendly display
  */
 export const formatDuration = (seconds) => {
-    if (seconds === null || seconds === undefined || isNaN(seconds)) return '-';
-    const mins = Math.round(seconds / 60);
+    if (seconds === null || seconds === undefined || seconds === '') return null;
+    if (typeof seconds === 'string' && isNaN(Number(seconds))) return seconds;
+    const num = Number(seconds);
+    if (isNaN(num)) return null;
+    const mins = Math.round(num / 60);
     if (mins < 60) {
         return `${mins} min${mins === 1 ? '' : 's'}`;
     }
     const hrs = Math.floor(mins / 60);
     const remMins = mins % 60;
+    if (remMins === 0) {
+        return `${hrs} hr${hrs === 1 ? '' : 's'}`;
+    }
     return `${hrs} hr${hrs === 1 ? '' : 's'} ${remMins} min`;
 };
 

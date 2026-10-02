@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
-import env from '../../../config/env';
+import env from '../config/env';
 
 let loadPromise = null;
 

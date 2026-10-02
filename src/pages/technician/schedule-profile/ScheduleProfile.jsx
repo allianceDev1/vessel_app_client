@@ -133,11 +133,11 @@ const ScheduleProfile = () => {
         location={{
           place: customer?.address?.place,
           post: customer?.address?.post,
-          placeId: customer?.location?.google_place_id || null,
           lat: customer?.location?.coordinates?.[0] || null,
           lng: customer?.location?.coordinates?.[1] || null
         }}
         directionButton
+        route={regService?.last_visit?.route || {}}
       />
       {customer?.note ? <Message message={customer?.note} type={'info'} /> : ''}
 

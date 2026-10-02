@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleMap } from './MapContext';
-import { geoPointToLatLng } from '../utils/map.utils';
-import { setSelectedCustomer } from '../store/mapSlice';
+import { geoPointToLatLng } from '../../../../utils/map.utils';
+import { setSelectedCustomer } from '../../../../redux/features/mapSlice';
 import { TbUser, TbMapPin, TbArrowRight, TbX } from 'react-icons/tb';
 
 export const CustomerInfoWindow = ({ customers = [] }) => {

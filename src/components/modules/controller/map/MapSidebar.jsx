@@ -6,7 +6,7 @@ import {
     setActiveTab,
     toggleSidebar,
     requestFitBounds,
-} from '../store/mapSlice';
+} from '../../../../redux/features/mapSlice';
 import {
     getTechnicianStatusMeta,
     formatDistance,
@@ -15,7 +15,7 @@ import {
     formatRelativeTime,
     isLocationStale,
     geoPointToLatLng,
-} from '../utils/map.utils';
+} from '../../../../utils/map.utils';
 import {
     TbSearch,
     TbRoute,

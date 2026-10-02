@@ -131,18 +131,18 @@ export const textSortFormate = (text) => {
 }
 
 export const maskPhoneNumber = (number) => {
+   
     if (!number) return '';
     const str = String(number).trim();
     const digits = str.replace(/\D/g, '');
-
+    console.log(digits)
     if (digits.length < 6) {
         return str;
     }
+  
+    const first3 = digits.slice(0, 2);
+    const last4 = digits.slice(-4);
+    const middleCount = Math.max(digits.length - 6, 2);
 
-    const core = digits.length >= 10 ? digits.slice(-10) : digits;
-    const first3 = core.slice(0, 2);
-    const last4 = core.slice(-4);
-    const middleCount = Math.max(core.length - 6, 2);
-
-    return `${first3}${'*'.repeat(middleCount)}${last4}`;
+    return `+${first3}${'*'.repeat(middleCount)}${last4}`;
 };

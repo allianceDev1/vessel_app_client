@@ -8,12 +8,12 @@ import {
     formatSpeed,
     formatRelativeTime,
     isLocationStale,
-} from '../utils/map.utils';
+} from '../../../../utils/map.utils';
 import {
     setSelectedTechnician,
     setSelectedTravel,
     requestFitBounds,
-} from '../store/mapSlice';
+} from '../../../../redux/features/mapSlice';
 import {
     TbGauge,
     TbCompass,

@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { useGoogleMap } from './MapContext';
-import { createCustomerIcon, geoPointToLatLng } from '../utils/map.utils';
-import { setSelectedCustomer } from '../store/mapSlice';
+import { createCustomerIcon, geoPointToLatLng } from '../../../../utils/map.utils';
+import { setSelectedCustomer } from '../../../../redux/features/mapSlice';
 
 export const CustomerMarkers = ({ customers = [] }) => {
     const { map } = useGoogleMap();
