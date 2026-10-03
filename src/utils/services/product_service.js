@@ -4,42 +4,38 @@ import { TbDropletCog, TbDropletHeart, TbDropletStar } from "react-icons/tb";
 
 
 export const buildCustomerPGStretcher = (products = []) => {
-    const vessels = products.filter(p => p.product_type === 'VESSEL_FILTER');
-    const addOns = products.filter(p => p.product_type === 'ADD_ON');
+  
+    const purifier = products.filter(p => p.product_type === 'WATER_PURIFIER')?.map(p => p?.product_id);
+    const vessels = products.filter(p => p.product_type === 'VESSEL_FILTER')?.map(p => p?.product_id);
+    const addOns = products.filter(p => p.product_type === 'ADD_ON')?.map(p => p?.product_id);
 
-    // Group vessels by order prefix (A, B, C, etc.)
-    const vesselGroups = {};
-    vessels.forEach(vessel => {
-        const prefix = vessel.order_id?.charAt(0);
-        if (!vesselGroups[prefix]) {
-            vesselGroups[prefix] = [];
-        }
-        vesselGroups[prefix].push(vessel);
-    });
+    const productStretcher = []
 
-    // Sort vessels within each group by their number
-    Object.keys(vesselGroups).forEach(prefix => {
-        vesselGroups[prefix].sort((a, b) => {
-            const numA = parseInt(a.order_id.slice(1));
-            const numB = parseInt(b.order_id.slice(1));
-            return numA - numB;
-        });
-    });
+    // ? Water purifier
+    if (purifier?.length) {
+        productStretcher.push({
+            title: 'Water purifier',
+            productIds: purifier
+        })
+    }
 
-    // Convert to array format
-    const result = [];
+    // ? Vessel filter
+    if (vessels?.length) {
+        productStretcher.push({
+            title: 'Vessel filter',
+            productIds: vessels
+        })
+    }
 
-    // Add vessel groups
-    Object.keys(vesselGroups).sort().forEach(prefix => {
-        result.push(vesselGroups[prefix]);
-    });
+    // ? Add-on
+    if (addOns?.length) {
+        productStretcher.push({
+            title: 'Add-on',
+            productIds: addOns
+        })
+    }
 
-    // Add each add-on as separate array
-    addOns.forEach(addOn => {
-        result.push([addOn]);
-    });
-
-    return result
+    return productStretcher
 }
 
 export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) => {
@@ -80,9 +76,9 @@ export const setupAvailableServiceCategories = (categories, product, productElig
                 if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
                     disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                // } else if (regData?.service_type !== 'COMPLAINT') {
-                //     is_disable = true
-                //     disable_reason = "It is not complaint registration."
+                    // } else if (regData?.service_type !== 'COMPLAINT') {
+                    //     is_disable = true
+                    //     disable_reason = "It is not complaint registration."
                 } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
                     is_disable = true
                     disable_reason = 'The service limit reached'
@@ -146,9 +142,9 @@ export const setupAddOnServiceCategories = (categories, regData, productEligibil
                 if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
                     disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                // } else if (regData?.service_type !== 'COMPLAINT') {
-                //     is_disable = true
-                //     disable_reason = "It is not complaint registration."
+                    // } else if (regData?.service_type !== 'COMPLAINT') {
+                    //     is_disable = true
+                    //     disable_reason = "It is not complaint registration."
                 }
                 break;
 

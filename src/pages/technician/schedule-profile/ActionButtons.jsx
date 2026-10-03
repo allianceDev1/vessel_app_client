@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Button from '../../../components/UI_Primitives/buttons/Button'
 import { TbBike, TbBikeOff, TbCalendarUp, TbCalendarX, TbCheck, TbDots, TbPlayerPlay, TbPlayerStop } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +14,7 @@ import { api } from '../../../api'
 import { sfActions } from '../../../redux/features/persisted/applicationSlice'
 import { useQueryClient } from '@tanstack/react-query'
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
+import { parseServiceJobKey } from '../../../utils/helpers/generate_Id'
 
 const ActionButtons = ({ regData, setRegData }) => {
     const dispatch = useDispatch();
@@ -21,6 +22,14 @@ const ActionButtons = ({ regData, setRegData }) => {
     const queryClient = useQueryClient()
     const { serviceForm } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
+
+
+    const workKeyParse = useMemo(() => {
+        if (serviceForm?.work_key) {
+            return parseServiceJobKey(serviceForm?.work_key)
+        }
+        return null
+    }, [serviceForm])
 
 
     const proceedTravel = (visitId) => {
@@ -91,9 +100,7 @@ const ActionButtons = ({ regData, setRegData }) => {
 
             setLoading('continue')
 
-            if (serviceForm?.service_form_uuid && serviceForm?.customer_id && serviceForm?.registration_id && serviceForm?.visit_uuid
-                && serviceForm?.technician_uuid && serviceForm?.in_time && !serviceForm?.out_time
-            ) {
+            if (serviceForm?.work_key && serviceForm?.customer_id && serviceForm?.start_time) {
                 navigate('/tech/service/attend-work')
                 return;
             }
@@ -115,7 +122,7 @@ const ActionButtons = ({ regData, setRegData }) => {
 
     const handleContinueWork = async () => {
 
-        const activeVisitId = serviceForm?.visit_uuid || null;
+        const activeVisitId = workKeyParse?.visit_uuid || null;
 
         // continue cases : 
         // 1. the reg data and catch data is same visit id (check the required elements is available or not)
@@ -133,9 +140,7 @@ const ActionButtons = ({ regData, setRegData }) => {
     const handleStopWork = () => {
         dispatch(modal.push({
             title: 'Stop Current Work',
-            body: <StopWork serviceFormUuid={serviceForm?.service_form_uuid} registrationId={regData?.registration_id}
-                visitId={regData?.last_visit?.visit_id} customerId={regData?.customer?.customer_id}
-            />
+            body: <StopWork workKey={serviceForm?.work_key} />
         }))
     }
 
@@ -189,7 +194,7 @@ const ActionButtons = ({ regData, setRegData }) => {
                     <Button icon={<TbBikeOff />} label={'Stop Travel'} rounded severity={'danger'} style={{ width: '100%' }}
                         onClick={handleStopTravel} />
                     <Button icon={<TbPlayerPlay />} label={'Start work'} rounded severity={'primary'} style={{ width: '100%' }}
-                        onClick={handleStarWork} disabled={serviceForm?.visit_uuid} />
+                        onClick={handleStarWork} disabled={serviceForm?.work_key} />
                 </> : ""}
 
                 {/* On Attend */}
@@ -198,7 +203,7 @@ const ActionButtons = ({ regData, setRegData }) => {
                         <Button icon={<TbPlayerStop />} label={'Stop work'} rounded severity={'danger'} style={{ width: '100%' }}
                             onClick={handleStopWork} spinIcon={loading === 'stop'} />
                         <Button icon={<TbPlayerPlay />} label={'Continue work'} rounded severity={'primary'} style={{ width: '100%' }}
-                            onClick={handleContinueWork} spinIcon={loading === 'continue'} disabled={serviceForm?.visit_uuid && regData?.last_visit?.visit_id !== serviceForm?.visit_uuid} />
+                            onClick={handleContinueWork} spinIcon={loading === 'continue'} disabled={serviceForm?.work_key && regData?.last_visit?.visit_id !== workKeyParse?.visit_uuid} />
                     </>
                     : ""}
 

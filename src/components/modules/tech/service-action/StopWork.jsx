@@ -7,7 +7,7 @@ import { modal, toast } from '../../../../redux/features/non_persisted/miniSyste
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import { useQueryClient } from '@tanstack/react-query';
 
-const StopWork = ({ serviceFormUuid, registrationId, visitId, customerId }) => {
+const StopWork = ({ workKey }) => {
 
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
@@ -19,37 +19,22 @@ const StopWork = ({ serviceFormUuid, registrationId, visitId, customerId }) => {
         try {
             setLoading('submit')
 
-            await api.vfTv2Axios.post(`/registered-service/${registrationId}/${visitId}/stop-work`,
-                { service_form_uuid: serviceFormUuid }
+            await api.vfTv2Axios.post(`/registered-service/stop-work`,
+                { work_key: workKey }
             )
 
-            const activeVisitId = serviceForm?.visit_uuid || null;
+            const activeWork = serviceForm?.work_key || null;
 
-            if (activeVisitId && visitId === activeVisitId) {
+            if (activeWork && workKey === activeWork) {
                 dispatch(sfActions.clearAll())
                 dispatch(sfSetting.clearAll())
             }
 
             dispatch(modal.pull.all())
 
-            queryClient.setQueryData(
-                ['tech_schedule_profile', customerId, registrationId],
-                old => {
-                    if (!old) return old
-
-                    return {
-                        ...old,
-                        regService: {
-                            ...(old?.regService || {}),
-                            last_visit: {
-                                ...(old?.regService.last_visit || {}),
-                                visit_status: 1,
-                                visit_status_text: 'Travel',
-                            }
-                        }
-                    }
-                }
-            )
+            queryClient.removeQueries({
+                queryKey: ['tech_schedule_profile']
+            })
 
         } catch (error) {
             dispatch(toast.push({

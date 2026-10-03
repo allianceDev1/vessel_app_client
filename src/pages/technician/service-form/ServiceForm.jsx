@@ -20,92 +20,43 @@ import SfAdSubPageThree from '../../../components/modules/tech/service-form-page
 import Review from '../../../components/modules/tech/service-form-pages/Review'
 import Payment from '../../../components/modules/tech/service-form-pages/Payment'
 import { useQuery } from '@tanstack/react-query'
+import { serviceFormResourcesVerification } from '../../../utils/services/service-form-services'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
-    const [conflict, setConflict] = useState({ error: false, title: '', message: '' })
-
+    const { formResources, serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const [isVerifying, setIsVerifying] = useState(false)
+    const [verification, setVerification] = useState({ success: true, message: null })
 
 
     const {
         isLoading,
         isFetching,
-        data: {
-            resources,
-            materialsList,
-            bagList,
-            spareList,
-            vesselServiceList,
-            addOnServiceList,
-            addOnSpareList,
-            availableAddOns,
-            serviceCharges,
-            customerProducts,
-            customer,
-            vesselsEligibilities,
-            addOnsEligibilities,
-            serviceCategories,
-            addOnServiceCategories,
-            regData,
-            repeatWork
-        } = {},
+        data,
         error
     } = useQuery({
-        queryKey: ['service_form_resources', serviceForm?.customer_id, serviceForm?.visit_uuid],
+        queryKey: ['service_form_resources', serviceForm?.work_key],
         queryFn: async () => {
 
-            const apis = [
-                api.vfTv2Axios.get(`/service/service-form/resources?customer_id=${serviceForm?.customer_id}`),
-                api.vfTv2Axios.get(`/service/service-form/init?customer_id=${serviceForm?.customer_id}&registration_id=${serviceForm?.registration_id}`)
-            ]
+            const { otp_logs, ...res } = await api.vfTv2Axios.get(`/service/service-job/form-resources?work_key=${serviceForm?.work_key}`)
 
-            const [resResources, resInit] = await Promise.all(apis);
+            const pgStretcher = buildCustomerPGStretcher(res?.products)
 
-            const customerOwnProducts = [...(resInit?.products?.vessel_filters || []), ...(resInit?.products?.add_ons || [])]
-            const pgStretcher = buildCustomerPGStretcher(customerOwnProducts)
-
-            // Call Log
+            // add to redux
             dispatch(sfActions.updateVerification({
-                otpLogs: resInit?.otp_logs || []
+                otpLogs: otp_logs || []
             }))
 
-            return {
-                // Form Resources
-                resources: resResources?.form_resources || [],
-                materialsList: resResources?.v_materials || [],
-                bagList: resResources?.v_bags || [],
-                spareList: resResources?.v_spares || [],
-                vesselServiceList: resResources?.v_services || [],
-                addOnServiceList: resResources?.a_services || [],
-                addOnSpareList: resResources?.a_spares || [],
-                availableAddOns: resResources?.add_on_products || [],
-                serviceCharges: resResources?.new_product_service_charges || [],
+            dispatch(sfActions.setUpFormResources({
+                hasResources: true,
+                ...res,
+                product_stretcher: pgStretcher
+            }))
 
-                // Customer products and packages
-                customerProducts: customerOwnProducts,
-
-                // Product Group
-                customer: { ...resInit?.customer, productStretcher: pgStretcher },
-
-                //  eligibility
-                vesselsEligibilities: resInit?.products?.vessel_filters_eligibility || [],
-                addOnsEligibilities: resInit?.products?.add_ons_eligibility || [],
-
-
-                // Service Categories
-                serviceCategories: resInit?.vessel_service_categories || [],
-                addOnServiceCategories: resInit?.add_on_service_categories || [],
-
-                // Registration form
-                regData: resInit?.registration || {},
-
-                // Repeat
-                repeatWork: resInit?.repeat || { is_repeat: false, repeat_work: {} },
-            }
+            return { status: "COMPLETED" }
         },
-        staleTime: 30 * 60_000 // 30 minutes
+        enabled: true
     })
 
     const changeSubmitStatusIsFalse = () => {
@@ -126,8 +77,7 @@ const ServiceForm = () => {
 
     useEffect(() => {
 
-        if (!serviceForm?.customer_id || !serviceForm?.registration_id || !serviceForm?.in_time || !serviceForm?.visit_uuid
-            || !serviceForm?.technician_uuid) {
+        if (!serviceForm?.customer_id || !serviceForm?.work_key || !serviceForm?.start_time) {
             navigate('/tech');
             return;
         }
@@ -136,30 +86,31 @@ const ServiceForm = () => {
             dispatch(sfSetting.setActivePage(100))
         }
 
-        // eslint-disable-next-line
-    }, [])
+        if (!formResources?.hasResources || !serviceForm) return;
 
-    useEffect(() => {
-        if (serviceForm?.customer_id && serviceForm?.registration_id && customer?.customer_id && regData?.registration_id) {
-            if (serviceForm?.customer_id !== customer?.customer_id || serviceForm?.registration_id !== regData?.registration_id) {
-                setConflict({
-                    error: true,
-                    title: 'Data Conflict Detected',
-                    message: "We found existing service data stored in your cache that may conflict with this action. To continue safely, you need to clear the cached data first."
-                })
-            }
-        }
+        setIsVerifying(true);
+
+        const result = serviceFormResourcesVerification(
+            formResources,
+            serviceForm
+        );
+        setVerification(result)
+        setIsVerifying(false);
+
+
         // eslint-disable-next-line
-    }, [customer, regData])
+    }, [formResources, serviceForm])
 
 
     // loading
-    if (isLoading || isFetching) {
+    if (isLoading || isFetching || isVerifying) {
         return <div className="tech-service-form-loader-container">
             <div className="loader-border">
-                {/* <TbLoader /> */}
-                <p>Setting up the service form</p>
-                <p>Loading resources and initial information. This may take a moment.</p>
+                <p>{isVerifying
+                    ? "Resources verifying.."
+                    : "Loading Resources..."
+                }</p>
+                <p>Loading form resources. This may take a moment.</p>
 
                 <div className="progress-bar">
                     <div className="progress spin"></div>
@@ -169,15 +120,14 @@ const ServiceForm = () => {
     }
 
     // Error
-    if (error || conflict?.error) {
+    if (error || !verification?.success) {
         return <ErrorState
             hight='80vh'
-            title={conflict?.title || 'Form resources fetching failed'}
-            message={conflict?.error || error?.message}
+            title={!verification?.success ? 'Verification failed' : 'Service form setup failed!'}
+            message={verification?.message || error?.message}
             icon={<TbFileText />}
         />
     }
-
 
     // Page
     return (
@@ -187,43 +137,7 @@ const ServiceForm = () => {
                 <FormTopBar />
             </div>
 
-            <div className="service-form-page-container">
-                {/* Pages */}
-                {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
-                    <Home page={{ index: 100, type: 'page' }} customer={customer} customerProducts={customerProducts}
-                        changeSubmitStatus={changeSubmitStatusIsFalse} availableAddOns={availableAddOns} addOnSpareList={addOnSpareList}
-                        resources={resources} repeatWork={repeatWork} serviceCharges={serviceCharges} />}
-                {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
-                    <Review page={{ index: 101, type: 'page' }} />}
-                {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
-                    <Payment page={{ index: 102, type: 'page' }} />}
-
-
-                {/* Vessel : Sub Pages  */}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                    <SfSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                    <SfSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                    <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
-                        customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
-                        materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
-                        changeSubmitStatus={changeSubmitStatusIsFalse} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                    <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
-
-
-                {/* Add-On : Sub Pages  */}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 200 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
-                    <SfAdSubPageOne page={{ index: 200, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
-                    <SfAdSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse}
-                        categories={addOnServiceCategories} customerProducts={customerProducts} regData={regData} serviceList={addOnServiceList}
-                        spareList={addOnSpareList} addOnsEligibilities={addOnsEligibilities} />}
-                {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
-                    <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />}
-
-            </div>
+            
         </div>
     )
 }

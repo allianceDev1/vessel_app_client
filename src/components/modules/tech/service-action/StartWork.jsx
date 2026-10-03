@@ -48,10 +48,10 @@ const StartWork = ({ registrationId, visitId }) => {
 
             const work = await api.vfTv2Axios.post(`/registered-service/${registrationId}/${visitId}/start-work`, { location })
             dispatch(sfActions.startWork(work))
+            
+            navigate('/tech/service/attend-work')
 
             dispatch(modal.pull.all())
-
-            navigate('/tech/service/attend-work')
 
             queryClient.removeQueries({
                 queryKey: ['tech_schedule_profile']
