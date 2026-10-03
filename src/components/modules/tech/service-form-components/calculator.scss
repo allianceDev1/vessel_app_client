@@ -1,0 +1,93 @@
+.tech-calculator {
+    width: 100%;
+    padding: 4px 0 2px;
+    outline: none;
+    user-select: none;
+
+    .calc-display {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        height: 52px;
+        padding: 4px 10px;
+        margin-bottom: 6px;
+        background-color: var(--surface-1);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        overflow: hidden;
+
+        .calc-expr {
+            font-size: 11px;
+            line-height: 14px;
+            opacity: 0.6;
+            white-space: nowrap;
+        }
+
+        .calc-value {
+            font-size: 26px;
+            line-height: 30px;
+            font-weight: 600;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+
+            &.small {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .calc-keys {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+
+        .calc-key {
+            height: 38px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            background-color: var(--surface-1);
+            color: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+
+            &:hover {
+                filter: brightness(0.94);
+            }
+
+            &:active {
+                transform: scale(0.96);
+            }
+
+            &.fn {
+                opacity: 0.85;
+                font-size: 15px;
+            }
+
+            &.op {
+                color: var(--color-primary);
+                font-size: 18px;
+                font-weight: 600;
+
+                &.active {
+                    background-color: var(--color-primary);
+                    border-color: var(--color-primary);
+                    color: var(--color-white);
+                }
+            }
+
+            &.eq {
+                background-color: var(--color-primary);
+                border-color: var(--color-primary);
+                color: var(--color-white);
+                font-size: 18px;
+                font-weight: 600;
+            }
+        }
+    }
+}

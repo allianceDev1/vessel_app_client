@@ -1,35 +1,196 @@
-  .tech-service-form-top-bar-container {
-      background-color: var(--surface-1);
-    //   // backdrop-filter: blur(20px);
-      border: 1px solid var(--border-light);
-      border-radius: 0px 0px 15px 15px;
-      padding-top: 10px;
+// fixed wrapper (portaled to body): sits at top:0 over the layout header (z 50), below modals (z 80)
+.tech-service-form-top-bar-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+    min-height: 55px; // fully cover the layout header
+    padding-top: env(safe-area-inset-top);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-alt);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.18);
+    color: var(--text-primary);
+}
 
-      .action-section {
-          border-bottom: 1px solid var(--border-light);
-          padding: 5px 15px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+.tech-service-form-top-bar-container {
+    // chip accents - mixed with --text-primary so text gets lighter in dark theme & darker in light theme
+    --tb-customer: #6366f1;
+    --tb-product: #06b6d4;
 
-          .buttons {
-              display: flex;
-              gap: 10px;
-          }
-      }
+    width: 100%;
+    max-width: 500px; // align with techLayout body column
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
-      .name-section {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 7px 15px;
+    // plain icon buttons (back + tools)
+    .tb-icon-btn {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        // very light tint from the text color -> subtle in both light & dark themes
+        border: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent);
+        border-radius: 10px;
+        background-color: color-mix(in srgb, var(--text-primary) 4%, transparent);
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 
-          p {
-              font-size: 13px;
-              font-weight: 500;
-          }
+        svg {
+            font-size: 22px;
+            stroke-width: 1.8;
+        }
 
+        &:hover:not(:disabled) {
+            background-color: color-mix(in srgb, var(--text-primary) 9%, transparent);
+            border-color: color-mix(in srgb, var(--text-primary) 18%, transparent);
+            color: var(--text-primary);
+        }
 
-      }
+        &:active:not(:disabled) {
+            transform: scale(0.92);
+        }
 
-  }
+        &:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        &.back svg {
+            font-size: 22px;
+            stroke-width: 2.4;
+        }
+    }
+
+    .tb-info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    // timer pill
+    .tb-timer {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 28px;
+        padding: 0 10px 0 8px;
+        border-radius: 8px;
+        background-color: var(--background);
+        border: 1px solid var(--border-light);
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: var(--color-success);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-success) 30%, transparent);
+            animation: tbPulse 2s ease-in-out infinite;
+        }
+
+        .clock {
+            font-size: 17px;
+            color: var(--color-success);
+        }
+
+        .time {
+            font-family: 'JetBrains Mono', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-primary);
+        }
+    }
+
+    // customer / product chips
+    .tb-chips {
+        display: flex;
+        gap: 8px;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .tb-chip {
+        --chip: var(--tb-customer);
+
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        height: 22px;
+        min-width: 0;
+        padding: 0 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1;
+        background-color: color-mix(in srgb, var(--chip) 12%, transparent);
+        border: 1px solid color-mix(in srgb, var(--chip) 35%, transparent);
+        color: color-mix(in srgb, var(--chip) 65%, var(--text-primary));
+
+        .prefix {
+            font-weight: 500;
+            opacity: 0.75;
+        }
+
+        .value {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.product {
+            --chip: var(--tb-product);
+        }
+
+        &.error {
+            --chip: var(--color-danger);
+        }
+    }
+
+    .tb-tools {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 380px) {
+        gap: 4px;
+        padding: 8px 6px;
+
+        .tb-icon-btn {
+            width: 32px;
+            height: 32px;
+
+            svg {
+                font-size: 21px;
+            }
+        }
+    }
+}
+
+@keyframes tbPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.45;
+    }
+}

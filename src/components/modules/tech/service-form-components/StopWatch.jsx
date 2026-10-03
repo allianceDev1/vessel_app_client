@@ -50,7 +50,7 @@ const StopWatch = () => {
         <div className="tech-stop-watch-container">
             <p>{formattedStopwatch}</p>
             <div className="buttons">
-                <Button rounded size="large" label={'Reset'} onClick={handleReset} />
+                <Button rounded size="large" severity={'secondary'} label={'Reset'} onClick={handleReset} />
                 {isRunning && !isPaused && <Button rounded size="large" label={'Stop'} severity={'danger'} onClick={handlePause} />}
                 {isRunning && isPaused && <Button rounded size="large" label={'Resume'} severity={'info'} onClick={handleStart} />}
                 {!isRunning && !isPaused && <Button rounded size="large" label={'Start'} severity={'success'} onClick={handleStart} />}

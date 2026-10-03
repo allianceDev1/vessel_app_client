@@ -94,13 +94,9 @@
 .tech-service-form-container {
     padding: 0 !important;
 
+    // FormTopBar positions itself (fixed, top: 0, portaled to body) - see form-top-bar.scss
     .top-bar-container {
-        position: sticky;
-        top: 55px;
-        left: 0;
         width: 100%;
-        z-index: 10;
-
     }
 
     .service-form-page-container {

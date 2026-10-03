@@ -137,7 +137,14 @@ const ServiceForm = () => {
                 <FormTopBar />
             </div>
 
-            
+            <div className="service-form-page-container">
+
+                {/* Main pages */}
+                {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
+                    <Home page={{ index: 100, type: 'page' }} resource={data} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+
+            </div>
+
         </div>
     )
 }
