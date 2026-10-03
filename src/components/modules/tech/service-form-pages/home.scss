@@ -25,7 +25,20 @@
         }
     }
 
+    .sub-title-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .form-sub-title {
+            @include subTitleSmall();
+        }
+    }
+
+
     .products-chart {
+
+
         .group-product {
             padding-bottom: 20px;
 

@@ -141,7 +141,7 @@ const ServiceForm = () => {
 
                 {/* Main pages */}
                 {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
-                    <Home page={{ index: 100, type: 'page' }} resource={data} changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                    <Home page={{ index: 100, type: 'page' }}  changeSubmitStatus={changeSubmitStatusIsFalse} />}
 
             </div>
 

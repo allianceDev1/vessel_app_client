@@ -21,9 +21,9 @@ import Radio from '../../../UI_Primitives/inputs/Radio'
 
 
 
-const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
+const Home = ({ page, resource, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
     const dispatch = useDispatch();
-    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const { formResources, serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workSites, setWorkSites] = useState([])
     const [waterSources, setWaterSources] = useState([])
 
@@ -212,43 +212,40 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                 <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
             </div>
 
-            {/* Page Section */}
-            {/* {customer?.images?.length > 0 ?
-                <div className="images-list">
-                    {customer?.images?.map((image, index) => {
-                        return <div className="image" key={index}>
-                            <img alt='product ' src={image?.thump?.url} />
-                        </div>
-                    })}
-                </div>
-                : ''} */}
-
             {/* Product list */}
+
             <div className="products-chart">
-                {customer?.productStretcher?.length > 0 ?
-                    <>{customer?.productStretcher?.map((pg, pgIndx) => {
-                        return <div className="group-product" key={pgIndx}>
-                            {pg?.map((item, productIndex) => {
-                                const product = customerProducts?.filter(p => p.product_id === item?.product_id)?.[0]
-                                const productPackage = product?.package?.package_status === PACKAGE_STATUSES.ACTIVE ? product?.package : null
-                                const packageFreeze = product?.package?.package_status === PACKAGE_STATUSES.FROZEN ? true : false
-                                const packageExpire = product?.package?.package_status === PACKAGE_STATUSES.EXPIRED ? true : false
+                {formResources?.product_stretcher?.length > 0 ?
+                    <>{formResources?.product_stretcher?.map((section, sectionIdx) => {
+                        return <div className="group-product" key={sectionIdx}>
+                            <div className="sub-title-section">
+                                <h3 className='form-sub-title'>{section?.title}</h3>
+                                <Badge value={`${section?.productIds?.length || 0} Items`} severity={'primary'} />
+                            </div>
+
+                            {section?.productIds?.map((productId) => {
+
+                                const product = formResources?.products?.find(p => p.product_id === productId)
+                                const productPackage = product?.package?.package_id ? product?.package : null
+
                                 const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
                                 const lowTokens = productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? true : false
-                                const isWorked = serviceForm?.service_products?.[item?.product_id]?.service_data?.category_id ? true : false
-                                const alertText = packageFreeze ? "The current product package is frozen"
-                                    : packageExpire ? "The current product package is expired"
-                                        : (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens'
-                                            : lowTokens ? 'May be chance to expire the product package on this service' : ''
-                                const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
-                                const isSaved = serviceFormSettings?.products?.[product?.product_id]?.is_saved || false
+                                console.log(lowTokens)
+                                const isWorked = serviceForm?.service_products?.[productId]?.service_data?.category_id ? true : false
+                                const isSubmitted = serviceFormSettings?.products?.[productId]?.is_submitted || false
+                                const isSaved = serviceFormSettings?.products?.[productId]?.is_saved || false
 
-                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type, productPackage?.package_name)}>
+                                const alertText = (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens'
+                                    : lowTokens ? 'May be chance to expire the product package on this service' : ''
+
+
+                                return <div className="single-product" key={productId}
+                                    onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type, productPackage?.package_name)}>
                                     <div className={`order-box`}>
                                         <div className={`order-index ${isSaved ? 'saved' : isSubmitted ? 'submitted' : ''}`}>
                                             <p>{product?.product_type === 'VESSEL_FILTER' ? (product?.order_id || "UN") : 'AD'}</p>
                                         </div>
-                                        {pg?.length !== productIndex + 1 && <div className="order-line"></div>}
+
                                     </div>
                                     <div className="product-content">
                                         <div className="id-status">
@@ -271,6 +268,8 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                                     </div>
                                 </div>
                             })}
+
+
                         </div>
                     })} </>
                     : <EmptyState

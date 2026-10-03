@@ -27,7 +27,7 @@
             margin-bottom: 10px;
             text-align: center;
 
-            &:first-child{
+            &:first-child {
                 font-weight: 500;
                 font-size: 15px;
             }
@@ -103,19 +103,20 @@
         padding: 10px 15px 50px 15px;
 
         .title-section {
-            margin-top: 10px;
+            margin-top: 5px;
             margin-bottom: 25px;
 
             h3 {
-                font-size: 22px;
-                font-weight: 700;
+                font-size: 20px;
+                font-weight: 600;
                 @include threeDots();
             }
 
             p {
-                font-size: 14px;
-                font-weight: 500;
+                font-size: 13px;
+                font-weight: 400;
                 color: var(--text-tertiary);
+                text-align: justify
             }
 
 

@@ -1,7 +1,7 @@
 import { toStandardText } from "../../../utils/helpers/text-formatting"
 
 export const serviceFormPageRoute = [
-    { key: 100, title: 'Select Products', description: "Choose the products or parts required for this service" },
+    { key: 100, title: 'Field Service', description: "Manage assigned products, configure site specifications, and record completion status" },
     { key: 101, title: 'Review & Confirmation', description: "Review service details and verify the total amount" },
     { key: 102, title: 'Payment', description: "Collect and complete the service payment" }
 ]
