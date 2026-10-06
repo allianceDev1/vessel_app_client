@@ -2,20 +2,46 @@ import React, { useEffect, useState } from 'react'
 import './techLayout.scss';
 import BrandLogo from '../../../assets/images/icons/alliance-logo.png';
 import env from '../../../config/env';
-import { IoChevronBack } from "react-icons/io5";
+import Cookies from 'js-cookie';
 import { RxDashboard } from "react-icons/rx";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TbCalendarWeek, TbDropletCheck, TbDropletHalf2, TbHome } from 'react-icons/tb';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import SkeletonPage from '../../UI_Primitives/skeleton/SkeletonPage';
+import { IconBrightnessFilled, IconMoon, IconSun } from '@tabler/icons-react';
+import { changeThemeColor } from '../../../redux/features/persisted/systemSlice';
 
 const TechLayout = ({ children }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [activeSegment, setActiveSegment] = useState('')
     const [isNavigating, setIsNavigating] = useState(false);
     const { page } = useSelector((state) => state.miniSystem)
+    const {  theme } = useSelector((state) => state.system)
+
+    // ── Theme toggle — cycles: os-default → dark → light → os-default ──────────
+    const handleThemeToggle = () => {
+        const cycle = { 'os-default': 'dark', 'dark': 'light', 'light': 'os-default' }
+        const next = cycle[theme] ?? 'os-default'
+        Cookies.set('color_mode', next, { expires: 365 })
+        dispatch(changeThemeColor(next))
+    }
+
+    // Derive button icon + tooltip from current theme
+    const themeIcon = theme === 'dark'
+        ? <IconSun size={18} />
+        : theme === 'light'
+            ? <IconBrightnessFilled size={18} />
+            : <IconMoon size={18} />   // os-default
+
+    const themeLabel = theme === 'dark'
+        ? 'Dark mode — click for Light'
+        : theme === 'light'
+            ? 'Light mode — click for OS default'
+            : 'OS default — click for Dark'
 
 
     useEffect(() => {
@@ -34,10 +60,13 @@ const TechLayout = ({ children }) => {
 
             <div className="layout-header">
                 <div className="section-one">
-                    <img src={BrandLogo} alt='brand-logo'  />
+                    <img src={BrandLogo} alt='brand-logo' />
                     <h3>Service</h3>
                 </div>
                 <div className="section-two">
+                    <div className="navigate-button" title={themeLabel} onClick={handleThemeToggle}>
+                        {themeIcon}
+                    </div>
                     <div className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)}>
                         <RxDashboard />
                     </div>

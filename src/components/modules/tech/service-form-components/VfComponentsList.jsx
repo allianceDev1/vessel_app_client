@@ -53,7 +53,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
 
         changeSubmitStatus(false)
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             work: {
                 ...productInForm?.work,
                 components_list: updatedSpareList
@@ -82,7 +82,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
         changeSubmitStatus(false)
 
         dispatch(
-            sfActions.updateProduct({
+            sfActions.updateProduct.innerFields({
                 work: {
                     ...productInForm?.work,
                     components_list: updatedSpareList
@@ -96,7 +96,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
 
         changeSubmitStatus(false)
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             work: {
                 ...productInForm?.work,
                 removed_components_list: [
@@ -112,7 +112,7 @@ const VfComponentsList = ({ itemsList, subPage, setWorkMenu, productInForm, chan
 
     const undoRemove = (item) => {
         changeSubmitStatus(false)
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             work: {
                 ...productInForm?.work,
                 removed_components_list: productInForm?.work?.removed_components_list?.filter(r => r?.spare_uuid !== item?.spare_uuid || r?.spare_type !== item?.spare_type)

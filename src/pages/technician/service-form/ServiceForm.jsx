@@ -10,17 +10,20 @@ import { buildCustomerPGStretcher } from '../../../utils/services/product_servic
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
 import FormTopBar from '../../../components/modules/tech/service-form-components/FormTopBar'
 import Home from '../../../components/modules/tech/service-form-pages/Home'
-import SfSubPageOne from '../../../components/modules/tech/service-form-pages/SfSubPageOne'
-import SfSubPageTwo from '../../../components/modules/tech/service-form-pages/SfSubPageTwo'
-import SfSubPageThree from '../../../components/modules/tech/service-form-pages/SfSubPageThree'
-import SfSubPageFour from '../../../components/modules/tech/service-form-pages/SfSubPageFour'
-import SfAdSubPageOne from '../../../components/modules/tech/service-form-pages/SfAdSubPageOne'
-import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
-import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
-import Review from '../../../components/modules/tech/service-form-pages/Review'
-import Payment from '../../../components/modules/tech/service-form-pages/Payment'
+import WpCurrentCondition from '../../../components/modules/tech/service-form-pages/WpCurrentCondition'
+import WpWithNewSpun from '../../../components/modules/tech/service-form-pages/WpWithNewSpun'
+import VfCurrentCondition from '../../../components/modules/tech/service-form-pages/VfCurrentCondition'
+import VfInspection from '../../../components/modules/tech/service-form-pages/VfInspection'
+// import SfSubPageThree from '../../../components/modules/tech/service-form-pages/SfSubPageThree'
+// import SfSubPageFour from '../../../components/modules/tech/service-form-pages/SfSubPageFour'
+// import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
+// import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
+// import Review from '../../../components/modules/tech/service-form-pages/Review'
+// import Payment from '../../../components/modules/tech/service-form-pages/Payment'
+import AdCurrentCondition from '../../../components/modules/tech/service-form-pages/AdCurrentCondition'
 import { useQuery } from '@tanstack/react-query'
 import { serviceFormResourcesVerification } from '../../../utils/services/service-form-services'
+import WpPumpMembrane from '../../../components/modules/tech/service-form-pages/WpPumpMembrane'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -33,7 +36,7 @@ const ServiceForm = () => {
     const {
         isLoading,
         isFetching,
-        data,
+        refetch,
         error
     } = useQuery({
         queryKey: ['service_form_resources', serviceForm?.work_key],
@@ -56,24 +59,8 @@ const ServiceForm = () => {
 
             return { status: "COMPLETED" }
         },
-        enabled: true
+        enabled: !formResources?.hasResources
     })
-
-    const changeSubmitStatusIsFalse = () => {
-        if (!serviceFormSettings?.activeProduct?.[0]) return;
-
-        if (!serviceFormSettings?.products?.[serviceFormSettings?.activeProduct?.[0]]?.is_submitted) return;
-
-        dispatch(sfSetting.updateSubmitStatus({
-            product_id: serviceFormSettings?.activeProduct?.[0],
-            is_submitted: false,
-            is_saved: false
-        }))
-        dispatch(sfSetting.update({
-            form_saved: false,
-            form_saved_time: null
-        }))
-    }
 
     useEffect(() => {
 
@@ -83,7 +70,7 @@ const ServiceForm = () => {
         }
 
         if (!serviceFormSettings?.activePage) {
-            dispatch(sfSetting.setActivePage(100))
+            dispatch(sfSetting.page.next(1000))
         }
 
         if (!formResources?.hasResources || !serviceForm) return;
@@ -101,50 +88,75 @@ const ServiceForm = () => {
         // eslint-disable-next-line
     }, [formResources, serviceForm])
 
-
-    // loading
-    if (isLoading || isFetching || isVerifying) {
-        return <div className="tech-service-form-loader-container">
-            <div className="loader-border">
-                <p>{isVerifying
-                    ? "Resources verifying.."
-                    : "Loading Resources..."
-                }</p>
-                <p>Loading form resources. This may take a moment.</p>
-
-                <div className="progress-bar">
-                    <div className="progress spin"></div>
-                </div>
-            </div>
-        </div>
-    }
-
-    // Error
-    if (error || !verification?.success) {
-        return <ErrorState
-            hight='80vh'
-            title={!verification?.success ? 'Verification failed' : 'Service form setup failed!'}
-            message={verification?.message || error?.message}
-            icon={<TbFileText />}
-        />
-    }
-
     // Page
     return (
         <div className="tech-service-form-container">
 
             <div className="top-bar-container">
-                <FormTopBar />
+                <FormTopBar refreshResources={refetch} isSyncing={isLoading || isFetching || isVerifying} />
             </div>
 
-            <div className="service-form-page-container">
+            {(isLoading || isFetching || isVerifying) ?
+                <div className="loader-section">
+                    <div className="loader-border">
+                        <p>{isVerifying
+                            ? "Resources verifying.."
+                            : "Loading Resources..."
+                        }</p>
+                        <p>Loading form resources. This may take a moment.</p>
 
-                {/* Main pages */}
-                {serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage &&
-                    <Home page={{ index: 100, type: 'page' }}  changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                        <div className="progress-bar">
+                            <div className="progress spin"></div>
+                        </div>
+                    </div>
+                </div>
+                : (error || !verification?.success) ?
+                    <ErrorState
+                        hight='80vh'
+                        title={!verification?.success ? 'Verification failed' : 'Service form setup failed!'}
+                        message={verification?.message || error?.message}
+                        icon={<TbFileText />}
+                    />
+                    : <div className="service-form-page-container">
 
-            </div>
+                        {/* Main pages */}
+                        {serviceFormSettings?.activePage === 1000 && <Home pageKey={1000} />}
 
+                        {/* {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
+                            <Review page={{ index: 101, type: 'page' }} />}
+                        {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
+                            <Payment page={{ index: 102, type: 'page' }} />} */}
+
+                        {/* Water purifier */}
+                        {serviceFormSettings?.activePage === 1100 && <WpCurrentCondition pageKey={1100} />}
+                        {serviceFormSettings?.activePage === 1101 && <WpWithNewSpun pageKey={1101} />}
+                        {serviceFormSettings?.activePage === 1102 && <WpPumpMembrane pageKey={1102} />}
+
+
+                        {/* Vessel Filter  */}
+                        {serviceFormSettings?.activePage === 1200 && <VfCurrentCondition pageKey={1200} />}
+                        {serviceFormSettings?.activePage === 1201 && <VfInspection pageKey={1201} />}
+                        {/* {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
+                            <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
+                                customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
+                                materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
+                                changeSubmitStatus={changeSubmitStatusIsFalse} />}
+                        {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
+                            <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
+
+
+                        {/* Add-On  */}
+                        {serviceFormSettings?.activePage === 1300 && <AdCurrentCondition pageKey={1300} />}
+                        {/* {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
+                            <SfAdSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse}
+                                categories={addOnServiceCategories} customerProducts={customerProducts} regData={regData} serviceList={addOnServiceList}
+                                spareList={addOnSpareList} addOnsEligibilities={addOnsEligibilities} />}
+                        {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
+                            <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
+
+
+
+                    </div>}
         </div>
     )
 }

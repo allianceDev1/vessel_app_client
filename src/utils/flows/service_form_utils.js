@@ -1,42 +1,3 @@
-const MAIN_PAGE_BACK_MAP = new Map([
-    [103, 102],
-    [102, 101],
-    [101, 100],
-    [100, null] // exit
-]);
-
-const SUB_PAGE_BACK_MAP = new Map([
-    [203, 202],
-    [202, 201],
-    [201, 200],
-    [200, null]
-]);
-
-
-export const getPreviousServicePageKey = (mainPageKey = null, subPageKey = null) => {
-    // 1️⃣ Sub page flow
-    if (subPageKey !== null) {
-        const prevSub = SUB_PAGE_BACK_MAP.get(subPageKey) ?? null;
-
-        return [
-            mainPageKey, // main page stays same
-            prevSub
-        ];
-    }
-
-    // 2️⃣ Main page flow
-    if (mainPageKey !== null) {
-        const prevMain = MAIN_PAGE_BACK_MAP.get(mainPageKey) ?? null;
-
-        return [
-            prevMain,
-            null
-        ];
-    }
-
-    // 3️⃣ Exit
-    return [null, null];
-}
 
 // find spare amount type
 /**
@@ -97,3 +58,118 @@ export const findSpareTypeAmount = (spare, amountType, servicePackageId, warrant
 
     return { ...pricing, reason };
 };
+
+export const findTdsStatus = (inputValue = 0, outputValue = 0, productInfo = {}) => {
+
+    if (typeof inputValue !== 'number' || typeof outputValue !== 'number') {
+        throw Error('TDS inValue / outValue is not Number')
+    }
+
+    // NO
+    if (!inputValue || !outputValue) {
+        return 'NO'
+    }
+
+    // LOW
+    if (outputValue < 5) {
+        return 'LOW'
+    }
+
+    // TYPE : UV
+    if (productInfo?.hasUV) {
+        if (outputValue > (inputValue + 50)) {
+            return 'HIGH'
+        } else {
+            return 'NORMAL'
+        }
+    }
+
+    // TYPE : ALKALINE
+    if (productInfo?.hasAlkaline) {
+        if (outputValue > ((inputValue * 0.15) + 40)) {
+            return 'HIGH'
+        } else {
+            return 'NORMAL'
+        }
+    }
+
+    // TYPE : RO only
+    if (outputValue > (inputValue * 0.15)) {
+        return 'HIGH'
+    } else {
+        return 'NORMAL'
+    }
+
+}
+
+export const findFilteredWaterFlowStatus = (flowValue = 0) => {
+
+    if (typeof flowValue !== 'number') {
+        throw Error('Value is not Number')
+    }
+
+    // NO
+    if (!flowValue || flowValue === 0) {
+        return 'NO'
+    }
+
+    // LOW
+    if (flowValue < 11) {
+        return 'LOW'
+    }
+
+    // NORMAL
+    if (flowValue >= 11) {
+        return 'NORMAL'
+    }
+
+}
+
+export const findRejectWaterFlowStatus = (flowValue = 0, frValue = 0) => {
+
+    if (typeof flowValue !== 'number' || typeof frValue !== 'number') {
+        throw Error('Flow value / fr value is not Number')
+    }
+
+    // NO
+    if (!flowValue || !frValue) {
+        return 'NO'
+    }
+
+    // LOW
+    if (flowValue < frValue) {
+        return 'LOW'
+    }
+
+    // TYPE : RO only
+    if (flowValue >= frValue) {
+        return 'NORMAL'
+    }
+
+}
+
+export const findPhStatus = (phValue = 0) => {
+
+    if (typeof phValue !== 'number') {
+        throw Error('Value is not Number')
+    }
+
+    // NO
+    if (!phValue || phValue === 0) {
+        return 'NO'
+    }
+
+    // LOW
+    if (phValue < 6.5) {
+        return 'LOW'
+    }
+
+    // HIGH
+    if (phValue > 8.5) {
+        return 'HIGH'
+    }
+
+    // NORMAL
+    return 'NORMAL'
+
+}

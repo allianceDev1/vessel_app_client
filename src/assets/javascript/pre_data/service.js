@@ -1,23 +1,32 @@
 import { toStandardText } from "../../../utils/helpers/text-formatting"
 
+
 export const serviceFormPageRoute = [
-    { key: 100, title: 'Field Service', description: "Manage assigned products, configure site specifications, and record completion status" },
-    { key: 101, title: 'Review & Confirmation', description: "Review service details and verify the total amount" },
-    { key: 102, title: 'Payment', description: "Collect and complete the service payment" }
+    { key: 1000, title: 'Field Service', description: "Manage assigned products, configure site specifications, and record completion status" },
+    { key: 1001, title: 'Review & Confirmation', description: "Review service details and verify the total amount" },
+    { key: 1002, title: 'Payment', description: "Collect and complete the service payment" },
+
+    // Purifier
+    { key: 1100, title: 'Current Condition', description: "Record the current condition of the product before service" },
+    { key: 1101, title: 'With new spun filter', description: "Change the spun filter and record the current condition of the product before service" },
+    { key: 1102, title: 'Pump & membrane', description: "Check current condition with change pump, membrane and FR" },
+    { key: 1103, title: 'Inspection report', description: "Document issues identified during the inspection" },
+    { key: 1104, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
+    { key: 1105, title: 'Evaluation', description: "Evaluate the product condition after service completion" },
+
+    // Vessel filter
+    { key: 1200, title: 'Current Condition', description: "Record the current condition of the product before service" },
+    { key: 1201, title: 'Inspection report', description: "Document issues identified during the inspection" },
+    { key: 1202, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
+    { key: 1203, title: 'Evaluation', description: "Evaluate the product condition after service completion" },
+
+    // Add-on
+    { key: 1300, title: 'Current Condition', description: "Record the current condition of the product before service" },
+    { key: 1301, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
+    { key: 1202, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
+
 ]
 
-export const serviceFormSubPageRoute = [
-    { key: 200, title: 'Current Condition', description: "Record the current condition of the product before service" },
-    { key: 201, title: 'Inspection report', description: "Document issues identified during the inspection" },
-    { key: 202, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
-    { key: 203, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
-]
-
-export const serviceFormAddOnSubPageRoute = [
-    { key: 200, title: 'Current Condition', description: "Record the current condition of the product before service" },
-    { key: 201, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
-    { key: 202, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
-]
 
 export const SPARE_SECTIONS = ["RENEWAL_SPARE", "PACKAGE_SPARE", "ADDITIONAL_SPARE"]
 export const SPARE_SECTION_TITLES = {

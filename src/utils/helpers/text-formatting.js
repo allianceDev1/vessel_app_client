@@ -131,18 +131,27 @@ export const textSortFormate = (text) => {
 }
 
 export const maskPhoneNumber = (number) => {
-   
+
     if (!number) return '';
     const str = String(number).trim();
     const digits = str.replace(/\D/g, '');
-    console.log(digits)
+
     if (digits.length < 6) {
         return str;
     }
-  
+
     const first3 = digits.slice(0, 2);
     const last4 = digits.slice(-4);
     const middleCount = Math.max(digits.length - 6, 2);
 
     return `+${first3}${'*'.repeat(middleCount)}${last4}`;
 };
+
+export function containsExactWord(text, searchWord) {
+    const words = text
+        .toUpperCase()
+        .split(/[^A-Z0-9]+/)
+        .filter(Boolean);
+
+    return words.includes(searchWord.toUpperCase());
+}

@@ -1,40 +1,34 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom';
 import './form-top-bar.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { TbCalculator, TbChevronLeft, TbClockHour5, TbRotate2, TbStopwatch } from 'react-icons/tb';
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
-import { getPreviousServicePageKey } from '../../../../utils/flows/service_form_utils';
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import StopWatch from './StopWatch';
 import Calculator from './Calculator';
-import { useQueryClient } from '@tanstack/react-query';
+
 
 // top margin of `.body-container` in techLayout.scss (space reserved for the layout header)
 const LAYOUT_BODY_OFFSET = 50
 
 
-const FormTopBar = () => {
+const FormTopBar = ({ refreshResources, isSyncing }) => {
   const dispatch = useDispatch();
-  const queryClient = useQueryClient()
   const barRef = useRef(null)
   const [barHeight, setBarHeight] = useState(LAYOUT_BODY_OFFSET)
   const [currentTime, setCurrentTime] = useState(Date.now());
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
 
 
-  const handleReloadResources = () => {
-    queryClient.invalidateQueries({
-      queryKey: ['service_form_resources']
-    })
+  const handleReloadResources = async () => {
+    await refreshResources()
   }
 
   const handleBack = () => {
-    const [mainKey, subKey] = getPreviousServicePageKey(serviceFormSettings?.activePage, serviceFormSettings?.activeSubPage)
-    dispatch(sfSetting.setActivePage(mainKey))
-    dispatch(sfSetting.setActiveSubPage(subKey))
+    dispatch(sfSetting.page.back())
 
-    if (subKey === null && mainKey === 100) {
+    if ([1100, 1200, 1300].includes(serviceFormSettings?.activePage)) {
       dispatch(sfSetting.setActiveProduct(null))
     }
   }
@@ -100,7 +94,7 @@ const FormTopBar = () => {
     <div className="tech-service-form-top-bar-fixed" ref={barRef}>
       <div className="tech-service-form-top-bar-container">
         <button type="button" className="tb-icon-btn back" title="Back" onClick={handleBack}
-          disabled={serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage}>
+          disabled={serviceFormSettings?.activePage === 1000 || !serviceFormSettings?.activePage}>
           <TbChevronLeft />
         </button>
 
@@ -125,7 +119,7 @@ const FormTopBar = () => {
         <div className="tb-tools">
           <button type="button" className="tb-icon-btn" title="Stopwatch" onClick={openStopWatch}><TbStopwatch /></button>
           <button type="button" className="tb-icon-btn" title="Calculator" onClick={openCalculator}><TbCalculator /></button>
-          <button type="button" className="tb-icon-btn" title="Refresh" onClick={handleReloadResources}><TbRotate2 /></button>
+          <button type="button" className="tb-icon-btn" title="Refresh" disabled={isSyncing} onClick={handleReloadResources}><TbRotate2 /></button>
         </div>
       </div>
     </div>

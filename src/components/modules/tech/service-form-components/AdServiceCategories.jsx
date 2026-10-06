@@ -41,7 +41,7 @@ const AdServiceCategories = ({ categories, product, regData, changeSubmitStatus,
         }
 
         changeSubmitStatus(false)
-        dispatch(sfActions.updateProduct(updateData))
+        dispatch(sfActions.updateProduct.innerFields(updateData))
     }
 
     useEffect(() => {

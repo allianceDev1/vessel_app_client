@@ -1,19 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import './sub-page-style.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { serviceFormSubPageRoute } from '../../../../assets/javascript/pre_data/service'
+import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
 import Select from '../../../UI_Primitives/inputs/Select'
-import Radio from '../../../UI_Primitives/inputs/Radio'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import Button from '../../../UI_Primitives/buttons/Button'
 import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
 import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { TbTrash } from 'react-icons/tb'
+import RadioCard from '../../../UI_Primitives/inputs/RadioCard'
 
-const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
+const VfInspection = ({ pageKey }) => {
     const dispatch = useDispatch();
-    const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
-    const orderId = serviceFormSettings?.activeProduct?.[1] || null
+    const { formResources, serviceFormSettings, serviceForm } = useSelector((state) => state.application)
     const [natures, setNatures] = useState([])
     const [reasons, setReasons] = useState([])
     const [solutions, setSolutions] = useState([])
@@ -29,12 +28,10 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
 
     const updateProductCondition = (e) => {
 
-        changeSubmitStatus(false)
-
         const { name, value } = e.target;
 
         if (name === 'condition' && value === 'Good') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 inspection_report: {
                     [name]: value || null,
                     tech_analyze: null
@@ -44,9 +41,11 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
             return;
         }
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             inspection_report: { [name]: value || null }
         }))
+
+        dispatch(sfSetting.productSubmit.resetStatus());
     }
 
     const handleChangeNature = (e) => {
@@ -86,9 +85,9 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
             return;
         }
 
-        changeSubmitStatus(false)
+        dispatch(sfSetting.productSubmit.resetStatus());
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             inspection_report: {
                 tech_analyze: [
                     ...(productInForm?.inspection_report?.tech_analyze || []),
@@ -104,8 +103,8 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
     }
 
     const handleDelete = (nature) => {
-        changeSubmitStatus(false)
-        dispatch(sfActions.updateProduct({
+        dispatch(sfSetting.productSubmit.resetStatus());
+        dispatch(sfActions.updateProduct.innerFields({
             inspection_report: {
                 tech_analyze: productInForm?.inspection_report?.tech_analyze?.filter(t => t.nature !== nature)
             }
@@ -124,24 +123,26 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
             return;
         }
 
-        dispatch(sfSetting.setActiveSubPage(202))
+        dispatch(sfSetting.page.next(1202))
     }
 
     useEffect(() => {
-        let natureOptions = resources?.filter(r => r.title === 'service_analyze_natures')?.[0]?.values || []
-        natureOptions = natureOptions.sort((a, b) => a.order - b.order)
-        natureOptions = natureOptions.map(v => v.data)
-        setNatures(natureOptions)
 
-    }, [resources])
+        if (formResources?.input_resources?.length) {
+            let colorOptions = formResources?.input_resources?.find(r => r.title === 'vessel_service_analyze_natures')?.values || []
+            colorOptions = colorOptions.map(v => v.data)
+            setNatures(colorOptions)
+        }
+
+    }, [formResources])
 
 
     return (
         <div className="tech-service-form-subpage sf-subpage-two">
             {/* Title */}
             <div className="title-section">
-                <h3>{orderId ? `${orderId} : ` : ''}{serviceFormSubPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormSubPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -149,10 +150,26 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
                 <div className="form-section">
                     <h3 className='subtitle'>Product condition</h3>
                     <div className="box-col1">
-                        <Radio label={"Ok, it's normal"} name={'condition'} radioValue={'Good'} onChange={updateProductCondition}
-                            checked={productInForm?.inspection_report?.condition === 'Good'} required />
-                        <Radio label={"Not ok, Have a problem"} name={'condition'} radioValue={'Bad'} onChange={updateProductCondition}
-                            checked={productInForm?.inspection_report?.condition === 'Bad'} required />
+                        <RadioCard
+                            label="Good"
+                            description="No complaints for product"
+                            name="condition"
+                            id="condition_ok"
+                            radioValue="Good"
+                            onChange={updateProductCondition}
+                            checked={productInForm?.inspection_report?.condition === 'Good'}
+                            required
+                        />
+                        <RadioCard
+                            label="Bad"
+                            description="Have a complaint / problem"
+                            name="condition"
+                            id="condition_not_ok"
+                            radioValue="Bad"
+                            onChange={updateProductCondition}
+                            checked={productInForm?.inspection_report?.condition === 'Bad'}
+                            required
+                        />
                     </div>
                 </div>
 
@@ -193,12 +210,14 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
                                 onChange={handleMultiInputChange} selected={form?.solutions?.map((r) => ({ label: r, value: r })) || []} />
 
                             <Button label={'Add to list'} rounded outlined style={{ width: '150px' }} type='button' size='small'
-                                onClick={handleSubmitSubForm} disabled={!form?.nature || !form?.reasons?.length || !form?.solutions?.length} />
+                                severity={'secondary'} onClick={handleSubmitSubForm}
+                                disabled={!form?.nature || !form?.reasons?.length || !form?.solutions?.length} />
                         </div>
                     </div>}
 
                 <div className="submit-section">
-                    <Button label={'Next'} rounded style={{ width: '100%' }} />
+                    <Button label={'Next'} severity={'secondary'} rounded style={{ width: '100%' }}
+                        disabled={productInForm?.inspection_report?.condition === 'Bad' && !productInForm?.inspection_report?.tech_analyze?.length} />
                 </div>
 
             </form>
@@ -206,4 +225,4 @@ const SfSubPageTwo = ({ page, resources, changeSubmitStatus }) => {
     )
 }
 
-export default SfSubPageTwo
+export default VfInspection

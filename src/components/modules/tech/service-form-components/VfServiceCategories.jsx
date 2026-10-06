@@ -72,7 +72,7 @@ const VfServiceCategories = ({ categories, product, productEligibility, regData,
 
         changeSubmitStatus(false)
 
-        dispatch(sfActions.updateProduct(updateData))
+        dispatch(sfActions.updateProduct.innerFields(updateData))
     }
 
     useEffect(() => {

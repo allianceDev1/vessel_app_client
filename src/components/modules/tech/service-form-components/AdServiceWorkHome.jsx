@@ -57,7 +57,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         changeSubmitStatus(false)
 
         if (name === 'repeat_status') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 service_data: {
                     repeat: {
                         ...(productInForm?.service_data?.repeat || {}),
@@ -71,7 +71,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         }
 
         if (name === 'repeat_comment') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 service_data: {
                     repeat: {
                         ...(productInForm?.service_data?.repeat || {}),
@@ -87,7 +87,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         changeSubmitStatus(false)
 
         if (e.target.name === 'service_charge') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 service_data: {
                     service_charge: {
                         estimate: Number(e.target.value),
@@ -99,7 +99,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
             return;
         }
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             service_data: {
                 service_charge: {
                     ...(productInForm?.service_data?.service_charge || {}),
@@ -119,7 +119,7 @@ const AdServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
             }
         }
 
-        dispatch(sfActions.updateProduct(updateData))
+        dispatch(sfActions.updateProduct.innerFields(updateData))
 
     }
 

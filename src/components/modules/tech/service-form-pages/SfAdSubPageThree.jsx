@@ -21,7 +21,7 @@ const SfAdSubPageThree = ({ page, changeSubmitStatus }) => {
     const handleChange = (e, subKey) => {
         changeSubmitStatus(false)
         if (e.target.name === 'leak_status' || e.target.name === 'working_status') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 evaluation: {
                     [subKey]: {
                         status: e.target.value,
@@ -30,7 +30,7 @@ const SfAdSubPageThree = ({ page, changeSubmitStatus }) => {
                 }
             }))
         } else {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 evaluation: {
                     [subKey]: {
                         ...(productInForm?.evaluation?.[subKey] || {}),

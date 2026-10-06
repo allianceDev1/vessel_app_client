@@ -19,14 +19,14 @@ const VfServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
     changeSubmitStatus(false)
 
     if (isExisted) {
-      dispatch(sfActions.updateProduct({
+      dispatch(sfActions.updateProduct.innerFields({
         work: {
           ...productInForm?.work,
           services_list: productInForm?.work?.services_list?.filter(s => s?.service_id !== item?.service_id || s?.service_type !== workMenu?.type)
         }
       }))
     } else {
-      dispatch(sfActions.updateProduct({
+      dispatch(sfActions.updateProduct.innerFields({
         work: {
           ...productInForm?.work,
           services_list: [

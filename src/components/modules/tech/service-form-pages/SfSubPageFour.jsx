@@ -28,7 +28,7 @@ const SfSubPageFour = ({ page, resources, changeSubmitStatus }) => {
 
         changeSubmitStatus(false)
 
-        dispatch(sfActions.updateProduct({
+        dispatch(sfActions.updateProduct.innerFields({
             evaluation: {
                 [subKey]: {
                     ...(productInForm?.evaluation?.[subKey] || {}),
@@ -41,7 +41,7 @@ const SfSubPageFour = ({ page, resources, changeSubmitStatus }) => {
     const updateWaterQuality = (e) => {
         changeSubmitStatus(false)
         if (e.target.name === 'status') {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 evaluation: {
                     water_quality: {
                         status: e.target.value,
@@ -50,7 +50,7 @@ const SfSubPageFour = ({ page, resources, changeSubmitStatus }) => {
                 }
             }))
         } else {
-            dispatch(sfActions.updateProduct({
+            dispatch(sfActions.updateProduct.innerFields({
                 evaluation: {
                     water_quality: {
                         ...(productInForm?.evaluation?.water_quality || {}),

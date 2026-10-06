@@ -5,9 +5,8 @@ const initialState = {
     serviceForm: {},
     serviceFormSettings: {
         activePage: null,
-        activeSubPage: null,
+        pageHistory: [],
         activeProduct: null,
-        storageTankAvailable: false,
         products: {}
     },
     verification: {},
@@ -39,6 +38,8 @@ export const appDataSlice = createSlice({
                 customer_id: payload.customer_id,
                 start_time: new Date(payload.start_time).toISOString()
             }
+            state.serviceFormSettings.pageHistory = [1000]
+            state.serviceFormSettings.activePage = 1000
         },
 
         // Form resources
@@ -48,7 +49,7 @@ export const appDataSlice = createSlice({
         },
 
         // Updates
-        updateServiceProduct: (state, action) => {
+        updateProductFormInnerField: (state, action) => {
             const payload = action?.payload;
 
             if (!state?.serviceForm?.service_products) {
@@ -72,6 +73,27 @@ export const appDataSlice = createSlice({
                 };
             });
         },
+        updateProductFormParentValue: (state, action) => {
+            const payload = action?.payload;
+
+            if (!state?.serviceForm?.service_products) {
+                state.serviceForm.service_products = {};
+            }
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            if (!state?.serviceForm?.service_products?.[productId]) {
+                state.serviceForm.service_products[productId] = {};
+            }
+
+            Object.entries(payload).forEach(([key, updates]) => {
+                state.serviceForm.service_products[productId][key] = updates;
+            });
+        },
         resetServiceCategory: (state, action) => {
             const productId = action?.payload?.product_id;
 
@@ -93,17 +115,21 @@ export const appDataSlice = createSlice({
         // ? SERVICE FORM SETTINGS
 
         // service form settings
-        setSfActivePage: (state, action) => {
-            state.serviceFormSettings = {
-                ...(state.serviceFormSettings || {}),
-                activePage: action.payload
+        setFormNextPage: (state, action) => {
+            const pageKey = action.payload
+            if (!state.serviceFormSettings.pageHistory) {
+                state.serviceFormSettings.pageHistory = []
             }
+            state.serviceFormSettings.pageHistory.push(pageKey)
+            state.serviceFormSettings.activePage = pageKey
         },
-        setActiveSubPage: (state, action) => {
-            state.serviceFormSettings = {
-                ...(state.serviceFormSettings || {}),
-                activeSubPage: action.payload
-            }
+        setFormBackPage: (state) => {
+            const { pageHistory } = state.serviceFormSettings;
+
+            if (pageHistory.length <= 1) return;
+
+            pageHistory.pop();
+            state.serviceFormSettings.activePage = pageHistory[pageHistory.length - 1];
         },
         setActiveProduct: (state, action) => {
             state.serviceFormSettings = {
@@ -129,6 +155,21 @@ export const appDataSlice = createSlice({
                 ...status
             };
         },
+        updateSubmitStatusToFalse: (state) => {
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) return;
+
+            const product = state.serviceFormSettings.products?.[productId];
+
+            if (!product?.is_submitted) return;
+
+            product.is_submitted = false;
+            product.is_saved = false;
+
+            state.serviceFormSettings.form_saved = false;
+            state.serviceFormSettings.form_saved_time = null;
+        },
         setVerification: (state, action) => {
             state.verification = {
                 ...(state.verification || {}),
@@ -149,23 +190,32 @@ export const appDataSlice = createSlice({
 
 
 const {
-    clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment, setUpFormResources
+    clearServiceForm, startServiceWork, setFormBackPage, setFormNextPage, setActiveProduct, clearServiceFormSettings, updateProductFormInnerField,
+    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment, setUpFormResources,
+    updateSubmitStatusToFalse, updateProductFormParentValue
 } = appDataSlice.actions;
 
 
 const sfSetting = {
-    setActivePage: setSfActivePage,
-    setActiveSubPage: setActiveSubPage,
+    page: {
+        back: setFormBackPage,
+        next: setFormNextPage,
+    },
+    productSubmit: {
+        setStatus: updateSubmitStatus,
+        resetStatus: updateSubmitStatusToFalse,
+    },
     setActiveProduct: setActiveProduct,
     clearAll: clearServiceFormSettings,
-    updateSubmitStatus: updateSubmitStatus,
     update: setFormSettings
 }
 const sfActions = {
     clearAll: clearServiceForm,
     startWork: startServiceWork,
-    updateProduct: updateServiceProduct,
+    updateProduct: {
+        innerFields: updateProductFormInnerField,
+        parentValue: updateProductFormParentValue
+    },
     updateForm: updateServiceForm,
     resetService: resetServiceCategory,
     updateVerification: setVerification,

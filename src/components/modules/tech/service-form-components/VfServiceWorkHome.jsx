@@ -33,7 +33,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
   const handelChangeServiceCharge = (e) => {
     changeSubmitStatus(false)
     if (e.target.name === 'service_charge') {
-      dispatch(sfActions.updateProduct({
+      dispatch(sfActions.updateProduct.innerFields({
         service_data: {
           service_charge: {
             estimate: Number(e.target.value),
@@ -45,7 +45,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
       return;
     }
 
-    dispatch(sfActions.updateProduct({
+    dispatch(sfActions.updateProduct.innerFields({
       service_data: {
         service_charge: {
           ...(productInForm?.service_data?.service_charge || {}),
@@ -74,7 +74,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
     changeSubmitStatus(false)
 
     if (name === 'repeat_status') {
-      dispatch(sfActions.updateProduct({
+      dispatch(sfActions.updateProduct.innerFields({
         service_data: {
           repeat: {
             ...(productInForm?.service_data?.repeat || {}),
@@ -88,7 +88,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
     }
 
     if (name === 'repeat_comment') {
-      dispatch(sfActions.updateProduct({
+      dispatch(sfActions.updateProduct.innerFields({
         service_data: {
           repeat: {
             ...(productInForm?.service_data?.repeat || {}),

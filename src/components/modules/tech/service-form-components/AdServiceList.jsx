@@ -31,7 +31,7 @@ const AdServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
                 }
             }
 
-            dispatch(sfActions.updateProduct(updateData))
+            dispatch(sfActions.updateProduct.innerFields(updateData))
         } else {
 
             updateData = {
@@ -53,7 +53,7 @@ const AdServiceList = ({ setWorkMenu, subPage, itemsList, productInForm, changeS
                 }
             }
 
-            dispatch(sfActions.updateProduct(updateData))
+            dispatch(sfActions.updateProduct.innerFields(updateData))
         }
 
     }
