@@ -42,7 +42,7 @@ const KEYS = [
     { l: '=', k: '=', t: 'eq' },
 ]
 
-const INITIAL = { current: '0', prev: null, op: null, overwrite: true, expr: '' }
+const INITIAL = { current: '0', prev: null, op: null, overwrite: true, expr: '', isResult: false }
 
 const Calculator = () => {
     const [state, setState] = useState(INITIAL)
@@ -58,16 +58,16 @@ const Calculator = () => {
             if (isError && key !== 'clear') return s
 
             if (/^\d$/.test(key)) {
-                if (s.overwrite) return { ...s, current: key, overwrite: false }
+                if (s.overwrite) return { ...s, current: key, overwrite: false, isResult: false }
                 if (s.current.replace(/[-.]/g, '').length >= MAX_DIGITS) return s
-                return { ...s, current: s.current === '0' ? key : s.current + key }
+                return { ...s, current: s.current === '0' ? key : s.current + key, isResult: false }
             }
 
             switch (key) {
                 case '.':
-                    if (s.overwrite) return { ...s, current: '0.', overwrite: false }
+                    if (s.overwrite) return { ...s, current: '0.', overwrite: false, isResult: false }
                     if (s.current.includes('.')) return s
-                    return { ...s, current: s.current + '.' }
+                    return { ...s, current: s.current + '.', isResult: false }
 
                 case 'clear':
                     return INITIAL
@@ -75,11 +75,11 @@ const Calculator = () => {
                 case 'back':
                     if (s.overwrite) return s
                     { const next = s.current.slice(0, -1)
-                      return { ...s, current: next === '' || next === '-' ? '0' : next } }
+                      return { ...s, current: next === '' || next === '-' ? '0' : next, isResult: false } }
 
                 case 'sign':
                     if (s.current === '0') return s
-                    return { ...s, current: s.current.startsWith('-') ? s.current.slice(1) : '-' + s.current }
+                    return { ...s, current: s.current.startsWith('-') ? s.current.slice(1) : '-' + s.current, isResult: false }
 
                 case 'percent': {
                     const cur = parseFloat(s.current)
@@ -87,7 +87,7 @@ const Calculator = () => {
                     const val = s.prev !== null && (s.op === '+' || s.op === '-')
                         ? (s.prev * cur) / 100
                         : cur / 100
-                    return { ...s, current: String(clean(val)), overwrite: true }
+                    return { ...s, current: String(clean(val)), overwrite: true, isResult: false }
                 }
 
                 case '+': case '-': case '*': case '/': {
@@ -97,18 +97,20 @@ const Calculator = () => {
                         const res = compute(s.prev, cur, s.op)
                         if (Number.isNaN(res)) return { ...INITIAL, current: 'Error' }
                         const r = clean(res)
-                        return { current: String(r), prev: r, op: key, overwrite: true, expr: `${format(String(r))} ${OP_SYMBOL[key]}` }
+                        return { current: String(r), prev: r, op: key, overwrite: true, expr: `${format(String(r))} ${OP_SYMBOL[key]}`, isResult: false }
                     }
-                    return { ...s, prev: cur, op: key, overwrite: true, expr: `${format(String(cur))} ${OP_SYMBOL[key]}` }
+                    return { ...s, prev: cur, op: key, overwrite: true, expr: `${format(String(cur))} ${OP_SYMBOL[key]}`, isResult: false }
                 }
 
                 case '=': {
                     if (s.prev === null || !s.op) return s
                     const cur = parseFloat(s.current)
                     const res = compute(s.prev, cur, s.op)
-                    const expr = `${format(String(s.prev))} ${OP_SYMBOL[s.op]} ${format(String(cur))} =`
-                    if (Number.isNaN(res)) return { ...INITIAL, current: 'Error', expr }
-                    return { current: String(clean(res)), prev: null, op: null, overwrite: true, expr }
+                    if (Number.isNaN(res)) return { ...INITIAL, current: 'Error', expr: `${format(String(s.prev))} ${OP_SYMBOL[s.op]} ${format(String(cur))} = Error`, isResult: false }
+                    const r = clean(res)
+                    const formattedResult = format(String(r))
+                    const expr = `${format(String(s.prev))} ${OP_SYMBOL[s.op]} ${format(String(cur))} = ${formattedResult}`
+                    return { current: String(r), prev: null, op: null, overwrite: true, expr, isResult: true }
                 }
 
                 default:
@@ -139,7 +141,7 @@ const Calculator = () => {
         <div className="tech-calculator" ref={rootRef} tabIndex={0} onKeyDown={handleKeyDown}>
             <div className="calc-display">
                 <span className="calc-expr">{state.expr || '\u00A0'}</span>
-                <span className={`calc-value ${value.length > 11 ? 'small' : ''}`}>{value}</span>
+                <span className={`calc-value ${state.isResult ? 'is-result' : ''} ${value.length > 11 ? 'small' : ''}`}>{value}</span>
             </div>
             <div className="calc-keys">
                 {KEYS.map((k) => (

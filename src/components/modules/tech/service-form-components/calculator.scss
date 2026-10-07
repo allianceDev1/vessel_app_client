@@ -30,6 +30,11 @@
             font-weight: 600;
             white-space: nowrap;
             font-variant-numeric: tabular-nums;
+            transition: color 0.15s ease;
+
+            &.is-result {
+                color: var(--color-success);
+            }
 
             &.small {
                 font-size: 20px;
