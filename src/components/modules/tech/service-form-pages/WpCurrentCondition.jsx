@@ -206,36 +206,43 @@ const WpCurrentCondition = ({ pageKey }) => {
         dispatch(sfSetting.productSubmit.resetStatus());
     }
 
+    const resetSection = () => {
+        dispatch(sfActions.updateProduct.parentValue({
+            current_condition: undefined,
+        }))
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const currentCondition = productInForm?.current_condition || {}
 
         // validation
-        if (!productInfo?.hasUvOnly) {
-            if (currentCondition?.filtered_water?.flow_status !== 'NORMAL' ||
-                currentCondition?.reject_water?.flow_status !== 'NORMAL'
-            ) {
-                // spun section
-                dispatch(sfSetting.page.next(1101))
-                return;
-            } else if (currentCondition?.tds?.status !== 'NORMAL') {
-                // pump & membrane section
-                dispatch(sfActions.updateProduct.parentValue({
-                    with_new_spun: undefined
-                }))
-                dispatch(sfSetting.page.next(1102))
-
-                return;
-            }
+        if (!productInfo?.hasUvOnly && (
+            currentCondition?.filtered_water?.flow_status !== 'NORMAL' ||
+            currentCondition?.reject_water?.flow_status !== 'NORMAL' ||
+            currentCondition?.tds?.status !== 'NORMAL'
+        )) {
+            // spun section
+            dispatch(sfSetting.page.next(1101))
+            return;
         }
 
         dispatch(sfActions.updateProduct.parentValue({
             with_new_spun: undefined,
             membrane_tds: undefined,
-            pump_membrane_checkups: undefined
+            pump_membrane_checkups: undefined,
+            inspection_report: undefined,
         }))
-        dispatch(sfSetting.page.next(1103))
+
+        // inspection section
+        if (currentCondition?.contaminants) {
+            dispatch(sfSetting.page.next(1103))
+            return;
+        }
+
+        // work section
+        dispatch(sfSetting.page.next(1104))
     }
 
 
@@ -245,6 +252,11 @@ const WpCurrentCondition = ({ pageKey }) => {
             <div className="title-section">
                 <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
                 <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
+            </div>
+
+            <div className="reset-section">
+                <Button label={'Reset section'} size='small' severity={'secondary'} rounded outlined style={{ width: '100px' }}
+                    onClick={resetSection} />
             </div>
 
             <form onSubmit={handleSubmit}>

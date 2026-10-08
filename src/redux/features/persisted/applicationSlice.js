@@ -75,7 +75,7 @@ export const appDataSlice = createSlice({
         },
         updateProductFormParentValue: (state, action) => {
             const payload = action?.payload;
-
+            console.log(payload)
             if (!state?.serviceForm?.service_products) {
                 state.serviceForm.service_products = {};
             }
@@ -91,6 +91,7 @@ export const appDataSlice = createSlice({
             }
 
             Object.entries(payload).forEach(([key, updates]) => {
+                console.log(updates)
                 state.serviceForm.service_products[productId][key] = updates;
             });
         },

@@ -93,6 +93,16 @@ export const findTdsStatus = (inputValue = 0, outputValue = 0, productInfo = {})
         }
     }
 
+    // Input TDS < 50
+    if (inputValue < 50) {
+        if (outputValue > 10) {
+            return 'HIGH'
+        } else {
+            return "NORMAL"
+        }
+    }
+
+
     // TYPE : RO only
     if (outputValue > (inputValue * 0.15)) {
         return 'HIGH'
@@ -102,9 +112,9 @@ export const findTdsStatus = (inputValue = 0, outputValue = 0, productInfo = {})
 
 }
 
-export const findFilteredWaterFlowStatus = (flowValue = 0) => {
+export const findFilteredWaterFlowStatus = (flowValue = 0, criteria = 11) => {
 
-    if (typeof flowValue !== 'number') {
+    if (typeof flowValue !== 'number' || typeof criteria !== 'number') {
         throw Error('Value is not Number')
     }
 
@@ -114,12 +124,12 @@ export const findFilteredWaterFlowStatus = (flowValue = 0) => {
     }
 
     // LOW
-    if (flowValue < 11) {
+    if (flowValue < criteria) {
         return 'LOW'
     }
 
     // NORMAL
-    if (flowValue >= 11) {
+    if (flowValue >= criteria) {
         return 'NORMAL'
     }
 

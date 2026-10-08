@@ -6,7 +6,7 @@ import { findFilteredWaterFlowStatus, findRejectWaterFlowStatus } from '../../..
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 
-const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
+const PumpMembFrSection = ({ title, sectionKey, sectionId, criteria }) => {
     const dispatch = useDispatch();
     const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
 
@@ -17,7 +17,7 @@ const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
         // eslint-disable-next-line
     }, [serviceForm?.service_products]);
 
-    const sectionData = productInForm?.pump_membrane_checkups?.[index] || {}
+    const sectionData = productInForm?.pump_membrane_checkups?.[sectionKey] || {}
 
     const handleChangeFilteredWaterFlow = (e) => {
         const { value } = e.target;
@@ -26,18 +26,18 @@ const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
 
         let data = [...(productInForm?.pump_membrane_checkups || [])]
 
-        data[index] = {
-            ...(data[index] || {}),
-            index,
-            type: sectionType,
+        data[sectionKey] = {
+            ...(data[sectionKey] || {}),
+            key: sectionKey,
+            type: sectionId,
             filtered_water: {
                 flow_status: status,
                 flow_value: value || ''
             }
         }
 
-        if (status === 'NORMAL' && data[index]?.reject_water?.flow_status === 'NORMAL') {
-            data = data.slice(0, index + 1)
+        if (status === 'NORMAL' && data[sectionKey]?.reject_water?.flow_status === 'NORMAL') {
+            data = data.slice(0, sectionKey + 1)
         }
 
         dispatch(sfActions.updateProduct.parentValue({
@@ -54,18 +54,18 @@ const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
 
         let data = [...(productInForm?.pump_membrane_checkups || [])]
 
-        data[index] = {
-            ...(data[index] || {}),
-            index,
-            type: sectionType,
+        data[sectionKey] = {
+            ...(data[sectionKey] || {}),
+            sectionKey,
+            type: sectionId,
             reject_water: {
                 flow_status: status,
                 flow_value: value || ''
             }
         }
 
-        if (status === 'NORMAL' && data[index]?.filtered_water?.flow_status === 'NORMAL') {
-            data = data.slice(0, index + 1)
+        if (status === 'NORMAL' && data[sectionKey]?.filtered_water?.flow_status === 'NORMAL') {
+            data = data.slice(0, sectionKey + 1)
         }
 
         dispatch(sfActions.updateProduct.parentValue({
@@ -82,7 +82,7 @@ const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
             <div className="form-section">
                 <h3 className='subtitle'>{title}</h3>
                 <div className="box-col-auto-80">
-                    <InputText label={'Filtered water flow'} id={sectionType + 'filtered_water'} name={'flow_value'} required
+                    <InputText label={'Filtered water flow'} id={sectionId + 'filtered_water'} name={'flow_value'} required
                         value={sectionData?.filtered_water?.flow_value} type='number' step={0.1} min={0}
                         onChange={handleChangeFilteredWaterFlow} />
                     <div className="info-section"
@@ -98,7 +98,7 @@ const PumpMembFrSection = ({ title, index, sectionType, criteria }) => {
                     </div>
                 </div>
                 <div className="box-col-auto-80" style={{ marginTop: "10px" }}>
-                    <InputText label={'Reject water flow'} id={sectionType + 'reject_water'} name={'flow_value'} required
+                    <InputText label={'Reject water flow'} id={sectionId + 'reject_water'} name={'flow_value'} required
                         value={sectionData?.reject_water?.flow_value} type='number' step={0.1} min={0}
                         onChange={handleChangeRejectWaterFlow} />
                     <div className="info-section"

@@ -113,17 +113,23 @@ const WpWithNewSpun = ({ pageKey }) => {
         dispatch(sfSetting.productSubmit.resetStatus());
     }
 
+    const resetSection = () => {
+        dispatch(sfActions.updateProduct.parentValue({
+            with_new_spun: undefined,
+        }))
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const withNewSpun = productInForm?.with_new_spun || {}
 
         // validation
-        if (!productInfo?.hasUvOnly &&
-            (withNewSpun?.filtered_water?.flow_status !== 'NORMAL' ||
-                withNewSpun?.reject_water?.flow_status !== 'NORMAL' ||
-                withNewSpun?.tds?.status === 'HIGH')
-        ) {
+        if (!productInfo?.hasUvOnly && (
+            (withNewSpun?.filtered_water?.flow_status && withNewSpun?.filtered_water?.flow_status !== 'NORMAL') ||
+            (withNewSpun?.reject_water?.flow_status && withNewSpun?.reject_water?.flow_status !== 'NORMAL') ||
+            (withNewSpun?.tds?.status && withNewSpun?.tds?.status === 'HIGH')
+        )) {
             // pump & membrane section
             dispatch(sfSetting.page.next(1102))
             return;
@@ -133,6 +139,8 @@ const WpWithNewSpun = ({ pageKey }) => {
             membrane_tds: undefined,
             pump_membrane_checkups: undefined
         }))
+
+        // work section
         dispatch(sfSetting.page.next(1103))
     }
 
@@ -145,10 +153,15 @@ const WpWithNewSpun = ({ pageKey }) => {
                 <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
+            <div className="reset-section">
+                <Button label={'Reset section'} size='small' severity={'secondary'} rounded outlined style={{ width: '100px' }}
+                    onClick={resetSection} />
+            </div>
+
             <form onSubmit={handleSubmit}>
 
                 {/* TDS */}
-                {productInForm?.current_condition?.working_status !== 'WORKING' &&
+                {productInForm?.current_condition?.tds?.status !== 'NORMAL' &&
                     <div className="form-section">
                         <h3 className='subtitle'>TDS</h3>
                         <div className="box-col2">
@@ -164,27 +177,29 @@ const WpWithNewSpun = ({ pageKey }) => {
                     </div>}
 
                 {/* Water flow */}
-                <div className="form-section">
-                    <h3 className='subtitle'>Water flow</h3>
-                    <div className={productInfo?.hasUvOnly ? "box-col1" : "box-col2"}>
-                        <InputText label={'Filtered water'} id={'filtered_water'} name={'flow_value'} required
-                            value={productInForm?.with_new_spun?.filtered_water?.flow_value}
-                            onChange={handleChangeFilteredWaterFlow} type='number' step={0.1} min={0}
-                            rightIcon={productInForm?.with_new_spun?.filtered_water?.flow_status ? <Badge
-                                value={toStandardText(productInForm?.with_new_spun?.filtered_water?.flow_status)}
-                                severity={productInForm?.with_new_spun?.filtered_water?.flow_status === "NORMAL" ? 'primary' : "danger"}
-                            /> : ''} />
+                {(productInForm?.current_condition?.filtered_water?.flow_status !== 'NORMAL' ||
+                    productInForm?.current_condition?.reject_water?.flow_status !== 'NORMAL') &&
+                    <div className="form-section">
+                        <h3 className='subtitle'>Water flow</h3>
+                        <div className={productInfo?.hasUvOnly ? "box-col1" : "box-col2"}>
+                            <InputText label={'Filtered water'} id={'filtered_water'} name={'flow_value'} required
+                                value={productInForm?.with_new_spun?.filtered_water?.flow_value}
+                                onChange={handleChangeFilteredWaterFlow} type='number' step={0.1} min={0}
+                                rightIcon={productInForm?.with_new_spun?.filtered_water?.flow_status ? <Badge
+                                    value={toStandardText(productInForm?.with_new_spun?.filtered_water?.flow_status)}
+                                    severity={productInForm?.with_new_spun?.filtered_water?.flow_status === "NORMAL" ? 'primary' : "danger"}
+                                /> : ''} />
 
-                        {!productInfo?.hasUvOnly &&
-                            <InputText label={'Reject water'} id={'reject_water'} name={'flow_value'} required
-                                value={productInForm?.with_new_spun?.reject_water?.flow_value}
-                                onChange={handleChangeRejectWaterFlow} type='number' min={0}
-                                rightIcon={productInForm?.with_new_spun?.reject_water?.flow_status ? <Badge
-                                    value={toStandardText(productInForm?.with_new_spun?.reject_water?.flow_status)}
-                                    severity={productInForm?.with_new_spun?.reject_water?.flow_status === "NORMAL" ? 'primary' : "danger"}
-                                /> : ''} />}
-                    </div>
-                </div>
+                            {!productInfo?.hasUvOnly &&
+                                <InputText label={'Reject water'} id={'reject_water'} name={'flow_value'} required
+                                    value={productInForm?.with_new_spun?.reject_water?.flow_value}
+                                    onChange={handleChangeRejectWaterFlow} type='number' min={0}
+                                    rightIcon={productInForm?.with_new_spun?.reject_water?.flow_status ? <Badge
+                                        value={toStandardText(productInForm?.with_new_spun?.reject_water?.flow_status)}
+                                        severity={productInForm?.with_new_spun?.reject_water?.flow_status === "NORMAL" ? 'primary' : "danger"}
+                                    /> : ''} />}
+                        </div>
+                    </div>}
 
                 {/* PH */}
                 {productInfo?.hasAlkaline && productInForm?.current_condition?.working_status !== 'WORKING' &&

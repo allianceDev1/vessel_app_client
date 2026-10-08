@@ -9,6 +9,7 @@ import { containsExactWord, toStandardText } from '../../../../utils/helpers/tex
 import { findFilteredWaterFlowStatus, findPhStatus, findRejectWaterFlowStatus, findTdsStatus } from '../../../../utils/flows/service_form_utils'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Message from '../../../UI_Primitives/message/Message'
+import PumpMembFrSection from '../service-form-components/purifier/PumpMembFrSection'
 
 const WpPumpMembrane = ({ pageKey }) => {
     const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const WpPumpMembrane = ({ pageKey }) => {
         return current || {}
 
         // eslint-disable-next-line
-    }, [serviceForm?.service_products]);
+    }, [serviceForm?.service_products, serviceFormSettings?.activeProduct]);
 
     const productInfo = useMemo(() => {
         const thisProduct = formResources?.products?.find(p => p?.product_id === serviceFormSettings?.activeProduct?.[0])
@@ -33,6 +34,62 @@ const WpPumpMembrane = ({ pageKey }) => {
 
         return { hasUV, hasAlkaline, hasRo, hasUvOnly }
     }, [formResources])
+    // productInForm?.current_condition?.fr_value || 0
+
+    const checkupStages = useMemo(() => {
+
+        const checkUpOne = [
+            { key: 3, id: 'op+nm+fr450', title: 'OP + NM + FR 450', criteria: { rejected: 450, filtered: 14 } },
+            { key: 4, id: 'np+om+fr350', title: 'NP + OM + FR 350', criteria: { rejected: 350, filtered: 12 } },
+            { key: 5, id: 'np+nm+fr450', title: 'NP + NM + FR 450', criteria: { rejected: 450, filtered: 15 } }
+        ]
+
+        const checkupTwo = [
+            { key: 0, id: 'op+om+fr_now', title: `OP + OM + FR ${productInForm?.current_condition?.fr_value || 0}`, criteria: { rejected: productInForm?.current_condition?.fr_value || 0, filtered: 12 } },
+            { key: 1, id: 'op+om+fr350', title: 'OP + OM + FR 350', criteria: { rejected: 350, filtered: 12 } }
+        ]
+
+        if (productInForm?.membrane_tds?.status === 'HIGH') {
+            return checkUpOne;
+        }
+        if (productInForm?.with_new_spun?.filtered_water?.flow_status !== 'NORMAL' || productInForm?.with_new_spun?.reject_water?.flow_status !== 'NORMAL') {
+            if (Number(productInForm?.current_condition?.fr_value) !== 300) {
+                checkupTwo.push({ key: 2, id: 'op+om+fr300', title: 'OP + OM + FR 300', criteria: { rejected: 300, filtered: 12 } })
+            }
+
+            return [...checkupTwo, ...checkUpOne];
+        }
+
+        return []
+
+    }, [productInForm]);
+
+
+    const visibleStages = useMemo(() => {
+        if (!checkupStages.length) {
+            return [];
+        }
+
+        let visibleCount = 1;
+
+        for (let index = 0; index < checkupStages.length - 1; index++) {
+            const stageData = productInForm?.pump_membrane_checkups?.[checkupStages[index]?.key];
+
+            if ((!stageData?.filtered_water?.flow_status || !stageData?.reject_water?.flow_status) ||
+                stageData?.filtered_water?.flow_status === "NORMAL" && stageData?.reject_water?.flow_status === "NORMAL") {
+
+                break;
+            }
+
+            visibleCount++;
+
+        }
+
+        return checkupStages.slice(0, visibleCount);
+    }, [
+        checkupStages,
+        productInForm?.pump_membrane_checkups,
+    ]);
 
 
     const handleChangeTDS = (e) => {
@@ -48,6 +105,7 @@ const WpPumpMembrane = ({ pageKey }) => {
             outputValue = Number(value)
         }
 
+        const previousStatus = productInForm?.membrane_tds?.status
         const status = findTdsStatus(inputValue, outputValue, productInfo)
 
         dispatch(sfActions.updateProduct.parentValue({
@@ -58,80 +116,25 @@ const WpPumpMembrane = ({ pageKey }) => {
             }
         }))
 
-        dispatch(sfSetting.productSubmit.resetStatus());
-    }
-
-    const handleChangeFilteredWaterFlow = (e) => {
-        const { value } = e.target;
-
-        const status = findFilteredWaterFlowStatus(Number(value || 0))
-
-        dispatch(sfActions.updateProduct.innerFields({
-            with_new_spun: {
-                filtered_water: {
-                    flow_status: status,
-                    flow_value: value || ''
-                }
-            }
-        }))
+        if (previousStatus !== status) {
+            dispatch(sfActions.updateProduct.parentValue({
+                pump_membrane_checkups: undefined
+            }))
+        }
 
         dispatch(sfSetting.productSubmit.resetStatus());
     }
 
-    const handleChangeRejectWaterFlow = (e) => {
-        const { value } = e.target;
-
-        const status = findRejectWaterFlowStatus(Number(value || 0), Number(productInForm?.current_condition?.fr_value || 0))
-
-        dispatch(sfActions.updateProduct.innerFields({
-            with_new_spun: {
-                reject_water: {
-                    flow_status: status,
-                    flow_value: value || ''
-                }
-            }
+    const resetSection = () => {
+        dispatch(sfActions.updateProduct.parentValue({
+            membrane_tds: undefined,
+            pump_membrane_checkups: undefined
         }))
-
-        dispatch(sfSetting.productSubmit.resetStatus());
-    }
-
-    const handleChangePh = (e) => {
-        const { value } = e.target;
-
-        const status = findPhStatus(Number(value || 0))
-
-        dispatch(sfActions.updateProduct.innerFields({
-            with_new_spun: {
-                ph: {
-                    status: status,
-                    value: value || ''
-                }
-            }
-        }))
-
-        dispatch(sfSetting.productSubmit.resetStatus());
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const withNewSpun = productInForm?.with_new_spun || {}
-
-        // validation
-        if (!productInfo?.hasUvOnly &&
-            (withNewSpun?.filtered_water?.flow_status !== 'NORMAL' ||
-                withNewSpun?.reject_water?.flow_status !== 'NORMAL' ||
-                withNewSpun?.tds?.status === 'HIGH')
-        ) {
-            // pump & membrane section
-            dispatch(sfSetting.page.next(1102))
-            return;
-        }
-
-        dispatch(sfActions.updateProduct.parentValue({
-            membrane_tds: undefined,
-            pump_membrane_checkups: undefined
-        }))
         dispatch(sfSetting.page.next(1103))
     }
 
@@ -144,11 +147,15 @@ const WpPumpMembrane = ({ pageKey }) => {
                 <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
+            <div className="reset-section">
+                <Button label={'Reset section'} size='small' severity={'secondary'} rounded outlined style={{ width: '100px' }}
+                    onClick={resetSection} />
+            </div>
+
             <form onSubmit={handleSubmit}>
 
                 {/* TDS */}
-                {!productInfo?.hasAlkaline &&
-                    (productInForm?.current_condition?.tds?.status === 'HIGH' || productInForm?.with_new_spun?.tds?.status === 'HIGH') &&
+                {(productInForm?.current_condition?.tds?.status === 'HIGH' || productInForm?.with_new_spun?.tds?.status === 'HIGH') &&
                     <div className="form-section">
                         <h3 className='subtitle'>From membrane, TDS</h3>
                         <div className="box-col2">
@@ -167,14 +174,23 @@ const WpPumpMembrane = ({ pageKey }) => {
                     <Message
                         type='info'
                         iconDisable
-                        head={'Check Alkaline Filter'}
-                        message={'The issue is related to the alkaline filter, not the pump or membrane. Please inspect the alkaline filter and resolve the issue.'}
+                        head={productInfo?.hasAlkaline ? 'Check Alkaline Filter' : 'Check Carbon Filters'}
+                        message={productInfo?.hasAlkaline
+                            ? 'The issue is related to the alkaline filter, not the pump or membrane. Please inspect the alkaline filter and resolve the issue.'
+                            : 'The issue is related to the carbon filters, not the pump or membrane. Please inspect the carbon filters and resolve the issue.'}
+                        style={{ marginBottom: '15px' }}
                     />}
 
-                {/* Use initial FR */}
-                {/* Tds status is Hight    ===> Don't show this inputs */}
 
-
+                {visibleStages.map((stage) => (
+                    <PumpMembFrSection
+                        key={stage.id}
+                        title={stage.title}
+                        sectionKey={stage.key}
+                        sectionId={stage.id}
+                        criteria={stage.criteria}
+                    />
+                ))}
 
                 <div className="submit-section">
                     <Button label={'Next'} severity={'secondary'} rounded style={{ width: '100%' }} />

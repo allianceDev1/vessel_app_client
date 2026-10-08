@@ -24,6 +24,7 @@ import AdCurrentCondition from '../../../components/modules/tech/service-form-pa
 import { useQuery } from '@tanstack/react-query'
 import { serviceFormResourcesVerification } from '../../../utils/services/service-form-services'
 import WpPumpMembrane from '../../../components/modules/tech/service-form-pages/WpPumpMembrane'
+import WpInspection from '../../../components/modules/tech/service-form-pages/WpInspection'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -131,6 +132,7 @@ const ServiceForm = () => {
                         {serviceFormSettings?.activePage === 1100 && <WpCurrentCondition pageKey={1100} />}
                         {serviceFormSettings?.activePage === 1101 && <WpWithNewSpun pageKey={1101} />}
                         {serviceFormSettings?.activePage === 1102 && <WpPumpMembrane pageKey={1102} />}
+                        {serviceFormSettings?.activePage === 1103 && <WpInspection pageKey={1103} />}
 
 
                         {/* Vessel Filter  */}
