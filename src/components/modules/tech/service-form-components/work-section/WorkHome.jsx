@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from 'react'
-import './vf-service-work-home.scss'
-import InputText from '../../../UI_Primitives/inputs/InputText'
-import Select from '../../../UI_Primitives/inputs/Select'
-import Button from '../../../UI_Primitives/buttons/Button'
+import './work-home.scss'
+import InputText from '../../../../UI_Primitives/inputs/InputText'
+import Select from '../../../../UI_Primitives/inputs/Select'
+import Button from '../../../../UI_Primitives/buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import { doDialog, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import Radio from '../../../UI_Primitives/inputs/Radio'
+import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
+import { doDialog, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
+import Radio from '../../../../UI_Primitives/inputs/Radio'
 
-const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
+const WorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
   const dispatch = useDispatch();
-  const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+  const { serviceForm, formResources, serviceFormSettings } = useSelector((state) => state.application)
   const [menuMeta, setMenuMeta] = useState({ renewal_spares: 0, package_spares: 0, additional_spares: 0, renewal_services: 0, package_services: 0, additional_services: 0 })
 
   const productInForm = useMemo(() => {
@@ -29,6 +29,21 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
     // eslint-disable-next-line
   }, [serviceForm?.service_products]);
+
+  const serviceCategory = useMemo(() => {
+
+    const category = formResources?.service_categories?.find(
+      (c) =>
+        c?.category_id === productInForm?.service_data?.category_id &&
+        (
+          !productInForm?.service_data?.package_id ||
+          c?.package_id === productInForm?.service_data?.package_id
+        )
+    );
+
+    return category;
+
+  }, [formResources?.service_categories, productInForm?.service_data])
 
   const handelChangeServiceCharge = (e) => {
     changeSubmitStatus(false)
@@ -103,10 +118,10 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
     e.preventDefault();
 
     // if renewal not select any fund distribution items : error
-    if (category?.mode === 'RENEWAL') {
+    if (serviceCategory?.mode === 'RENEWAL') {
       if (!menuMeta?.renewal_spares && !menuMeta?.renewal_services) {
-        const FdInSpare = category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS')
-        const FdInWork = category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK')
+        const FdInSpare = serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS')
+        const FdInWork = serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK')
 
         if (FdInSpare && !menuMeta?.package_spares) {
           dispatch(toast.push({
@@ -152,19 +167,19 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
 
 
   return (
-    <div className="sf-sub-vf-service-work-home">
+    <div className="sf-sub-service-work-home">
 
       <div className="menus">
         {/* Renewal */}
-        {category?.mode === 'RENEWAL' &&
+        {serviceCategory?.mode === 'RENEWAL' &&
           <div className="menu-section">
-            {category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS') &&
+            {serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SPARE_PARTS') &&
               <div className={`menu-item ${menuMeta?.renewal_spares ? 'item-selected' : ''}`}
                 onClick={() => clickWorkMenu('RENEWAL_SPARE', "SPARE_SECTION")}>
                 <h3>Package Renewal <br></br> Components</h3>
                 <p>{menuMeta?.renewal_spares ? `${menuMeta?.renewal_spares} items selected` : "Choose component items"}</p>
               </div>}
-            {category?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK') &&
+            {serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(f => f?.fund_type === 'SERVICE_WORK') &&
               <div className={`menu-item ${menuMeta?.renewal_services ? 'item-selected' : ''}`}
                 onClick={() => clickWorkMenu('RENEWAL_SERVICE')}>
                 <h3>Package Renewal <br></br> Services</h3>
@@ -173,7 +188,7 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
           </div>}
 
         {/* Package */}
-        {category?.package_id &&
+        {serviceCategory?.package_id &&
           <div className="menu-section">
             <div className={`menu-item ${menuMeta?.package_spares ? 'item-selected' : ''}`}
               onClick={() => clickWorkMenu('PACKAGE_SPARE', "SPARE_SECTION")}>
@@ -210,10 +225,10 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
         {/* Service charge */}
         <h4>Service Charge</h4>
         <Select label={'Service Charge'} name={'service_charge'} value={productInForm?.service_data?.service_charge?.estimate}
-          options={[{}, ...category?.service_charges?.map(s => ({ label: s?.charge_amount, value: s?.charge_amount }))]}
+          options={[{}, ...serviceCategory?.service_charges?.map(s => ({ label: s?.charge_amount, value: s?.charge_amount }))]}
           onChange={handelChangeServiceCharge} required />
 
-        {category?.service_charges?.[0]?.charge_amount !== productInForm?.service_data?.service_charge?.estimate &&
+        {serviceCategory?.service_charges?.[0]?.charge_amount !== productInForm?.service_data?.service_charge?.estimate &&
           <InputText label={'Extra Charge Reason'} name={'remark'} value={productInForm?.service_data?.service_charge?.remark}
             onChange={handelChangeServiceCharge} required />}
 
@@ -241,4 +256,4 @@ const VfServiceWorkHome = ({ category, setWorkMenu, changeSubmitStatus }) => {
   )
 }
 
-export default VfServiceWorkHome
+export default WorkHome

@@ -86,8 +86,8 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
 
   const customerId = serviceForm?.customer_id
   const productId = serviceFormSettings?.activeProduct?.[0]
-  const productName = productId
-    ? `${productId}${serviceFormSettings?.activeProduct?.[3] ? ' - ' + serviceFormSettings?.activeProduct?.[3] : ''}`
+  const packageName = productId && serviceFormSettings?.activeProduct?.[2] 
+    ? serviceFormSettings?.activeProduct?.[2]
     : ''
 
   const bar = (
@@ -109,9 +109,12 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
               <span className="prefix">CID</span>
               <span className="value">{customerId || 'Error'}</span>
             </span>
-            {productId && <span className="tb-chip product" title={`Product : ${productName}`}>
+            {productId && <span className="tb-chip product" title={`Product ID : ${productId || 'Error'}`}>
               <span className="prefix">P-ID</span>
               <span className="value">{productId}</span>
+            </span>}
+            {packageName && <span className="tb-chip product" title={`Package name : ${packageName}`}>
+              <span className="value">{packageName}</span>
             </span>}
           </div>
         </div>

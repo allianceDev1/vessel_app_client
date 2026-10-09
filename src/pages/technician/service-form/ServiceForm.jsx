@@ -25,6 +25,7 @@ import { useQuery } from '@tanstack/react-query'
 import { serviceFormResourcesVerification } from '../../../utils/services/service-form-services'
 import WpPumpMembrane from '../../../components/modules/tech/service-form-pages/WpPumpMembrane'
 import WpInspection from '../../../components/modules/tech/service-form-pages/WpInspection'
+import WorkSection from '../../../components/modules/tech/service-form-pages/WorkSection'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -156,7 +157,8 @@ const ServiceForm = () => {
                         {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
                             <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
 
-
+                        {/* Work */}
+                        {[1104, 1202, 1301].includes(serviceFormSettings?.activePage) && <WorkSection  />}
 
                     </div>}
         </div>

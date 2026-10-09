@@ -140,7 +140,7 @@ const WpPumpMembrane = ({ pageKey }) => {
 
 
     return (
-        <div className="tech-service-form-subpage sf-subpage-one">
+        <div className="tech-service-form-subpage">
             {/* Title */}
             <div className="title-section">
                 <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>

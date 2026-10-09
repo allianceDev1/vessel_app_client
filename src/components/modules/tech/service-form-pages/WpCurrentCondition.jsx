@@ -41,7 +41,7 @@ const WpCurrentCondition = ({ pageKey }) => {
 
         dispatch(sfSetting.productSubmit.resetStatus());
 
-        if (e.target.name === 'fr_value') {
+        if (e.target.name === 'fr_value' && productInForm?.current_condition?.working_status === 'WORKING') {
             const status = findRejectWaterFlowStatus(
                 Number(productInForm?.current_condition?.reject_water?.flow_value || 0),
                 Number(e.target.value || 0)
@@ -51,7 +51,7 @@ const WpCurrentCondition = ({ pageKey }) => {
                     [e.target.name]: e.target.value || "",
                     reject_water: {
                         flow_status: status,
-                        flow_value: productInForm?.current_condition?.reject_water?.flow_value || 0
+                        flow_value: productInForm?.current_condition?.reject_water?.flow_value || ''
                     }
                 }
             }))
@@ -247,7 +247,7 @@ const WpCurrentCondition = ({ pageKey }) => {
 
 
     return (
-        <div className="tech-service-form-subpage sf-subpage-one">
+        <div className="tech-service-form-subpage">
             {/* Title */}
             <div className="title-section">
                 <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
