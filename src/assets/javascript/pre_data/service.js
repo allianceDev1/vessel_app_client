@@ -28,19 +28,9 @@ export const serviceFormPageRoute = [
 ]
 
 
-export const SPARE_SECTIONS = ["RENEWAL_SPARE", "PACKAGE_SPARE", "ADDITIONAL_SPARE"]
-export const SPARE_SECTION_TITLES = {
-    RENEWAL_SPARE: "Package Renewal Spares",
-    PACKAGE_SPARE: "Service Package Spares",
-    ADDITIONAL_SPARE: "Additional Spares"
-}
-
+export const SPARE_SECTIONS = ["RENEWAL_SPARE_PARTS", "PACKAGE_SPARE_PARTS", "ADDITIONAL_SPARE_PARTS"]
 export const SERVICE_SECTIONS = ['RENEWAL_SERVICE', 'PACKAGE_SERVICE', 'ADDITIONAL_SERVICE']
-export const SERVICE_SECTION_TITLES = {
-    RENEWAL_SERVICE: "Package Renewal Services",
-    PACKAGE_SERVICE: "Service Package Services",
-    ADDITIONAL_SERVICE: "Additional Services"
-}
+
 
 export const SERVICE_TYPES = ['COMPLAINT', 'SERVICE', 'RENEWAL']
 export const SERVICE_PRIORITY = {

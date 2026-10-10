@@ -54,6 +54,7 @@ const ServiceCategories = () => {
                 category_id: category?.category_id,
                 mode: category?.mode,
                 repeat: {
+                    same_registration: repeatWork?.same_registration ? true : false,
                     system_say: repeatWork ? true : false,
                     tech_say: repeatWork ? true : false,
                     comment: null
@@ -62,12 +63,13 @@ const ServiceCategories = () => {
         }
 
         // service charge
+        updateData.service_data.service_charge_applied = category?.service_charges?.length ? true : false
+
         if (category?.service_charges?.length) {
             updateData.service_data.service_charge = {
                 charge_index: 0,
+                start_index: 0,
                 estimate: category?.service_charges?.[0]?.charge_amount || 0,
-                applied: category?.service_charge_applied ? category?.service_charges?.[0]?.charge_amount : 0,
-                call: category?.service_charges?.[0]?.call_count || 0,
                 remark: null
             }
         }

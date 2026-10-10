@@ -1,0 +1,43 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.vf-components-list-comp-container {
+    position: relative;
+
+    .components-action {
+        height: 45px;
+
+        .menu-section,
+        .search-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+    }
+
+    .components-list-border {
+
+        margin-top: 10px;
+
+       
+    }
+
+    .fixed-section {
+        position: fixed;
+        width: 100%;
+        bottom: 55px;
+        left: 0;
+        padding: 5px 0;
+        display: flex;
+        justify-content: center;
+        background-color: var(--background);
+        z-index: 5;
+
+        .submit-button {
+            max-width: 500px;
+            width: 500px;
+            padding: 0 10px;
+        }
+    }
+
+}

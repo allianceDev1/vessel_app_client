@@ -1,62 +1,131 @@
 @use '../../../../../assets/scss/mixins/mixin.scss' as *;
 
 .sf-sub-service-work-home {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
-    .menus {
-        .menu-section {
-            display: flex;
+    /* Choosing Buttons Section */
+    .choosing-menus-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .choosing-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-bottom: 10px;
 
-            .menu-item {
-                width: 100%;
-                height: 100px;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                background-color: var(--surface-2);
-                // // backdrop-filter: blur(10px);
-                border-radius: 15px;
-                cursor: pointer;
-
-                h3 {
-                    font-weight: 500;
-                    font-size: 14px;
-                }
-
-                p {
-                    font-size: 12px;
-                    margin-top: 5px;
-                    color: var(--text-secondary-alt);
-                }
-
+            @media (max-width: 380px) {
+                grid-template-columns: 1fr;
             }
 
-            .item-selected {
-                background-color: var(--color-success-bg);
-                // // backdrop-filter: blur(10px);
-                color: var(--color-success-text);
+            .mobile-choose-btn {
+                width: 100%;
+                background: var(--surface-1);
+                border: 1px solid var(--border-light);
+                border-radius: 14px;
+                padding: 10px 11px;
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.15s ease-in-out;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
 
-                p {
-                    color: var(--color-success-text);
+                &:hover {
+                    background: var(--surface-2);
+                    border-color: var(--border-default);
+                }
+
+                &:active {
+                    transform: scale(0.97);
+                    background: var(--surface-3);
+                }
+
+                .btn-icon {
+                    width: 34px;
+                    height: 34px;
+                    min-width: 34px;
+                    border-radius: 9px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 18px;
+
+                    &.spares {
+                        background-color: rgba(59, 130, 246, 0.12);
+                        color: #2563eb;
+                    }
+
+                    &.works {
+                        background-color: rgba(16, 185, 129, 0.12);
+                        color: #059669;
+                    }
+                }
+
+                .btn-content {
+                    flex: 1;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1px;
+
+                    .btn-tag {
+                        font-size: 10px;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.4px;
+                        line-height: 1.2;
+
+                        &.tag-renewal {
+                            color: #7c3aed;
+                        }
+
+                        &.tag-package {
+                            color: #2563eb;
+                        }
+
+                        &.tag-additional {
+                            color: #d97706;
+                        }
+                    }
+
+                    .btn-title {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        margin: 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        line-height: 1.3;
+                    }
+                }
+
+                .btn-action-icon {
+                    font-size: 15px;
+                    color: var(--text-tertiary);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
             }
         }
-
-
     }
 
-
+    /* Form Styles */
     form {
-        margin-top: 20px;
+        margin-top: 4px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
 
         h4 {
             @include subTitleSmall();
+            margin: 0;
         }
 
         .form-section {
@@ -65,13 +134,16 @@
             gap: 10px;
         }
 
-
         .buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
-            margin-top: 25px;
+            margin-top: 15px;
+
+            button {
+                min-height: 44px;
+                font-size: 14px;
+            }
         }
     }
-
 }

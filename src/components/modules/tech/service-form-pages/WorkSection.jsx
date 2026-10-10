@@ -3,8 +3,8 @@ import './sub-page-style.scss'
 import { useSelector } from 'react-redux'
 import { SERVICE_SECTIONS, serviceFormSubPageRoute, SPARE_SECTIONS } from '../../../../assets/javascript/pre_data/service.js'
 import ServiceCategories from '../service-form-components/work-section/ServiceCategories.jsx'
-import VfServiceWorkHome from '../service-form-components/work-section/WorkHome.jsx'
-import VfComponentsList from '../service-form-components/VfComponentsList'
+import WorkHome from '../service-form-components/work-section/WorkHome.jsx'
+import ComponentsList from '../service-form-components/work-section/ComponentsList.jsx'
 import { findSpareTypeAmount } from '../../../../utils/flows/service_form_utils'
 import { normalizeDate } from '../../../../utils/helpers/date-helpers'
 import VfServiceList from '../service-form-components/VfServiceList'
@@ -17,7 +17,7 @@ const WorkSection = ({
 
     const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
     const orderId = serviceFormSettings?.activeProduct?.[1] || null
-    const [workMenu, setWorkMenu] = useState({ type: null, id: null })
+    const [workMenu, setWorkMenu] = useState('')
     const [itemsList, setItemList] = useState([])
     const [subPage, setSubPage] = useState({ title: null, id: null, max: 0, deleteItem: false })
 
@@ -64,7 +64,7 @@ const WorkSection = ({
 
 
     useEffect(() => {
-        if (!workMenu?.type) return;
+        if (!workMenu) return;
 
         let priceType = null, pricePackageId = null;
 
@@ -280,18 +280,17 @@ const WorkSection = ({
                 <ServiceCategories />}
 
             {(productInForm?.service_data?.category_id && productInForm?.service_data?.mode) &&
-                <>{workMenu?.type
+                <>{workMenu
                     ? <>
-                        {SPARE_SECTIONS.includes(workMenu?.type) &&
-                            <VfComponentsList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage} category={category}
+                        {SPARE_SECTIONS.includes(workMenu) &&
+                            <ComponentsList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage} category={category}
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}
                         {SERVICE_SECTIONS.includes(workMenu?.type) &&
                             <VfServiceList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage}
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}
                     </>
-                    : <VfServiceWorkHome category={category} setWorkMenu={setWorkMenu} changeSubmitStatus={changeSubmitStatus} />}
-                </>
-            }
+                    : <WorkHome setWorkMenu={setWorkMenu} />}
+                </>}
 
         </div>
     )
