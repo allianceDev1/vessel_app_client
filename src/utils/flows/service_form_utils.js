@@ -7,16 +7,18 @@
  * @param {boolean} warranty
  * @returns {{ list_price: number, charged: number, ledger_cost: number }}
  */
-export const findSpareTypeAmount = (spare, amountType, servicePackageId, warranty = false) => {
-    if (!spare || !amountType) {
-        throw new Error('Invalid arguments');
-    }
+export const findSpareTypeAmount = (
+    sparePriceList = {},
+    amountType = 'SELLING_RATE',
+    servicePackageId = null,
+    warranty = false
+) => {
 
     const {
         selling_rate = 0,
         purchase_cost = 0,
         ...packagePricing
-    } = spare?.pricing ?? {};
+    } = sparePriceList ?? {};
 
     let pricing;
     let reason = null;
@@ -25,25 +27,22 @@ export const findSpareTypeAmount = (spare, amountType, servicePackageId, warrant
         case 'SELLING_RATE':
             pricing = {
                 list_price: selling_rate,
-                charged: selling_rate,
-                ledger_cost: selling_rate
+                charged: selling_rate
             };
             break;
 
         case 'PURCHASE_COST':
             pricing = {
                 list_price: selling_rate,
-                charged: 0,
-                ledger_cost: purchase_cost
+                charged: 0
             };
-            reason = 'Zero fee category'
+            reason = 'Zero price coverage item'
             break;
 
         case 'PACKAGE_PRICE':
             pricing = {
                 list_price: selling_rate,
-                charged: packagePricing?.[servicePackageId] ?? selling_rate,
-                ledger_cost: packagePricing?.[servicePackageId] ?? selling_rate
+                charged: packagePricing?.[servicePackageId] ?? selling_rate
             };
             break;
 
@@ -54,6 +53,7 @@ export const findSpareTypeAmount = (spare, amountType, servicePackageId, warrant
     // Warranty override (only charged becomes zero)
     if (warranty === true) {
         pricing.charged = 0;
+        pricing.reason = 'Spare warranty override';
     }
 
     return { ...pricing, reason };

@@ -15,7 +15,7 @@ const WorkSection = ({
     materialsList, bagList, spareList, vesselServiceList, changeSubmitStatus
 }) => {
 
-    const { serviceFormSettings, serviceForm } = useSelector((state) => state.application)
+    const { serviceFormSettings, serviceForm, formResources } = useSelector((state) => state.application)
     const orderId = serviceFormSettings?.activeProduct?.[1] || null
     const [workMenu, setWorkMenu] = useState('')
     const [itemsList, setItemList] = useState([])
@@ -30,14 +30,14 @@ const WorkSection = ({
     }, [serviceForm?.service_products]);
 
     const product = useMemo(() => {
-        if (!customerProducts || !serviceFormSettings?.activeProduct?.[0]) return null;
+        if (!serviceFormSettings?.activeProduct?.[0]) return null;
 
-        return customerProducts.find(
+        return formResources?.products?.find(
             p => p.product_id === serviceFormSettings?.activeProduct?.[0]
         ) || null;
 
         // eslint-disable-next-line
-    }, [customerProducts, serviceFormSettings?.activeProduct?.[0]]);
+    }, [formResources?.products, serviceFormSettings?.activeProduct?.[0]]);
 
     const productEligibility = useMemo(() => {
         if (!vesselsEligibilities || !serviceFormSettings?.activeProduct?.[0]) return null;
@@ -48,6 +48,16 @@ const WorkSection = ({
 
         // eslint-disable-next-line
     }, [vesselsEligibilities, serviceFormSettings?.activeProduct?.[0]]);
+
+    const serviceCategory = useMemo(() => {
+        const category = formResources?.service_categories?.find(
+            (c) =>
+                c?.category_id === productInForm?.service_data?.category_id &&
+                (!productInForm?.service_data?.package_id || c?.package_id === productInForm?.service_data?.package_id)
+        )
+
+        return category
+    }, [formResources?.service_categories, productInForm?.service_data])
 
     const category = useMemo(() => {
         const workServiceId = productInForm?.service_data?.service_id || null
@@ -283,7 +293,7 @@ const WorkSection = ({
                 <>{workMenu
                     ? <>
                         {SPARE_SECTIONS.includes(workMenu) &&
-                            <ComponentsList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage} category={category}
+                            <ComponentsList setWorkMenu={setWorkMenu} product={product} subPage={subPage} serviceCategory={serviceCategory}
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}
                         {SERVICE_SECTIONS.includes(workMenu?.type) &&
                             <VfServiceList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage}

@@ -1,0 +1,263 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.product-spare-card {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    &.is-selected {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 1px var(--color-primary), 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    &.is-deleted {
+        background-color: var(--surface-1);
+        border-color: var(--border-light);
+        opacity: 0.8;
+
+        .spare-name {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+    }
+
+    &.is-inactive {
+        opacity: 0.65;
+    }
+
+    /* Top Section */
+    .card-top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+
+        .left-info {
+            flex: 1;
+            min-width: 0;
+
+            .title-row {
+                .spare-name {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin: 0;
+                    line-height: 1.35;
+                    @include threeDots(2);
+                }
+            }
+
+            .meta-row {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 6px;
+                font-size: 12px;
+
+                .spare-id-code {
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    font-family: monospace;
+                    letter-spacing: 0.3px;
+                }
+
+                .unique-chip {
+                    background-color: var(--surface-3);
+                    color: var(--text-tertiary);
+                    padding: 1px 6px;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    font-weight: 500;
+                }
+
+                .category-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 3px;
+                    color: var(--text-tertiary);
+                    font-size: 11px;
+
+                    .tag-icon {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .right-action {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+
+            .delete-btn {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: var(--text-tertiary);
+                padding: 6px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+
+                &:hover {
+                    color: var(--color-danger);
+                    background-color: var(--color-danger-bg);
+                }
+
+                &:active {
+                    transform: scale(0.92);
+                }
+            }
+
+            .undo-btn {
+                background: var(--surface-3);
+                border: 1px solid var(--border-light);
+                cursor: pointer;
+                color: var(--color-primary);
+                padding: 4px 10px;
+                border-radius: 20px;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+
+                &:hover {
+                    background-color: var(--color-primary-bg);
+                }
+
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
+
+            .clear-btn {
+                background: var(--surface-3);
+                border: 1px solid var(--border-light);
+                cursor: pointer;
+                color: var(--color-danger);
+                padding: 4px 10px;
+                border-radius: 20px;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+
+                &:hover {
+                    background-color: var(--color-danger-bg);
+                }
+
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
+        }
+    }
+
+    /* Middle Section: Badges & Pricing */
+    .card-bottom-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-light);
+
+        .badge-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+
+            .warranty-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 600;
+
+                .pill-icon {
+                    font-size: 13px;
+                }
+
+                &.in-warranty {
+                    background-color: var(--color-success-bg);
+                    color: var(--color-success);
+                    border: 1px solid rgba(34, 197, 94, 0.2);
+                }
+
+                &.out-warranty {
+                    background-color: var(--surface-3);
+                    color: var(--text-tertiary);
+                    border: 1px solid var(--border-light);
+                }
+            }
+
+            .status-pill.inactive {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 500;
+                background-color: var(--color-warning-bg);
+                color: var(--color-warning);
+            }
+        }
+
+        .pricing-info {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            text-align: right;
+
+            .mrp-price {
+                font-size: 12px;
+                color: var(--text-tertiary);
+                text-decoration: line-through;
+            }
+
+            .actual-price {
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--text-primary);
+
+                .warranty-free {
+                    color: var(--color-success);
+                    margin-right: 4px;
+                }
+
+                .actual-price-strike {
+                    font-size: 11px;
+                    font-weight: normal;
+                    color: var(--text-tertiary);
+                    text-decoration: line-through;
+                }
+            }
+        }
+    }
+
+    
+}
+

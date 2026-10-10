@@ -190,7 +190,7 @@ const WorkHome = ({ setWorkMenu }) => {
                   <button
                     type="button"
                     className="mobile-choose-btn"
-                    onClick={() => clickWorkMenu('RENEWAL_SPARE_PARTS')}
+                    onClick={() => clickWorkMenu('RENEWAL_SPARE')}
                   >
                     <div className="btn-icon spares">
                       <TbComponents />
@@ -211,7 +211,7 @@ const WorkHome = ({ setWorkMenu }) => {
                   <button
                     type="button"
                     className="mobile-choose-btn"
-                    onClick={() => clickWorkMenu('RENEWAL_SERVICE_WORKS')}
+                    onClick={() => clickWorkMenu('RENEWAL_SERVICE')}
                   >
                     <div className="btn-icon works">
                       <TbTools />
@@ -234,7 +234,7 @@ const WorkHome = ({ setWorkMenu }) => {
               <button
                 type="button"
                 className="mobile-choose-btn"
-                onClick={() => clickWorkMenu('PACKAGE_SPARE_PARTS')}
+                onClick={() => clickWorkMenu('PACKAGE_SPARE')}
               >
                 <div className="btn-icon spares">
                   <TbComponents />
@@ -251,7 +251,7 @@ const WorkHome = ({ setWorkMenu }) => {
               <button
                 type="button"
                 className="mobile-choose-btn"
-                onClick={() => clickWorkMenu('PACKAGE_SERVICE_WORKS')}
+                onClick={() => clickWorkMenu('PACKAGE_SERVICE')}
               >
                 <div className="btn-icon works">
                   <TbTools />
@@ -271,7 +271,7 @@ const WorkHome = ({ setWorkMenu }) => {
           <button
             type="button"
             className="mobile-choose-btn"
-            onClick={() => clickWorkMenu('ADDITIONAL_SPARE_PARTS')}
+            onClick={() => clickWorkMenu('ADDITIONAL_SPARE')}
           >
             <div className="btn-icon spares">
               <TbComponents />
@@ -288,7 +288,7 @@ const WorkHome = ({ setWorkMenu }) => {
           <button
             type="button"
             className="mobile-choose-btn"
-            onClick={() => clickWorkMenu('ADDITIONAL_SERVICE_WORKS')}
+            onClick={() => clickWorkMenu('ADDITIONAL_SERVICE')}
           >
             <div className="btn-icon works">
               <TbTools />

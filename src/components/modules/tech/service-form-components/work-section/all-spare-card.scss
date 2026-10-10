@@ -1,0 +1,309 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.all-spare-card {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--surface-2);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    &.is-added {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 1px var(--color-primary), 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    &.is-inactive {
+        opacity: 0.6;
+    }
+
+    /* Top Section */
+    .card-top-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+
+        .left-info {
+            flex: 1;
+            min-width: 0;
+
+            .title-row {
+                .spare-name {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin: 0;
+                    line-height: 1.35;
+                    @include threeDots(2);
+                }
+            }
+
+            .meta-row {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 6px;
+                font-size: 12px;
+
+                .spare-id-code {
+                    font-weight: 600;
+                    color: var(--text-secondary);
+                    font-family: monospace;
+                    letter-spacing: 0.3px;
+                }
+
+                .category-tag {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 3px;
+                    color: var(--text-tertiary);
+                    font-size: 11px;
+
+                    .tag-icon {
+                        font-size: 12px;
+                    }
+                }
+
+                .type-badge {
+                    background-color: var(--surface-3);
+                    color: var(--text-secondary);
+                    font-size: 10px;
+                    font-weight: 600;
+                    padding: 1px 6px;
+                    border-radius: 4px;
+                    letter-spacing: 0.4px;
+                    text-transform: uppercase;
+                }
+            }
+        }
+
+        .right-action {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+
+            .delete-btn {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                color: var(--text-tertiary);
+                padding: 6px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+
+                &:hover {
+                    color: var(--color-danger);
+                    background-color: var(--color-danger-bg);
+                }
+
+                &:active {
+                    transform: scale(0.92);
+                }
+            }
+        }
+    }
+
+    /* Middle Section: Price Breakdown */
+    .card-middle-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border-light);
+
+        .price-details {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            flex-wrap: wrap;
+
+            .actual-price {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            .mrp-price {
+                font-size: 12px;
+                color: var(--text-tertiary);
+                text-decoration: line-through;
+            }
+
+            .save-badge {
+                font-size: 10.5px;
+                font-weight: 600;
+                color: var(--color-success);
+                background-color: var(--color-success-bg);
+                padding: 1px 6px;
+                border-radius: 4px;
+            }
+        }
+
+        .status-badge.unavailable {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            background-color: var(--color-warning-bg);
+            color: var(--color-warning);
+
+            .pill-icon {
+                font-size: 13px;
+            }
+        }
+    }
+
+    /* Bottom Section: Stepper / Add button */
+    .card-bottom-section {
+        margin-top: 12px;
+
+        .add-spare-btn {
+            width: 100%;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: var(--surface-1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s ease-in-out;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+
+            .btn-icon {
+                font-size: 16px;
+                color: var(--color-primary);
+            }
+
+            &:hover:not(:disabled) {
+                background-color: var(--color-primary-bg);
+                border-color: var(--color-primary);
+                color: var(--color-primary);
+            }
+
+            &:active:not(:disabled) {
+                transform: scale(0.98);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        .stepper-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+
+            .stepper-controls {
+                display: inline-flex;
+                align-items: center;
+                background-color: var(--surface-1);
+                border: 1px solid var(--border-light);
+                border-radius: 10px;
+                padding: 3px;
+                gap: 4px;
+
+                .stepper-btn {
+                    width: 32px;
+                    height: 32px;
+                    border: none;
+                    border-radius: 8px;
+                    background-color: var(--surface-2);
+                    color: var(--text-primary);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    font-size: 15px;
+                    transition: all 0.15s ease;
+                    -webkit-tap-highlight-color: transparent;
+
+                    &:hover:not(:disabled) {
+                        background-color: var(--surface-3);
+                    }
+
+                    &:active:not(:disabled) {
+                        transform: scale(0.92);
+                    }
+
+                    &.minus-btn:hover:not(:disabled) {
+                        color: var(--color-danger);
+                    }
+
+                    &.plus-btn:hover:not(:disabled) {
+                        color: var(--color-primary);
+                    }
+
+                    &:disabled {
+                        opacity: 0.4;
+                        cursor: not-allowed;
+                    }
+                }
+
+                .quantity-display {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 36px;
+                    padding: 0 4px;
+
+                    .qty-number {
+                        font-size: 14px;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                        line-height: 1.1;
+                    }
+
+                    .qty-label {
+                        font-size: 9px;
+                        color: var(--text-tertiary);
+                        text-transform: uppercase;
+                        letter-spacing: 0.3px;
+                    }
+                }
+            }
+
+            .total-calculation {
+                display: flex;
+                align-items: baseline;
+                gap: 4px;
+
+                .calc-label {
+                    font-size: 12px;
+                    color: var(--text-tertiary);
+                }
+
+                .calc-amount {
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: var(--color-primary);
+                }
+            }
+        }
+    }
+}

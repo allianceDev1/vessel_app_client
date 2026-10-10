@@ -1,20 +1,19 @@
 import React from 'react'
 import './spare-card.scss'
-import Badge from '../../../UI_Primitives/badge/Badge'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
+import UpdateSpare from '../../../forms/controller/product/UpdateSpare'
 import { TbDots, TbPencil, TbTrash } from 'react-icons/tb'
 import { isoToDDMonYYYY, isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { useDispatch, useSelector } from 'react-redux'
 import { modal, doDialog, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import UpdateSpare from '../../../forms/controller/product/UpdateSpare'
 import { api } from '../../../../api'
 import { useQueryClient } from '@tanstack/react-query'
 
 
 const SpareCard = ({
     productId, spareId, componentUuid, spareName, trackingType, spareCategory, warrantyStarted,
-    warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false, Qty, Unit
+    warrantyExpiry, warrantyPeriod, insertAt, isReadyOnly = false
 }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
@@ -111,15 +110,6 @@ const SpareCard = ({
                     )}
                 </div>
                 <div className="right-section">
-                    {trackingType ? (
-                        <Badge
-                            value={trackingType.toUpperCase()}
-                            size={'md'}
-                            severity={isGroup ? 'secondary' : 'info'}
-                        />
-                    ) : Qty ? (
-                        <Badge value={`${Qty} ${Unit || ''}`} size={'md'} />
-                    ) : null}
                     <p className='date-label'>Insert at</p>
                     <p className='date'>{insertAt ? isoToDDMonYYYY(insertAt) : 'Nil'}</p>
                 </div>
