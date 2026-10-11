@@ -3,16 +3,12 @@ import './all-spare-card.scss'
 import {
     TbPlus,
     TbMinus,
-    TbTag,
 } from 'react-icons/tb'
-import { toStandardText } from '../../../../../utils/helpers/text-formatting'
-
-
 
 /**
  * AllSpareCard
- * Mobile-friendly item card representing a spare item from the catalog inventory.
- * Supports quick adding, quantity stepper (+/-), direct deletion, and price breakdown.
+ * Compact mobile-friendly item row designed for high-density listing (100+ spares).
+ * Keeps all data elements intact without extra whitespace.
  *
  * @param {Object} props
  * @param {Object} props.data - Spare catalog item object
@@ -37,7 +33,6 @@ const AllSpareCard = ({
     const {
         spare_id,
         spare_name,
-        spare_category,
         pricing = { list_price: 0, charged: 0 },
         is_active = true,
         is_selected = false,
@@ -50,7 +45,7 @@ const AllSpareCard = ({
 
     const actualPrice = Number(pricing?.charged ?? 0)
     const mrpPrice = Number(pricing?.list_price ?? 0)
-    const hasDiscount = mrpPrice > actualPrice
+    const hasDiscount = mrpPrice > actualPrice 
     const discountAmount = mrpPrice - actualPrice
     const itemTotal = count * actualPrice
 
@@ -78,7 +73,6 @@ const AllSpareCard = ({
         e?.stopPropagation?.()
         if (isReadOnly) return
         if (count <= 1) {
-            // Reaching 0 removes the item
             if (onDelete) {
                 onDelete(data)
             }
@@ -99,59 +93,33 @@ const AllSpareCard = ({
         <div
             className={`all-spare-card ${isAdded ? 'is-added' : ''} ${!is_active ? 'is-inactive' : ''} ${className}`}
         >
-            {/* Top row: Spare title, ID & Delete button (if added) */}
-            <div className="card-top-section">
-                <div className="left-info">
-                    <div className="title-row">
-                        <h4 className="spare-name" title={spare_name}>
-                            {spare_name}
-                        </h4>
-                    </div>
-
-                    <div className="meta-row">
-                        <span className="spare-id-code">#{spare_id}</span>
-                        {spare_category && (
-                            <span className="category-tag">
-                                <TbTag className="tag-icon" />
-                                {toStandardText(spare_category)}
-                            </span>
-                        )}
-                    </div>
+            {/* Left Content: Name & Price/ID Meta */}
+            <div className="card-main-content">
+                <div className="title-row">
+                    <h4 className="spare-name" title={spare_name}>
+                        {spare_name}
+                    </h4>
                 </div>
 
-                {/* Trash button appears when spare is added/selected */}
-                {/* <div className="right-action">
-                    {isAdded && (
-                        <button
-                            type="button"
-                            className="delete-btn"
-                            onClick={handleDelete}
-                            title="Remove spare"
-                            aria-label="Remove spare"
-                        >
-                            <TbTrash />
-                        </button>
-                    )}
-                </div> */}
-            </div>
-
-            {/* Middle row: Pricing breakdown */}
-            <div className="card-middle-section">
-                <div className="price-details">
-                    {!hasDiscount && (
+                <div className="meta-price-row">
+                    <span className={`actual-price ${actualPrice === 0 ? 'zero-price' : ''}`}>
+                        ₹{actualPrice}
+                    </span>
+                    {hasDiscount && (
                         <>
-                            <span className="save-badge">Save ₹{discountAmount}</span>
                             <span className="mrp-price">₹{mrpPrice}</span>
+                            <span className="save-badge">Save ₹{discountAmount}</span>
                         </>
                     )}
-                    <span className="actual-price">₹{actualPrice}</span>
+                    {spare_id && <span className="spare-id-code">#{spare_id}</span>}
+                    {!is_active && <span className="inactive-badge">Unavailable</span>}
                 </div>
             </div>
 
-            {/* Bottom row: Add button or Quantity Stepper */}
-            <div className="card-bottom-section">
+            {/* Right Action: Compact Add Button or Inline Stepper */}
+            <div className="card-action-side">
                 {isAdded ? (
-                    <div className="stepper-row">
+                    <div className="stepper-wrapper">
                         <div className="stepper-controls">
                             <button
                                 type="button"
@@ -163,10 +131,10 @@ const AllSpareCard = ({
                                 <TbMinus />
                             </button>
 
-                            <div className="quantity-display">
-                                <span className="qty-number">{count}</span>
-                                <span className="qty-label">{unit || 'qty'}</span>
-                            </div>
+                            <span className="qty-number">
+                                {count}
+                                {unit && <small className="unit-label">{unit}</small>}
+                            </span>
 
                             <button
                                 type="button"
@@ -179,10 +147,9 @@ const AllSpareCard = ({
                             </button>
                         </div>
 
-                        {count > 0 && (
-                            <div className="total-calculation">
-                                <span className="calc-label">Total:</span>
-                                <span className="calc-amount">₹{itemTotal.toFixed(0)}</span>
+                        {count > 1 && (
+                            <div className="subtotal-text">
+                                Total: ₹{itemTotal}
                             </div>
                         )}
                     </div>
@@ -194,7 +161,7 @@ const AllSpareCard = ({
                         disabled={isReadOnly || !is_active}
                     >
                         <TbPlus className="btn-icon" />
-                        <span>Add Spare</span>
+                        <span>Add</span>
                     </button>
                 )}
             </div>
@@ -203,4 +170,3 @@ const AllSpareCard = ({
 }
 
 export default AllSpareCard
-
