@@ -293,8 +293,8 @@ const WorkSection = ({
                 <>{workMenu
                     ? <>
                         {SPARE_SECTIONS.includes(workMenu) &&
-                            <ComponentsList setWorkMenu={setWorkMenu} product={product} subPage={subPage} serviceCategory={serviceCategory}
-                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}
+                            <ComponentsList setWorkMenu={setWorkMenu} product={product} serviceCategory={serviceCategory}
+                                productInForm={productInForm} workMenu={workMenu} />}
                         {SERVICE_SECTIONS.includes(workMenu?.type) &&
                             <VfServiceList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage}
                                 productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}

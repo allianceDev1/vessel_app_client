@@ -7,9 +7,15 @@ import {
     TbRotateClockwise,
     TbTag,
     TbAlertTriangle,
-    TbX
+    TbX,
+    TbReplace,
+    TbCheckbox
 } from 'react-icons/tb'
+import { useDispatch } from 'react-redux'
+import { modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
+import ReplaceSpareModal from './ReplaceSpareModal'
+import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
 
 
 /**
@@ -18,7 +24,7 @@ import { toStandardText } from '../../../../../utils/helpers/text-formatting'
  *
  * @param {Object} props
  * @param {Object} props.data - Product spare object
- * @param {Function} props.onSelect - Callback when selecting SAME or REPLACE: (item, selectionType) => void
+ * @param {Function} props.onSelect - Callback when selecting SAME or REPLACE: (item, selectionType, details) => void
  * @param {Function} props.onDelete - Callback to remove spare from product: (item) => void
  * @param {Function} props.onUndoDelete - Callback to undo deletion/removal: (item) => void
  * @param {Boolean} props.isReadOnly - Whether actions are disabled
@@ -26,21 +32,21 @@ import { toStandardText } from '../../../../../utils/helpers/text-formatting'
  */
 const ProductSpareCard = ({
     data,
-    onSelect = () => { },
-    onDelete = () => { },
-    onUndoDelete = () => { },
-    isReadOnly = false,
-    className = ''
+    productInForm
 }) => {
+    const dispatch = useDispatch()
+
     const {
         spare_id,
+        spare_uuid,
         component_uuid,
         spare_name,
         spare_category,
         is_warranty_item = false,
         is_active = true,
         is_selected = false,
-        selection_type = null,
+        selection_context = null,
+        selection_info = {},
         is_removed = false,
         pricing = { list_price: 0, charged: 0 },
     } = data || {}
@@ -50,28 +56,115 @@ const ProductSpareCard = ({
     const mrpPrice = Number(pricing?.list_price ?? 0)
     const hasDiscount = mrpPrice > actualPrice
 
-    const handleSelectAction = (type) => {
-        if (isReadOnly || is_removed) return
-        // Toggle off if already selected with the same type, otherwise set type
-        const nextType = (is_selected && selection_type === type) ? null : type
-        onSelect(data, nextType)
+    const handleCardClick = () => {
+        if (is_selected || is_removed) return;
+
+        dispatch(modal.push({
+            title: 'Replace Spare Part',
+            body: <ReplaceSpareModal
+                currentSpare={data}
+                onConfirm={(replacementData) => handleConfirmReplacement(replacementData)}
+                onClose={() => {
+                    dispatch(modal.pull.all())
+                }}
+            />
+
+        }))
+    }
+
+    const handleConfirmReplacement = (replacementData) => {
+
+        const isSelected = productInForm?.work?.components_list?.find(c => c?.component_uuid === replacementData?.component_uuid)
+
+        if (isSelected) {
+            dispatch(toast.push({
+                type: 'danger',
+                head: 'Already selected',
+                message: 'The spare already selected.'
+            }));
+            return;
+        }
+
+        // add to cart
+        dispatch(sfActions.updateProduct.innerFields({
+            work: {
+                ...(productInForm?.work || {}),
+                components_list: [
+                    ...(productInForm?.work?.components_list || []),
+                    {
+                        selection_context: selection_context,
+                        ...replacementData,
+                    }
+                ]
+            }
+        }))
+
+        dispatch(modal.pull.all())
+
     }
 
     const handleDelete = (e) => {
         e?.stopPropagation?.()
-        if (isReadOnly) return
-        onDelete(data)
+
+        if (!is_selected && !is_removed) {
+
+            dispatch(sfActions.updateProduct.innerFields({
+                work: {
+                    ...(productInForm?.work || {}),
+                    removed_components_list: [
+                        ...(productInForm?.work?.removed_components_list || []),
+                        {
+                            selection_context,
+                            spare_uuid,
+                            component_uuid
+                        }
+                    ]
+                }
+            }))
+        }
+
+
     }
 
     const handleUndo = (e) => {
         e?.stopPropagation?.()
-        if (isReadOnly) return
-        onUndoDelete(data)
+
+        if (is_removed) {
+
+            let componentList = productInForm?.work?.removed_components_list || []
+            componentList = componentList?.filter(c => c?.component_uuid !== component_uuid)
+
+            dispatch(sfActions.updateProduct.innerFields({
+                work: {
+                    ...(productInForm?.work || {}),
+                    removed_components_list: componentList
+                }
+            }))
+        }
+
+    }
+    const handleUnSelect = (e) => {
+        e?.stopPropagation?.();
+
+        if (is_selected && selection_info?.selected_context === selection_context) {
+
+            let componentList = productInForm?.work?.components_list || []
+            componentList = componentList?.filter(c => c?.component_uuid !== component_uuid)
+
+            dispatch(sfActions.updateProduct.innerFields({
+                work: {
+                    ...(productInForm?.work || {}),
+                    components_list: componentList
+                }
+            }))
+        }
+
     }
 
     return (
         <div
-            className={`product-spare-card ${is_removed ? 'is-deleted' : ''} ${is_selected ? 'is-selected' : ''} ${!is_active ? 'is-inactive' : ''} ${className}`}
+            className={`product-spare-card ${is_removed ? 'is-deleted' : ''} ${is_selected ? 'is-selected' : ''} ${!is_active ? 'is-inactive' : ''}`}
+            onClick={handleCardClick}
         >
             {/* Header: Name, IDs & Actions */}
             <div className="card-top-section">
@@ -97,16 +190,18 @@ const ProductSpareCard = ({
                 <div className="right-action">
                     {/* Delete or Undo trigger */}
                     {is_selected ? (
-                        <button
-                            type="button"
-                            className="clear-btn"
-                            onClick={handleUndo}
-                            title="Undo removal"
-                            aria-label="Undo removal"
-                        >
-                            <TbX />
-                            <span>Unselect</span>
-                        </button>
+                        selection_info?.selected_context === selection_context ?
+                            <button
+                                type="button"
+                                className="clear-btn"
+                                onClick={handleUnSelect}
+                                title="Undo removal"
+                                aria-label="Undo removal"
+                            >
+                                <TbX />
+                                <span>Unselect</span>
+                            </button>
+                            : ""
                     ) : is_removed ? (
                         <button
                             type="button"
@@ -164,6 +259,31 @@ const ProductSpareCard = ({
                     </span>
                 </div>
             </div>
+
+            {/* Replacement Details Preview (if replaced) */}
+            {is_selected && (
+                <div className="replacement-preview-row">
+                    {selection_info?.selection_type === 'REPLACE' ?
+                        <span className="replace-tag">
+                            <TbReplace />
+                            <span>Replaced with another spare</span>
+                        </span>
+                        : <span className="replace-tag">
+                            <TbCheckbox />
+                            <span>Replaced with exact spare</span>
+                        </span>}
+
+                    {selection_info?.policy_mode && (
+                        <span className="policy-mini-badge">
+                            {selection_info.policy_mode === 'WARRANTY'
+                                ? 'Warranty (₹0)'
+                                : selection_info.policy_mode === 'PAID_ZERO_OVERRIDE'
+                                    ? 'Zero Fee (₹0)'
+                                    : `Paid (₹${selection_info.charged_amount})`}
+                        </span>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

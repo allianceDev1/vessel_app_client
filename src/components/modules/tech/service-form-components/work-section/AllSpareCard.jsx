@@ -3,7 +3,10 @@ import './all-spare-card.scss'
 import {
     TbPlus,
     TbMinus,
+    TbShieldCheck,
 } from 'react-icons/tb'
+import { useDispatch } from 'react-redux'
+import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
 
 /**
  * AllSpareCard
@@ -12,86 +15,124 @@ import {
  *
  * @param {Object} props
  * @param {Object} props.data - Spare catalog item object
- * @param {Function} props.onSelect - Callback when adding/selecting item: (item) => void
- * @param {Function} props.onDelete - Callback when removing item / resetting qty: (item) => void
- * @param {Function} props.onQtyChange - Callback when quantity changes: (item, newQty) => void
- * @param {Function} props.onIncrement - Callback to increase quantity: (item) => void
- * @param {Function} props.onDecrement - Callback to decrease quantity: (item) => void
- * @param {Boolean} props.isReadOnly - Whether interactions are disabled
- * @param {String} props.className - Optional extra classes
+ * @param {Object} props.productInForm 
+ * @param {Object} props.workMenu 
+ *
  */
 const AllSpareCard = ({
     data,
-    onSelect = () => { },
-    onDelete = () => { },
-    onQtyChange = () => { },
-    onIncrement = () => { },
-    onDecrement = () => { },
-    isReadOnly = false,
-    className = ''
+    productInForm,
+    workMenu,
 }) => {
     const {
         spare_id,
+        spare_uuid,
         spare_name,
         pricing = { list_price: 0, charged: 0 },
         is_active = true,
         is_selected = false,
         qty = 0,
-        unit
+        unit,
+        warranty_period = 0
     } = data || {}
 
-    const count = Number(qty || 0)
-    const isAdded = is_selected || count > 0
+    const dispatch = useDispatch();
 
+    const count = Number(qty || 0)
     const actualPrice = Number(pricing?.charged ?? 0)
     const mrpPrice = Number(pricing?.list_price ?? 0)
-    const hasDiscount = mrpPrice > actualPrice 
-    const discountAmount = mrpPrice - actualPrice
+    const hasDiscount = mrpPrice > actualPrice
     const itemTotal = count * actualPrice
 
-    const handleAdd = (e) => {
-        e?.stopPropagation?.()
-        if (isReadOnly || !is_active) return
-        onSelect(data)
-        if (onQtyChange && count === 0) {
-            onQtyChange(data, 1)
-        }
-    }
-
     const handleIncrement = (e) => {
-        e?.stopPropagation?.()
-        if (isReadOnly || !is_active) return
-        if (onIncrement) {
-            onIncrement(data)
+        e?.stopPropagation?.();
+
+        let componentList = [...(productInForm?.work?.components_list || [])];
+        const spareIndex = componentList?.findIndex(c =>
+            c?.section_id === 'ALL_SPARE' &&
+            c?.spare_uuid === spare_uuid &&
+            c?.selection_context === workMenu)
+
+        // already selected
+        if (spareIndex !== -1) {
+            componentList = componentList?.map((comp, index) => {
+                if (index === spareIndex) {
+                    return {
+                        ...comp,
+                        qty: Number(comp.qty || 0) + 1
+                    }
+                }
+                return comp
+            })
+        } else {
+            // not selected already
+            componentList.push({
+                selection_context: workMenu,
+                section_id: "ALL_SPARE",
+                original_spare_uuid: null,
+                component_uuid: null,
+                spare_uuid,
+                qty: 1,
+                pricing,
+                purchase_warranty_months: warranty_period || 0
+            })
         }
-        if (onQtyChange) {
-            onQtyChange(data, count + 1)
-        }
+
+        dispatch(sfActions.updateProduct.innerFields({
+            work: {
+                ...(productInForm?.work || {}),
+                components_list: componentList
+            }
+        }))
+
     }
 
     const handleDecrement = (e) => {
         e?.stopPropagation?.()
-        if (isReadOnly) return
-        if (count <= 1) {
-            if (onDelete) {
-                onDelete(data)
-            }
-            if (onQtyChange) {
-                onQtyChange(data, 0)
-            }
-        } else {
-            if (onDecrement) {
-                onDecrement(data)
-            }
-            if (onQtyChange) {
-                onQtyChange(data, count - 1)
-            }
+
+        let componentList = [...(productInForm?.work?.components_list || [])];
+
+        const spareIndex = componentList?.findIndex(c =>
+            c?.section_id === 'ALL_SPARE' &&
+            c?.spare_uuid === spare_uuid &&
+            c?.selection_context === workMenu)
+
+
+        const spare = componentList?.[spareIndex] || {}
+
+        if (!spare) {
+            return;
         }
+
+        // already selected
+        if (spare?.qty === 1) {
+            componentList = componentList?.filter((comp, index) => index !== spareIndex)
+        } else {
+            componentList = componentList?.map((comp, index) => {
+                if (index === spareIndex) {
+                    return {
+                        ...comp,
+                        qty: Number(comp.qty || 0) - 1
+                    }
+                }
+                return comp
+            })
+
+        }
+
+        dispatch(sfActions.updateProduct.innerFields({
+            work: {
+                ...(productInForm?.work || {}),
+                components_list: componentList
+            }
+        }))
+
+
     }
 
     return (
         <div
-            className={`all-spare-card ${isAdded ? 'is-added' : ''} ${!is_active ? 'is-inactive' : ''} ${className}`}
+            className={`all-spare-card ${is_selected ? 'is-added' : ''} ${!is_active ? 'is-inactive' : ''}`}
         >
             {/* Left Content: Name & Price/ID Meta */}
             <div className="card-main-content">
@@ -105,27 +146,25 @@ const AllSpareCard = ({
                     <span className={`actual-price ${actualPrice === 0 ? 'zero-price' : ''}`}>
                         ₹{actualPrice}
                     </span>
-                    {hasDiscount && (
-                        <>
-                            <span className="mrp-price">₹{mrpPrice}</span>
-                            <span className="save-badge">Save ₹{discountAmount}</span>
-                        </>
-                    )}
+                    {hasDiscount && <span className="mrp-price">₹{mrpPrice}</span>}
                     {spare_id && <span className="spare-id-code">#{spare_id}</span>}
-                    {!is_active && <span className="inactive-badge">Unavailable</span>}
+
+                    {!!warranty_period && <span className="warranty-pill in-warranty">
+                        <TbShieldCheck className="pill-icon" />
+                        <span>{warranty_period} M Warranty</span>
+                    </span>}
                 </div>
             </div>
 
             {/* Right Action: Compact Add Button or Inline Stepper */}
             <div className="card-action-side">
-                {isAdded ? (
+                {is_selected ? (
                     <div className="stepper-wrapper">
                         <div className="stepper-controls">
                             <button
                                 type="button"
                                 className="stepper-btn minus-btn"
                                 onClick={handleDecrement}
-                                disabled={isReadOnly}
                                 aria-label="Decrease quantity"
                             >
                                 <TbMinus />
@@ -140,7 +179,7 @@ const AllSpareCard = ({
                                 type="button"
                                 className="stepper-btn plus-btn"
                                 onClick={handleIncrement}
-                                disabled={isReadOnly || !is_active}
+                                disabled={!is_active}
                                 aria-label="Increase quantity"
                             >
                                 <TbPlus />
@@ -157,8 +196,8 @@ const AllSpareCard = ({
                     <button
                         type="button"
                         className="add-spare-btn"
-                        onClick={handleAdd}
-                        disabled={isReadOnly || !is_active}
+                        onClick={handleIncrement}
+                        disabled={!is_active}
                     >
                         <TbPlus className="btn-icon" />
                         <span>Add</span>
