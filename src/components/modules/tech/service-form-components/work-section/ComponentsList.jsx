@@ -17,9 +17,30 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
     const [enableSearch, setEnableSearch] = useState(false)
     const [sectionId, setSectionId] = useState('PRODUCT_SPARE')
 
-
     const selectSection = (id) => {
         setSectionId(id)
+    }
+
+    const coverage = useMemo(() => {
+        return serviceCategory?.coverage?.find(c => {
+            if (workMenu === 'RENEWAL_SPARE') {
+                return c.coverage_id === 'SPARE_PARTS' && c.position === 'TARGET';
+            } else {
+                return c.coverage_id === 'SPARE_PARTS' && c.position === 'CURRENT';
+            }
+        }) || null;
+    }, [serviceCategory, workMenu])
+
+    if (!coverage?.access) {
+        return (
+            <EmptyState
+                size='sm'
+                icon={<TbComponents />}
+                title='No access'
+                hight='calc(100vh - 300px)'
+                footer={<Button size='small' outlined label={'Close tab'} severity={'secondary'} rounded style={{ width: '150px' }} onClick={() => setWorkMenu('')} />}
+            />
+        )
     }
 
     return (
@@ -51,7 +72,7 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
                 {sectionId === 'PRODUCT_SPARE' && (
                     <ProductSpares
                         productInForm={productInForm}
-                        serviceCategory={serviceCategory}
+                        coverage={coverage}
                         workMenu={workMenu}
                         product={product}
                         searchText={sectionId === 'PRODUCT_SPARE' && searchText ? searchText : ''}
@@ -60,7 +81,7 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
                 {sectionId === 'ALL_SPARES' && (
                     <AllSpares
                         productInForm={productInForm}
-                        serviceCategory={serviceCategory}
+                        coverage={coverage}
                         workMenu={workMenu}
                         product={product}
                         searchText={sectionId === 'ALL_SPARES' && searchText ? searchText : ''}
@@ -79,7 +100,7 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
 
 const ProductSpares = ({
     productInForm,
-    serviceCategory,
+    coverage,
     workMenu,
     product,
     searchText
@@ -101,20 +122,12 @@ const ProductSpares = ({
             const isRemoved = productInForm?.work?.removed_components_list?.find(c => c?.component_uuid === productSpare?.component_uuid) ? true : false
             const spareWarranty = productSpare?.wr_expire_date && (normalizeDate(new Date()) <= normalizeDate(new Date(productSpare?.wr_expire_date))) ? true : false
 
-            const coverage = serviceCategory?.coverage?.find(c => {
-                if (workMenu === 'RENEWAL_SPARE') {
-                    return c.coverage_id === 'SPARE_PARTS' && c.position === 'TARGET';
-                } else {
-                    return c.coverage_id === 'SPARE_PARTS' && c.position === 'CURRENT';
-                }
-            })
-
             // For package coverage the additional_spare price_type default is SELLING_RATE
             const priceType = product?.package?.package_id && workMenu === 'ADDITIONAL_SPARE' ? 'SELLING_RATE' : coverage?.price_type
 
             const priceObject = findSpareTypeAmount(
                 (spare?.pricing || {}),
-                priceType,
+                priceType || 'SELLING_RATE',
                 product?.package?.package_id || null,
                 spareWarranty
             )
@@ -147,7 +160,7 @@ const ProductSpares = ({
 
         })
 
-    }, [formResources, productInForm, serviceCategory, searchText])
+    }, [formResources, productInForm, coverage, searchText])
 
 
     if (!productSpares?.length) {
@@ -176,7 +189,7 @@ const ProductSpares = ({
 
 const AllSpares = ({
     productInForm,
-    serviceCategory,
+    coverage,
     workMenu,
     product,
     searchText
@@ -206,20 +219,12 @@ const AllSpares = ({
                 c?.selection_context === workMenu
             );
 
-            const coverage = serviceCategory?.coverage?.find(c => {
-                if (workMenu === 'RENEWAL_SPARE') {
-                    return c.coverage_id === 'SPARE_PARTS' && c.position === 'TARGET';
-                } else {
-                    return c.coverage_id === 'SPARE_PARTS' && c.position === 'CURRENT';
-                }
-            })
-
             // For package coverage the additional_spare price_type default is SELLING_RATE
             const priceType = product?.package?.package_id && workMenu === 'ADDITIONAL_SPARE' ? 'SELLING_RATE' : coverage?.price_type
 
             const priceObject = findSpareTypeAmount(
                 (spare?.pricing || {}),
-                priceType,
+                priceType || 'SELLING_RATE',
                 product?.package?.package_id || null,
                 false
             )
@@ -257,7 +262,7 @@ const AllSpares = ({
             a.spare_category.localeCompare(b.spare_category)
         );
 
-    }, [serviceFormSettings, searchText, formResources, serviceCategory, productInForm])
+    }, [serviceFormSettings, searchText, formResources, coverage, productInForm])
 
 
     const [openCategory, setOpenCategory] = useState(null)

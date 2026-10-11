@@ -7,7 +7,7 @@ import WorkHome from '../service-form-components/work-section/WorkHome.jsx'
 import ComponentsList from '../service-form-components/work-section/ComponentsList.jsx'
 import { findSpareTypeAmount } from '../../../../utils/flows/service_form_utils'
 import { normalizeDate } from '../../../../utils/helpers/date-helpers'
-import VfServiceList from '../service-form-components/VfServiceList'
+import ServiceList from '../service-form-components/work-section/ServiceList.jsx'
 
 
 const WorkSection = ({
@@ -295,9 +295,9 @@ const WorkSection = ({
                         {SPARE_SECTIONS.includes(workMenu) &&
                             <ComponentsList setWorkMenu={setWorkMenu} product={product} serviceCategory={serviceCategory}
                                 productInForm={productInForm} workMenu={workMenu} />}
-                        {SERVICE_SECTIONS.includes(workMenu?.type) &&
-                            <VfServiceList setWorkMenu={setWorkMenu} itemsList={itemsList} subPage={subPage}
-                                productInForm={productInForm} changeSubmitStatus={changeSubmitStatus} workMenu={workMenu} />}
+                        {SERVICE_SECTIONS.includes(workMenu) &&
+                            <ServiceList setWorkMenu={setWorkMenu} productInForm={productInForm} workMenu={workMenu}
+                                product={product} serviceCategory={serviceCategory} />}
                     </>
                     : <WorkHome setWorkMenu={setWorkMenu} />}
                 </>}

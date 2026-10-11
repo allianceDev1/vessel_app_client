@@ -23,4 +23,18 @@ Warranty
 
 
 spare selection
-- pump & membraine add service charge effect.
+- pump & membrane add service charge effect.
+
+
+...........................
+
+Work
+---
+selection_context : RENEWAL_SPARE / PACKAGE_SPARE / ADDITIONAL_SPARE / RENEWAL_SERVICE / PACKAGE_SERVICE / ADDITIONAL_SERVICE
+work_uuid : replaced work uuid 
+is_warranty_item : true / false
+pricing : {
+    list_price : 
+    charged : 
+    reason :
+}
