@@ -158,7 +158,7 @@ const ServiceForm = () => {
                             <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
 
                         {/* Work */}
-                        {[1104, 1202, 1301].includes(serviceFormSettings?.activePage) && <WorkSection  />}
+                        {[1104, 1202, 1301].includes(serviceFormSettings?.activePage) && <WorkSection />}
 
                     </div>}
         </div>

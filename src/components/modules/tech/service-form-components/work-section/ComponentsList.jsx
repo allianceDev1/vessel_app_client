@@ -150,7 +150,6 @@ const ProductSpares = ({
                     charged_amount: selectedItem?.pricing?.charged || 0,
                     selection_type: selectedItem ? selectedItem?.spare_uuid === productSpare?.spare_uuid ? 'DEFAULT' : 'REPLACE' : null,
                 },
-                selected_context: selectedItem ? selectedItem?.selection_context : null,
                 selection_context: workMenu,
                 is_removed: isRemoved,
                 pricing: priceObject,

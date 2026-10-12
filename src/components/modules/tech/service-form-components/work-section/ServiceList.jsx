@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import './service-list.scss'
 import Button from '../../../../UI_Primitives/buttons/Button'
 import { TbCheck, TbTools } from 'react-icons/tb'
@@ -8,11 +8,10 @@ import { sfActions } from '../../../../../redux/features/persisted/applicationSl
 import { findSpareTypeAmount } from '../../../../../utils/flows/service_form_utils'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
 
-const ServiceList = ({ setWorkMenu, productInForm, changeSubmitStatus, workMenu, serviceCategory, product, }) => {
+const ServiceList = ({ setWorkMenu, productInForm, workMenu, serviceCategory, product, }) => {
   const dispatch = useDispatch();
   const { formResources, serviceFormSettings } = useSelector((state) => state.application);
-  const [searchText, setSearchText] = useState('')
-  const [enableSearch, setEnableSearch] = useState(false)
+
 
   const coverage = useMemo(() => {
     return serviceCategory?.coverage?.find(c => {
@@ -23,46 +22,6 @@ const ServiceList = ({ setWorkMenu, productInForm, changeSubmitStatus, workMenu,
       }
     }) || null;
   }, [serviceCategory, workMenu])
-
-
-
-
-
-
-
-  const selectService = (item) => {
-
-    const isExisted = productInForm?.work?.services_list?.filter(s => s?.service_id === item?.service_id && s?.service_type === workMenu?.type)?.[0]
-
-    // if existed then remove form service list
-    // if not existed then add to service list
-
-    changeSubmitStatus(false)
-
-    if (isExisted) {
-      dispatch(sfActions.updateProduct.innerFields({
-        work: {
-          ...productInForm?.work,
-          services_list: productInForm?.work?.services_list?.filter(s => s?.service_id !== item?.service_id || s?.service_type !== workMenu?.type)
-        }
-      }))
-    } else {
-      dispatch(sfActions.updateProduct.innerFields({
-        work: {
-          ...productInForm?.work,
-          services_list: [
-            ...(productInForm?.work?.services_list || []),
-            {
-              ...item,
-              selected: true
-            }
-          ]
-        }
-      }))
-    }
-
-  }
-
 
 
   const allServiceWorks = useMemo(() => {
@@ -93,16 +52,74 @@ const ServiceList = ({ setWorkMenu, productInForm, changeSubmitStatus, workMenu,
         work_uuid: work?.work_uuid,
         work_id: work?.work_id,
         work_name: work?.work_name,
-        is_active: true,
+        is_active: work?.is_active !== undefined ? work?.is_active : true,
+        disabled: work?.disabled !== undefined ? work?.disabled : (work?.is_active === false),
         is_selected: selectedItem ? true : false,
+        is_warranty_item: false,
+        selection_context: workMenu,
+        selection_info: {
+          selected_context: selectedItem ? selectedItem?.selection_context : null,
+          charged_amount: selectedItem?.pricing?.charged || 0,
+        },
         pricing: priceObject
       }
     });
 
     return works;
 
-  }, [serviceFormSettings, searchText, formResources, coverage, productInForm])
+  }, [serviceFormSettings, formResources, coverage, productInForm])
 
+  const selectService = (item) => {
+
+    const isExisted = productInForm?.work?.services_list?.find(s => s?.work_uuid === item?.work_uuid && s?.selection_context === workMenu)
+
+    // if existed then remove form service list
+    // if not existed then add to service list
+
+    if (isExisted) {
+      dispatch(sfActions.updateProduct.innerFields({
+        work: {
+          ...(productInForm?.work || {}),
+          services_list: productInForm?.work?.services_list?.filter(s => !(s?.work_uuid === item?.work_uuid && s?.selection_context === workMenu))
+        }
+      }))
+    } else {
+      dispatch(sfActions.updateProduct.innerFields({
+        work: {
+          ...(productInForm?.work || {}),
+          services_list: [
+            ...(productInForm?.work?.services_list || []),
+            {
+              selection_context: item?.selection_context,
+              work_uuid: item?.work_uuid,
+              is_warranty_item: item?.is_warranty_item,
+              pricing: item?.pricing
+            }
+          ]
+        }
+      }))
+    }
+
+    // Service charge enable / disable
+    if (!productInForm?.work?.services_list?.length && !isExisted) {
+      // disable
+      dispatch(sfActions.updateProduct.innerFields({
+        service_data: {
+          ...(productInForm?.service_data || {}),
+          service_charge_applied: false
+        }
+      }))
+    } else if (productInForm?.work?.services_list?.length === 1 && isExisted) {
+      // enable
+      dispatch(sfActions.updateProduct.innerFields({
+        service_data: {
+          ...(productInForm?.service_data || {}),
+          service_charge_applied: true
+        }
+      }))
+    }
+
+  }
 
   if (!coverage?.access) {
     return (
@@ -133,20 +150,45 @@ const ServiceList = ({ setWorkMenu, productInForm, changeSubmitStatus, workMenu,
         {allServiceWorks?.length > 0 &&
           <div className="service-list">
             {allServiceWorks?.map((item) => {
-              return <div className="item" key={item?.work_id} onClick={() => selectService(item)}>
-                <div className="checkbox-section">
-                  <div className={item?.selected ? "checkbox active" : "checkbox"}>
-                    <TbCheck />
+              const isSelected = Boolean(item?.is_selected)
+              const isDisabled = Boolean(item?.is_selected && item?.selection_context !== item?.selection_info?.selected_context)
+              const actualPrice = Number(item?.pricing?.charged ?? 0)
+              const mrpPrice = Number(item?.pricing?.list_price ?? 0)
+              const hasDiscount = mrpPrice > actualPrice
+
+              return (
+                <div
+                  className={`item ${isSelected ? 'is-selected active' : ''} ${isDisabled ? 'is-disabled disabled' : ''}`}
+                  key={item?.work_uuid || item?.work_id}
+                  onClick={() => {
+                    if (isDisabled) return
+                    selectService(item)
+                  }}
+                  aria-disabled={isDisabled}
+                >
+                  <div className="checkbox-section">
+                    <div className={`checkbox ${isSelected ? 'active' : ''}`}>
+                      <TbCheck className="check-icon" />
+                    </div>
                   </div>
-                </div>
-                <div className="item-content">
-                  <h4>{item?.work_name}</h4>
+                  <div className="item-content">
+                    <div className="title-row">
+                      <h4 className="work-name" title={item?.work_name}>{item?.work_name}</h4>
+                    </div>
+                    {item?.work_id && (
+                      <div className="meta-row">
+                        <span className="work-id-code">#{item?.work_id}</span>
+                      </div>
+                    )}
+                  </div>
                   <div className="price">
-                    {item?.pricing?.list_price !== item?.pricing?.charged && <p className="hash-price">₹{item?.pricing?.list_price}</p>}
-                    <p className="real-price">₹{item?.pricing?.charged}</p>
+                    {hasDiscount && <p className="hash-price">₹{mrpPrice}</p>}
+                    <p className={`real-price ${actualPrice === 0 ? 'free-price' : ''}`}>
+                      {actualPrice === 0 ? '₹0' : `₹${actualPrice}`}
+                    </p>
                   </div>
                 </div>
-              </div>
+              )
             })}
           </div>}
       </div>
