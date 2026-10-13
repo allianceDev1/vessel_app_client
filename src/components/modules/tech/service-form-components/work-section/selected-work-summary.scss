@@ -298,6 +298,7 @@
                 }
             }
         }
+
         .empty-summary-placeholder {
             padding: 16px;
             text-align: center;
@@ -344,19 +345,21 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
 
             .label {
                 font-size: 12px;
                 font-weight: 500;
                 color: var(--text-secondary);
+                flex-shrink: 0;
             }
 
             .amount {
                 font-size: 15px;
                 font-weight: 700;
                 color: var(--text-primary);
+                flex-shrink: 0;
             }
         }
     }
 }
-

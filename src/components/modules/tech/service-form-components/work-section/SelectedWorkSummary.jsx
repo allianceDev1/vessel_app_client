@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { TbComponents, TbTools, TbChevronDown, TbChevronUp, TbReceipt, TbPackage, TbReceiptTax } from 'react-icons/tb'
 import { calculateTaxAmount, toDecimal } from '../../../../../utils/helpers/math-equations'
 
-const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
+const SelectedWorkSummary = ({ productInForm }) => {
   const { formResources } = useSelector((state) => state.application || {})
 
   // Collapsible toggle state (default closed)
@@ -17,11 +17,11 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
       return list.map((s) => {
         const spareInfo = formResources?.spare_list?.find((item) => item?.spare_uuid === s?.spare_uuid)
         const qty = Number(s?.qty || 1)
-        const rate = Number(s?.pricing?.charged ?? s?.rate ?? 0)
+        const rate = Number(s?.pricing?.charged ?? 0)
         return {
-          spare_id: s?.spare_id || spareInfo?.spare_id || 'SP',
-          spare_name: s?.spare_name || spareInfo?.spare_name || 'Component Item',
-          spare_type: s?.selection_context || s?.spare_type || 'SPARE',
+          spare_id: s?.spare_id || spareInfo?.spare_id || '',
+          spare_name: spareInfo?.spare_name || '',
+          spare_type: s?.selection_context || '',
           qty,
           rate,
           total: qty * rate
@@ -37,11 +37,11 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
     if (list && list.length > 0) {
       return list.map((w) => {
         const workInfo = formResources?.service_work_list?.find((item) => item?.work_uuid === w?.work_uuid)
-        const rate = Number(w?.pricing?.charged ?? w?.rate ?? 0)
+        const rate = Number(w?.pricing?.charged ?? 0)
         return {
-          work_id: w?.work_id || workInfo?.work_id || 'WK',
-          work_name: w?.work_name || workInfo?.work_name || 'Service Work Item',
-          work_type: w?.selection_context || w?.work_type || w?.service_type || 'SERVICE',
+          work_id: w?.work_id || workInfo?.work_id || '',
+          work_name: workInfo?.work_name || '',
+          work_type: w?.selection_context || '',
           rate
         }
       })
@@ -52,21 +52,21 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
   // Selected package details and amount (analyzed from ServiceCategories.jsx)
   const selectedPackage = useMemo(() => {
     const renewedPkg = productInForm?.service_data?.renewed_package
-    const isRenewalMode = serviceCategory?.mode === 'RENEWAL' || productInForm?.service_data?.mode === 'RENEWAL'
+    const isRenewalMode = productInForm?.service_category?.mode === 'RENEWAL' || productInForm?.service_data?.mode === 'RENEWAL'
 
     if (renewedPkg?.is_renewed || isRenewalMode) {
-      const pkgName = renewedPkg?.package_name || serviceCategory?.target_package?.name || 'Renewal Package'
-      const pkgId = renewedPkg?.package_id || serviceCategory?.target_package?.package_id || null
+      const pkgName = renewedPkg?.package_name || productInForm?.service_category?.target_package?.name || 'Renewal Package'
+      const pkgId = renewedPkg?.package_id || productInForm?.service_category?.target_package?.package_id || null
 
       let amount = 0
       if (renewedPkg?.price?.total_rate !== undefined && renewedPkg?.price?.total_rate !== null) {
         amount = Number(renewedPkg.price.total_rate) || 0
       } else if (renewedPkg?.price?.base_rate !== undefined && renewedPkg?.price?.base_rate !== null) {
         amount = Number(renewedPkg.price.base_rate) || 0
-      } else if (serviceCategory?.target_package?.pricing_config) {
-        const baseRate = serviceCategory?.target_package?.pricing_config?.base_price || 0
-        const taxRate = serviceCategory?.target_package?.pricing_config?.gst?.rate || 0
-        const taxType = serviceCategory?.target_package?.pricing_config?.gst?.type || null
+      } else if (productInForm?.service_category?.target_package?.pricing_config) {
+        const baseRate = productInForm?.service_category?.target_package?.pricing_config?.base_price || 0
+        const taxRate = productInForm?.service_category?.target_package?.pricing_config?.gst?.rate || 0
+        const taxType = productInForm?.service_category?.target_package?.pricing_config?.gst?.type || null
         const tax = taxRate ? calculateTaxAmount(baseRate, taxRate, taxType) : 0
         amount = toDecimal(baseRate + (tax?.total_tax || 0), { precision: 2 })
       }
@@ -80,7 +80,7 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
     }
 
     return null
-  }, [productInForm?.service_data?.renewed_package, productInForm?.service_data?.mode, serviceCategory])
+  }, [productInForm?.service_data?.renewed_package, productInForm?.service_data?.mode, productInForm?.service_category])
 
   // Service charge calculation:
   // - service_data.service_charge_applied === false => don't show service charge
@@ -98,25 +98,25 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
     }
 
     const isCategoryChargeApplied = Boolean(
-      serviceCategory?.service_charge_applied && !productInForm?.service_data?.has_product_warranty
+      productInForm?.service_category?.service_charge_applied && !productInForm?.service_data?.has_product_warranty
     )
 
     let rawCharge = 0
     if (isCategoryChargeApplied) {
       rawCharge = Number(
         productInForm?.service_data?.service_charge?.estimate ??
-        serviceCategory?.service_charges?.[0]?.charge_amount ??
+        productInForm?.service_category?.service_charges?.[0]?.charge_amount ??
         0
       )
     } else {
       rawCharge = 0
     }
 
-    const repeatActive = Boolean(productInForm?.service_data?.repeat?.tech_say)
+    const repeatActive = Boolean(productInForm?.service_data?.repeat?.tech_say && !productInForm?.service_data?.repeat?.same_registration)
 
     let finalCharge = rawCharge
     if (repeatActive) {
-      const index0Value = Number(serviceCategory?.service_charges?.[0]?.charge_amount || 0)
+      const index0Value = Number(productInForm?.service_category?.service_charges?.[0]?.charge_amount || 0)
       finalCharge = Math.max(0, rawCharge - index0Value)
     }
 
@@ -130,7 +130,7 @@ const SelectedWorkSummary = ({ productInForm, serviceCategory }) => {
     productInForm?.service_data?.has_product_warranty,
     productInForm?.service_data?.service_charge?.estimate,
     productInForm?.service_data?.repeat?.tech_say,
-    serviceCategory
+    productInForm?.service_data?.repeat?.same_registration
   ])
 
   // Summary calculations

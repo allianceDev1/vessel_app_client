@@ -329,7 +329,7 @@ const WorkHome = ({ setWorkMenu }) => {
 
 
       {/* Selected Items Summary Card Component */}
-      <SelectedWorkSummary productInForm={productInForm} serviceCategory={productInForm?.service_category} />
+      <SelectedWorkSummary productInForm={productInForm} />
 
       {/* Form Details */}
       <form action="" onSubmit={handleSubmit}>
