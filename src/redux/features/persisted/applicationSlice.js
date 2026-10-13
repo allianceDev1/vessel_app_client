@@ -94,17 +94,79 @@ export const appDataSlice = createSlice({
                 state.serviceForm.service_products[productId][key] = updates;
             });
         },
-        resetServiceCategory: (state, action) => {
+        resetServiceCategory: (state) => {
             const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
-           
+
             if (productId) {
                 state.serviceForm.service_products[productId] = {
                     ...(state.serviceForm.service_products[productId] || {}),
-                    service_data: {},
-                    work: {}
+                    service_data: null,
+                    work: null,
+                    service_category: null
                 };
             }
         },
+        increaseServiceChargeIndex: (state) => {
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            const serviceCharge = state.serviceForm.service_products[productId].service_data.service_charge
+
+            let startIndex = serviceCharge?.start_index || 0;
+            let chargeIndex = serviceCharge?.charge_index || 0;
+            let estimate = serviceCharge?.estimate || '';
+
+            if (serviceCharge?.start_index === 0 && serviceCharge?.charge_index === 0) {
+                startIndex = 1;
+                chargeIndex = 1;
+                estimate = state.serviceForm.service_products[productId]?.service_category?.service_charges?.[1]?.charge_amount || 0;
+            } else if (serviceCharge?.start_index === 0) {
+                startIndex = 1;
+            }
+
+            state.serviceForm.service_products[productId].service_data.service_charge = {
+                ...(state.serviceForm.service_products[productId].service_data.service_charge || {}),
+                charge_index: chargeIndex,
+                start_index: startIndex,
+                estimate: estimate
+            };
+
+        },
+        decreaseServiceChargeIndex: (state) => {
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            // find condition apply items 1 or 0
+
+            const spares = state.serviceForm.service_products[productId].work?.components_list?.filter(c => {
+                if (c?.spare_category === 'PUMP' || (c?.spare_category === "MEMBRANE" && c?.selection_context !== 'RENEWAL_SPARE')) {
+                    return c
+                }
+            })
+
+            const qty = spares?.reduce((acc, crr) => acc + crr?.qty || 0, 0)
+            const serviceCharge = state.serviceForm.service_products[productId].service_data.service_charge
+
+            if (!qty && serviceCharge?.start_index !== 0) {
+
+                state.serviceForm.service_products[productId].service_data.service_charge = {
+                    ...(state.serviceForm.service_products[productId].service_data.service_charge || {}),
+                    charge_index: 0,
+                    start_index: 0,
+                    estimate: state.serviceForm.service_products[productId]?.service_category?.service_charges?.[0]?.charge_amount || 0
+                };
+            }
+        },
+
+
         updateServiceForm: (state, action) => {
             const payload = action?.payload;
             state.serviceForm = {
@@ -193,7 +255,7 @@ export const appDataSlice = createSlice({
 const {
     clearServiceForm, startServiceWork, setFormBackPage, setFormNextPage, setActiveProduct, clearServiceFormSettings, updateProductFormInnerField,
     resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment, setUpFormResources,
-    updateSubmitStatusToFalse, updateProductFormParentValue
+    updateSubmitStatusToFalse, updateProductFormParentValue, increaseServiceChargeIndex, decreaseServiceChargeIndex,
 } = appDataSlice.actions;
 
 
@@ -204,7 +266,7 @@ const sfSetting = {
     },
     productSubmit: {
         setStatus: updateSubmitStatus,
-        resetStatus: updateSubmitStatusToFalse,
+        resetStatus: updateSubmitStatusToFalse
     },
     setActiveProduct: setActiveProduct,
     clearAll: clearServiceFormSettings,
@@ -215,7 +277,9 @@ const sfActions = {
     startWork: startServiceWork,
     updateProduct: {
         innerFields: updateProductFormInnerField,
-        parentValue: updateProductFormParentValue
+        parentValue: updateProductFormParentValue,
+        increaseSCIndex: increaseServiceChargeIndex,
+        decreaseSCIndex: decreaseServiceChargeIndex
     },
     updateForm: updateServiceForm,
     resetService: resetServiceCategory,

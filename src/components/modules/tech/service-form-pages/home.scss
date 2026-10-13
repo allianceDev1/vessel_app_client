@@ -136,23 +136,40 @@
                 .package-info {
                     display: flex;
                     align-items: center;
-                    gap: 6px;
+                    gap: 8px;
+                    flex-wrap: wrap;
                     font-size: 12.5px;
                     color: var(--text-secondary);
 
-                    .pkg-icon {
-                        font-size: 15px;
-                        color: var(--text-tertiary);
-                        flex-shrink: 0;
+                    .package-item,
+                    .warranty-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        color: var(--color-success);
                     }
 
-                    .pkg-label {
-                        color: var(--text-tertiary);
+                    .pkg-icon {
+                        flex-shrink: 0;
                     }
 
                     .pkg-name {
                         font-weight: 500;
-                        color: var(--text-primary);
+                    }
+
+                    .meta-dot {
+                        color: var(--text-tertiary);
+                        font-size: 10px;
+                    }
+
+                    .warranty-item {
+                        .warranty-icon {
+                            flex-shrink: 0;
+                        }
+
+                        .warranty-name {
+                            font-weight: 500;
+                        }
                     }
                 }
 

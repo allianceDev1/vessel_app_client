@@ -23,7 +23,7 @@ Warranty
 
 
 spare selection
-- pump & membrane add service charge effect.
+- pump & membrane add service charge effect.     : 
 
 
 ...........................

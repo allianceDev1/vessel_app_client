@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import './work-home.scss'
 import InputText from '../../../../UI_Primitives/inputs/InputText'
 import Select from '../../../../UI_Primitives/inputs/Select'
 import Button from '../../../../UI_Primitives/buttons/Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
-import { doDialog, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
+import { doDialog } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import { TbComponents, TbTools, TbPlus } from 'react-icons/tb'
 import SelectedWorkSummary from './SelectedWorkSummary'
@@ -13,7 +13,7 @@ import RadioCard from '../../../../UI_Primitives/inputs/RadioCard'
 
 const WorkHome = ({ setWorkMenu }) => {
   const dispatch = useDispatch()
-  const { serviceForm, formResources, serviceFormSettings } = useSelector((state) => state.application)
+  const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
 
   const productInForm = useMemo(() => {
     const current = serviceForm?.service_products?.[serviceFormSettings?.activeProduct?.[0]]
@@ -22,15 +22,32 @@ const WorkHome = ({ setWorkMenu }) => {
     // eslint-disable-next-line
   }, [serviceForm?.service_products])
 
-  const serviceCategory = useMemo(() => {
-    const category = formResources?.service_categories?.find(
-      (c) =>
-        c?.category_id === productInForm?.service_data?.category_id &&
-        (!productInForm?.service_data?.package_id || c?.package_id === productInForm?.service_data?.package_id)
-    )
+  const workAccess = useMemo(() => {
 
-    return category
-  }, [formResources?.service_categories, productInForm?.service_data])
+    let targetSpare = false, targetService = false;
+    let currentSpare = false, currentService = false;
+
+    if (productInForm?.service_category) {
+      if (productInForm?.service_category?.coverage?.find((f) => f?.coverage_id === 'SPARE_PARTS' && f?.position === 'TARGET')?.access) {
+        targetSpare = true
+      }
+      if (productInForm?.service_category?.coverage?.find((f) => f?.coverage_id === 'SERVICE_WORK' && f?.position === 'TARGET')?.access) {
+        targetService = true;
+      }
+      if (productInForm?.service_category?.coverage?.find((f) => f?.coverage_id === 'SPARE_PARTS' && f?.position === 'CURRENT')?.access) {
+        currentSpare = true
+      }
+      if (productInForm?.service_category?.coverage?.find((f) => f?.coverage_id === 'SERVICE_WORK' && f?.position === 'CURRENT')?.access) {
+        currentService = true
+      }
+    }
+
+    return {
+      targetSpare, targetService, currentSpare, currentService
+    }
+
+
+  }, [productInForm?.service_category])
 
   const handelChangeServiceCharge = (e) => {
 
@@ -38,7 +55,7 @@ const WorkHome = ({ setWorkMenu }) => {
 
     if (e.target.name === 'service_charge') {
 
-      const chargeIndex = serviceCategory?.service_charges?.findIndex(c => Number(c?.charge_amount) === Number(e.target.value))
+      const chargeIndex = productInForm?.service_category?.service_charges?.findIndex(c => Number(c?.charge_amount) === Number(e.target.value))
 
       if (productInForm?.service_data?.service_charge?.start_index > chargeIndex) {
         return;
@@ -74,7 +91,7 @@ const WorkHome = ({ setWorkMenu }) => {
   const resetWorkCategory = () => {
     const resetAction = () => {
       dispatch(sfActions.resetService())
-      dispatch(sfSetting.productSubmit.resetStatus())
+      dispatch(sfSetting.productSubmit.resetStatus());
     }
 
     dispatch(
@@ -178,60 +195,64 @@ const WorkHome = ({ setWorkMenu }) => {
 
   return (
     <div className="sf-sub-service-work-home">
+
+      {!workAccess?.currentSpare && !workAccess?.currentService && !workAccess?.targetSpare && !workAccess?.targetService &&
+        <Message head={'Access Restricted'}
+          message={'Spare changes and additional service work are disabled for this service category. The applicable service charge will still be applied. To add spares or select additional service work, you must change to a service category that allows these options.'}
+          type='warning' iconDisable
+        />}
+
       {/* Mobile Choosing Buttons */}
       <div className="choosing-menus-wrapper">
-        <div className="choosing-buttons-grid">
-          {/* Renewal Section */}
-          {serviceCategory?.mode === 'RENEWAL' && (
-            <>
-              {serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(
-                (f) => f?.fund_type === 'SPARE_PARTS'
-              ) && (
-                  <button
-                    type="button"
-                    className="mobile-choose-btn"
-                    onClick={() => clickWorkMenu('RENEWAL_SPARE')}
-                  >
-                    <div className="btn-icon spares">
-                      <TbComponents />
-                    </div>
-                    <div className="btn-content">
-                      <span className="btn-tag tag-renewal">Renewal</span>
-                      <span className="btn-title">Spares</span>
-                    </div>
-                    <div className="btn-action-icon">
-                      <TbPlus />
-                    </div>
-                  </button>
-                )}
 
-              {serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(
-                (f) => f?.fund_type === 'SERVICE_WORK'
-              ) && (
-                  <button
-                    type="button"
-                    className="mobile-choose-btn"
-                    onClick={() => clickWorkMenu('RENEWAL_SERVICE')}
-                  >
-                    <div className="btn-icon works">
-                      <TbTools />
-                    </div>
-                    <div className="btn-content">
-                      <span className="btn-tag tag-renewal">Renewal</span>
-                      <span className="btn-title">Services</span>
-                    </div>
-                    <div className="btn-action-icon">
-                      <TbPlus />
-                    </div>
-                  </button>
-                )}
+        {/* Renewal Section */}
+        <div className="choosing-buttons-grid" style={{ gridTemplateColumns: (!workAccess?.targetSpare || !workAccess?.targetService) ? '1fr' : '1fr 1fr' }}>
+          {productInForm?.service_category?.mode === 'RENEWAL' && (
+            <>
+              {workAccess?.targetSpare && (
+                <button
+                  type="button"
+                  className="mobile-choose-btn"
+                  onClick={() => clickWorkMenu('RENEWAL_SPARE')}
+                >
+                  <div className="btn-icon spares">
+                    <TbComponents />
+                  </div>
+                  <div className="btn-content">
+                    <span className="btn-tag tag-renewal">Renewal</span>
+                    <span className="btn-title">Spares</span>
+                  </div>
+                  <div className="btn-action-icon">
+                    <TbPlus />
+                  </div>
+                </button>
+              )}
+              {workAccess?.targetService && (
+                <button
+                  type="button"
+                  className="mobile-choose-btn"
+                  onClick={() => clickWorkMenu('RENEWAL_SERVICE')}
+                >
+                  <div className="btn-icon works">
+                    <TbTools />
+                  </div>
+                  <div className="btn-content">
+                    <span className="btn-tag tag-renewal">Renewal</span>
+                    <span className="btn-title">Services</span>
+                  </div>
+                  <div className="btn-action-icon">
+                    <TbPlus />
+                  </div>
+                </button>)}
             </>
           )}
+        </div>
 
-          {/* Package Section */}
-          {serviceCategory?.package_id && (
+        {/* Package Section */}
+        <div className="choosing-buttons-grid" style={{ gridTemplateColumns: (!workAccess?.currentSpare || !workAccess?.currentService) ? '1fr' : '1fr 1fr' }}>
+          {productInForm?.service_category?.package_id && (
             <>
-              <button
+              {workAccess?.currentSpare && (<button
                 type="button"
                 className="mobile-choose-btn"
                 onClick={() => clickWorkMenu('PACKAGE_SPARE')}
@@ -246,9 +267,9 @@ const WorkHome = ({ setWorkMenu }) => {
                 <div className="btn-action-icon">
                   <TbPlus />
                 </div>
-              </button>
+              </button>)}
 
-              <button
+              {workAccess?.currentService && <button
                 type="button"
                 className="mobile-choose-btn"
                 onClick={() => clickWorkMenu('PACKAGE_SERVICE')}
@@ -263,12 +284,14 @@ const WorkHome = ({ setWorkMenu }) => {
                 <div className="btn-action-icon">
                   <TbPlus />
                 </div>
-              </button>
+              </button>}
             </>
           )}
+        </div>
 
-          {/* Additional Section */}
-          <button
+        {/* Additional Section */}
+        <div className="choosing-buttons-grid" style={{ gridTemplateColumns: (!workAccess?.currentSpare || !workAccess?.currentService) ? '1fr' : '1fr 1fr' }}>
+          {workAccess?.currentSpare && <button
             type="button"
             className="mobile-choose-btn"
             onClick={() => clickWorkMenu('ADDITIONAL_SPARE')}
@@ -283,9 +306,9 @@ const WorkHome = ({ setWorkMenu }) => {
             <div className="btn-action-icon">
               <TbPlus />
             </div>
-          </button>
+          </button>}
 
-          <button
+          {workAccess?.currentService && <button
             type="button"
             className="mobile-choose-btn"
             onClick={() => clickWorkMenu('ADDITIONAL_SERVICE')}
@@ -300,12 +323,13 @@ const WorkHome = ({ setWorkMenu }) => {
             <div className="btn-action-icon">
               <TbPlus />
             </div>
-          </button>
+          </button>}
         </div>
       </div>
 
+
       {/* Selected Items Summary Card Component */}
-      <SelectedWorkSummary productInForm={productInForm} />
+      <SelectedWorkSummary productInForm={productInForm} serviceCategory={productInForm?.service_category} />
 
       {/* Form Details */}
       <form action="" onSubmit={handleSubmit}>
@@ -319,7 +343,7 @@ const WorkHome = ({ setWorkMenu }) => {
             value={productInForm?.service_data?.service_charge?.estimate}
             options={[
               {},
-              ...(serviceCategory?.service_charges?.map((s) => ({
+              ...(productInForm?.service_category?.service_charges?.map((s) => ({
                 label: s?.charge_amount,
                 value: s?.charge_amount
               })) || [])
@@ -328,8 +352,8 @@ const WorkHome = ({ setWorkMenu }) => {
             required
           />
 
-          {serviceCategory?.service_charges?.[0]?.charge_amount !==
-            productInForm?.service_data?.service_charge?.estimate && (
+          {productInForm?.service_data?.service_charge?.charge_index !==
+            productInForm?.service_data?.service_charge?.start_index && (
               <InputText
                 label={'Extra Charge Reason'}
                 name={'remark'}

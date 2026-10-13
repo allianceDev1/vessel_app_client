@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import './home.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
-import { TbAlertCircle, TbBox, TbChevronRight, TbPlus, TbSitemap, TbTrash } from 'react-icons/tb'
+import { TbAlertCircle, TbChevronRight, TbPlus, TbShieldCheck, TbSitemap, TbTrash } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUpcomingServiceType } from '../../../../utils/services/product_service'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
 import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { isoToYYYYMMDD, normalizeDate } from '../../../../utils/helpers/date-helpers'
 import { generateUniqueId } from '../../../../utils/helpers/generate_Id'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import Badge from '../../../UI_Primitives/badge/Badge'
@@ -18,6 +18,7 @@ import InputText from '../../../UI_Primitives/inputs/InputText'
 import SFormSave from '../service-form-components/SFormSave'
 import RadioCard from '../../../UI_Primitives/inputs/RadioCard'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
+import { IconCrown } from '@tabler/icons-react'
 
 
 
@@ -202,6 +203,11 @@ const Home = ({ pageKey }) => {
                                 const product = formResources?.products?.find(p => p.product_id === productId)
                                 const productPackage = product?.package?.package_id ? product?.package : null
 
+                                const productWarranty = Boolean(
+                                    !productPackage &&
+                                    product?.product?.wr_expire_date &&
+                                    (normalizeDate(new Date()) <= normalizeDate(new Date(product?.product?.wr_expire_date))))
+
                                 const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
                                 const lowTokens = productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? true : false
 
@@ -249,11 +255,25 @@ const Home = ({ pageKey }) => {
                                         <h4>{product?.product_name}</h4>
                                     </div>
 
-                                    {productPackage?.package_name && (
+                                    {(productPackage?.package_name || productWarranty) && (
                                         <div className="package-info">
-                                            <TbBox className="pkg-icon" />
-                                            <span className="pkg-label">Package:</span>
-                                            <span className="pkg-name">{productPackage?.package_name}</span>
+                                            {productPackage?.package_name && (
+                                                <div className="package-item" style={{ color: productPackage?.color_code }}>
+                                                    <IconCrown className="pkg-icon" size={17} />
+                                                    <span className="pkg-name">{productPackage?.package_name} Subscription</span>
+                                                </div>
+                                            )}
+
+                                            {productPackage?.package_name && productWarranty && (
+                                                <span className="meta-dot">•</span>
+                                            )}
+
+                                            {productWarranty && (
+                                                <div className="warranty-item">
+                                                    <TbShieldCheck className="warranty-icon" size={17} />
+                                                    <span className="warranty-name">Product warranty</span>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 

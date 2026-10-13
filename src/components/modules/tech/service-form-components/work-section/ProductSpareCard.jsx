@@ -11,7 +11,7 @@ import {
     TbReplace,
     TbCheckbox
 } from 'react-icons/tb'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
 import ReplaceSpareModal from './ReplaceSpareModal'
@@ -24,15 +24,13 @@ import { sfActions } from '../../../../../redux/features/persisted/applicationSl
  *
  * @param {Object} props
  * @param {Object} props.data - Product spare object
- * @param {Function} props.onSelect - Callback when selecting SAME or REPLACE: (item, selectionType, details) => void
- * @param {Function} props.onDelete - Callback to remove spare from product: (item) => void
- * @param {Function} props.onUndoDelete - Callback to undo deletion/removal: (item) => void
- * @param {Boolean} props.isReadOnly - Whether actions are disabled
- * @param {String} props.className - Optional extra classes
+ * @param {Function} props.coverage - Callback when selecting SAME or REPLACE: (item, selectionType, details) => void
+ * @param {Function} props.productInForm - Callback to remove spare from product: (item) => void
  */
 const ProductSpareCard = ({
     data,
-    productInForm
+    productInForm,
+    coverage
 }) => {
     const dispatch = useDispatch()
 
@@ -45,13 +43,12 @@ const ProductSpareCard = ({
         is_warranty_item = false,
         is_active = true,
         is_selected = false,
-        selection_context = null,
         selection_info = {},
         is_removed = false,
         pricing = { list_price: 0, charged: 0 },
     } = data || {}
 
-    const uniqueId = component_uuid ? String(component_uuid).slice(-4).toUpperCase() : null
+    const uniqueId = component_uuid ? String(component_uuid).slice(-3).toUpperCase() : null
     const actualPrice = Number(pricing?.charged ?? 0)
     const mrpPrice = Number(pricing?.list_price ?? 0)
     const hasDiscount = mrpPrice > actualPrice
@@ -63,6 +60,8 @@ const ProductSpareCard = ({
             title: 'Replace Spare Part',
             body: <ReplaceSpareModal
                 currentSpare={data}
+                coverage={coverage}
+                productInForm={productInForm}
                 onConfirm={(replacementData) => handleConfirmReplacement(replacementData)}
                 onClose={() => {
                     dispatch(modal.pull.all())
@@ -92,15 +91,22 @@ const ProductSpareCard = ({
                 components_list: [
                     ...(productInForm?.work?.components_list || []),
                     {
-                        selection_context: selection_context,
+                        selection_context: coverage?.coverage_section,
                         ...replacementData,
                     }
                 ]
             }
-        }))
+        }));
+
+        const spareChargeIncreaseFlag = Boolean(
+            replacementData?.spare_category === 'PUMP' ||
+            (replacementData?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+
+        if (spareChargeIncreaseFlag) {
+            dispatch(sfActions.updateProduct.increaseSCIndex())
+        }
 
         dispatch(modal.pull.all())
-
     }
 
     const handleDelete = (e) => {
@@ -114,7 +120,6 @@ const ProductSpareCard = ({
                     removed_components_list: [
                         ...(productInForm?.work?.removed_components_list || []),
                         {
-                            selection_context,
                             spare_uuid,
                             component_uuid
                         }
@@ -122,8 +127,6 @@ const ProductSpareCard = ({
                 }
             }))
         }
-
-
     }
 
     const handleUndo = (e) => {
@@ -143,10 +146,11 @@ const ProductSpareCard = ({
         }
 
     }
+
     const handleUnSelect = (e) => {
         e?.stopPropagation?.();
 
-        if (is_selected && selection_info?.selected_context === selection_context) {
+        if (is_selected && selection_info?.selected_context === coverage?.coverage_section) {
 
             let componentList = productInForm?.work?.components_list || []
             componentList = componentList?.filter(c => c?.component_uuid !== component_uuid)
@@ -157,6 +161,14 @@ const ProductSpareCard = ({
                     components_list: componentList
                 }
             }))
+
+            const spareChargeIncreaseFlag = Boolean(
+                data?.spare_category === 'PUMP' ||
+                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+
+            if (spareChargeIncreaseFlag) {
+                dispatch(sfActions.updateProduct.decreaseSCIndex())
+            }
         }
 
     }
@@ -190,7 +202,7 @@ const ProductSpareCard = ({
                 <div className="right-action">
                     {/* Delete or Undo trigger */}
                     {is_selected ? (
-                        selection_info?.selected_context === selection_context ?
+                        selection_info?.selected_context === coverage?.coverage_section ?
                             <button
                                 type="button"
                                 className="clear-btn"

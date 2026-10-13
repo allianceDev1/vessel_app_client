@@ -30,23 +30,15 @@ const WorkSection = () => {
         // eslint-disable-next-line
     }, [formResources?.products, serviceFormSettings?.activeProduct?.[0]]);
 
-    const serviceCategory = useMemo(() => {
-        const category = formResources?.service_categories?.find(
-            (c) =>
-                c?.category_id === productInForm?.service_data?.category_id &&
-                (!productInForm?.service_data?.package_id || c?.package_id === productInForm?.service_data?.package_id)
-        )
-
-        return category
-    }, [formResources?.service_categories, productInForm?.service_data])
-
 
     return (
         <div className="tech-service-form-subpage">
 
             {/* Title */}
             <div className="title-section">
-                <h3>Action Taken</h3>
+                {productInForm?.service_category?.service_name
+                    ? <h3>Category : {productInForm?.service_category?.service_name}</h3>
+                    : <h3>Action Taken</h3>}
                 <p>Record the solution or repair performed during the service</p>
             </div>
 
@@ -58,11 +50,11 @@ const WorkSection = () => {
                 <>{workMenu
                     ? <>
                         {SPARE_SECTIONS.includes(workMenu) &&
-                            <ComponentsList setWorkMenu={setWorkMenu} product={product} serviceCategory={serviceCategory}
-                                productInForm={productInForm} workMenu={workMenu} />}
+                            <ComponentsList setWorkMenu={setWorkMenu} productInForm={productInForm}
+                                workMenu={workMenu} product={product} />}
                         {SERVICE_SECTIONS.includes(workMenu) &&
-                            <ServiceList setWorkMenu={setWorkMenu} productInForm={productInForm} workMenu={workMenu}
-                                product={product} serviceCategory={serviceCategory} />}
+                            <ServiceList setWorkMenu={setWorkMenu} productInForm={productInForm}
+                                workMenu={workMenu} product={product} />}
                     </>
                     : <WorkHome setWorkMenu={setWorkMenu} />}
                 </>}

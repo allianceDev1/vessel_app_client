@@ -5,6 +5,7 @@ import { sfActions, sfSetting } from '../../../../../redux/features/persisted/ap
 import { TbPlayerSkipForwardFilled } from 'react-icons/tb'
 import { setupAvailableServiceCategories } from '../../../../../utils/services/product_service'
 import { calculateTaxAmount, toDecimal } from '../../../../../utils/helpers/math-equations'
+import { normalizeDate } from '../../../../../utils/helpers/date-helpers'
 
 
 const ServiceCategories = () => {
@@ -17,6 +18,7 @@ const ServiceCategories = () => {
 
         const product = formResources?.products?.find(p => p?.product_id === productId)
         const packageId = product?.package?.package_id || null
+
 
         const serviceEligibility = formResources?.eligibility?.find(e => e?.productId === productId)?.services || []
         let categories = []
@@ -40,19 +42,30 @@ const ServiceCategories = () => {
         dispatch(sfSetting.page.next(Number(activePage) + 1))
     }
 
-    const selectCategory = (category) => {
+    const selectCategory = (selectedCategory) => {
+        const { is_disable, disable_reason, icon, ...category } = selectedCategory
+
         if (category?.is_disable) {
             return;
         }
+        const productId = serviceFormSettings?.activeProduct?.[0]
 
-        const repeatWork = formResources?.repeat_works?.find(r => r?.product_id === serviceFormSettings?.activeProduct?.[0]) || null
-
+        const repeatWork = formResources?.repeat_works?.find(r => r?.product_id === productId) || null
+        const product = formResources?.products?.find(p => p?.product_id === productId)
+        const productWarranty = Boolean(
+            !category?.package_id &&
+            product?.product?.wr_expire_date &&
+            normalizeDate(new Date()) <= normalizeDate(new Date(product?.product?.wr_expire_date))
+        )
+       
         const updateData = {
+            service_category: category,
             service_data: {
                 package_id: category?.package_id || null,
                 service_id: category?.service_id || null,
                 category_id: category?.category_id,
                 mode: category?.mode,
+                has_product_warranty: productWarranty,
                 repeat: {
                     same_registration: repeatWork?.same_registration ? true : false,
                     system_say: repeatWork ? true : false,

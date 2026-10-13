@@ -11,7 +11,8 @@ export const findSpareTypeAmount = (
     sparePriceList = {},
     amountType = 'SELLING_RATE',
     servicePackageId = null,
-    warranty = false
+    warranty = false,
+    warrantyReason = null
 ) => {
 
     const {
@@ -34,9 +35,9 @@ export const findSpareTypeAmount = (
         case 'PURCHASE_COST':
             pricing = {
                 list_price: selling_rate,
-                charged: 0
+                charged: 0,
+                reason: 'Zero price coverage item'
             };
-            reason = 'Zero price coverage item'
             break;
 
         case 'PACKAGE_PRICE':
@@ -49,14 +50,14 @@ export const findSpareTypeAmount = (
         default:
             throw new Error(`Unsupported amountType: ${amountType}`);
     }
-
+  
     // Warranty override (only charged becomes zero)
     if (warranty === true) {
         pricing.charged = 0;
-        pricing.reason = 'Spare warranty override';
+        pricing.reason = warrantyReason || 'Spare warranty override';
     }
 
-    return { ...pricing, reason };
+    return pricing;
 };
 
 export const findTdsStatus = (inputValue = 0, outputValue = 0, productInfo = {}) => {

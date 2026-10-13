@@ -16,18 +16,18 @@ import { sfActions } from '../../../../../redux/features/persisted/applicationSl
  * @param {Object} props
  * @param {Object} props.data - Spare catalog item object
  * @param {Object} props.productInForm 
- * @param {Object} props.workMenu 
  *
  */
 const AllSpareCard = ({
     data,
     productInForm,
-    workMenu,
+    coverage
 }) => {
     const {
         spare_id,
         spare_uuid,
         spare_name,
+        spare_category,
         pricing = { list_price: 0, charged: 0 },
         is_active = true,
         is_selected = false,
@@ -51,7 +51,7 @@ const AllSpareCard = ({
         const spareIndex = componentList?.findIndex(c =>
             c?.section_id === 'ALL_SPARE' &&
             c?.spare_uuid === spare_uuid &&
-            c?.selection_context === workMenu)
+            c?.selection_context === coverage?.coverage_section)
 
         // already selected
         if (spareIndex !== -1) {
@@ -67,11 +67,12 @@ const AllSpareCard = ({
         } else {
             // not selected already
             componentList.push({
-                selection_context: workMenu,
+                selection_context: coverage?.coverage_section,
                 section_id: "ALL_SPARE",
                 original_spare_uuid: null,
                 component_uuid: null,
                 spare_uuid,
+                spare_category,
                 qty: 1,
                 pricing,
                 purchase_warranty_months: warranty_period || 0
@@ -85,6 +86,16 @@ const AllSpareCard = ({
             }
         }))
 
+        if (spareIndex === -1) {
+            const spareChargeIncreaseFlag = Boolean(
+                data?.spare_category === 'PUMP' ||
+                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+
+            if (spareChargeIncreaseFlag) {
+                dispatch(sfActions.updateProduct.increaseSCIndex())
+            }
+        }
+
     }
 
     const handleDecrement = (e) => {
@@ -95,7 +106,7 @@ const AllSpareCard = ({
         const spareIndex = componentList?.findIndex(c =>
             c?.section_id === 'ALL_SPARE' &&
             c?.spare_uuid === spare_uuid &&
-            c?.selection_context === workMenu)
+            c?.selection_context === coverage?.coverage_section)
 
 
         const spare = componentList?.[spareIndex] || {}
@@ -127,6 +138,15 @@ const AllSpareCard = ({
             }
         }))
 
+        if (spare?.qty === 1) {
+            const spareChargeIncreaseFlag = Boolean(
+                data?.spare_category === 'PUMP' ||
+                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+
+            if (spareChargeIncreaseFlag) {
+                dispatch(sfActions.updateProduct.decreaseSCIndex())
+            }
+        }
 
     }
 

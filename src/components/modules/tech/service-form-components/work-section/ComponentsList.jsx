@@ -12,7 +12,7 @@ import { findSpareTypeAmount } from '../../../../../utils/flows/service_form_uti
 import { normalizeDate } from '../../../../../utils/helpers/date-helpers'
 
 
-const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, serviceCategory }) => {
+const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu }) => {
     const [searchText, setSearchText] = useState('')
     const [enableSearch, setEnableSearch] = useState(false)
     const [sectionId, setSectionId] = useState('PRODUCT_SPARE')
@@ -22,14 +22,20 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
     }
 
     const coverage = useMemo(() => {
-        return serviceCategory?.coverage?.find(c => {
+        const c = productInForm?.service_category?.coverage?.find(c => {
             if (workMenu === 'RENEWAL_SPARE') {
                 return c.coverage_id === 'SPARE_PARTS' && c.position === 'TARGET';
             } else {
                 return c.coverage_id === 'SPARE_PARTS' && c.position === 'CURRENT';
             }
         }) || null;
-    }, [serviceCategory, workMenu])
+
+        if (c) {
+            return { ...c, coverage_section: workMenu }
+        }
+
+        return null
+    }, [productInForm?.service_category, workMenu])
 
     if (!coverage?.access) {
         return (
@@ -73,8 +79,6 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
                     <ProductSpares
                         productInForm={productInForm}
                         coverage={coverage}
-                        workMenu={workMenu}
-                        product={product}
                         searchText={sectionId === 'PRODUCT_SPARE' && searchText ? searchText : ''}
                     />
                 )}
@@ -82,7 +86,6 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
                     <AllSpares
                         productInForm={productInForm}
                         coverage={coverage}
-                        workMenu={workMenu}
                         product={product}
                         searchText={sectionId === 'ALL_SPARES' && searchText ? searchText : ''}
                     />
@@ -101,8 +104,6 @@ const ComponentsList = ({ product, setWorkMenu, productInForm, workMenu, service
 const ProductSpares = ({
     productInForm,
     coverage,
-    workMenu,
-    product,
     searchText
 }) => {
     const { formResources, serviceFormSettings } = useSelector((state) => state.application)
@@ -115,6 +116,7 @@ const ProductSpares = ({
         if (searchText) {
             productSpares = productSpares.filter((p) => reg.test(p.spare_name) || reg.test(p.spare_id) || reg.test(p.spare_category))
         }
+        const productWarranty = productInForm?.service_data?.has_product_warranty || false;
 
         return productSpares?.map((productSpare) => {
             const spare = formResources?.spare_list?.find(s => s?.spare_uuid === productSpare?.spare_uuid)
@@ -123,13 +125,17 @@ const ProductSpares = ({
             const spareWarranty = productSpare?.wr_expire_date && (normalizeDate(new Date()) <= normalizeDate(new Date(productSpare?.wr_expire_date))) ? true : false
 
             // For package coverage the additional_spare price_type default is SELLING_RATE
-            const priceType = product?.package?.package_id && workMenu === 'ADDITIONAL_SPARE' ? 'SELLING_RATE' : coverage?.price_type
+            const priceType = coverage?.coverage_section === 'RENEWAL_SPARE' ? "PURCHASE_COST" :
+                productInForm?.service_data?.package_id && coverage?.coverage_section === 'ADDITIONAL_SPARE' ? 'SELLING_RATE'
+                    : coverage?.price_type;
+
+            const hasWarranty = Boolean(coverage?.coverage_section !== 'RENEWAL_SPARE' && (spareWarranty || productWarranty));
 
             const priceObject = findSpareTypeAmount(
                 (spare?.pricing || {}),
                 priceType || 'SELLING_RATE',
-                product?.package?.package_id || null,
-                spareWarranty
+                productInForm?.service_data?.package_id || null,
+                false
             )
 
             return {
@@ -138,23 +144,20 @@ const ProductSpares = ({
                 component_uuid: productSpare?.component_uuid,
                 spare_name: productSpare?.spare_name,
                 spare_category: productSpare?.spare_category,
-                is_warranty_item: spareWarranty,
-                wr_expire_date: productSpare?.wr_expire_date,
+                is_warranty_item: hasWarranty,
+                warranty_reason: spareWarranty ? 'Spare warranty override' : productWarranty ? 'Product warranty override' : null,
                 is_active: productSpare?.is_active && spare ? true : false,
-                unit: productSpare?.unit,
                 insert_at: productSpare?.insert_at || null,
-                is_selected: selectedItem ? true : false,
-                selection_info: {
-                    selected_context: selectedItem ? selectedItem?.selection_context : null,
-                    policy_mode: selectedItem ? selectedItem?.policy_mode : null,
-                    charged_amount: selectedItem?.pricing?.charged || 0,
-                    selection_type: selectedItem ? selectedItem?.spare_uuid === productSpare?.spare_uuid ? 'DEFAULT' : 'REPLACE' : null,
-                },
-                selection_context: workMenu,
-                is_removed: isRemoved,
                 pricing: priceObject,
                 price_type: priceType,
-                package_id: product?.package?.package_id || null,
+                is_removed: isRemoved,
+                is_selected: selectedItem ? true : false,
+                selection_info: selectedItem ? {
+                    selected_context: selectedItem?.selection_context ?? null,
+                    policy_mode: selectedItem?.policy_mode ?? null,
+                    charged_amount: selectedItem?.pricing?.charged ?? 0,
+                    selection_type: selectedItem?.spare_uuid === productSpare?.spare_uuid ? 'DEFAULT' : 'REPLACE',
+                } : null
             }
 
         })
@@ -180,6 +183,7 @@ const ProductSpares = ({
                     key={item.spare_uuid || item.spare_id}
                     data={item}
                     productInForm={productInForm}
+                    coverage={coverage}
                 />
             ))}
         </div>
@@ -189,14 +193,14 @@ const ProductSpares = ({
 const AllSpares = ({
     productInForm,
     coverage,
-    workMenu,
-    product,
     searchText
 }) => {
 
     const { formResources, serviceFormSettings } = useSelector((state) => state.application)
 
     const allSpares = useMemo(() => {
+        // All spare not apply the product warranty and spare warranty. only in product spares
+
         const activeProductType = serviceFormSettings?.activeProduct?.[1] || null
 
         if (!activeProductType) {
@@ -215,16 +219,18 @@ const AllSpares = ({
             const selectedItem = productInForm?.work?.components_list?.find(c =>
                 c?.section_id === 'ALL_SPARE' &&
                 c?.spare_uuid === spare?.spare_uuid &&
-                c?.selection_context === workMenu
+                c?.selection_context === coverage?.coverage_section
             );
 
             // For package coverage the additional_spare price_type default is SELLING_RATE
-            const priceType = product?.package?.package_id && workMenu === 'ADDITIONAL_SPARE' ? 'SELLING_RATE' : coverage?.price_type
+            const priceType = coverage?.coverage_section === 'RENEWAL_SPARE' ? "PURCHASE_COST" :
+                productInForm?.service_data?.package_id && coverage?.coverage_section === 'ADDITIONAL_SPARE' ? 'SELLING_RATE'
+                    : coverage?.price_type
 
             const priceObject = findSpareTypeAmount(
                 (spare?.pricing || {}),
                 priceType || 'SELLING_RATE',
-                product?.package?.package_id || null,
+                productInForm?.service_data?.package_id || null,
                 false
             )
 
@@ -323,7 +329,7 @@ const AllSpares = ({
                                         key={item.spare_uuid || item.spare_id}
                                         data={item}
                                         productInForm={productInForm}
-                                        workMenu={workMenu}
+                                        coverage={coverage}
                                     />
                                 ))}
                             </div>
