@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from 'react'
 import './selected-work-summary.scss'
 import { useSelector } from 'react-redux'
-import { TbComponents, TbTools, TbChevronDown, TbChevronUp, TbReceipt, TbPackage, TbReceiptTax } from 'react-icons/tb'
+import { TbComponents, TbTools, TbChevronDown, TbChevronUp, TbReceipt, TbReceiptTax } from 'react-icons/tb'
+import { IconCrown } from '@tabler/icons-react'
 import { calculateTaxAmount, toDecimal } from '../../../../../utils/helpers/math-equations'
 
 const SelectedWorkSummary = ({ productInForm }) => {
@@ -9,6 +10,10 @@ const SelectedWorkSummary = ({ productInForm }) => {
 
   // Collapsible toggle state (default closed)
   const [isOpen, setIsOpen] = useState(false)
+
+  // Inner collapsible states for spares and works
+  const [isSparesOpen, setIsSparesOpen] = useState(true)
+  const [isWorksOpen, setIsWorksOpen] = useState(true)
 
   // Spares list mapping with real data
   const displaySpares = useMemo(() => {
@@ -49,13 +54,13 @@ const SelectedWorkSummary = ({ productInForm }) => {
     return []
   }, [productInForm?.work?.services_list, formResources?.service_work_list])
 
-  // Selected package details and amount (analyzed from ServiceCategories.jsx)
+  // Selected subscription plan details and amount
   const selectedPackage = useMemo(() => {
     const renewedPkg = productInForm?.service_data?.renewed_package
     const isRenewalMode = productInForm?.service_category?.mode === 'RENEWAL' || productInForm?.service_data?.mode === 'RENEWAL'
 
     if (renewedPkg?.is_renewed || isRenewalMode) {
-      const pkgName = renewedPkg?.package_name || productInForm?.service_category?.target_package?.name || 'Renewal Package'
+      const pkgName = renewedPkg?.package_name || productInForm?.service_category?.target_package?.name || 'Subscription Plan'
       const pkgId = renewedPkg?.package_id || productInForm?.service_category?.target_package?.package_id || null
 
       let amount = 0
@@ -74,7 +79,7 @@ const SelectedWorkSummary = ({ productInForm }) => {
       return {
         package_id: pkgId,
         package_name: pkgName,
-        package_type: 'RENEWAL_PACKAGE',
+        package_type: 'SUBSCRIPTION_PLAN',
         amount
       }
     }
@@ -82,11 +87,7 @@ const SelectedWorkSummary = ({ productInForm }) => {
     return null
   }, [productInForm?.service_data?.renewed_package, productInForm?.service_data?.mode, productInForm?.service_category])
 
-  // Service charge calculation:
-  // - service_data.service_charge_applied === false => don't show service charge
-  // - if service_data.service_charge_applied && service_category > service_charge_applied both applied => apply amount, otherwise set zero
-  // - if repeat work => minus index 0 charge value from service charge and show balance only
-  // - repeat only affects service charge when service_data.service_charge_applied === true
+  // Service charge calculation
   const { showServiceCharge, serviceChargeAmount, isRepeat } = useMemo(() => {
     const isServiceDataChargeApplied = Boolean(productInForm?.service_data?.service_charge_applied)
     if (!isServiceDataChargeApplied) {
@@ -130,7 +131,8 @@ const SelectedWorkSummary = ({ productInForm }) => {
     productInForm?.service_data?.has_product_warranty,
     productInForm?.service_data?.service_charge?.estimate,
     productInForm?.service_data?.repeat?.tech_say,
-    productInForm?.service_data?.repeat?.same_registration
+    productInForm?.service_data?.repeat?.same_registration,
+    productInForm?.service_category
   ])
 
   // Summary calculations
@@ -143,22 +145,24 @@ const SelectedWorkSummary = ({ productInForm }) => {
   }, [displayWorks])
 
   const grandTotalAmount = useMemo(() => {
-    let total = sparesTotalAmount + worksTotalAmount
+    let total = 0
     if (selectedPackage) {
       total += Number(selectedPackage.amount) || 0
     }
     if (showServiceCharge) {
       total += Number(serviceChargeAmount) || 0
     }
+    total += sparesTotalAmount + worksTotalAmount
     return total
-  }, [sparesTotalAmount, worksTotalAmount, selectedPackage, showServiceCharge, serviceChargeAmount])
+  }, [selectedPackage, showServiceCharge, serviceChargeAmount, sparesTotalAmount, worksTotalAmount])
 
   const totalItemsCount = useMemo(() => {
-    let count = displaySpares.length + displayWorks.length
+    let count = 0
     if (selectedPackage) count += 1
     if (showServiceCharge) count += 1
+    count += displaySpares.length + displayWorks.length
     return count
-  }, [displaySpares.length, displayWorks.length, selectedPackage, showServiceCharge])
+  }, [selectedPackage, showServiceCharge, displaySpares.length, displayWorks.length])
 
   const formatTypeLabel = (type) => {
     if (!type) return 'Standard'
@@ -178,22 +182,20 @@ const SelectedWorkSummary = ({ productInForm }) => {
 
   const footerMetaItems = useMemo(() => {
     const items = []
+    if (selectedPackage) {
+      items.push({ key: 'package', label: 'Plan', value: `₹${Number(selectedPackage.amount).toLocaleString('en-IN')}` })
+    }
+    if (showServiceCharge) {
+      items.push({ key: 'service_charge', label: 'Service Charge', value: `₹${Number(serviceChargeAmount).toLocaleString('en-IN')}` })
+    }
     if (displaySpares.length > 0) {
       items.push({ key: 'spares', label: 'Spares', value: `₹${sparesTotalAmount.toLocaleString('en-IN')}` })
     }
     if (displayWorks.length > 0) {
       items.push({ key: 'works', label: 'Works', value: `₹${worksTotalAmount.toLocaleString('en-IN')}` })
     }
-    if (selectedPackage) {
-      items.push({ key: 'package', label: 'Package', value: `₹${Number(selectedPackage.amount).toLocaleString('en-IN')}` })
-    }
-    if (showServiceCharge) {
-      items.push({ key: 'service_charge', label: 'Service Charge', value: `₹${Number(serviceChargeAmount).toLocaleString('en-IN')}` })
-    }
     return items
-  }, [displaySpares.length, displayWorks.length, sparesTotalAmount, worksTotalAmount, selectedPackage, showServiceCharge, serviceChargeAmount])
-
-
+  }, [selectedPackage, showServiceCharge, serviceChargeAmount, displaySpares.length, sparesTotalAmount, displayWorks.length, worksTotalAmount])
 
   return (
     <div className={`selected-section-card ${!isOpen ? 'collapsed' : ''}`}>
@@ -224,99 +226,15 @@ const SelectedWorkSummary = ({ productInForm }) => {
 
       {isOpen && (
         <div className="card-body-expanded">
-          {/* Spares Sub-list */}
-          {displaySpares.length > 0 && (
-            <div className="sub-list-block">
-              <div className="sub-list-header">
-                <div className="sub-title">
-                  <div className="icon-tag spares">
-                    <TbComponents />
-                  </div>
-                  <h4>Selected Spares ({displaySpares.length})</h4>
-                </div>
-                <span className="sub-total-tag">₹{sparesTotalAmount.toLocaleString('en-IN')}</span>
-              </div>
-
-              <div className="mobile-items-list">
-                {displaySpares.map((spare, idx) => (
-                  <div className="mobile-item-card" key={`spare-${spare.spare_id}-${idx}`}>
-                    <div className="card-top">
-                      <div className="id-and-title">
-                        <span className="item-code">#{spare.spare_id}</span>
-                        <h4 className="item-name">{spare.spare_name}</h4>
-                      </div>
-                      <div className="item-total">
-                        <span className="total-label">Total</span>
-                        <span className="total-val">₹{Number(spare.total).toLocaleString('en-IN')}</span>
-                      </div>
-                    </div>
-
-                    <div className="card-bottom">
-                      <span className={`type-tag ${getTypeBadgeClass(spare.spare_type)}`}>
-                        {formatTypeLabel(spare.spare_type)}
-                      </span>
-                      <div className="qty-rate-pills">
-                        <span className="pill">
-                          Qty: <strong>{spare.qty}</strong>
-                        </span>
-                        <span className="pill">
-                          Rate: <strong>₹{Number(spare.rate).toLocaleString('en-IN')}</strong>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Service Works Sub-list */}
-          {displayWorks.length > 0 && (
-            <div className="sub-list-block">
-              <div className="sub-list-header">
-                <div className="sub-title">
-                  <div className="icon-tag works">
-                    <TbTools />
-                  </div>
-                  <h4>Selected Service Works ({displayWorks.length})</h4>
-                </div>
-                <span className="sub-total-tag">₹{worksTotalAmount.toLocaleString('en-IN')}</span>
-              </div>
-
-              <div className="mobile-items-list">
-                {displayWorks.map((work, idx) => (
-                  <div className="mobile-item-card" key={`work-${work.work_id}-${idx}`}>
-                    <div className="card-top">
-                      <div className="id-and-title">
-                        <span className="item-code">#{work.work_id}</span>
-                        <h4 className="item-name">{work.work_name}</h4>
-                      </div>
-                      <div className="item-total">
-                        <span className="total-label">Rate</span>
-                        <span className="total-val">₹{Number(work.rate).toLocaleString('en-IN')}</span>
-                      </div>
-                    </div>
-
-                    <div className="card-bottom">
-                      <span className={`type-tag ${getTypeBadgeClass(work.work_type)}`}>
-                        {formatTypeLabel(work.work_type)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Selected Package Sub-list */}
+          {/* 1. Selected Subscription Plan Sub-list (No Collapse) */}
           {selectedPackage && (
             <div className="sub-list-block">
               <div className="sub-list-header">
                 <div className="sub-title">
                   <div className="icon-tag package">
-                    <TbPackage />
+                    <IconCrown size={15} />
                   </div>
-                  <h4>Selected Package (1)</h4>
+                  <h4>Selected Subscription plan (1)</h4>
                 </div>
                 <span className="sub-total-tag">₹{Number(selectedPackage.amount).toLocaleString('en-IN')}</span>
               </div>
@@ -338,7 +256,7 @@ const SelectedWorkSummary = ({ productInForm }) => {
 
                   <div className="card-bottom">
                     <span className="type-tag badge-package">
-                      Renewal Package
+                      Subscription Plan
                     </span>
                   </div>
                 </div>
@@ -346,7 +264,7 @@ const SelectedWorkSummary = ({ productInForm }) => {
             </div>
           )}
 
-          {/* Service Charge Sub-list */}
+          {/* 2. Service Charge Sub-list (No Collapse) */}
           {showServiceCharge && (
             <div className="sub-list-block">
               <div className="sub-list-header">
@@ -381,6 +299,114 @@ const SelectedWorkSummary = ({ productInForm }) => {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* 3. Spares Sub-list (Inner Collapsible) */}
+          {displaySpares.length > 0 && (
+            <div className="sub-list-block">
+              <div
+                className="sub-list-header clickable"
+                onClick={() => setIsSparesOpen((prev) => !prev)}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="sub-title">
+                  <div className="icon-tag spares">
+                    <TbComponents />
+                  </div>
+                  <h4>Selected Spares ({displaySpares.length})</h4>
+                </div>
+                <div className="header-actions">
+                  <span className="sub-total-tag">₹{sparesTotalAmount.toLocaleString('en-IN')}</span>
+                  <span className="sub-toggle-chevron">
+                    {isSparesOpen ? <TbChevronUp /> : <TbChevronDown />}
+                  </span>
+                </div>
+              </div>
+
+              {isSparesOpen && (
+                <div className="mobile-items-list">
+                  {displaySpares.map((spare, idx) => (
+                    <div className="mobile-item-card" key={`spare-${spare.spare_id}-${idx}`}>
+                      <div className="card-top">
+                        <div className="id-and-title">
+                          <span className="item-code">#{spare.spare_id}</span>
+                          <h4 className="item-name">{spare.spare_name}</h4>
+                        </div>
+                        <div className="item-total">
+                          <span className="total-label">Total</span>
+                          <span className="total-val">₹{Number(spare.total).toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+
+                      <div className="card-bottom">
+                        <span className={`type-tag ${getTypeBadgeClass(spare.spare_type)}`}>
+                          {formatTypeLabel(spare.spare_type)}
+                        </span>
+                        <div className="qty-rate-pills">
+                          <span className="pill">
+                            Qty: <strong>{spare.qty}</strong>
+                          </span>
+                          <span className="pill">
+                            Rate: <strong>₹{Number(spare.rate).toLocaleString('en-IN')}</strong>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 4. Service Works Sub-list (Inner Collapsible) */}
+          {displayWorks.length > 0 && (
+            <div className="sub-list-block">
+              <div
+                className="sub-list-header clickable"
+                onClick={() => setIsWorksOpen((prev) => !prev)}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="sub-title">
+                  <div className="icon-tag works">
+                    <TbTools />
+                  </div>
+                  <h4>Selected Service Works ({displayWorks.length})</h4>
+                </div>
+                <div className="header-actions">
+                  <span className="sub-total-tag">₹{worksTotalAmount.toLocaleString('en-IN')}</span>
+                  <span className="sub-toggle-chevron">
+                    {isWorksOpen ? <TbChevronUp /> : <TbChevronDown />}
+                  </span>
+                </div>
+              </div>
+
+              {isWorksOpen && (
+                <div className="mobile-items-list">
+                  {displayWorks.map((work, idx) => (
+                    <div className="mobile-item-card" key={`work-${work.work_id}-${idx}`}>
+                      <div className="card-top">
+                        <div className="id-and-title">
+                          <span className="item-code">#{work.work_id}</span>
+                          <h4 className="item-name">{work.work_name}</h4>
+                        </div>
+                        <div className="item-total">
+                          <span className="total-label">Rate</span>
+                          <span className="total-val">₹{Number(work.rate).toLocaleString('en-IN')}</span>
+                        </div>
+                      </div>
+
+                      <div className="card-bottom">
+                        <span className={`type-tag ${getTypeBadgeClass(work.work_type)}`}>
+                          {formatTypeLabel(work.work_type)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

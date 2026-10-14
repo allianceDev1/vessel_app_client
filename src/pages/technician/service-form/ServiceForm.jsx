@@ -26,6 +26,9 @@ import { serviceFormResourcesVerification } from '../../../utils/services/servic
 import WpPumpMembrane from '../../../components/modules/tech/service-form-pages/WpPumpMembrane'
 import WpInspection from '../../../components/modules/tech/service-form-pages/WpInspection'
 import WorkSection from '../../../components/modules/tech/service-form-pages/WorkSection'
+import VfEvaluation from '../../../components/modules/tech/service-form-pages/VfEvaluation'
+import AdEvaluation from '../../../components/modules/tech/service-form-pages/AdEvaluation'
+import WpEvaluation from '../../../components/modules/tech/service-form-pages/WpEvaluation'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -122,7 +125,8 @@ const ServiceForm = () => {
                     : <div className="service-form-page-container">
 
                         {/* Main pages */}
-                        {serviceFormSettings?.activePage === 1000 && <Home pageKey={1000} />}
+                        {(serviceFormSettings?.activePage === 1000 || !serviceFormSettings?.activeProduct?.[0])
+                            && <Home pageKey={1000} />}
 
                         {/* {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
                             <Review page={{ index: 101, type: 'page' }} />}
@@ -134,28 +138,19 @@ const ServiceForm = () => {
                         {serviceFormSettings?.activePage === 1101 && <WpWithNewSpun pageKey={1101} />}
                         {serviceFormSettings?.activePage === 1102 && <WpPumpMembrane pageKey={1102} />}
                         {serviceFormSettings?.activePage === 1103 && <WpInspection pageKey={1103} />}
+                        {serviceFormSettings?.activePage === 1105 && <WpEvaluation pageKey={1105} />}
 
 
                         {/* Vessel Filter  */}
                         {serviceFormSettings?.activePage === 1200 && <VfCurrentCondition pageKey={1200} />}
                         {serviceFormSettings?.activePage === 1201 && <VfInspection pageKey={1201} />}
-                        {/* {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                            <SfSubPageThree page={{ index: 202, type: 'subPage' }} categories={serviceCategories}
-                                customerProducts={customerProducts} regData={regData} vesselsEligibilities={vesselsEligibilities}
-                                materialsList={materialsList} bagList={bagList} spareList={spareList} vesselServiceList={vesselServiceList}
-                                changeSubmitStatus={changeSubmitStatusIsFalse} />}
-                        {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 203 && serviceFormSettings?.activeProduct?.[2] === 'VESSEL_FILTER' &&
-                            <SfSubPageFour page={{ index: 203, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
+                        {serviceFormSettings?.activePage === 1203 && <VfEvaluation pageKey={1203} />}
 
 
                         {/* Add-On  */}
                         {serviceFormSettings?.activePage === 1300 && <AdCurrentCondition pageKey={1300} />}
-                        {/* {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 201 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
-                            <SfAdSubPageTwo page={{ index: 201, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse}
-                                categories={addOnServiceCategories} customerProducts={customerProducts} regData={regData} serviceList={addOnServiceList}
-                                spareList={addOnSpareList} addOnsEligibilities={addOnsEligibilities} />}
-                        {serviceFormSettings?.activePage === 100 && serviceFormSettings?.activeSubPage === 202 && serviceFormSettings?.activeProduct?.[2] === 'ADD_ON' &&
-                            <SfAdSubPageThree page={{ index: 202, type: 'subPage' }} resources={resources} changeSubmitStatus={changeSubmitStatusIsFalse} />} */}
+                        {serviceFormSettings?.activePage === 1302 && <AdEvaluation pageKey={1302} />}
+                        
 
                         {/* Work */}
                         {[1104, 1202, 1301].includes(serviceFormSettings?.activePage) && <WorkSection />}

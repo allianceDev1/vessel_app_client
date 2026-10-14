@@ -6,7 +6,7 @@ import {
     TbShieldCheck,
 } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
-import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 
 /**
  * AllSpareCard
@@ -96,6 +96,8 @@ const AllSpareCard = ({
             }
         }
 
+        dispatch(sfSetting.productSubmit.resetStatus())
+
     }
 
     const handleDecrement = (e) => {
@@ -147,6 +149,8 @@ const AllSpareCard = ({
                 dispatch(sfActions.updateProduct.decreaseSCIndex())
             }
         }
+
+        dispatch(sfSetting.productSubmit.resetStatus())
 
     }
 

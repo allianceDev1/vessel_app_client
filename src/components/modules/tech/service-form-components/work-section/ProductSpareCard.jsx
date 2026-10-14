@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
 import ReplaceSpareModal from './ReplaceSpareModal'
-import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 
 
 /**
@@ -106,6 +106,7 @@ const ProductSpareCard = ({
             dispatch(sfActions.updateProduct.increaseSCIndex())
         }
 
+        dispatch(sfSetting.productSubmit.resetStatus())
         dispatch(modal.pull.all())
     }
 
@@ -126,6 +127,8 @@ const ProductSpareCard = ({
                     ]
                 }
             }))
+
+            dispatch(sfSetting.productSubmit.resetStatus())
         }
     }
 
@@ -143,6 +146,8 @@ const ProductSpareCard = ({
                     removed_components_list: componentList
                 }
             }))
+
+            dispatch(sfSetting.productSubmit.resetStatus())
         }
 
     }
@@ -169,6 +174,8 @@ const ProductSpareCard = ({
             if (spareChargeIncreaseFlag) {
                 dispatch(sfActions.updateProduct.decreaseSCIndex())
             }
+
+            dispatch(sfSetting.productSubmit.resetStatus())
         }
 
     }

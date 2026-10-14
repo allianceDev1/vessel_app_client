@@ -23,7 +23,7 @@ export const serviceFormPageRoute = [
     // Add-on
     { key: 1300, title: 'Current Condition', description: "Record the current condition of the product before service" },
     { key: 1301, title: 'Action Taken', description: "Record the solution or repair performed during the service" },
-    { key: 1202, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
+    { key: 1302, title: 'Evaluation', description: "Evaluate the product condition after service completion" }
 
 ]
 

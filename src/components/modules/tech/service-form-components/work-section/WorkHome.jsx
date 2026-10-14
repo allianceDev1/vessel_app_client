@@ -137,56 +137,29 @@ const WorkHome = ({ setWorkMenu }) => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    // // if renewal not select any fund distribution items : error
-    // if (serviceCategory?.mode === 'RENEWAL') {
-    //   if (!menuMeta?.renewal_spares && !menuMeta?.renewal_services) {
-    //     const FdInSpare = serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(
-    //       (f) => f?.fund_type === 'SPARE_PARTS'
-    //     )
-    //     const FdInWork = serviceCategory?.target_package?.pricing_config?.fund_distribution?.find(
-    //       (f) => f?.fund_type === 'SERVICE_WORK'
-    //     )
+    const componentsLength = productInForm?.work?.components_list?.length || 0
+    const workLength = productInForm?.work?.services_list?.length || 0
 
-    //     if (FdInSpare && !menuMeta?.package_spares) {
-    //       dispatch(
-    //         toast.push({
-    //           type: 'danger',
-    //           message: 'You have not selected any renewal components'
-    //         })
-    //       )
-    //       return
-    //     }
+    // If choose any work or components , then show the warming alert
+    const nextPageNumber = serviceFormSettings?.activePage + 1
 
-    //     if (FdInWork && !menuMeta?.package_services) {
-    //       dispatch(
-    //         toast.push({
-    //           type: 'danger',
-    //           message: 'You have not selected any renewal services'
-    //         })
-    //       )
-    //       return
-    //     }
-    //   }
-    // }
+    if (!componentsLength && !workLength) {
+      dispatch(
+        doDialog.confirm({
+          message: 'You have not selected any work or spares, Are you sure to continue without work or spare?',
+          accept: {
+            onClick: () => {
+              dispatch(sfSetting.page.next(nextPageNumber))
+            }
+          }
+        })
+      )
+      return
+    }
 
-    // // If choose any work or components , then show the warming alert
-    // if ('') {
-    //   dispatch(
-    //     doDialog.confirm({
-    //       message: 'You have not selected any work or components, Are you sure to continue without work or components?',
-    //       accept: {
-    //         onClick: () => {
-    //           dispatch(sfSetting.setActiveSubPage(203))
-    //         }
-    //       }
-    //     })
-    //   )
-    //   return
-    // }
-
-    // dispatch(sfSetting.setActiveSubPage(203))
+    dispatch(sfSetting.page.next(nextPageNumber))
   }
 
   const clickWorkMenu = (type) => {
