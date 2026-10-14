@@ -125,6 +125,120 @@
             margin-bottom: 12px;
         }
     }
+
+    .verification-error-container {
+        padding: 20px 15px 50px 15px;
+        max-width: 650px;
+        margin: 0 auto;
+
+        .error-header {
+            text-align: center;
+            margin-bottom: 25px;
+
+            .alert-icon {
+                font-size: 42px;
+                color: var(--color-danger);
+                margin-bottom: 10px;
+            }
+
+            h2 {
+                font-size: 19px;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 6px;
+            }
+
+            p {
+                font-size: 13px;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
+        }
+
+        .product-error-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 25px;
+
+            .product-error-card {
+                background-color: var(--surface-1);
+                border: 1px solid var(--border-color);
+                border-left: 4px solid var(--color-danger);
+                border-radius: 12px;
+                padding: 16px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+                .card-top {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 12px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid var(--border-color);
+
+                    .product-title-group {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+
+                        h4 {
+                            font-size: 15px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                            margin: 0;
+                        }
+                    }
+
+                    .product-type-label {
+                        font-size: 11px;
+                        color: var(--text-tertiary);
+                        font-weight: 500;
+                        text-transform: uppercase;
+                    }
+                }
+
+                .error-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+
+                    .error-item {
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 8px;
+                        font-size: 13px;
+                        color: var(--text-primary);
+                        line-height: 1.4;
+
+                        svg {
+                            color: var(--color-danger);
+                            font-size: 16px;
+                            min-width: 16px;
+                            margin-top: 2px;
+                        }
+                    }
+                }
+            }
+
+            .general-error-card {
+                border-left-color: var(--color-warning);
+
+                .error-item svg {
+                    color: var(--color-warning);
+                }
+            }
+        }
+
+        .action-footer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+    }
 }
 
 

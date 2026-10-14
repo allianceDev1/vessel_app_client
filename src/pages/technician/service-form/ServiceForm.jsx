@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './service-form.scss'
-import { TbFileText } from 'react-icons/tb'
+import { TbAlertCircle, TbAlertTriangle, TbFileText, TbRotate2 } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice'
@@ -8,6 +8,8 @@ import { api } from '../../../api'
 import { buildCustomerPGStretcher } from '../../../utils/services/product_service'
 
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
+import Button from '../../../components/UI_Primitives/buttons/Button'
+import Badge from '../../../components/UI_Primitives/badge/Badge'
 import FormTopBar from '../../../components/modules/tech/service-form-components/FormTopBar'
 import Home from '../../../components/modules/tech/service-form-pages/Home'
 import WpCurrentCondition from '../../../components/modules/tech/service-form-pages/WpCurrentCondition'
@@ -37,6 +39,19 @@ const ServiceForm = () => {
     const [isVerifying, setIsVerifying] = useState(false)
     const [verification, setVerification] = useState({ success: true, message: null })
 
+    const serviceFormRef = useRef(serviceForm)
+    useEffect(() => {
+        serviceFormRef.current = serviceForm
+    }, [serviceForm])
+
+    const handleVerify = (resources, currentForm) => {
+        if (!resources?.hasResources || !currentForm) return
+        setIsVerifying(true)
+        const result = serviceFormResourcesVerification(resources, currentForm)
+      
+        setVerification(result)
+        setIsVerifying(false)
+    }
 
     const {
         isLoading,
@@ -51,24 +66,29 @@ const ServiceForm = () => {
 
             const pgStretcher = buildCustomerPGStretcher(res?.products)
 
+            const resourcesData = {
+                hasResources: true,
+                ...res,
+                product_stretcher: pgStretcher
+            }
+
             // add to redux
             dispatch(sfActions.updateVerification({
                 otpLogs: otp_logs || []
             }))
 
-            dispatch(sfActions.setUpFormResources({
-                hasResources: true,
-                ...res,
-                product_stretcher: pgStretcher
-            }))
+            dispatch(sfActions.setUpFormResources(resourcesData))
+
+            // Run verification whenever resources are loaded from API
+            handleVerify(resourcesData, serviceFormRef.current || serviceForm)
 
             return { status: "COMPLETED" }
         },
         enabled: !formResources?.hasResources
     })
 
+    // Navigation and initial page routing
     useEffect(() => {
-
         if (!serviceForm?.customer_id || !serviceForm?.work_key || !serviceForm?.start_time) {
             navigate('/tech');
             return;
@@ -77,21 +97,17 @@ const ServiceForm = () => {
         if (!serviceFormSettings?.activePage) {
             dispatch(sfSetting.page.next(1000))
         }
+    }, [serviceForm?.customer_id, serviceForm?.work_key, serviceForm?.start_time, serviceFormSettings?.activePage, navigate, dispatch])
 
-        if (!formResources?.hasResources || !serviceForm) return;
-
-        setIsVerifying(true);
-
-        const result = serviceFormResourcesVerification(
-            formResources,
-            serviceForm
-        );
-        setVerification(result)
-        setIsVerifying(false);
-
-
+    // Run verification once on initial mount if resources are already cached
+    const initialVerifiedRef = useRef(false)
+    useEffect(() => {
+        if (!initialVerifiedRef.current && formResources?.hasResources && (serviceFormRef.current || serviceForm)) {
+            initialVerifiedRef.current = true
+            handleVerify(formResources, serviceFormRef.current || serviceForm)
+        }
         // eslint-disable-next-line
-    }, [formResources, serviceForm])
+    }, [formResources?.hasResources])
 
     // Page
     return (
@@ -115,13 +131,85 @@ const ServiceForm = () => {
                         </div>
                     </div>
                 </div>
-                : (error || !verification?.success) ?
+                : error ? (
                     <ErrorState
                         hight='80vh'
-                        title={!verification?.success ? 'Verification failed' : 'Service form setup failed!'}
-                        message={verification?.message || error?.message}
+                        title='Service form setup failed!'
+                        message={error?.message}
                         icon={<TbFileText />}
                     />
+                ) : !verification?.success ? (
+                    <div className="verification-error-container">
+                        <div className="error-header">
+                            <TbAlertTriangle className="alert-icon" />
+                            <h2>Verification Conflicts Detected</h2>
+                            <p>
+                                Stored service data conflicts with updated resources.
+                                Please review the issues by product below before proceeding.
+                            </p>
+                        </div>
+
+                        <div className="product-error-cards">
+                            {/* Product-based error cards */}
+                            {Object.values(verification?.products || {})
+                                .filter((prod) => !prod?.success || (prod?.errors && prod?.errors.length > 0))
+                                .map((prod) => (
+                                    <div key={prod.product_id} className="product-error-card">
+                                        <div className="card-top">
+                                            <div className="product-title-group">
+                                                <Badge value={prod.product_id} severity="danger" size="small" />
+                                                <h4>{prod.product_name}</h4>
+                                            </div>
+                                            {prod.product_type && (
+                                                <span className="product-type-label">
+                                                    {prod.product_type.replace(/_/g, ' ')}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <ul className="error-list">
+                                            {[...new Set(prod.errors || [])].map((errMessage, index) => (
+                                                <li key={index} className="error-item">
+                                                    <TbAlertCircle />
+                                                    <span>{errMessage}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))}
+
+                            {/* General non-product errors if any */}
+                            {verification?.general_errors?.length > 0 && (
+                                <div className="product-error-card general-error-card">
+                                    <div className="card-top">
+                                        <div className="product-title-group">
+                                            <Badge value="General" severity="warning" size="small" />
+                                            <h4>System & Configuration</h4>
+                                        </div>
+                                    </div>
+                                    <ul className="error-list">
+                                        {[...new Set(verification.general_errors || [])].map((errMessage, index) => (
+                                            <li key={index} className="error-item">
+                                                <TbAlertCircle />
+                                                <span>{errMessage}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="action-footer">
+                            <Button
+                                label="Re-sync Resources"
+                                icon={<TbRotate2 />}
+                                severity="primary"
+                                rounded
+                                onClick={() => refetch()}
+                            />
+                        </div>
+                    </div>
+                )
                     : <div className="service-form-page-container">
 
                         {/* Main pages */}
