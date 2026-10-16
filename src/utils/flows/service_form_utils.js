@@ -22,7 +22,6 @@ export const findSpareTypeAmount = (
     } = sparePriceList ?? {};
 
     let pricing;
-    let reason = null;
 
     switch (amountType) {
         case 'SELLING_RATE':

@@ -126,7 +126,7 @@ const Home = ({ pageKey }) => {
         if (formProductCount === saveProductCount && serviceFormSettings?.form_saved) {
 
             // redirect to next page
-            dispatch(sfSetting.setActivePage(101))
+            dispatch(sfSetting.page.next(1001))
             return;
         }
 

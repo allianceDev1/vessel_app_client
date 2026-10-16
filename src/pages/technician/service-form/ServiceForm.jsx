@@ -16,10 +16,6 @@ import WpCurrentCondition from '../../../components/modules/tech/service-form-pa
 import WpWithNewSpun from '../../../components/modules/tech/service-form-pages/WpWithNewSpun'
 import VfCurrentCondition from '../../../components/modules/tech/service-form-pages/VfCurrentCondition'
 import VfInspection from '../../../components/modules/tech/service-form-pages/VfInspection'
-// import SfSubPageThree from '../../../components/modules/tech/service-form-pages/SfSubPageThree'
-// import SfSubPageFour from '../../../components/modules/tech/service-form-pages/SfSubPageFour'
-// import SfAdSubPageTwo from '../../../components/modules/tech/service-form-pages/SfAdSubPageTwo'
-// import SfAdSubPageThree from '../../../components/modules/tech/service-form-pages/SfAdSubPageThree'
 // import Review from '../../../components/modules/tech/service-form-pages/Review'
 // import Payment from '../../../components/modules/tech/service-form-pages/Payment'
 import AdCurrentCondition from '../../../components/modules/tech/service-form-pages/AdCurrentCondition'
@@ -48,7 +44,7 @@ const ServiceForm = () => {
         if (!resources?.hasResources || !currentForm) return
         setIsVerifying(true)
         const result = serviceFormResourcesVerification(resources, currentForm)
-      
+
         setVerification(result)
         setIsVerifying(false)
     }
@@ -213,8 +209,9 @@ const ServiceForm = () => {
                     : <div className="service-form-page-container">
 
                         {/* Main pages */}
-                        {(serviceFormSettings?.activePage === 1000 || !serviceFormSettings?.activeProduct?.[0])
-                            && <Home pageKey={1000} />}
+                        {!serviceFormSettings?.activeProduct?.[0] && <>
+                            {serviceFormSettings?.activePage === 1000 && <Home pageKey={1000} />}
+                        </>}
 
                         {/* {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
                             <Review page={{ index: 101, type: 'page' }} />}
@@ -238,7 +235,7 @@ const ServiceForm = () => {
                         {/* Add-On  */}
                         {serviceFormSettings?.activePage === 1300 && <AdCurrentCondition pageKey={1300} />}
                         {serviceFormSettings?.activePage === 1302 && <AdEvaluation pageKey={1302} />}
-                        
+
 
                         {/* Work */}
                         {[1104, 1202, 1301].includes(serviceFormSettings?.activePage) && <WorkSection />}

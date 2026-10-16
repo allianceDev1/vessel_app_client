@@ -201,7 +201,7 @@ const WpEvaluation = ({ pageKey }) => {
             </div>
 
             <form onSubmit={handleSubmit}>
-                {/* Working Status */}
+                
                 {!productInfo?.hasUvOnly && <div className="form-section">
                     <h3 className='subtitle'>Pump & FR</h3>
                     <div className="box-col2" >
