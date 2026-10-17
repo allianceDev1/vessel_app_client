@@ -56,7 +56,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
             const summery = calculateBillsSummery(
                 review?.bills ?? [],
                 review?.zero_fee_items ?? [],
-                payment?.complement_amount ?? 0
+                payment?.compliment_amount ?? 0
             )
             const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
             const balance = summery?.grandTotal - enteredAmount
@@ -72,7 +72,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
                 promise_date: payment?.balance_payment_date,
                 promise_reason: payment?.balance_payment_reason,
                 paid_amount: enteredAmount,
-                paid_from_compliment: payment?.complement_amount,
+                paid_from_compliment: payment?.compliment_amount,
                 zero_fee_items: review?.zero_fee_items
             }
 

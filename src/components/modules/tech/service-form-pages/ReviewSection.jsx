@@ -38,7 +38,7 @@ const ReviewSection = ({ pageKey, setOpenedBill }) => {
             }))
 
             dispatch(sfActions.updatePayment({
-                complement_amount: resReview?.wallet?.amount || 0
+                compliment_amount: resReview?.wallet?.amount || 0
             }))
 
         } catch (error) {

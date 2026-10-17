@@ -6,7 +6,6 @@ import { sfActions, sfSetting } from '../../../../../redux/features/persisted/ap
 import { audio, modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import Button from '../../../../UI_Primitives/buttons/Button'
-import { getLocation } from '../../../../../utils/services/location_services'
 import { initAudio, unlockAudio } from '../../../../../utils/services/success_audio_services'
 import { useNavigate } from 'react-router-dom'
 import { calculateBillsSummery } from '../../../../../utils/helpers/math-equations'
@@ -53,38 +52,35 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
         dispatch(audio.setUnlocked());
 
         try {
+            const grandTotal = calculateBillsSummery(review?.bills ?? [], review?.zero_fee_items ?? []);
+            const allPaymentMethods = payment?.payment_methods ?? []
 
-            // collect location
-            const locationData = await getLocation()
-            const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
+            if (payment?.compliment_amount > 0) {
+                allPaymentMethods.push({
+                    unique_id: 82657944156,
+                    method: 'WALLET',
+                    amount: payment?.compliment_amount
+                })
+            }
 
-            const summery = calculateBillsSummery(
-                review?.bills ?? [],
-                review?.zero_fee_items ?? [],
-                payment?.complement_amount ?? 0
-            )
-            const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-            const balance = summery?.grandTotal - enteredAmount
+            const enteredAmount = allPaymentMethods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+            const balance = grandTotal - enteredAmount
+
             // Setup Body
             const body = {
-                service_job_uuid: serviceForm?.service_form_uuid,
-                customer_id: serviceForm?.customer_id,
-                registration_id: serviceForm?.registration_id,
-                visit_uuid: serviceForm?.visit_uuid,
-                technician_uuid: serviceForm?.technician_uuid,
-                location: location,
-                grand_total: summery?.subTotal || 0,
-                receivable_amount: summery?.grandTotal || 0, // without compliment
-                payment_methods: payment?.payment_methods,
-                promise_amount: balance,
-                promise_date: payment?.balance_payment_date,
-                promise_reason: payment?.balance_payment_reason,
+                grand_total: grandTotal || 0,
+                payment_methods: allPaymentMethods,
+                promise_amount: balance ?? 0,
+                promise_date: payment?.balance_payment_date ?? null,
+                promise_reason: payment?.balance_payment_reason ?? null,
                 paid_amount: enteredAmount,
-                paid_from_compliment: payment?.complement_amount,
                 zero_fee_items: review?.zero_fee_items
             }
 
             const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {
+                params: {
+                    work_key: serviceForm?.work_key
+                },
                 timeout: 5 * 60 * 1000,
                 onUploadProgress: (progressEvent) => {
                     if (!progressEvent.total) return;
@@ -234,7 +230,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
 
                 {/* Buttons */}
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} severity={'secondary'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
                     <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet} />
                 </div>
@@ -259,7 +255,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} severity={'secondary'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet} />
 

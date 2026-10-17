@@ -31,7 +31,7 @@ const SelfCloseForm = () => {
 
     useEffect(() => {
         setPayment({
-            complement_amount: data?.wallet?.amount || 0
+            compliment_amount: data?.wallet?.amount || 0
         })
 
         setReview({

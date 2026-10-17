@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './otp-verification.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '../../../UI_Primitives/buttons/Button';
+import Button from '../../../../UI_Primitives/buttons/Button';
 import { TbBrandWhatsapp, TbDeviceSim1, TbDeviceSim2, TbRefresh } from 'react-icons/tb';
-import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers';
-import { toStandardText } from '../../../../utils/helpers/text-formatting';
-import Message from '../../../UI_Primitives/message/Message';
-import { api } from '../../../../api'
-import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
-import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice';
+import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../../utils/helpers/date-helpers';
+import { toStandardText } from '../../../../../utils/helpers/text-formatting';
+import Message from '../../../../UI_Primitives/message/Message';
+import { api } from '../../../../../api'
+import { sfActions } from '../../../../../redux/features/persisted/applicationSlice';
+import { toast } from '../../../../../redux/features/non_persisted/miniSystemSlice';
 
 const OtpVerification = ({ resetType }) => {
     const dispatch = useDispatch();
@@ -40,7 +40,11 @@ const OtpVerification = ({ resetType }) => {
         try {
             setLoading('refetch')
 
-            const logs = await api.vfTv2Axios.get(`/registered-service/${serviceForm?.registration_id}/${serviceForm?.visit_uuid}/verify/otp-logs`)
+            const logs = await api.vfTv2Axios.get(`/registered-service/verify/otp-logs`, {
+                params: {
+                    work_key: serviceForm?.work_key
+                }
+            })
             dispatch(sfActions.updateVerification({
                 otpLogs: logs || []
             }))
@@ -57,9 +61,13 @@ const OtpVerification = ({ resetType }) => {
 
     const resendOtp = async (sendType, numberType) => {
         try {
-            await api.vfTv2Axios.post(`/registered-service/${serviceForm?.registration_id}/${serviceForm?.visit_uuid}/resend-otp`, {
+            await api.vfTv2Axios.post(`/registered-service/resend-otp`, {
                 number_type: numberType,
                 send_type: sendType
+            }, {
+                params: {
+                    work_key: serviceForm?.work_key
+                }
             })
 
             dispatch(sfActions.updateVerification({
@@ -91,8 +99,12 @@ const OtpVerification = ({ resetType }) => {
         try {
             setLoading('verify')
 
-            await api.vfTv2Axios.post(`/registered-service/${serviceForm?.registration_id}/${serviceForm?.visit_uuid}/verify/otp`, {
+            await api.vfTv2Axios.post(`/registered-service/verify/otp`, {
                 otp: OTP || otp
+            }, {
+                params: {
+                    work_key: serviceForm?.work_key
+                }
             })
 
             dispatch(sfActions.updateVerification({
@@ -113,12 +125,14 @@ const OtpVerification = ({ resetType }) => {
 
     const handleChangeOtp = (e) => {
 
-        if (e.target.value.length > 6) return;
+        const value = e.target.value.replace(/\D/g, '');
 
-        setOtp(e.target.value)
+        if (value.length > 6) return;
 
-        if (e.target.value.length === 6) {
-            verifyOtp(e.target.value)
+        setOtp(value);
+
+        if (value.length === 6) {
+            verifyOtp(value);
         }
     }
 
@@ -149,6 +163,7 @@ const OtpVerification = ({ resetType }) => {
         return () => clearInterval(timer);
     }, []);
 
+
     return (
         <div className="tech-service-form-otp-verification-comp" >
             {/* Info */}
@@ -169,10 +184,9 @@ const OtpVerification = ({ resetType }) => {
                     e.preventDefault();
                     verifyOtp()
                 }}>
-                    <input value={otp} placeholder='______' type='number' onChange={handleChangeOtp} name='otp' min={0} />
+                    <input value={otp} placeholder='______' type='text' onChange={handleChangeOtp} name='otp' min={0} />
                     <Button label={'Verify'} rounded severity={'primary'} disabled={loading === 'verify'}
                         spinIcon={loading === 'verify'} />
-
 
                     <p className='reset-type' onClick={resetType}>Try Another Verification Type</p>
                 </form>

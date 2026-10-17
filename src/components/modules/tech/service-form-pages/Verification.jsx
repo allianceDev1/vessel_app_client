@@ -1,11 +1,11 @@
 import './verification.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
-import OtpVerification from '../OtpVerification'
+import { sfActions } from '../../../../redux/features/persisted/applicationSlice'
+import OtpVerification from '../service-form-components/verification/OtpVerification'
 
 
 
-const Verification = ({ }) => {
+const Verification = () => {
     const dispatch = useDispatch();
     const { verification } = useSelector((state) => state.application)
 
@@ -36,14 +36,6 @@ const Verification = ({ }) => {
         }))
     }
 
-    const setVerificationType = (type) => {
-        dispatch(sfActions.updateVerification({
-            verification_type: type,
-            is_verified: false,
-            verification_at: null
-        }))
-    }
-
     return (
         <div className="tech-service-form-page verification">
             {/* Title */}
@@ -63,7 +55,7 @@ const Verification = ({ }) => {
                     <p>Fallback verification</p>
                 </div>
             </div>}
-
+ 
             {/* OTP Verification */}
             {verification?.verification_type && !verification?.is_verified && verification?.verification_type === 'OTP' &&
                 <OtpVerification resetType={resetVerificationType} />}

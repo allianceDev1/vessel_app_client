@@ -1,9 +1,13 @@
 @use '../../../../assets/scss/mixins/mixin.scss' as *;
 
 .tech-bill-review-page-container {
+    padding-bottom: 20px;
 
     .bill-border {
-        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 24px;
 
         .list-section {
             position: relative;
@@ -14,44 +18,83 @@
                 position: sticky;
                 top: 70px;
                 z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
 
                 h5 {
                     font-size: 14px;
                     font-weight: 500;
+                    margin: 0;
+                }
+
+                .group-count {
+                    font-size: 11px;
+                    font-weight: 500;
+                    color: var(--text-tertiary);
+                    background-color: var(--surface-2);
+                    padding: 2px 8px;
+                    border-radius: 20px;
+                    border: 1px solid var(--border-light);
                 }
             }
 
+            .items-list {
+                display: flex;
+                flex-direction: column;
+            }
+
             .item {
-                padding: 8px;
+                padding: 10px 6px;
                 border-bottom: 1px solid var(--border-medium);
                 display: grid;
-                grid-template-columns: 30px 1fr;
-                gap: 15px;
+                grid-template-columns: 26px 1fr;
+                gap: 10px;
+                align-items: center;
                 cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+
+                &.unselected {
+                    .item-name {
+                        color: var(--text-tertiary);
+                    }
+
+                    .charged-value {
+                        color: var(--text-muted);
+                        text-decoration: line-through;
+                    }
+                }
+
+                &.item-disabled {
+                    cursor: default;
+                }
 
                 .checkbox-section {
                     display: flex;
                     align-items: center;
 
                     .item-checkbox {
-                        width: 25px;
-                        height: 25px;
+                        width: 22px;
+                        height: 22px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
                         border: 2px solid var(--border-medium);
-                        border-radius: 100%;
-                        cursor: pointer;
+                        border-radius: 6px;
+                        background-color: transparent;
+                        transition: all 0.15s ease;
 
                         svg {
-                            font-size: 22px;
-                            color: var(--text-primary);
+                            font-size: 15px;
+                            stroke-width: 2.5;
+                            color: #fff;
                             display: none;
                         }
                     }
 
                     .checked {
-                        border-color: var(--text-primary);
+                        background-color: var(--color-primary);
+                        border-color: var(--color-primary);
 
                         svg {
                             display: block;
@@ -59,72 +102,131 @@
                     }
 
                     .disabled {
-                        border-color: var(--text-muted);
+                        opacity: 0.45;
+                        background-color: var(--surface-2);
+                        border-color: var(--border-medium);
 
-                        svg {
-                            color: var(--text-muted);
+                        &.checked {
+                            background-color: var(--text-muted);
+                            border-color: var(--text-muted);
+                        }
+                    }
+                }
+
+                .item-body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    min-width: 0;
+
+                    .item-top-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 10px;
+
+                        .item-name {
+                            font-size: 15px;
+                            font-weight: 500;
+                            color: var(--text-primary);
+                            margin: 0;
+                            @include threeDots();
+                        }
+
+                        .charged-value {
+                            flex-shrink: 0;
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: var(--text-primary);
                         }
                     }
 
-
-                }
-
-                .name-section {
-                    h3 {
-                        font-size: 16px;
-                        font-weight: 500;
-                        @include threeDots();
-                    }
-                }
-
-                .detail-section {
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 10px;
-
-                    div {
+                    .item-bottom-row {
                         display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-                    }
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
 
-                    .single-price {
-                        font-size: 13px;
-                        font-weight: 500;
-                        color: var(--text-tertiary);
-                    }
+                        .item-meta {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            min-width: 0;
 
-                    .qty {
-                        font-size: 13px;
-                        font-weight: 500;
-                        color: var(--text-secondary);
-                    }
+                            .item-type-badge {
+                                font-size: 10px;
+                                font-weight: 600;
+                                text-transform: uppercase;
+                                letter-spacing: 0.3px;
+                                padding: 1px 6px;
+                                border-radius: 4px;
+                                background-color: var(--surface-2);
+                                color: var(--text-secondary);
+                                border: 1px solid var(--border-light);
+                                white-space: nowrap;
+                            }
 
-                    .price {
-                        font-size: 18px;
-                        font-weight: 600;
-                        color: var(--text-primary);
-                        text-align: end;
-                    }
+                            .qty-text {
+                                font-size: 12px;
+                                color: var(--text-tertiary);
+                                white-space: nowrap;
 
-                    .estimate {
-                        font-size: 13px;
-                        font-weight: 500;
-                        color: var(--text-tertiary);
-                        text-align: end;
+                                strong {
+                                    color: var(--text-secondary);
+                                    font-weight: 500;
+                                }
+                            }
+                        }
+
+                        .estimate-value {
+                            flex-shrink: 0;
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: var(--text-tertiary);
+                        }
                     }
                 }
             }
         }
 
-        .grand-total {
-            padding: 10px;
-            text-align: end;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-primary);
+        .grand-total-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--surface-2);
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            padding: 14px 18px;
+
+            .grand-total-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .gt-label {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                .gt-sub {
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                }
+            }
+
+            .gt-amount {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--color-primary);
+                margin: 0;
+            }
         }
+    }
 
-
+    .bill-review-footer {
+        position: sticky;
+        bottom: 12px;
+        z-index: 5;
     }
 }

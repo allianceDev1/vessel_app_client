@@ -10,7 +10,7 @@ const BillSummery = ({ review, payment, expand = true }) => {
         const summery = calculateBillsSummery(
             review?.bills ?? [],
             review?.zero_fee_items ?? [],
-            payment?.complement_amount ?? 0
+            payment?.compliment_amount ?? 0
         )
         setBillSummery(summery)
 
@@ -25,7 +25,7 @@ const BillSummery = ({ review, payment, expand = true }) => {
                 </div>
 
                 <div className="item">
-                    <p className="label">Complement (Less)</p>
+                    <p className="label">compliment (Less)</p>
                     <p className='value'>₹{billSummery?.discount || 0}</p>
                 </div>
             </>}

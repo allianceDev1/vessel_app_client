@@ -2,6 +2,42 @@
 
 .sf-page-four {
 
+    .verification-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        background-color: var(--color-success);
+        padding: 10px 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+
+        div {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            color: white;
+
+            svg {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 14px;
+                font-size: 500;
+            }
+
+            .action {
+                text-decoration: underline;
+                cursor: pointer;
+                text-align: end;
+                font-size: 13px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+        }
+    }
+
     .payment-container {
         margin-top: 20px;
 

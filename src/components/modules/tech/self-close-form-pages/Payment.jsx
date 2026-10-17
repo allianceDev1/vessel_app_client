@@ -95,7 +95,7 @@ const Payment = ({ page, review, payment, setPayment }) => {
         const summery = calculateBillsSummery(
             review?.bills ?? [],
             review?.zero_fee_items ?? [],
-            payment?.complement_amount ?? 0
+            payment?.compliment_amount ?? 0
         )
 
         setGrandTotal(summery?.grandTotal || 0)
