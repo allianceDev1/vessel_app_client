@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import './form-review.scss'
+import './review-section.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { serviceFormPageRoute } from '../../../../../assets/javascript/pre_data/service';
-import { api } from '../../../../../api';
-import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice';
-import SkeletonGrid from '../../../../UI_Primitives/skeleton/SkeletonGrid';
-import ErrorState from '../../../../UI_Primitives/ui-states/ErrorState';
-import { TbFile, TbShieldCheckFilled } from 'react-icons/tb';
-import BillSummery from '../BillSummery';
-import Badge from '../../../../UI_Primitives/badge/Badge';
-import Button from '../../../../UI_Primitives/buttons/Button';
-import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
-import { toStandardText } from '../../../../../utils/helpers/text-formatting';
+import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service';
+import { api } from '../../../../api';
+import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice';
+import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
+import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
+import { TbFile } from 'react-icons/tb';
+import BillSummery from '../service-form-components/BillSummery';
+import Badge from '../../../UI_Primitives/badge/Badge';
+import Button from '../../../UI_Primitives/buttons/Button';
+import { calculateBillTotalAmount } from '../../../../utils/helpers/math-equations';
 
 
-const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
+
+const ReviewSection = ({ pageKey, setOpenedBill }) => {
     const dispatch = useDispatch();
-    const { serviceForm, serviceFormSettings, review, verification } = useSelector((state) => state.application)
+    const { serviceForm, serviceFormSettings, review } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
     const [error, setError] = useState({ error: false, title: null, message: null })
 
@@ -26,9 +26,7 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
 
             const resReview = await api.vfTv2Axios.get(`/service/service-form/bill-reviews`, {
                 params: {
-                    service_job_uuid: serviceForm?.service_form_uuid,
-                    registration_id: serviceForm?.registration_id,
-                    visit_uuid: serviceForm?.visit_uuid
+                    work_key: serviceForm?.work_key
                 }
             })
 
@@ -61,8 +59,8 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
         <div className="tech-service-form-page form-review">
             {/* Title */}
             <div className="title-section">
-                <h3>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
             {/* Loading */}
@@ -85,19 +83,6 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
             {/* Content */}
             {!loading && !error?.error && <div className='tech-sf-review-page'>
 
-                {/* Verification */}
-                <div className="verification-container">
-                    <div>
-                        <TbShieldCheckFilled />
-                        <p>Service verified by {toStandardText(verification?.verification_type)}</p>
-                    </div>
-                    <div>
-                        {verification?.verification_type !== 'OTP' &&
-                            <p className='action' onClick={() => setVerificationType('OTP')}>Use OTP ?</p>}
-                    </div>
-                </div>
-
-
                 {/* Bill Summery */}
                 <BillSummery />
 
@@ -117,12 +102,13 @@ const ReviewForm = ({ page, setVerificationType, setOpenedBill }) => {
                         </div>
                     ))}
                 </div>
-                <div className="submit-section">
-                    <Button label={'Next'} rounded style={{ width: '100%' }} onClick={() => dispatch(sfSetting.setActivePage(102))} />
+                <div className="submit-section" style={{ marginTop: '40px' }}>
+                    <Button label={'Next'} rounded style={{ width: '100%' }} severity={'secondary'}
+                        onClick={() => dispatch(sfSetting.page.next(1002))} />
                 </div>
             </div>}
         </div>
     )
 }
 
-export default ReviewForm
+export default ReviewSection

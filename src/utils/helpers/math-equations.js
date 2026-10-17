@@ -172,7 +172,7 @@ export const calculateBillTotalAmount = (items, zeroFeeItems = []) => {
     return total;
 }
 
-export const calculateBillsSummery = (bills = [], zeroFeeItems = [], maxDiscount = 0) => {
+export const calculateBillsSummery = (bills = [], zeroFeeItems = []) => {
 
     const allBillTotal = bills.reduce(
         (sum, bill) =>
@@ -184,14 +184,7 @@ export const calculateBillsSummery = (bills = [], zeroFeeItems = [], maxDiscount
         0
     );
 
-    const compliment = maxDiscount > allBillTotal ? allBillTotal : maxDiscount
-    const grandTotal = allBillTotal - compliment
-
-    return {
-        subTotal: allBillTotal,
-        discount: compliment,
-        grandTotal: grandTotal
-    }
+    return allBillTotal ?? 0
 
 }
 

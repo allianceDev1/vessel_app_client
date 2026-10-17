@@ -16,7 +16,6 @@ import WpCurrentCondition from '../../../components/modules/tech/service-form-pa
 import WpWithNewSpun from '../../../components/modules/tech/service-form-pages/WpWithNewSpun'
 import VfCurrentCondition from '../../../components/modules/tech/service-form-pages/VfCurrentCondition'
 import VfInspection from '../../../components/modules/tech/service-form-pages/VfInspection'
-// import Review from '../../../components/modules/tech/service-form-pages/Review'
 // import Payment from '../../../components/modules/tech/service-form-pages/Payment'
 import AdCurrentCondition from '../../../components/modules/tech/service-form-pages/AdCurrentCondition'
 import { useQuery } from '@tanstack/react-query'
@@ -27,6 +26,8 @@ import WorkSection from '../../../components/modules/tech/service-form-pages/Wor
 import VfEvaluation from '../../../components/modules/tech/service-form-pages/VfEvaluation'
 import AdEvaluation from '../../../components/modules/tech/service-form-pages/AdEvaluation'
 import WpEvaluation from '../../../components/modules/tech/service-form-pages/WpEvaluation'
+import ReviewSection from '../../../components/modules/tech/service-form-pages/ReviewSection'
+import BillReview from '../../../components/modules/tech/service-form-pages/BillReview'
 
 const ServiceForm = () => {
     const navigate = useNavigate();
@@ -34,6 +35,8 @@ const ServiceForm = () => {
     const { formResources, serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [isVerifying, setIsVerifying] = useState(false)
     const [verification, setVerification] = useState({ success: true, message: null })
+    const [openedBill, setOpenedBill] = useState({})
+
 
     const serviceFormRef = useRef(serviceForm)
     useEffect(() => {
@@ -209,13 +212,17 @@ const ServiceForm = () => {
                     : <div className="service-form-page-container">
 
                         {/* Main pages */}
-                        {!serviceFormSettings?.activeProduct?.[0] && <>
-                            {serviceFormSettings?.activePage === 1000 && <Home pageKey={1000} />}
-                        </>}
 
-                        {/* {serviceFormSettings?.activePage === 101 && !serviceFormSettings?.activeSubPage &&
-                            <Review page={{ index: 101, type: 'page' }} />}
-                        {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
+                        {serviceFormSettings?.activePage === 1000 && !serviceFormSettings?.activeProduct?.[0]
+                            && ![1001, 1002, 1003].includes(serviceFormSettings?.activePage) &&
+                            < Home pageKey={1000} />}
+
+
+                        {serviceFormSettings?.activePage === 1001 && <>
+                            {!openedBill?.service_srl_no && <ReviewSection setOpenedBill={setOpenedBill} pageKey={1001} />}
+                            {openedBill?.service_srl_no && <BillReview bill={openedBill} setOpenedBill={setOpenedBill} />}
+                        </>}
+                        {/* {serviceFormSettings?.activePage === 102 && !serviceFormSettings?.activeSubPage &&
                             <Payment page={{ index: 102, type: 'page' }} />} */}
 
                         {/* Water purifier */}

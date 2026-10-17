@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import Button from '../../../UI_Primitives/buttons/Button'
+import Button from '../../../../UI_Primitives/buttons/Button'
 import './stopwatch.scss'
 
 const StopWatch = () => {

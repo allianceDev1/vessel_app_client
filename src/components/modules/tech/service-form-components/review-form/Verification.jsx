@@ -5,7 +5,7 @@ import OtpVerification from '../OtpVerification'
 
 
 
-const Verification = ({ resetVerificationType }) => {
+const Verification = ({ }) => {
     const dispatch = useDispatch();
     const { verification } = useSelector((state) => state.application)
 
@@ -21,6 +21,22 @@ const Verification = ({ resetVerificationType }) => {
             return;
         }
 
+        dispatch(sfActions.updateVerification({
+            verification_type: type,
+            is_verified: false,
+            verification_at: null
+        }))
+    }
+
+    const resetVerificationType = () => {
+        dispatch(sfActions.updateVerification({
+            verification_type: null,
+            is_verified: false,
+            verification_at: null
+        }))
+    }
+
+    const setVerificationType = (type) => {
         dispatch(sfActions.updateVerification({
             verification_type: type,
             is_verified: false,

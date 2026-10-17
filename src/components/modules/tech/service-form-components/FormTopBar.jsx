@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TbCalculator, TbChevronLeft, TbClockHour5, TbRotate2, TbStopwatch } from 'react-icons/tb';
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice';
-import StopWatch from './StopWatch';
-import Calculator from './Calculator';
+import StopWatch from './tools/StopWatch';
+import Calculator from './tools/Calculator';
 
 
 // top margin of `.body-container` in techLayout.scss (space reserved for the layout header)
@@ -86,7 +86,7 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
 
   const customerId = serviceForm?.customer_id
   const productId = serviceFormSettings?.activeProduct?.[0]
-  const packageName = productId && serviceFormSettings?.activeProduct?.[2] 
+  const packageName = productId && serviceFormSettings?.activeProduct?.[2]
     ? serviceFormSettings?.activeProduct?.[2]
     : ''
 
@@ -120,9 +120,11 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
         </div>
 
         <div className="tb-tools">
-          <button type="button" className="tb-icon-btn" title="Stopwatch" onClick={openStopWatch}><TbStopwatch /></button>
+          {![1001, 1002, 1003].includes(serviceFormSettings.activePage) &&
+            <button type="button" className="tb-icon-btn" title="Stopwatch" onClick={openStopWatch}><TbStopwatch /></button>}
           <button type="button" className="tb-icon-btn" title="Calculator" onClick={openCalculator}><TbCalculator /></button>
-          <button type="button" className="tb-icon-btn" title="Refresh" disabled={isSyncing} onClick={handleReloadResources}><TbRotate2 /></button>
+          {![1001, 1002, 1003].includes(serviceFormSettings.activePage) &&
+            <button type="button" className="tb-icon-btn" title="Refresh" disabled={isSyncing} onClick={handleReloadResources}><TbRotate2 /></button>}
         </div>
       </div>
     </div>

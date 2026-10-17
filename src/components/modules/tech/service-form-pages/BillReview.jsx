@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './bill-review.scss'
-import Button from '../../../../UI_Primitives/buttons/Button';
+import Button from '../../../UI_Primitives/buttons/Button';
 import { TbCheck } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
-import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
-import { sfActions } from '../../../../../redux/features/persisted/applicationSlice';
-import { groupItemsByGroupId } from '../../../../../utils/services/work_services';
+import { calculateBillTotalAmount } from '../../../../utils/helpers/math-equations';
+import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
+import { groupItemsByGroupId } from '../../../../utils/services/work_services';
 
 const BillReview = ({ bill, setOpenedBill }) => {
     const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const BillReview = ({ bill, setOpenedBill }) => {
 
             </div>
 
-            <Button label={'Done'} rounded style={{ width: '100%' }} onClick={() => setOpenedBill({})} />
+            <Button label={'Done'} severity={'secondary'} rounded style={{ width: '100%' }} onClick={() => setOpenedBill({})} />
         </div>
     )
 }

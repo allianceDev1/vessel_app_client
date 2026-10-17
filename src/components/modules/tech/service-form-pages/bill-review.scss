@@ -1,4 +1,4 @@
-@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
 
 .tech-bill-review-page-container {
 
@@ -12,7 +12,7 @@
                 background-color: var(--surface-1);
                 padding: 10px 15px;
                 position: sticky;
-                top: 140px;
+                top: 70px;
                 z-index: 1;
 
                 h5 {
