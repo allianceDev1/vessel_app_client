@@ -226,13 +226,28 @@ const ControllerLayout = ({ children }) => {
                             <IconMenu2 size={20} />
                         </div>
 
-                        {/* Breadcrumbs */}
-                        <div className="breadcrumbs">
-                            <span className={`crumb`}    >
-                                {page?.title}
-                            </span>
-
-                        </div>
+                        {/* Page Header / Title */}
+                        {(page?.title || page?.head || page?.note) && (
+                            <div className="page-header">
+                                <div className="page-title-wrap">
+                                    {page?.icon && (
+                                        <span className="page-title-icon">
+                                            {page?.icon}
+                                        </span>
+                                    )}
+                                    {(page?.title || page?.head) && (
+                                        <h2 className="page-title">
+                                            {page?.title || page?.head}
+                                        </h2>
+                                    )}
+                                </div>
+                                {page?.note && (
+                                    <p className="page-note">
+                                        {page?.note}
+                                    </p>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     <div className="header-right">

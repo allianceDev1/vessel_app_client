@@ -159,7 +159,7 @@ export const calculateBillTotalAmount = (items, zeroFeeItems = []) => {
     let total = 0;
 
     items?.map((item) => {
-        if (!zeroFeeItems?.includes(item?.uuid)) {
+        if (!zeroFeeItems?.includes(item?.unique_key)) {
             total = total + Number(item?.total || 0)
         }
 

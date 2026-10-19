@@ -336,9 +336,9 @@ const WorkHome = ({ setWorkMenu }) => {
               />
             )}
         </>}
-
+       
         {/* Repeat */}
-        {serviceForm?.repeat?.system_say && (
+        {productInForm?.service_data?.repeat?.system_say && (
           <>
             <h4 style={{ marginTop: '15px' }}>Repeat work</h4>
             <div className="form-section">

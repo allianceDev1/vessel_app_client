@@ -43,6 +43,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             return;
         }
 
+
         if (!formVerification?.ok) {
             setLoading(false)
             return;
@@ -55,7 +56,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             const grandTotal = calculateBillsSummery(review?.bills ?? [], review?.zero_fee_items ?? []);
             const allPaymentMethods = payment?.payment_methods ?? []
 
-            if (payment?.compliment_amount > 0) {
+            if (payment?.compliment_amount > 0 && review?.is_ready_to_pay) {
                 allPaymentMethods.push({
                     unique_id: 82657944156,
                     method: 'WALLET',
@@ -70,7 +71,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             const body = {
                 grand_total: grandTotal || 0,
                 payment_methods: allPaymentMethods,
-                promise_amount: balance ?? 0,
+                promise_amount: review?.is_ready_to_pay ? balance ?? 0 : 0,
                 promise_date: payment?.balance_payment_date ?? null,
                 promise_reason: payment?.balance_payment_reason ?? null,
                 paid_amount: enteredAmount,
@@ -151,8 +152,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
 
     useEffect(() => {
         // Check required element
-        if (!serviceForm?.customer_id || !serviceForm?.registration_id || !serviceForm?.in_time || !serviceForm?.visit_uuid
-            || !serviceForm?.technician_uuid) {
+        if (!serviceForm?.customer_id || !serviceForm?.work_key) {
             setFormVerification({ ok: false, type: 'danger', message: "The required form element are missing" })
 
             return;
