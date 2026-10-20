@@ -8,6 +8,25 @@ const STATUS_CONFIG = {
     Traveling: { label: "Traveling", color: "#38bdf8", bg: "var(--surface-1)" },
 };
 
+const VISIT_TYPE_CONFIG = {
+    DEFAULT: { label: "Default", color: "#8b5cf6", lightColor: "rgba(139, 92, 246, 0.32)" },
+    WATER_PURIFIER: { label: "Water Purifier", color: "#00B4D8", lightColor: "rgba(0, 180, 216, 0.32)" },
+    VESSEL_FILTER: { label: "Vessel Filter", color: "#0087cf", lightColor: "rgba(0, 135, 207, 0.32)" },
+};
+
+const normalizeVisitType = (type) => {
+    if (!type) return 'DEFAULT';
+    const upper = String(type).trim().toUpperCase();
+    if (upper === 'WATER_PURIFIER' || upper === 'WP') return 'WATER_PURIFIER';
+    if (upper === 'VESSEL_FILTER' || upper === 'VF') return 'VESSEL_FILTER';
+    return 'DEFAULT';
+};
+
+const getVisitTypeConfig = (type) => {
+    const key = normalizeVisitType(type);
+    return VISIT_TYPE_CONFIG[key] || VISIT_TYPE_CONFIG.DEFAULT;
+};
+
 
 const TodayWorkFlow = ({ technicians, workFlows }) => {
 
@@ -39,11 +58,13 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                 const status = getStatus(w);
                 const effectiveWorkStart = w.workStart ?? now;
                 const effectiveWorkClose = w.workClose ?? now;
+                const visit_type = w.visit_type || 'DEFAULT';
 
                 segments.push({
                     workId: w.id,
                     label: w.label,
                     status,
+                    visit_type,
                     travelStart: w.travelStart,
                     workStart: w.workStart,
                     workClose: w.workClose,
@@ -67,6 +88,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                     workId: seg.workId,
                     label: seg.label,
                     status: seg.status,
+                    visit_type: seg.visit_type,
                     travelStart: seg.travelStart,
                     workStart: seg.workStart,
                     workClose: seg.workClose,
@@ -79,6 +101,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                         workId: seg.workId,
                         label: seg.label,
                         status: seg.status,
+                        visit_type: seg.visit_type,
                         travelStart: seg.travelStart,
                         workStart: seg.workStart,
                         workClose: seg.workClose,
@@ -102,20 +125,20 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
         const data = hoveredSegmentRef.current;
         if (!data || data.type === "gap") return null;
 
-        const tech = technicians.find((t) => t.worker_name === label);
         const statusCfg = STATUS_CONFIG[data.status] || STATUS_CONFIG.Completed;
+        const visitCfg = getVisitTypeConfig(data.visit_type);
 
         return (
             <div style={{
                 background: "var(--surface)",
-                border: `1px solid ${tech.color}`,
+                border: `1px solid ${visitCfg.color}`,
                 borderRadius: 10,
                 padding: "12px 16px",
                 minWidth: 200,
                 boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
             }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 10 }}>
-                    <div style={{ fontWeight: 700, fontSize: 13, color: tech.color, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: visitCfg.color, letterSpacing: "0.04em", textTransform: "uppercase" }}>
                         {data.label}
                     </div>
                     <div style={{ fontSize: 10, fontWeight: 700, color: statusCfg.color, background: statusCfg.bg, border: `1px solid ${statusCfg.color}44`, borderRadius: 4, padding: "2px 7px", whiteSpace: "nowrap" }}>
@@ -123,6 +146,8 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                     </div>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "4px 12px", fontSize: 12 }}>
+                    <span style={{ color: "var(--text-muted)" }}>Visit Type</span>
+                    <span style={{ color: visitCfg.color, fontWeight: 600 }}>{visitCfg.label}</span>
                     <span style={{ color: "var(--text-muted)" }}>Travel Start</span>
                     <span style={{ color: "var(--text_secondary-1)", fontWeight: 600 }}>{toHHMM(data.travelStart)}</span>
                     <span style={{ color: "var(--text-muted)" }}>Work Start</span>
@@ -191,6 +216,18 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
 
     return (
         <div className="chart-controller-today-work-flow-container" >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '10px', paddingLeft: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-disabled)', fontWeight: 500 }}>Visit Type:</span>
+                {Object.entries(VISIT_TYPE_CONFIG).map(([key, config]) => (
+                    <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: config.color, display: 'inline-block' }} />
+                        <span style={{ fontSize: '12px', color: 'var(--text-secondary-alt)', fontWeight: 500 }}>{config.label}</span>
+                    </div>
+                ))}
+                <span style={{ fontSize: '11px', color: 'var(--text-disabled)', fontWeight: 500, marginLeft: '6px' }}>
+                    (Light: Travel, Solid: Work)
+                </span>
+            </div>
             <div >
                 <ResponsiveContainer width="100%" height={(technicians.length * 50) + 30}>
                     <BarChart
@@ -250,16 +287,17 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                                     if (!meta || meta.type === "gap") {
                                         return <Cell key={ri} fill="transparent" />;
                                     }
-                                    const tech = technicians.find((t) => t.worker_name === row.name);
+                                    const visitCfg = getVisitTypeConfig(meta.visit_type);
+                                    const barColor = visitCfg.color;
+                                    const travelColor = visitCfg.lightColor || `${barColor}45`;
 
                                     if (meta.type === "travel") {
                                         return (
                                             <Cell
                                                 key={ri}
-                                                fill={tech.color}
-                                                // opacity={0.3}
-                                                stroke={tech.color}
-                                                strokeWidth={0.5}
+                                                fill={travelColor}
+                                                stroke={barColor}
+                                                strokeWidth={0.8}
                                                 strokeDasharray="3 2"
                                                 radius={[10, 0, 0, 10]}
                                                 height={20}
@@ -269,9 +307,8 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                                     return (
                                         <Cell
                                             key={ri}
-                                            fill={tech.color}
-                                            // opacity={0.85}
-                                            stroke={tech.color}
+                                            fill={barColor}
+                                            stroke={barColor}
                                             strokeWidth={0.5}
                                             radius={meta.status === "Completed" ? [0, 10, 10, 0] : [0, 0, 0, 0]}
                                             height={20}
@@ -302,10 +339,11 @@ export default TodayWorkFlow
 
 //? Work array object formate
 // {
-//  techId: w?.technician_uuid,
+//                 techId: w?.technician_uuid,
 //                 id: w?.customer_id,
 //                 label: `${w?.customer_id} - ${w?.customer_name}`,
 //                 travelStart: w?.pickup_work_at ? isoToDecimalHour(w?.pickup_work_at) : null,
 //                 workStart: w?.start_work_at ? isoToDecimalHour(w?.start_work_at) : null,
 //                 workClose: w?.end_work_at ? isoToDecimalHour(w?.end_work_at) : null,
+//                 visit_type: w?.visit_type, // 'DEFAULT' | 'WATER_PURIFIER' | 'VESSEL_FILTER'
 // }

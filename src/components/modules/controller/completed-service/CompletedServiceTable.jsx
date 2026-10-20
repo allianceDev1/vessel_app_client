@@ -20,7 +20,8 @@ const CompletedServiceTable = () => {
         'Post Office': 'post',
         'City': 'city_name',
         'Package Name': 'package_name',
-        'Category': 'category_id',
+        'Service': 'category_name',
+        'Product Type': 'product_type',
         'Reg No': 'registration_id',
         'Product Id': 'product_id',
     })[id] || id
@@ -77,8 +78,9 @@ const CompletedServiceTable = () => {
                         'CID': item.customer_id,
                         "Customer name": item.customer_name,
                         'Product Id': item.product_id,
+                        'Product Type': item.product_type,
                         'Origin': toStandardText(item.origin_category),
-                        'Service': item.category_id,
+                        'Service': item.category_name,
                         'Service Srl No': item.service_srl_no,
                         'Reg No': item.registration_id,
                         'Technician': item.technician,
@@ -98,7 +100,7 @@ const CompletedServiceTable = () => {
         // eslint-disable-next-line
     }, [navigate, searchParams.get('view_type'), searchParams.get('product_id'), searchParams.get('customer_id'), searchParams.get('technician_id'),
         // eslint-disable-next-line
-        searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no'), searchParams.get('rnd'), searchParams.get('unverified')])
+        searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no'), searchParams.get('rnd'), searchParams.get('unverified'), searchParams.get('product_type')])
 
     const tableColumns = useMemo(() => {
 
@@ -107,7 +109,6 @@ const CompletedServiceTable = () => {
 
                 setColumnVisibility({
                     'Post Office': false,
-                    'Reg No': false
                 })
 
                 return [
@@ -126,7 +127,7 @@ const CompletedServiceTable = () => {
             case 'product': {
                 setColumnVisibility({
                     'Customer name': false,
-                    'Reg No': false
+                    'Origin': false
                 })
 
                 return [
@@ -134,9 +135,11 @@ const CompletedServiceTable = () => {
                     { header: 'CID', accessorKey: 'CID', enableHiding: false },
                     { header: 'Customer name', accessorKey: 'Customer name' },
                     { header: 'Product Id', accessorKey: 'Product Id', },
+                    { header: 'Product Type', accessorKey: 'Product Type', },
                     { header: 'Origin', accessorKey: 'Origin', },
                     {
                         header: 'Package',
+                        accessorKey: 'Package',
                         enableSorting: false,
                         enableColumnFilter: false,
                         meta: { style: { textAlign: 'center' } },
@@ -174,7 +177,7 @@ const CompletedServiceTable = () => {
                 columnVisible={columnVisibility}
                 queryKey={['completed_service_table_list', listType, searchParams.get('product_id'), searchParams.get('customer_id'),
                     searchParams.get('technician_id'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('reg_no'),
-                    searchParams.get('rnd'), searchParams.get('unverified')]}
+                    searchParams.get('rnd'), searchParams.get('unverified'), searchParams.get('product_type')]}
                 tableKey="completed_service"
             />
         </div>

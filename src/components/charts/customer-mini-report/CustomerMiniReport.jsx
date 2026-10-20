@@ -5,8 +5,8 @@ import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, XAxis, YAxis }
 import { renderCustomChartLabel } from '../../../utils/helpers/chart_utils'
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { api } from '../../../api'
-import ChartTooltip from '../primitives/ChartTooltip';
-import ChartLegend from '../primitives/ChartLegend';
+import ChartTooltip from '../primitives/ChartTooltip'
+import ChartLegend from '../primitives/ChartLegend'
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
 import { modal } from '../../../redux/features/non_persisted/miniSystemSlice'
@@ -14,10 +14,8 @@ import { useDispatch } from 'react-redux'
 import SearchCustomerByKey from '../../forms/controller/search-customer/SearchCustomerByKey'
 import { useQuery } from '@tanstack/react-query'
 
-
 const CustomerMiniReport = () => {
-    const dispatch = useDispatch();
-
+    const dispatch = useDispatch()
 
     const openSearchModal = () => {
         dispatch(modal.push({
@@ -29,8 +27,8 @@ const CustomerMiniReport = () => {
 
     const {
         data: {
-            productChart = [],
-            productReport = {},
+            vesselReport = {},
+            purifierReport = {},
             customerCount = [],
             addOnReport = {},
         } = {},
@@ -38,98 +36,116 @@ const CustomerMiniReport = () => {
         error: reportError,
         dataUpdatedAt: reportDataUpdatedAt,
     } = useQuery({
-        queryKey: ['customer_mini_report'],
+        queryKey: ['customer_mini_report', 'v3'],
         queryFn: async () => {
             const reports = await api.vfCv2Axios.get('/product/mini-report')
 
-            // Vessel
-            const totalPackageProducts = reports?.vessel_report?.packages_counts?.reduce((t, p) => t + p.count, 0) || 0
-            const packageProducts = {}
-            const packageColorCodes = reports?.vessel_report?.packages_counts?.map((p) => {
-                packageProducts[p.package_name] = Number(((p.count / totalPackageProducts) * 100).toFixed(2))
+            // 1. Vessel Report Calculations
+            const vProducts = Number(reports?.vessel_report?.products || 0)
+            const vInHouse = Number(reports?.vessel_report?.inHouse_products || 0)
+            const vOutside = Number(reports?.vessel_report?.outSide_products || 0)
+            const vInHousePct = vProducts > 0 ? Number(((vInHouse / vProducts) * 100).toFixed(2)) : 0
+            const vOutsidePct = vProducts > 0 ? Number(((vOutside / vProducts) * 100).toFixed(2)) : 0
 
-                return {
-                    package_name: p.package_name,
-                    color_code: p?.package_color_code,
-                    value: Number(((p.count / totalPackageProducts) * 100).toFixed(2))
-                };
-            })
+            // 2. Water Purifier Report Calculations
+            const pProducts = Number(reports?.purifier_report?.products || 0)
+            const pInHouse = Number(reports?.purifier_report?.inHouse_products || 0)
+            const pOutside = Number(reports?.purifier_report?.outSide_products || 0)
+            const pInHousePct = pProducts > 0 ? Number(((pInHouse / pProducts) * 100).toFixed(2)) : 0
+            const pOutsidePct = pProducts > 0 ? Number(((pOutside / pProducts) * 100).toFixed(2)) : 0
 
-            // Add-on
-            const addOnProductTypes = {
-                in_house: Number((((reports?.addOn_report?.inHouse_products || 0) / (reports?.addOn_report?.products || 0)) * 100).toFixed(2)),
-                out_side: Number((((reports?.addOn_report?.outSide_products || 0) / (reports?.addOn_report?.products || 0)) * 100).toFixed(2))
-            }
+            // 3. Customer Report Calculations
+            const totalCustomers = Number(reports?.customer_report?.total_customers || 0)
+            const productCustomers = Number(reports?.customer_report?.product_customers || 0)
+            const otherCustomers = Math.max(0, totalCustomers - productCustomers)
 
-            // Output
+            // 4. Add-on Report Calculations
+            const addOnProducts = Number(reports?.addOn_report?.products || 0)
+            const addOnInHouse = Number(reports?.addOn_report?.inHouse_products || 0)
+            const addOnOutside = Number(reports?.addOn_report?.outSide_products || 0)
+            const addOnInHousePct = addOnProducts > 0 ? Number(((addOnInHouse / addOnProducts) * 100).toFixed(2)) : 0
+            const addOnOutsidePct = addOnProducts > 0 ? Number(((addOnOutside / addOnProducts) * 100).toFixed(2)) : 0
 
             return {
-                productChart: [
-                    { name: 'In-house', value: reports?.vessel_report?.inHouse_products || 0 },
-                    { name: 'Outside', value: reports?.vessel_report?.outSide_products || 0 }
-                ],
-                productReport: {
-                    products: reports?.vessel_report?.products || 0,
-                    inactive_products: reports?.vessel_report?.inactive_products || 0,
-                    new_product_in_30_days: reports?.vessel_report?.new_product_in_30_days || 0,
-                    iw_products: reports?.vessel_report?.iw_products || 0,
-                    ssp_products: reports?.vessel_report?.ssp_products || 0,
-                    package_products: packageProducts,
-                    total_package_products: totalPackageProducts,
-                    pkg_color_codes: packageColorCodes?.sort((a, b) => b.value - a.value)
+                vesselReport: {
+                    products: vProducts,
+                    inactive_products: Number(reports?.vessel_report?.inactive_products || 0),
+                    new_product_in_30_days: Number(reports?.vessel_report?.new_product_in_30_days || 0),
+                    in_house_products: vInHousePct,
+                    out_side_products: vOutsidePct,
+                    in_house_count: vInHouse,
+                    out_side_count: vOutside
+                },
+                purifierReport: {
+                    products: pProducts,
+                    inactive_products: Number(reports?.purifier_report?.inactive_products || 0),
+                    new_product_in_30_days: Number(reports?.purifier_report?.new_product_in_30_days || 0),
+                    in_house_products: pInHousePct,
+                    out_side_products: pOutsidePct,
+                    in_house_count: pInHouse,
+                    out_side_count: pOutside
                 },
                 customerCount: [
-                    { name: 'Vessel Users', value: reports?.customer_report?.vessel_customers || 0 },
-                    { name: 'Other Users', value: reports?.customer_report?.total_customers - reports?.customer_report?.vessel_customers || 0, }
+                    { name: 'Product Users', value: productCustomers },
+                    { name: 'Other Users', value: otherCustomers }
                 ],
                 addOnReport: {
-                    products: reports?.addOn_report?.products || 0,
-                    inactive_products: reports?.addOn_report?.inactive_products || 0,
-                    new_product_in_30_days: reports?.addOn_report?.new_product_in_30_days || 0,
-                    in_house_products: addOnProductTypes.in_house,
-                    out_side_products: addOnProductTypes.out_side,
-                    rental_products: reports?.addOn_report?.rental_products || 0,
+                    products: addOnProducts,
+                    inactive_products: Number(reports?.addOn_report?.inactive_products || 0),
+                    new_product_in_30_days: Number(reports?.addOn_report?.new_product_in_30_days || 0),
+                    rental_products: Number(reports?.addOn_report?.rental_products || 0),
+                    in_house_products: addOnInHousePct,
+                    out_side_products: addOnOutsidePct,
+                    in_house_count: addOnInHouse,
+                    out_side_count: addOnOutside
                 }
             }
         },
         staleTime: 30 * 60_000
     })
 
-
-    // loading
+    // Loading State
     if (reportLoading) {
-        return <div className="customer-mini-report-comp-load">
-            <SkeletonGrid rows={1} columns={1} height={165} />
-            <SkeletonGrid rows={1} columns={2} height={140} style={{ marginTop: '15px' }}
-                responsive={{
-                    md: { rows: 1, columns: 2 }
-                }} />
-            <SkeletonGrid rows={1} columns={1} height={140} style={{ marginTop: '15px' }}
-                responsive={{
-                    md: { rows: 1, columns: 2 }
-                }} />
-        </div>
+        return (
+            <div className="customer-mini-report-comp-load">
+                <SkeletonGrid rows={1} columns={1} height={165} />
+                <SkeletonGrid rows={1} columns={2} height={170} style={{ marginTop: '15px' }}
+                    responsive={{
+                        md: { rows: 2, columns: 1 }
+                    }} />
+                <SkeletonGrid rows={1} columns={2} height={170} style={{ marginTop: '15px' }}
+                    responsive={{
+                        md: { rows: 2, columns: 1 }
+                    }} />
+            </div>
+        )
     }
 
-    // Error
+    // Error State
     if (reportError) {
-        return <ErrorState
-            hight='70vh'
-            title={"Report can't Load!"}
-            message={reportError?.message}
-            icon={<TbMoodSadDizzy />}
-        />
+        return (
+            <ErrorState
+                hight="70vh"
+                title="Report can't Load!"
+                message={reportError?.message}
+                icon={<TbMoodSadDizzy />}
+            />
+        )
     }
 
-    // Content
     return (
         <div className="customer-mini-report-comp">
+            {/* Quick Search Action */}
             <div className="search-button-box" onClick={openSearchModal}>
-                <span> <TbMoodSearch /></span>
-                <h3>Search vessel filter customer</h3>
+                <span><TbMoodSearch /></span>
+                <h3>Search customers</h3>
                 <p>Search customers using Name, address, contact numbers and product Id</p>
             </div>
+
+            {/* Reports Grid */}
             <div className="reports">
+
+                {/* 1. Vessel Report */}
                 <div className="vessel-report report-box">
                     <div className="title-section">
                         <h4>Vessel Report</h4>
@@ -138,97 +154,150 @@ const CustomerMiniReport = () => {
                         <div className="number-chart">
                             <div className="section-one">
                                 <div className="item-div">
-                                    <h2>{productReport?.products || 0}</h2>
+                                    <h2>{vesselReport?.products || 0}</h2>
                                     <p>Products</p>
                                 </div>
                                 <div className="item-div">
-                                    <h2>{productReport?.inactive_products || 0}</h2>
+                                    <h2>{vesselReport?.inactive_products || 0}</h2>
                                     <p>Inactive</p>
                                 </div>
                                 <div className="item-div">
-                                    <h2>{productReport?.new_product_in_30_days || 0}</h2>
+                                    <h2>{vesselReport?.new_product_in_30_days || 0}</h2>
                                     <p>New in 30d</p>
                                 </div>
                             </div>
 
                             <div className="section-two">
                                 <div className="bar-border">
-                                    <p>Package Products : {productReport?.total_package_products || 0}</p>
-                                    <ResponsiveContainer width="100%" height="35">
+                                    <p>Product Types (In House & Outside)</p>
+                                    <ResponsiveContainer width="100%" height={18}>
                                         <BarChart
                                             layout="vertical"
-                                            data={[{ name: 'Percentage', ...productReport?.package_products }]}
+                                            data={[{
+                                                name: "Percentage (%)",
+                                                'In house': vesselReport?.in_house_products || 0,
+                                                Outside: vesselReport?.out_side_products || 0
+                                            }]}
                                             stackOffset="none"
                                         >
                                             <XAxis type="number" domain={[0, 100]} hide />
                                             <YAxis type="category" dataKey="name" hide />
-                                            {productReport?.pkg_color_codes?.map((p, index) => (
-                                                <Bar
-                                                    dataKey={p?.package_name}
-                                                    stackId="a"
-                                                    fill={p?.color_code}
-                                                    barSize={15}
-                                                    radius={[15, 15, 15, 15]}
-                                                    barGap={15}
-                                                // background={{
-                                                //     fill: "var(--surface-3)",
-                                                //     radius: 6
-                                                // }}
-                                                >
-                                                    <ChartTooltip valueFormatter={(value) => `${value}%`} labelVisibility={false} />
-                                                </Bar>
-                                            ))}
+                                            <Bar
+                                                dataKey="In house"
+                                                stackId="a"
+                                                fill={chartLabelColors[0]}
+                                                barSize={10}
+                                                radius={[6, 6, 6, 6]}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                            <Bar
+                                                dataKey="Outside"
+                                                stackId="a"
+                                                fill={chartLabelColors[1]}
+                                                barSize={10}
+                                                radius={[6, 6, 6, 6]}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                            <ChartTooltip valueFormatter={(value) => `${value}%`} />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </div>
                             </div>
                         </div>
-                        <div className="chart">
-                            <ResponsiveContainer width={'100%'} height={170}>
-                                <PieChart>
-                                    <Pie
-                                        accessibilityLayer
-                                        cornerRadius={10}
-                                        data={productChart}
-                                        stroke='none'
-                                        cx="50%"
-                                        cy="47%"
-                                        labelLine={false}
-                                        label={renderCustomChartLabel}
-                                        outerRadius={70}
-                                        innerRadius={50}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                        animationBegin={0}
-                                        animationDuration={800}
-                                        paddingAngle={5}
-                                    >
-                                        {productChart?.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={chartLabelColors[index % chartLabelColors.length]} stroke='none' />
-                                        ))}
-                                        <ChartTooltip />
-                                        <ChartLegend />
-                                    </Pie>
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-
-
                     </div>
-
                 </div>
+
+                {/* 2. Water Purifier Report */}
+                <div className="purifier-report report-box">
+                    <div className="title-section">
+                        <h4>Water Purifier Report</h4>
+                    </div>
+                    <div className="content">
+                        <div className="number-chart">
+                            <div className="section-one">
+                                <div className="item-div">
+                                    <h2>{purifierReport?.products || 0}</h2>
+                                    <p>Products</p>
+                                </div>
+                                <div className="item-div">
+                                    <h2>{purifierReport?.inactive_products || 0}</h2>
+                                    <p>Inactive</p>
+                                </div>
+                                <div className="item-div">
+                                    <h2>{purifierReport?.new_product_in_30_days || 0}</h2>
+                                    <p>New in 30d</p>
+                                </div>
+                            </div>
+
+                            <div className="section-two">
+                                <div className="bar-border">
+                                    <p>Product Types (In House & Outside)</p>
+                                    <ResponsiveContainer width="100%" height={18}>
+                                        <BarChart
+                                            layout="vertical"
+                                            data={[{
+                                                name: "Percentage (%)",
+                                                'In house': purifierReport?.in_house_products || 0,
+                                                Outside: purifierReport?.out_side_products || 0
+                                            }]}
+                                            stackOffset="none"
+                                        >
+                                            <XAxis type="number" domain={[0, 100]} hide />
+                                            <YAxis type="category" dataKey="name" hide />
+                                            <Bar
+                                                dataKey="In house"
+                                                stackId="a"
+                                                fill={chartLabelColors[0]}
+                                                barSize={10}
+                                                radius={[6, 6, 6, 6]}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                            <Bar
+                                                dataKey="Outside"
+                                                stackId="a"
+                                                fill={chartLabelColors[1]}
+                                                barSize={10}
+                                                radius={[6, 6, 6, 6]}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                            <ChartTooltip valueFormatter={(value) => `${value}%`} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 3. Customer Report */}
                 <div className="report-box customer-report">
                     <div className="title-section">
                         <h4>Customer Report</h4>
                     </div>
                     <div className="content">
-                        <ResponsiveContainer width={'100%'} height={170}>
+                        <ResponsiveContainer width="100%" height={170}>
                             <PieChart>
                                 <Pie
                                     accessibilityLayer
                                     cornerRadius={10}
                                     data={customerCount}
-                                    stroke='none'
+                                    stroke="none"
                                     cx="50%"
                                     cy="87%"
                                     startAngle={180}
@@ -237,14 +306,18 @@ const CustomerMiniReport = () => {
                                     label={renderCustomChartLabel}
                                     outerRadius={100}
                                     innerRadius={80}
-                                    fill="#8884d8"
+                                    fill={chartLabelColors[0]}
                                     dataKey="value"
                                     animationBegin={0}
                                     animationDuration={800}
                                     paddingAngle={5}
                                 >
-                                    {productChart?.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={chartLabelColors[(index) % chartLabelColors.length]} stroke='none' />
+                                    {customerCount?.map((entry, index) => (
+                                        <Cell
+                                            key={`c-cell-${index}`}
+                                            fill={chartLabelColors[index % chartLabelColors.length]}
+                                            stroke="none"
+                                        />
                                     ))}
                                     <ChartTooltip />
                                     <ChartLegend />
@@ -252,39 +325,15 @@ const CustomerMiniReport = () => {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-
                 </div>
+
+                {/* 4. Add-on Report (2 Rows) */}
                 <div className="report-box add-on-report">
                     <div className="title-section">
                         <h4>Add-on Report</h4>
                     </div>
                     <div className="content">
-                        <div className="section-two">
-                            <div className="bar-border">
-                                <p>Product Types (In House & Outside)</p>
-                                <ResponsiveContainer width="100%" height="18">
-                                    <BarChart layout="vertical" data={[{ name: "Percentage (%)", 'In house': addOnReport?.in_house_products, Outside: addOnReport?.out_side_products }]} stackOffset="none">
-                                        <XAxis type="number" domain={[0, 100]} hide />
-                                        <YAxis type="category" dataKey="name" hide />
-                                        <Bar dataKey="In house" stackId="a" fill={chartLabelColors[0]} barSize={10} radius={[6, 6, 6, 6]}
-                                            background={{
-                                                fill: "var(--surface-3)",
-                                                radius: 6,
-                                                pointerEvents: "none"
-                                            }} >
-                                        </Bar>
-                                        <Bar dataKey="Outside" stackId="a" fill={chartLabelColors[1]} barSize={10} radius={[6, 6, 6, 6]}
-                                            background={{
-                                                fill: "var(--surface-3)",
-                                                radius: 6,
-                                                pointerEvents: "none"
-                                            }} >
-                                        </Bar>
-                                        <ChartTooltip />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </div>
+                        {/* Row 1: KPI Numbers */}
                         <div className="section-one">
                             <div className="item-div">
                                 <h2>{addOnReport?.products || 0}</h2>
@@ -303,11 +352,62 @@ const CustomerMiniReport = () => {
                                 <p>New in 30d</p>
                             </div>
                         </div>
+
+                        {/* Row 2: Product Types Bar */}
+                        <div className="section-two">
+                            <div className="bar-border">
+                                <p>Product Types (In House & Outside)</p>
+                                <ResponsiveContainer width="100%" height={18}>
+                                    <BarChart
+                                        layout="vertical"
+                                        data={[{
+                                            name: "Percentage (%)",
+                                            'In house': addOnReport?.in_house_products || 0,
+                                            Outside: addOnReport?.out_side_products || 0
+                                        }]}
+                                        stackOffset="none"
+                                    >
+                                        <XAxis type="number" domain={[0, 100]} hide />
+                                        <YAxis type="category" dataKey="name" hide />
+                                        <Bar
+                                            dataKey="In house"
+                                            stackId="a"
+                                            fill={chartLabelColors[0]}
+                                            barSize={10}
+                                            radius={[6, 6, 6, 6]}
+                                            background={{
+                                                fill: "var(--surface-3)",
+                                                radius: 6,
+                                                pointerEvents: "none"
+                                            }}
+                                        />
+                                        <Bar
+                                            dataKey="Outside"
+                                            stackId="a"
+                                            fill={chartLabelColors[1]}
+                                            barSize={10}
+                                            radius={[6, 6, 6, 6]}
+                                            background={{
+                                                fill: "var(--surface-3)",
+                                                radius: 6,
+                                                pointerEvents: "none"
+                                            }}
+                                        />
+                                        <ChartTooltip valueFormatter={(value) => `${value}%`} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
-            <p className="last-update">Last update at {new Date(reportDataUpdatedAt).toLocaleString()}</p>
-        </div >
+
+            {/* Footer with Timestamp */}
+            <p className="last-update">
+                Last update at {new Date(reportDataUpdatedAt).toLocaleString()}
+            </p>
+        </div>
     )
 }
 

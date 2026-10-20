@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import moment from 'moment';
 import Select from '../../../UI_Primitives/inputs/Select'
+import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
 import Button from '../../../UI_Primitives/buttons/Button'
 import ButtonGroup from '../../../UI_Primitives/buttons/ButtonGroup'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
@@ -26,8 +27,20 @@ const FilterBox = () => {
         reg_no: searchParams.get('reg_no') || '',
         rnd: searchParams.get('rnd') || '',
         unverified: searchParams.get('unverified') || '',
+        product_type: searchParams.get('product_type')?.split(',')?.filter(Boolean) || [],
+        view_type: searchParams.get('view_type') || 'customer',
     })
 
+    const productTypeList = [
+        { label: 'Default', value: 'DEFAULT' },
+        { label: 'Water Purifier', value: 'WATER_PURIFIER' },
+        { label: 'Vessel Filter', value: 'VESSEL_FILTER' },
+    ]
+
+    const viewTypeList = [
+        { label: 'Customer View', value: 'customer' },
+        { label: 'Product View', value: 'product' },
+    ]
     const {
         data: techList,
         isLoading: techLoading,
@@ -48,6 +61,10 @@ const FilterBox = () => {
         })
     }
 
+    const handleMultiInputChange = (e) => {
+        setForm({ ...form, [e.name]: e.selectedValues?.map((c) => c.value) })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -66,6 +83,8 @@ const FilterBox = () => {
             form.reg_no ? next.set('reg_no', form.reg_no) : next.delete('reg_no')
             form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
             form.unverified ? next.set('unverified', form.unverified) : next.delete('unverified')
+            form.product_type?.length ? next.set('product_type', form.product_type.join(',')) : next.delete('product_type')
+            form.view_type ? next.set('view_type', form.view_type) : next.delete('view_type')
             return next;
         })
 
@@ -82,6 +101,8 @@ const FilterBox = () => {
             reg_no: '',
             rnd: '',
             unverified: '',
+            product_type: [],
+            view_type: 'customer',
         })
         setSearchParams((prev) => {
             const next = new URLSearchParams(prev);
@@ -94,6 +115,8 @@ const FilterBox = () => {
             next.delete('reg_no');
             next.delete('rnd');
             next.delete('unverified');
+            next.delete('product_type');
+            next.delete('view_type');
             return next;
         })
     }
@@ -117,6 +140,11 @@ const FilterBox = () => {
                         <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
                             min={form.from_date} required={true} />
                     </div>
+
+                    <Select label={'View Type'} name={'view_type'} value={form.view_type} onChange={handleChange} options={viewTypeList} />
+
+                    <MultiSelectInput label={'Product Type'} name={'product_type'} options={productTypeList} onChange={handleMultiInputChange}
+                        selected={productTypeList.filter(item => form.product_type?.includes(item.value))} />
 
                     <Select label={'Technician'} name={'technician_id'} value={form.technician_id} onChange={handleChange}
                         options={[{ label: '', value: '' }, ...techList?.map((t) => ({ label: t.full_name, value: t.worker_uuid }))]} />

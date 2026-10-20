@@ -22,7 +22,7 @@ const AddSpare = ({ productId, productType }) => {
     const { data: sparesData, isLoading: spareLoading, error } = useQuery({
         queryKey: ['spares'],
         queryFn: async () => {
-            const res = await api.cnAv1Axios.get(`/production/spares?limit=1000&fields=spare_name,spare_id,uuid,tracking_type&applicable_for=${productType}&sortBy=spare_name&sortOrder=asc`)
+            const res = await api.cnAv1Axios.get(`/production/spares?limit=1000&fields=spare_name,spare_id,uuid&tracking_type=PRODUCT_LINKED&applicable_for=${productType}&sortBy=spare_name&sortOrder=asc`)
 
             return res.data?.map((s) => ({ label: s?.spare_name, value: s?.uuid, tracking_type: s?.tracking_type })) || []
         },

@@ -32,6 +32,45 @@
                 margin-top: 3px;
             }
 
+            .count-content {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 8px;
+                margin-top: 9px;
+
+                h2 {
+                    margin-top: 0;
+                    line-height: 1;
+                }
+
+                .sub-counts {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+                    text-align: right;
+
+                    .sub-item {
+                        font-size: 11px;
+                        font-weight: 500;
+                        white-space: nowrap;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        gap: 6px;
+
+                        .sub-label {
+                            color: var(--text-disabled);
+                        }
+
+                        .sub-value {
+                            font-weight: 600;
+                            color: var(--text-primary);
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -79,7 +118,9 @@
                 padding-bottom: 10px;
                 display: flex;
                 justify-content: space-between;
-                align-items: flex-start;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 10px;
 
                 h4 {
                     font-size: 14px;
@@ -87,18 +128,18 @@
                     color: var(--text-tertiary);
                 }
 
-                p {
-                    font-size: 13px;
-                    font-weight: 400;
-                    color: var(--text-disabled);
-                    margin-right: 45px;
-                    text-align: end;
-                }
+                .action-section {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
 
-                button {
-                    position: absolute;
-                    right: 10px;
-                    top: 10px;
+                    p {
+                        font-size: 13px;
+                        font-weight: 400;
+                        color: var(--text-disabled);
+                        text-align: end;
+                    }
                 }
             }
 

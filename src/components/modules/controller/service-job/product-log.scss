@@ -59,38 +59,7 @@
         margin: 25px 0 15px 0;
     }
 
-    .assessment-report-border {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 30px;
-
-        .section-border {
-            h4 {
-                font-size: 16px;
-                font-weight: 600;
-                color: var(--text-muted);
-                margin-bottom: 10px;
-            }
-
-            .list {
-                display: flex;
-                justify-content: space-between;
-                gap: 10px;
-                align-items: center;
-                margin: 6px 0;
-
-                .label,
-                .text-value {
-                    font-size: 13px;
-                    font-weight: 500;
-                }
-
-                .label {
-                    color: var(--text-tertiary);
-                }
-            }
-        }
-    }
+  
 
     .table-list {
         .table-menu {
