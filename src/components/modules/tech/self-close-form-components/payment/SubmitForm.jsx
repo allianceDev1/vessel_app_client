@@ -13,7 +13,6 @@ import Button from '../../../../UI_Primitives/buttons/Button'
 
 
 
-
 const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -52,56 +51,59 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
 
         try {
 
+            const grandTotal = calculateBillsSummery(review?.bills ?? [], review?.zero_fee_items ?? [])
+            const allPaymentMethods = payment?.payment_methods ?? []
 
-            const summery = calculateBillsSummery(
-                review?.bills ?? [],
-                review?.zero_fee_items ?? [],
-                payment?.compliment_amount ?? 0
-            )
+            if (payment?.compliment_amount > 0 && review?.is_ready_to_pay) {
+                allPaymentMethods.push({
+                    unique_id: 82657944156,
+                    method: 'WALLET',
+                    amount: payment?.compliment_amount
+                })
+            }
+
             const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-            const balance = summery?.grandTotal - enteredAmount
+            const balance = grandTotal - enteredAmount
 
             // Setup Body
             const body = {
-                customer_id: review?.customer_id,
-                registration_id: review?.registration_id,
-                grand_total: summery?.subTotal || 0,
-                receivable_amount: summery?.grandTotal || 0, // without compliment
+                grand_total: grandTotal || 0,
                 payment_methods: payment?.payment_methods,
                 promise_amount: balance,
                 promise_date: payment?.balance_payment_date,
                 promise_reason: payment?.balance_payment_reason,
                 paid_amount: enteredAmount,
-                paid_from_compliment: payment?.compliment_amount,
                 zero_fee_items: review?.zero_fee_items
             }
 
-            const result = await api.vfTv2Axios.post('/service/service-form/self-close', body, {
-                timeout: 5 * 60 * 1000,
-                onUploadProgress: (progressEvent) => {
-                    if (!progressEvent.total) return;
+            const result = await api.vfTv2Axios.post(`/registered-service/${review?.registration_id}/self-close/submit`,
+                body,
+                {
+                    timeout: 5 * 60 * 1000,
+                    onUploadProgress: (progressEvent) => {
+                        if (!progressEvent.total) return;
 
-                    const percent = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
+                        const percent = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
 
-                    setApiProgress(percent);
+                        setApiProgress(percent);
 
-                    if (percent < 100) {
-                        setApiStatus(`Uploading data...`);
-                    } else {
-                        setApiStatus("Processing...");
+                        if (percent < 100) {
+                            setApiStatus(`Uploading data...`);
+                        } else {
+                            setApiStatus("Processing...");
+                        }
                     }
-                }
-            })
-
-            dispatch(modal.pull.single(modalId))
+                })
 
             const { status, description, color } = getPaymentDisplay({
                 total: result?.totalBillAmount,
                 paid: result?.paidAmount,
                 verified: result?.verifiedAmount
             })
+
+            dispatch(modal.pull.single(modalId))
 
             navigate("/tech/service/work-success", {
                 replace: true,
@@ -175,7 +177,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
 
                 {/* Buttons */}
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'}  onClick={closeModal} />
+                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'} onClick={closeModal} />
                     <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
                 </div>
@@ -200,7 +202,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'}  onClick={closeModal} />
+                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} severity={'secondary'} onClick={closeModal} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
 

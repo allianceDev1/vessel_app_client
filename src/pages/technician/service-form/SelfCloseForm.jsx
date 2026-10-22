@@ -10,7 +10,7 @@ import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGri
 import { TbMoodSadDizzy } from 'react-icons/tb'
 
 const SelfCloseForm = () => {
-    const [activePage, setActivePage] = useState(101)
+    const [activePage, setActivePage] = useState(1001)
     const location = useLocation()
     const registrationId = location?.state?.registration_id || null
     const customerId = location?.state?.customer_id || null
@@ -21,7 +21,7 @@ const SelfCloseForm = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['self_close', 'review_report', registrationId],
         queryFn: async () => {
-            const res = await api.vfTv2Axios.get(`/service/service-form/bill-reviews?registration_id=${registrationId}`)
+            const res = await api.vfTv2Axios.get(`/registered-service/${registrationId}/self-close/resources`)
 
             return res
 
@@ -68,12 +68,11 @@ const SelfCloseForm = () => {
         <div className="tech-service-form-container">
 
             <div className="service-form-page-container">
-                {activePage === 101 && <Review page={{ index: 101, type: 'page' }} review={review} payment={payment}
-                    setReview={setReview} setActivePage={setActivePage} />}
+                {activePage === 1001 &&
+                    <Review pageKey={1001} review={review} setReview={setReview} setActivePage={setActivePage} />}
 
-                {activePage === 102 && <Payment page={{ index: 102, type: 'page' }} review={review} payment={payment}
-                    setPayment={setPayment}
-                />}
+                {activePage === 1002 &&
+                    <Payment pageKey={1002} review={review} payment={payment} setPayment={setPayment} />}
 
             </div>
 

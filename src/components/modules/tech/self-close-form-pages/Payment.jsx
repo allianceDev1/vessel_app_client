@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import '../service-form-pages/payment.scss'
 import { useDispatch } from 'react-redux';
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service';
-import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbX } from 'react-icons/tb';
+import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbWallet, TbX } from 'react-icons/tb';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
 import { generateUniqueId } from '../../../../utils/helpers/generate_Id';
@@ -16,11 +16,9 @@ import Button from '../../../UI_Primitives/buttons/Button';
 import SubmitForm from '../self-close-form-components/payment/SubmitForm';
 
 
-const Payment = ({ page, review, payment, setPayment }) => {
+const Payment = ({ pageKey, review, payment, setPayment }) => {
+
     const dispatch = useDispatch();
-    const [grandTotal, setGrandTotal] = useState(0)
-    const [paidAmount, setPaidAmount] = useState(0)
-    const [balanceAmount, setBalanceAmount] = useState(0)
 
 
     const handleOpenPaymentMethods = () => {
@@ -91,19 +89,25 @@ const Payment = ({ page, review, payment, setPayment }) => {
         }))
     }
 
-    useEffect(() => {
-        const summery = calculateBillsSummery(
+
+
+    const { grandTotal, paidAmount, balanceAmount, complimentAmount } = useMemo(() => {
+        const grandTotal = calculateBillsSummery(
             review?.bills ?? [],
-            review?.zero_fee_items ?? [],
-            payment?.compliment_amount ?? 0
+            review?.zero_fee_items ?? []
         )
 
-        setGrandTotal(summery?.grandTotal || 0)
+        const complimentAmount = payment?.compliment_amount ?? 0
+        const otherMethodAmounts = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+        const enteredAmount = (otherMethodAmounts || 0) + complimentAmount
+        const balance = grandTotal - enteredAmount
 
-        const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-        const balance = summery?.grandTotal - enteredAmount
-        setPaidAmount(enteredAmount)
-        setBalanceAmount(balance)
+        return {
+            grandTotal: grandTotal ?? 0,
+            paidAmount: enteredAmount ?? 0,
+            balanceAmount: balance ?? 0,
+            complimentAmount
+        }
 
     }, [payment, review])
 
@@ -112,17 +116,28 @@ const Payment = ({ page, review, payment, setPayment }) => {
         <div className="tech-service-form-page sf-page-four">
             {/* Title */}
             <div className="title-section">
-                <h3>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
             {/* Summery */}
-            <BillSummery expand={false} review={review} payment={payment} />
+            <BillSummery review={review} />
 
             {/* Payment methods */}
             {(grandTotal > 0 && review?.is_ready_to_pay) ? <div className="payment-container">
                 <h3 className='sub-title'>Payment Methods</h3>
                 <div className="payments-list">
+
+                    {complimentAmount ? <div className="payment-item" >
+                        <div className="icon">
+                            <TbWallet />
+                        </div>
+                        <div className="text">
+                            <h4>₹ {complimentAmount ?? 0}</h4>
+                            <p>Wallet</p>
+                        </div>
+                    </div> : ''}
+
                     {payment?.payment_methods?.map((pay) => {
                         return <div className="payment-item" key={pay?.unique_id}>
                             <div className="icon">
