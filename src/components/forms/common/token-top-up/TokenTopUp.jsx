@@ -6,7 +6,7 @@ import Button from '../../../UI_Primitives/buttons/Button'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbCheck, TbChevronRight, TbCircleLetterT } from 'react-icons/tb'
+import { TbCheck, TbChevronRight, TbTicket } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
@@ -86,7 +86,7 @@ const TokenTopUp = ({ fetchCustomerApi, doTopUpApi, redirectUrl = '/404', prePag
             </div>}
             {pageState === 'success' && <div className="success">
                 <EmptyState
-                    icon={<TbCircleLetterT />}
+                    icon={<TbTicket />}
                     title={'Success!'}
                     description={'Token top-up successfully completed.'}
                     hight='400px'
@@ -142,7 +142,7 @@ const TopUpForm = ({ fetchCustomerApi, topUpForm, setTopUpForm, readyToPay }) =>
 
             {/* Fetch Customer Details */}
             {!apiResponse?.customer_id && <EmptyState
-                icon={<TbCircleLetterT />}
+                icon={<TbTicket />}
                 title="Top-up Package Services"
                 description={'Enter Customer Id below and top-up'}
                 hight={'300px'}
@@ -163,7 +163,7 @@ const TopUpForm = ({ fetchCustomerApi, topUpForm, setTopUpForm, readyToPay }) =>
 
             {/* No Products */}
             {apiResponse?.products?.length === 0 && apiResponse?.customer_id && <ErrorState
-                icon={<TbCircleLetterT />}
+                icon={<TbTicket />}
                 title={"No Products"}
                 message={"No token ending products"}
                 hight='400px'
@@ -217,7 +217,7 @@ const TopUpForm = ({ fetchCustomerApi, topUpForm, setTopUpForm, readyToPay }) =>
                     </div>
                 </div>}
 
-                {topUpForm?.number_of_tokens && <Button label={'Ready to Pay'} severity={'secondary'}  rounded style={{ width: '100%' }} onClick={readyToPay} />}
+                {topUpForm?.number_of_tokens && <Button label={'Ready to Pay'} severity={'secondary'} rounded style={{ width: '100%' }} onClick={readyToPay} />}
             </div>}
         </div>
     )

@@ -10,7 +10,7 @@ import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
 const getProductType = (products) => {
     const parentTypes = new Set();
     (products || []).forEach((p) => {
-        const pType = p?.parent_type ;
+        const pType = p?.parent_type;
         const normalized = pType?.toUpperCase();
         if (normalized === 'WATER_PURIFIER' || normalized === 'VESSEL_FILTER') {
             parentTypes.add(normalized);
@@ -29,7 +29,7 @@ const getProductType = (products) => {
     return 'DEFAULT';
 };
 
-const TechScheduleService = ({ registrationId, customerId, serviceType, serviceProducts }) => {
+const TechScheduleService = ({ registrationId, customerId, serviceType, serviceProducts, productType }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState('')
@@ -45,12 +45,17 @@ const TechScheduleService = ({ registrationId, customerId, serviceType, serviceP
         try {
             setLoading('submit')
 
-            const productType = getProductType(serviceProducts);
+            let type = null
+            if (productType) {
+                type = productType
+            } else {
+                type = getProductType(serviceProducts);
+            }
 
             await api.cnAv1Axios.post(`/customer/service/technician/schedule`, {
                 registration_id: registrationId || null,
                 customer_id: customerId,
-                product_type: productType,
+                product_type: type,
                 service_type: serviceType,
                 schedule_slot_start_at: startTime,
                 schedule_slot_finish_at: endTime

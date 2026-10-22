@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import './submit-form.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../../../api'
-import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 import { audio, modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import Button from '../../../../UI_Primitives/buttons/Button'
@@ -11,14 +10,12 @@ import { useNavigate } from 'react-router-dom'
 import { calculateBillsSummery } from '../../../../../utils/helpers/math-equations'
 import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../../utils/helpers/date-helpers'
 import { getPaymentDisplay } from '../../../../../utils/services/work_services'
-import { useQueryClient } from '@tanstack/react-query'
 
 
 
 const SubmitForm = ({ modalId, unenablePayment }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const queryClient = useQueryClient()
     const { internet } = useSelector((state) => state.system)
     const { serviceForm, serviceFormSettings, review, payment } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
@@ -100,15 +97,13 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 }
             })
 
-            dispatch(sfSetting.clearAll())
-            dispatch(sfActions.clearAll())
-            dispatch(modal.pull.single(modalId))
-
             const { status, description, color } = getPaymentDisplay({
                 total: result?.totalBillAmount,
                 paid: result?.paidAmount,
                 verified: result?.verifiedAmount
             })
+
+            dispatch(modal.pull.single(modalId))
 
             navigate("/tech/service/work-success", {
                 replace: true,
@@ -127,11 +122,6 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                     unenable_payment: unenablePayment
                 }
             });
-
-
-            queryClient.removeQueries({
-                queryKey: ['service_form_resources']
-            })
 
 
         } catch (error) {

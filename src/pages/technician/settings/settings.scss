@@ -46,35 +46,48 @@
                 border-bottom: none;
             }
         }
-    }
 
-    .footer-container {
-        margin-top: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        text-align: center;
+        .theme-menu {
+            grid-template-columns: 45px 1fr auto;
+            padding-right: 12px;
 
-        .right-section {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            .theme-icon svg {
+                font-size: 22px;
+            }
+
+            .label-note {
+                font-size: 11px;
+                color: var(--text-disabled);
+                margin-top: 2px;
+            }
+
+            .theme-pill {
+                height: auto;
+                align-self: center;
+                padding: 5px 14px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--color-primary);
+                background-color: var(--color-primary-bg);
+                transition: background-color 0.2s;
+            }
+
+            &:hover .theme-pill {
+                background-color: var(--color-primary-bg-hover);
+            }
         }
 
-        span,
-        p {
-            font-size: 11px;
-            color: var(--text-disabled);
-        }
+        .danger-menu {
 
-        .link {
-            cursor: pointer;
+            .icon,
+            .label .label-name,
+            .action {
+                color: var(--color-danger-text);
+            }
 
             &:hover {
-                color: var(--color-primary);
-                text-decoration: underline;
+                background-color: var(--color-danger-bg);
             }
         }
     }

@@ -14,7 +14,6 @@ const MonthlyReport = ({
   travelTime,
   travelTimeAvg,
   cancelledVisits,
-  onViewDetail,
 }) => {
 
   const navigate = useNavigate();
@@ -24,7 +23,8 @@ const MonthlyReport = ({
     <section className="vms-monthly-report">
       <div className="vms-monthly-report__header">
         <h3 className="vms-monthly-report__title">This Month</h3>
-        <Button label={'View Detail'} size='small' rounded text severity={'secondary'}  onClick={() => navigate(`/tech/completed?fl=Yes&from_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`)} />
+        <Button label={'View Detail'} size='small' rounded text severity={'secondary'}
+          onClick={() => navigate(`/tech/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}`)} />
       </div>
 
       <div className="vms-monthly-report__grid">
@@ -41,7 +41,7 @@ const MonthlyReport = ({
         <div className="vms-monthly-report__metric-card">
           <span className="vms-monthly-report__metric-label">Total Work</span>
           <span className="vms-monthly-report__metric-value">{totalWork}</span>
-          <span className="vms-monthly-report__metric-sub">Visits</span>
+          <span className="vms-monthly-report__metric-sub">Completed visits</span>
         </div>
 
         <div className="vms-monthly-report__metric-card">
@@ -57,11 +57,11 @@ const MonthlyReport = ({
         </div>
 
         <div className="vms-monthly-report__metric-card">
-          <span className="vms-monthly-report__metric-label">Cancelled Visits</span>
+          <span className="vms-monthly-report__metric-label">Cancelled Visit</span>
           <span className="vms-monthly-report__metric-value vms-monthly-report__metric-value--error">
             {cancelledVisits}
           </span>
-          <span className="vms-monthly-report__metric-sub">This Month</span>
+          <span className="vms-monthly-report__metric-sub">Visit(s)</span>
         </div>
       </div>
     </section>

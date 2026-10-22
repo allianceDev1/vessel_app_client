@@ -101,7 +101,7 @@ const ServiceJob = () => {
             <div className="buttons">
                 <div className="menu-buttons">
                     <Button icon={<TbHome />} rounded outlined={pl_product_id || pp_product_id ? true : false} size='small'
-                        onClick={() => navigate(`/tech/completed/service-job/${service_srl_no}`)} />
+                        onClick={() => navigate(`/tech/completed/service-job/${service_srl_no}`)} severity={'secondary'} />
                     {(data?.service_products?.length > 0 || data?.purchase_products?.length > 0) && <Dropdown button={{
                         icon: <TbChevronDown />,
                         label: "Products",
@@ -182,10 +182,12 @@ const ServiceJob = () => {
                             </div>
                         </div>
                         <div className="item">
-                            <p className='label'>Service Srl No & Job Status</p>
+                            <p className='label'>Service Srl No & Reg Status</p>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <p className='text-value'>{data?.service_srl_no}</p>
-                                <Badge size='small' value={toStandardText(data?.job_status)} severity={'success'} />
+                                <Badge size='small'
+                                    value={data?.work_closed ? 'Reg Closed' : 'Reg not closed'}
+                                    severity={data?.work_closed ? 'success' : 'warning'} />
                             </div>
                         </div>
                         <div className="item">

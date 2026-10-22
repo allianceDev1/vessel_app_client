@@ -86,9 +86,11 @@ const ServiceForm = () => {
 
             return { status: "COMPLETED" }
         },
-        enabled: !formResources?.hasResources
+        enabled: Boolean(serviceForm?.work_key && !formResources?.hasResources),
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: 'always'
     })
-
     // Navigation and initial page routing
     useEffect(() => {
         if (!serviceForm?.customer_id || !serviceForm?.work_key || !serviceForm?.start_time) {
@@ -141,7 +143,7 @@ const ServiceForm = () => {
                         icon={<TbFileText />}
                     />
                 ) : !resourcesVerification?.success ? (
-                    <div className="resourcesVerification-error-container">
+                    <div className="verification-error-container">
                         <div className="error-header">
                             <TbAlertTriangle className="alert-icon" />
                             <h2>Verification Conflicts Detected</h2>

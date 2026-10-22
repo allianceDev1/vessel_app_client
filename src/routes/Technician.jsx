@@ -15,7 +15,6 @@ const Schedules = React.lazy(() => import('../pages/technician/schedules/Schedul
 const ScheduleProfile = React.lazy(() => import('../pages/technician/schedule-profile/ScheduleProfile'))
 const ServiceForm = React.lazy(() => import('../pages/technician/service-form/ServiceForm'))
 const ServiceCompleted = React.lazy(() => import('../pages/technician/service-form/ServiceCompleted'))
-const More = React.lazy(() => import('../pages/technician/more/More'))
 const ServiceAreaList = React.lazy(() => import('../pages/technician/service-area/ServiceAreaList'))
 const RunningKms = React.lazy(() => import('../pages/technician/running-km/RunningKms'))
 const TopUp = React.lazy(() => import('../pages/technician/top-up/TopUp'))
@@ -36,6 +35,7 @@ const ServicesUnderProductPackage = React.lazy(() => import('../components/modul
 const ServiceJob = React.lazy(() => import('../pages/technician/service-job/ServiceJob'))
 const ProductLogInfo = React.lazy(() => import('../components/modules/tech/service-job/ProductLogInfo'))
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/tech/service-job/PurchaseLogInfo'))
+const Settings = React.lazy(() => import('../pages/technician/settings/Settings'))
 const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/SelfCloseForm'))
 
 
@@ -67,8 +67,8 @@ const Technician = () => {
           <Route path='/service/work-success' element={<PrivateRoute element={<ServiceCompleted />} isAuthenticated={isAuthenticated} />} />
           <Route path='/service/self-close' element={<PrivateRoute element={<SelfCloseForm />} isAuthenticated={isAuthenticated} />} />
 
-          {/* More */}
-          <Route path='/more' element={<PrivateRoute element={<More />} isAuthenticated={isAuthenticated} />} />
+          {/* Settings */}
+          <Route path='/settings' element={<PrivateRoute element={<Settings />} isAuthenticated={isAuthenticated} />} />
 
           {/* More Pages */}
           <Route path='/service-area' element={<PrivateRoute element={<ServiceAreaList />} isAuthenticated={isAuthenticated} />} />

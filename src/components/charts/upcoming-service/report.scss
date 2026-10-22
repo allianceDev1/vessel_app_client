@@ -1,4 +1,106 @@
 .upcoming-service-report-container {
+    // Product Type Filter Bar
+    .product-type-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        margin-bottom: 5px;
+        flex-wrap: wrap;
+
+        .product-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            background-color: var(--surface-2);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+
+            .tab-icon {
+                font-size: 16px;
+                display: flex;
+                align-items: center;
+            }
+
+            .tab-label {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .tab-badge {
+                display: inline-block;
+                padding: 1px 8px;
+                border-radius: 50px;
+                font-size: 11px;
+                font-weight: 600;
+                background-color: var(--surface-3);
+                color: var(--text-primary);
+                line-height: 1.4;
+            }
+
+            &:hover {
+                background-color: var(--surface-3);
+                color: var(--text-primary);
+                border-color: var(--border-medium);
+            }
+
+            &.active {
+                font-weight: 600;
+
+                &.tab-all {
+                    border-color: var(--color-primary);
+                    background-color: var(--color-primary-bg);
+                    color: var(--color-primary);
+
+                    .tab-badge {
+                        background-color: var(--color-primary);
+                        color: #ffffff;
+                    }
+                }
+
+                &.tab-vessel {
+                    border-color: #0087cf;
+                    background-color: rgba(0, 135, 207, 0.12);
+                    color: #0087cf;
+
+                    .tab-badge {
+                        background-color: #0087cf;
+                        color: #ffffff;
+                    }
+                }
+
+                &.tab-purifier {
+                    border-color: #00B4D8;
+                    background-color: rgba(0, 180, 216, 0.12);
+                    color: #00B4D8;
+
+                    .tab-badge {
+                        background-color: #00B4D8;
+                        color: #ffffff;
+                    }
+                }
+
+                &.tab-addon {
+                    border-color: #15c659;
+                    background-color: rgba(21, 198, 89, 0.12);
+                    color: #15c659;
+
+                    .tab-badge {
+                        background-color: #15c659;
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+
     .reports {
         margin-top: 15px;
         display: grid;
@@ -8,7 +110,6 @@
 
         .report-box {
             background-color: var(--surface-2);
-            // backdrop-filter: blur(5px);
             padding: 10px 15px;
             border-radius: 15px;
 
@@ -77,6 +178,15 @@
     }
 
     @media screen and (max-width:650px) {
+        .product-type-filter-bar {
+            gap: 8px;
+
+            .product-tab-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
         .reports {
             grid-template-columns: 1fr;
             gap: 20px;
@@ -98,9 +208,12 @@
                         grid-template-columns: 1fr;
 
                         .item-div {
-                            &:first-child {
-                                border-right: none;
-                                border-bottom: 1px solid var(--border-light);
+                            padding: 10px 5px;
+                            border-right: none;
+                            border-bottom: 1px solid var(--border-light);
+
+                            &:last-child {
+                                border-bottom: none;
                             }
                         }
                     }
@@ -109,28 +222,6 @@
 
             .report-three {
                 grid-column: 1;
-            }
-        }
-    }
-
-    @media screen and (max-width:450px) {
-        .reports {
-            .report-two {
-                .content {
-                    grid-template-columns: 1fr;
-
-                    .count-report {
-                        margin-top: 0px;
-                        grid-template-columns: 1fr 1fr;
-
-                        .item-div {
-                            &:first-child {
-                                border-bottom: none;
-                                border-right: 1px solid var(--border-light);
-                            }
-                        }
-                    }
-                }
             }
         }
     }

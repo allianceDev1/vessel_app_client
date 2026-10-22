@@ -188,6 +188,22 @@ const Home = ({ pageKey }) => {
                 <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
+            {/* Account Info */}
+            <div className="account-info-box">
+                <div className="info-item">
+                    <span className="label">Work pending amount</span>
+                    <span className="value">₹ {formResources?.pending_work_amount ?? 0}</span>
+                </div>
+                <div className="info-item">
+                    <span className="label">Wallet Amount</span>
+                    <span className="value">₹ {formResources?.site_info?.debit_amount ?? 0}</span>
+                </div>
+                <div className="info-item">
+                    <span className="label">Credit amount</span>
+                    <span className="value">₹ {formResources?.site_info?.credit_amount ?? 0}</span>
+                </div>
+            </div>
+
             {/* Product list */}
             <div className="products-chart">
                 {formResources?.product_stretcher?.length > 0 ?

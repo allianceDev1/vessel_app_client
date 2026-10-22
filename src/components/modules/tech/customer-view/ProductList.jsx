@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../../api';
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
-import { TbManualGearbox } from 'react-icons/tb';
+import { TbChevronRight, TbManualGearbox } from 'react-icons/tb';
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState';
 import { toStandardText } from '../../../../utils/helpers/text-formatting';
 import { getContrastText } from '../../../../utils/helpers/color-utils';
@@ -16,50 +16,61 @@ const PRODUCT_GROUPS = [
     {
         key: 'WATER_PURIFIER',
         title: 'Water purifier',
-        fallbackCode: 'WP',
         match: (p) => p?.product_type === 'WATER_PURIFIER',
         sort: (a, b) => (a?.order_id || '').localeCompare(b?.order_id || '')
     },
     {
         key: 'WATER_PURIFIER_ADD_ON',
         title: 'Water Purifier Add-ons',
-        fallbackCode: 'AD',
         match: (p) => p?.product_type === 'ADD_ON' && p?.parent_type === 'WATER_PURIFIER',
         sort: (a, b) => (a?.order_id || '').localeCompare(b?.order_id || '')
     },
     {
         key: 'VESSEL_FILTER',
         title: 'Vessel Filters',
-        fallbackCode: 'UN',
         match: (p) => p?.product_type === 'VESSEL_FILTER',
         sort: (a, b) => (a?.order_id || '').localeCompare(b?.order_id || '')
     },
     {
         key: 'VESSEL_FILTER_ADD_ON',
         title: 'Vessel Add-ons',
-        fallbackCode: 'AD',
         match: (p) => p?.product_type === 'ADD_ON' && (p?.parent_type === 'VESSEL_FILTER' || !p?.parent_type),
         sort: (a, b) => (a?.order_id || '').localeCompare(b?.order_id || '')
     }
 ];
 
-const ProductCard = ({ product, fallbackCode, onNavigate }) => {
+const ProductCard = ({ product, onNavigate }) => {
+    const hasBadges = Boolean(
+        product?.product_warranty ||
+        product?.package?.has_service_package ||
+        product?.rental ||
+        !product?.active
+    );
+
     return (
         <div
             className="product-item"
             key={product?.product_id}
             onClick={onNavigate}
         >
-            <div className="order-section">
-                <h4>{product?.order_id ? product?.order_id : fallbackCode}</h4>
-            </div>
-            <div className="content">
-                <div className="x1">
-                    <p className='text-1'>ID : {product?.product_id}</p>
-                    <p className='text-2'>{toStandardText(product?.origin_category)}</p>
+            <div className="product-item-header">
+                <div className="product-meta">
+                    <span className="product-id">ID : {product?.product_id}</span>
+                    {product?.origin_category && (
+                        <span className="product-category">
+                            {toStandardText(product?.origin_category)}
+                        </span>
+                    )}
                 </div>
-                <h3>{product?.product_name}</h3>
-                <div className="x3">
+                <div className="product-arrow">
+                    <TbChevronRight />
+                </div>
+            </div>
+
+            <h3 className="product-title">{product?.product_name}</h3>
+
+            {hasBadges && (
+                <div className="product-badges">
                     {product?.product_warranty && <Badge severity={'info'} value={'Warranty'} />}
                     {product?.package?.has_service_package && (
                         <Badge
@@ -73,7 +84,7 @@ const ProductCard = ({ product, fallbackCode, onNavigate }) => {
                     {product?.rental && <Badge value={'Rental'} />}
                     {!product?.active && <Badge severity={'danger'} value={'Disconnected'} />}
                 </div>
-            </div>
+            )}
         </div>
     );
 };
@@ -198,8 +209,7 @@ const ProductList = () => {
                             <ProductCard
                                 key={product?.product_id}
                                 product={product}
-                                fallbackCode={group.fallbackCode}
-                                onNavigate={() => navigate('/tech/customer/100/product/' + product?.product_id + '/about')}
+                                onNavigate={() => navigate('/tech/customer/' + customer_id + '/product/' + product?.product_id + '/about')}
                             />
                         ))}
                     </div>

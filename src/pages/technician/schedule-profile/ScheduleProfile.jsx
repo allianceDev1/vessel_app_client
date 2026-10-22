@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import './schedule-profile.scss';
 import NameCard from '../../../components/modules/tech/customer-profile/NameCard';
 import Contacts from '../../../components/modules/tech/customer-profile/Contacts';
@@ -16,6 +16,7 @@ import { api } from '../../../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice';
 import { useQuery } from '@tanstack/react-query';
+import { parseServiceJobKey } from '../../../utils/helpers/generate_Id';
 
 
 const ScheduleProfile = () => {
@@ -48,6 +49,14 @@ const ScheduleProfile = () => {
     },
     staleTime: 30_000
   })
+
+  const workKeyParse = useMemo(() => {
+    if (serviceForm?.work_key) {
+      return parseServiceJobKey(serviceForm?.work_key)
+    }
+    return null
+  }, [serviceForm])
+
 
   useEffect(() => {
     if (regService?.status?.status && ![3, 4].includes(regService?.status?.status)) {
@@ -160,8 +169,8 @@ const ScheduleProfile = () => {
       />
 
       {/* Reset Warning */}
-      {((regService?.status?.status === 4 && regService?.last_visit?.visit_status === 1 && serviceForm?.registration_id)
-        || (regService?.status?.status === 4 && regService?.last_visit?.visit_status === 2 && (serviceForm?.visit_uuid && serviceForm?.visit_uuid !== regService?.last_visit?.visit_id)))
+      {((regService?.status?.status === 4 && regService?.last_visit?.visit_status === 1 && workKeyParse?.reg_id)
+        || (regService?.status?.status === 4 && regService?.last_visit?.visit_status === 2 && (workKeyParse?.visit_uuid && workKeyParse?.visit_uuid !== regService?.last_visit?.visit_id)))
         ? <Message head={'Data Conflict Detected'} message={<>
           <p style={{ textAlign: 'justify' }}>We found existing service data stored in your cache that may conflict with this action.
             To continue safely, you need to clear the cached data first.</p>
@@ -173,7 +182,7 @@ const ScheduleProfile = () => {
 
 
       {/* Action buttons */}
-      <ActionButtons regData={regService} />
+      <ActionButtons regData={regService} workKeyParse={workKeyParse} />
 
     </div>
   )

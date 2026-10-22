@@ -16,20 +16,12 @@ import { useQueryClient } from '@tanstack/react-query'
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { parseServiceJobKey } from '../../../utils/helpers/generate_Id'
 
-const ActionButtons = ({ regData, setRegData }) => {
+const ActionButtons = ({ regData, workKeyParse }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const queryClient = useQueryClient()
     const { serviceForm } = useSelector((state) => state.application)
     const [loading, setLoading] = useState('')
-
-
-    const workKeyParse = useMemo(() => {
-        if (serviceForm?.work_key) {
-            return parseServiceJobKey(serviceForm?.work_key)
-        }
-        return null
-    }, [serviceForm])
 
 
     const proceedTravel = (visitId) => {

@@ -79,7 +79,8 @@ const ServiceProfile = () => {
         dispatch(modal.push({
             title: 'Schedule service',
             body: <TechScheduleService registrationId={searchParams.get('reg_id') || null} customerId={customer_id} serviceProducts={upServices?.products}
-                serviceType={['overdue', 'renewal'].includes(service_type) ? 'RENEWAL' : service_type === 'service' ? 'SERVICE' : 'COMPLAINT'} />
+                serviceType={['overdue', 'renewal'].includes(service_type) ? 'RENEWAL' : service_type === 'service' ? 'SERVICE' : 'COMPLAINT'}
+                productType={regService?.about?.product_type} />
         }))
     }
 

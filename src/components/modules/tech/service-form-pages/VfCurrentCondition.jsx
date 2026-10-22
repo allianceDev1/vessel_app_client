@@ -84,6 +84,8 @@ const VfCurrentCondition = ({ pageKey }) => {
                     <div className="box-col2">
                         <Select label={'Color'} id={'dw_color'} name={'color'} required value={productInForm?.current_condition?.direct_water?.color}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} options={[{}, ...waterColors]} />
+                        <Select label={'Color (After deposit)'} id={'dw_deposit_color'} name={'deposit_color'} required value={productInForm?.current_condition?.direct_water?.deposit_color}
+                            onChange={(e) => updateCurrentCondition(e, 'direct_water')} options={[{}, ...waterColors]} />
                         <Select label={'Smell / Odor'} id={'dw_odor'} name={'odor'} required value={productInForm?.current_condition?.direct_water?.odor}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} options={[{}, ...waterOdors]} />
                         <InputText label={'Iron ferrous (mg/L)'} id={'dw_i_ferrous'} name={'i_ferrous'} required value={productInForm?.current_condition?.direct_water?.i_ferrous}

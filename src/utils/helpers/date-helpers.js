@@ -244,8 +244,10 @@ export const formatSecondsToHHMM = (totalSeconds) => {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
 
-    return [
-        hours > 0 ? `${hours}h` : '',
-        minutes > 0 ? `${minutes}m` : ''
-    ].join('') || '0m';
+    const arr = []
+
+    if (hours > 0) arr.push(`${hours}h`)
+    if (minutes > 0) arr.push(`${minutes}m`)
+
+    return arr?.length ? arr.join(' ') : '0m';
 };

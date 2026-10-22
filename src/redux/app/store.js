@@ -7,6 +7,7 @@ import applicationSlice from '../features/persisted/applicationSlice'
 import controllerSlice from '../features/persisted/controllerSlice'
 import miniSystemSlice from '../features/non_persisted/miniSystemSlice';
 import mapSlice from '../features/non_persisted/mapSlice';
+import { memoryResetReducer } from '../features/memoryActions';
 
 
 // Create IndexedDB storage
@@ -37,7 +38,7 @@ const rootReducer = combineReducers({
 });
 
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, memoryResetReducer(rootReducer));
 
 export const store = configureStore({
     reducer: persistedReducer,

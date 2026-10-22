@@ -73,9 +73,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Product Name & Order Id</p>
+                        <p className='label'>Product Name</p>
                         <div>
-                            <p className='text-value'>{data?.product_name} {data?.order_id ? `(${data?.order_id})` : ''} </p>
+                            <p className='text-value'>{data?.product_name} </p>
                         </div>
                     </div>
                     <div className="item">

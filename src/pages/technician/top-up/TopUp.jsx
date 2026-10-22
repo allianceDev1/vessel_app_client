@@ -23,7 +23,7 @@ const TopUp = () => {
 
     return (
         <div className="tech-token-top-up-page">
-            <TokenTopUp fetchCustomerApi={fetchCustomerProducts} doTopUpApi={doTopUp} redirectUrl='/tech/more' />
+            <TokenTopUp fetchCustomerApi={fetchCustomerProducts} doTopUpApi={doTopUp} redirectUrl='/tech' />
         </div>
     )
 }
