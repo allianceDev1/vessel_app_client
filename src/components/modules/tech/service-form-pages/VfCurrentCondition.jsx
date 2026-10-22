@@ -98,6 +98,8 @@ const VfCurrentCondition = ({ pageKey }) => {
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
                         <InputText label={'Flow (L/min)'} id={'dw_flow'} name={'flow'} required value={productInForm?.current_condition?.direct_water?.flow}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} type='number' step={0.1} min={0} />
+                    </div>
+                    <div className="box-col1" style={{ marginTop: "10px" }}>
                         <InputText label={'Other contaminants'} id={'dw_contaminants'} name={'contaminants'} value={productInForm?.current_condition?.direct_water?.contaminants}
                             onChange={(e) => updateCurrentCondition(e, 'direct_water')} />
                     </div>

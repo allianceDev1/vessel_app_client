@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 import { doDialog } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
-import { TbComponents, TbTools, TbPlus } from 'react-icons/tb'
+import { TbComponents, TbTools, TbPlus, TbRefreshAlert } from 'react-icons/tb'
 import SelectedWorkSummary from './SelectedWorkSummary'
 import RadioCard from '../../../../UI_Primitives/inputs/RadioCard'
+import { getUpcomingServiceType } from '../../../../../utils/services/product_service'
+import Checkbox from '../../../../UI_Primitives/inputs/Checkbox'
 
-const WorkHome = ({ setWorkMenu }) => {
+const WorkHome = ({ setWorkMenu, product }) => {
   const dispatch = useDispatch()
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
 
@@ -48,6 +50,10 @@ const WorkHome = ({ setWorkMenu }) => {
 
 
   }, [productInForm?.service_category])
+
+
+  const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
+
 
   const handelChangeServiceCharge = (e) => {
 
@@ -134,6 +140,21 @@ const WorkHome = ({ setWorkMenu }) => {
         })
       )
     }
+  }
+
+  const handleChangeRenewalNote = (e) => {
+
+    dispatch(sfSetting.productSubmit.resetStatus())
+
+    dispatch(
+      sfActions.updateProduct.parentValue({
+        service_data: {
+          ...(productInForm?.service_data || {}),
+          package_renewal_declined: e?.target?.checked ? 'Yes' : 'No'
+        }
+      })
+    )
+
   }
 
   const handleSubmit = (e) => {
@@ -336,7 +357,7 @@ const WorkHome = ({ setWorkMenu }) => {
               />
             )}
         </>}
-       
+
         {/* Repeat */}
         {productInForm?.service_data?.repeat?.system_say && (
           <>
@@ -386,6 +407,34 @@ const WorkHome = ({ setWorkMenu }) => {
 
           </>
         )}
+
+        {/* interested to renewal */}
+        {upcomingServiceType === 'RENEWAL' && productInForm?.service_data?.mode !== 'RENEWAL' && <>
+          <h4 style={{ marginTop: '15px' }}>Subscription Renewal Decision</h4>
+          <div className={`renewal-decision-card ${productInForm?.service_data?.package_renewal_declined === 'Yes' ? 'declined' : ''}`}>
+            <div className="renewal-header">
+              <TbRefreshAlert className="renewal-icon" />
+              <div className="renewal-text">
+                <h5>Renewal period</h5>
+                <p className='renewal-note-description'>
+                  The subscription is due for renewal. Tick below only if the customer does not want to
+                  renew and will discontinue after the current package expires.
+                </p>
+              </div>
+            </div>
+
+            <div className="renewal-check">
+              <Checkbox
+                label={'Customer is not interested in continuing any subscription plan.'}
+                id={'package_renewal_declined'}
+                name={'package_renewal_declined'}
+                value={'Yes'}
+                checked={productInForm?.service_data?.package_renewal_declined === 'Yes'}
+                onChange={handleChangeRenewalNote}
+              />
+            </div>
+          </div>
+        </>}
 
         <div className="buttons">
           <Button type="button" label={'Reset Work'} rounded severity={'danger'} onClick={resetWorkCategory} />

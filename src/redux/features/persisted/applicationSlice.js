@@ -213,9 +213,18 @@ export const appDataSlice = createSlice({
                 state.serviceFormSettings.products = {};
             }
 
+            const product = state.serviceFormSettings.products?.[product_id] || {};
+          
+            if (product?.is_submitted) return;
+
+            product.is_submitted = true;
+            product.is_saved = false;
+
+            state.serviceFormSettings.form_saved = false;
+            state.serviceFormSettings.form_saved_time = null;
+
             state.serviceFormSettings.products[product_id] = {
-                ...(state.serviceFormSettings.products[product_id] || {}),
-                ...status
+                ...product
             };
         },
         updateSubmitStatusToFalse: (state) => {

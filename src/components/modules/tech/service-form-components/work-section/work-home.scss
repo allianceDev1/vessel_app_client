@@ -116,6 +116,56 @@
         }
     }
 
+    .renewal-note-description {
+        font-size: 13px;
+        color: var(--text-secondary-alt);
+    }
+
+    .renewal-decision-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border-light);
+        background-color: var(--surface-1);
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+
+        .renewal-header {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+
+            .renewal-icon {
+                flex-shrink: 0;
+                font-size: 22px;
+                color: var(--color-primary);
+                margin-top: 2px;
+            }
+
+            .renewal-text h5 {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 2px;
+            }
+        }
+
+        .renewal-check {
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-medium);
+        }
+
+        &.declined {
+            border-color: var(--color-warning-border);
+            background-color: var(--color-warning-bg);
+
+            .renewal-icon {
+                color: var(--color-warning);
+            }
+        }
+    }
+
     /* Form Styles */
     form {
         margin-top: 4px;

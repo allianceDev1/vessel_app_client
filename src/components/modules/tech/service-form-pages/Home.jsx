@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './home.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
-import { TbAlertCircle, TbChevronRight, TbPlus, TbShieldCheck, TbSitemap, TbTrash } from 'react-icons/tb'
+import { TbAlertCircle, TbChevronRight, TbPlus, TbPuzzle, TbShieldCheck, TbSitemap, TbTrash } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUpcomingServiceType } from '../../../../utils/services/product_service'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
@@ -123,7 +123,7 @@ const Home = ({ pageKey }) => {
             serviceFormSettings?.products ?? {}
         ).filter(product => product?.is_saved === true).length || 0;
 
-        if (formProductCount === saveProductCount && serviceFormSettings?.form_saved) {
+        if (serviceFormSettings?.form_saved) {
 
             // redirect to next page
             dispatch(sfSetting.page.next(1001))
@@ -321,7 +321,7 @@ const Home = ({ pageKey }) => {
             <div className="install-addons-card">
                 <div className="card-header">
                     <div className="icon-wrapper">
-                        <TbPlus className="plus-icon" />
+                        <TbPuzzle className="plus-icon" />
                     </div>
                     <div className="header-text">
                         <h4>Install Add-ons</h4>

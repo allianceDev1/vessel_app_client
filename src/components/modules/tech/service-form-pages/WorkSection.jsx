@@ -56,7 +56,7 @@ const WorkSection = () => {
                             <ServiceList setWorkMenu={setWorkMenu} productInForm={productInForm}
                                 workMenu={workMenu} product={product} />}
                     </>
-                    : <WorkHome setWorkMenu={setWorkMenu} />}
+                    : <WorkHome setWorkMenu={setWorkMenu} product={product} />}
                 </>}
 
         </div>

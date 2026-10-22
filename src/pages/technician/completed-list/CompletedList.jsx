@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import './completed-list.scss'
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbBriefcase2, TbCurrencyRupee, TbDropletCheck, TbFilter, TbPhoneCall } from 'react-icons/tb'
+import { TbBriefcase2, TbCircleLetterC, TbCurrencyRupee, TbDropletCheck, TbFilter } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import ServiceJobItem from '../../../components/modules/tech/service-job/ServiceJobItem'
@@ -146,7 +146,7 @@ const CompletedList = () => {
                             </div>
                             <div className="report-item">
                                 <div className="report-icon calls">
-                                    <TbPhoneCall />
+                                    <TbCircleLetterC />
                                 </div>
                                 <span className="report-value">{report?.total_calls ?? 0}</span>
                                 <span className="report-label">Total Calls</span>
