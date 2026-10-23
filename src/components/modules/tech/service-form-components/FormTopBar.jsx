@@ -106,11 +106,9 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
           </div>
           <div className="tb-chips">
             <span className={`tb-chip customer ${!customerId ? 'error' : ''}`} title={`Customer ID : ${customerId || 'Error'}`}>
-              <span className="prefix">CID</span>
               <span className="value">{customerId || 'Error'}</span>
             </span>
             {productId && <span className="tb-chip product" title={`Product ID : ${productId || 'Error'}`}>
-              <span className="prefix">P-ID</span>
               <span className="value">{productId}</span>
             </span>}
             {packageName && <span className="tb-chip product" title={`Package name : ${packageName}`}>

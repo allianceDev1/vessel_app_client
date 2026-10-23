@@ -5,6 +5,7 @@ import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
+import Message from '../../../UI_Primitives/message/Message'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
@@ -112,6 +113,13 @@ const ProductLogInfo = () => {
 
     return (
         <div className="tech-service-job-log-view-container">
+
+            <Message
+                type='warning'
+                head={'Package Renewal Update'}
+                message={'Customer was informed about renewal but is not ready to renew at this time.'}
+            />
+
             <div className="text-content">
                 <div className="item">
                     <p className='label'>Product ID & Type</p>

@@ -21,6 +21,7 @@
             transition: border-color 0.2s ease-in-out;
             background-color: var(--surface-1);
             width: 21px;
+            min-width: 21px;
             height: 21px;
 
             &:hover {
@@ -54,7 +55,7 @@
         }
 
         input:disabled+.checkbox-custom+.label-text {
-            color: var(--text-tertiary); 
+            color: var(--text-tertiary);
         }
 
         .label-text {
@@ -68,6 +69,7 @@
         .checkbox-label {
             .checkbox-custom {
                 width: 16px;
+                min-width: 16px;
                 height: 16px;
                 border-width: 1px;
 
@@ -87,6 +89,7 @@
         .checkbox-label {
             .checkbox-custom {
                 width: 21px;
+                min-width: 21px;
                 height: 21px;
                 border-width: 2px;
 
@@ -106,6 +109,7 @@
         .checkbox-label {
             .checkbox-custom {
                 width: 25px;
+                min-width: 25px;
                 height: 25px;
                 border-width: 2px;
 

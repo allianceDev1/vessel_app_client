@@ -103,7 +103,8 @@ const SFormSave = ({ modalId }) => {
                     repeat: {
                         tech_say: entry?.service_data?.repeat?.tech_say || false,
                         comment: entry?.service_data?.repeat?.comment || null
-                    }
+                    },
+                    package_renewal_declined: entry?.service_data?.package_renewal_declined === 'Yes' ? true : false
                 },
                 components_list: (entry?.work?.components_list || [])?.map(c => ({
                     spare_type: c?.selection_context,
@@ -318,7 +319,7 @@ const SFormSave = ({ modalId }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Close'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Close'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} severity={'secondary'} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
 

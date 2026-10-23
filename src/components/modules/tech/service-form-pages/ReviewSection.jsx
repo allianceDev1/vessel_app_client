@@ -11,6 +11,8 @@ import BillSummery from '../service-form-components/BillSummery';
 import Badge from '../../../UI_Primitives/badge/Badge';
 import Button from '../../../UI_Primitives/buttons/Button';
 import { calculateBillTotalAmount } from '../../../../utils/helpers/math-equations';
+import { calculateServiceFormTotal } from '../../../../utils/helpers/service-form-total';
+import Message from '../../../UI_Primitives/message/Message';
 
 
 
@@ -54,6 +56,12 @@ const ReviewSection = ({ pageKey, setOpenedBill }) => {
         }
         // eslint-disable-next-line
     }, [serviceFormSettings, review])
+
+    // Current work bill amount must match the total amount of the current work form
+    const currentWorkBill = review?.bills?.find(b => b?.this_work_bill)
+    const billAmount = currentWorkBill ? Number(calculateBillTotalAmount(currentWorkBill?.items, review?.zero_fee_items || [])) : null
+    const formAmount = calculateServiceFormTotal(serviceForm)
+    const amountMismatch = billAmount !== null && billAmount !== formAmount
 
     return (
         <div className="tech-service-form-page form-review">
@@ -102,8 +110,10 @@ const ReviewSection = ({ pageKey, setOpenedBill }) => {
                         </div>
                     ))}
                 </div>
+                {amountMismatch && <Message type='danger' head='Bill amount mismatch' style={{ marginTop: '20px' }}
+                    message={`Current work bill amount (₹${billAmount}) does not match the current work total amount (₹${formAmount}). Please go back, review the work and save the form again.`} />}
                 <div className="submit-section" style={{ marginTop: '40px' }}>
-                    <Button label={'Next'} rounded style={{ width: '100%' }} severity={'secondary'}
+                    <Button label={'Next'} rounded style={{ width: '100%' }} severity={'secondary'} disabled={amountMismatch}
                         onClick={() => dispatch(sfSetting.page.next(1002))} />
                 </div>
             </div>}

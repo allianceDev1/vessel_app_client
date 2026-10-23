@@ -56,6 +56,7 @@ const AboutPackage = () => {
             body: <PackageExtend
                 expireDate={data?.expire_date}
                 packageSrlNo={serial_number}
+                packageStatus={data?.package_status}
             />
         }))
     }

@@ -415,20 +415,23 @@ const WorkHome = ({ setWorkMenu, product }) => {
             <div className="renewal-header">
               <TbRefreshAlert className="renewal-icon" />
               <div className="renewal-text">
-                <h5>Renewal period</h5>
+                <h5>Renewal Period</h5>
                 <p className='renewal-note-description'>
-                  The subscription is due for renewal. Tick below only if the customer does not want to
-                  renew and will discontinue after the current package expires.
+                  The customer's subscription has reached its renewal period. Inform the customer about the available
+                  renewal options, applicable charges, and benefits of continuing the subscription. If the customer
+                  is not ready to renew and chooses to proceed with another work category, confirm that the renewal
+                  information has been explained before continuing.
                 </p>
               </div>
             </div>
 
             <div className="renewal-check">
               <Checkbox
-                label={'Customer is not interested in continuing any subscription plan.'}
+                label={'I have explained the package renewal details to the customer.'}
                 id={'package_renewal_declined'}
                 name={'package_renewal_declined'}
                 value={'Yes'}
+                required
                 checked={productInForm?.service_data?.package_renewal_declined === 'Yes'}
                 onChange={handleChangeRenewalNote}
               />
