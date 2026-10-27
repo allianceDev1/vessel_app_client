@@ -24,7 +24,7 @@ const CustomerProductView = () => {
 
     useEffect(() => {
         const segments = location?.pathname?.split('/').filter(Boolean)
-        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history'].includes((segments.at(-1) || ''))
+        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history', 'service-card-images'].includes((segments.at(-1) || ''))
             ? segments.at(-1) || '' : null
 
         setActiveSegment(lastSegment)
@@ -46,7 +46,7 @@ const CustomerProductView = () => {
                         <TbCircleCheck />
                         <p>Eligibility</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/service-cards`)}>
+                    <div className={`menu-item ${(activeSegment === 'service-cards' || activeSegment === 'service-card-images') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/service-cards`)}>
                         <TbPlayCard4 />
                         <p>Service Cards</p>
                     </div>

@@ -37,6 +37,8 @@ const ProductLogInfo = React.lazy(() => import('../components/modules/tech/servi
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/tech/service-job/PurchaseLogInfo'))
 const Settings = React.lazy(() => import('../pages/technician/settings/Settings'))
 const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/SelfCloseForm'))
+const PurifierServiceJobAbout = React.lazy(() => import('../pages/public/purifier-service-job/PurifierServiceJobAbout'))
+const ServiceCardImageList = React.lazy(() => import('../pages/public/service-card-image-page/ServiceCardImageList'))
 
 
 
@@ -82,6 +84,8 @@ const Technician = () => {
             <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
             <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
           </Route>
+          <Route path='/completed/service-job/v1.5/p/:service_srl_no/about' element={<PrivateRoute element={<PurifierServiceJobAbout />} isAuthenticated={isAuthenticated} />} />
+
 
           {/* Customer */}
           <Route path='/customer/:customer_id' element={<PrivateRoute element={<CustomerView />} isAuthenticated={isAuthenticated} />} >
@@ -98,6 +102,7 @@ const Technician = () => {
             <Route path="spares" element={<CustomerProductSpares />} />
             <Route path="eligibility" element={<CustomerProductEligibility />} />
             <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+            <Route path="service-card-images" element={<ServiceCardImageList />} />
             <Route path="package-history" element={<CustomerProductPackageHistory />} />
           </Route>
 

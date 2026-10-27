@@ -6,6 +6,7 @@ import Page404 from '../components/layout/404/Page404';
 import env from '../config/env';
 
 
+
 // Lazy
 const Dashboard = React.lazy(() => import('../pages/controller/dashboard/Dashboard'))
 const AreaList = React.lazy(() => import('../pages/controller/area-list/AreaList'))
@@ -52,13 +53,8 @@ const ControllerLayout = React.lazy(() => import('../components/layout/controlle
 const ServiceCategoryView = React.lazy(() => import("../pages/controller/service-category/ServiceCategoryView"))
 const PackageServiceCategoryView = React.lazy(() => import("../pages/controller/package-service-category/PackageServiceCategoryView"))
 const ControllerMap = React.lazy(() => import('../pages/controller/map/ControllerMap'));
-
-
-
-
-
-
-
+const PurifierServiceJobAbout = React.lazy(() => import('../pages/public/purifier-service-job/PurifierServiceJobAbout'))
+const ServiceCardImageList = React.lazy(() => import('../pages/public/service-card-image-page/ServiceCardImageList'))
 
 
 
@@ -109,6 +105,7 @@ const Controller = () => {
                         <Route path="spares" element={<CustomerProductSpares />} />
                         <Route path="eligibility" element={<CustomerProductEligibility />} />
                         <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+                        <Route path="service-card-images" element={<ServiceCardImageList />} />
                         <Route path="package-history" element={<CustomerProductPackageHistory />} />
                     </Route>
 
@@ -136,6 +133,7 @@ const Controller = () => {
                         <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
                         <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
                     </Route>
+                    <Route path='/completed/service-job/v1.5/p/:service_srl_no/about' element={<PrivateRoute element={<PurifierServiceJobAbout />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Subscriptions */}
                     <Route path='/subscriptions' element={<PrivateRoute element={<Subscriptions />} isAuthenticated={isAuthenticated} />} />

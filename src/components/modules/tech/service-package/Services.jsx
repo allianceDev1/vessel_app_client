@@ -59,8 +59,13 @@ const Services = () => {
                     />}
 
                     {data.data?.map((card) => (
-                        card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
-                            onClick={() => card?.version === 2 ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} /> :
+                        card?.card_type === 'SERVICE_CARD' ? <ServiceCard key={card.uuid} data={card}
+                            pointer={card?.version === 1 ? false : true}
+                            onClick={() => card?.version === 2
+                                ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`)
+                                : card?.version === 1.5
+                                    ? navigate(`/tech/completed/service-job/v1.5/p/${card?.service_srl_no}/about`)
+                                    : null} /> :
                             card?.card_type === 'SERVICE_CANCEL_CARD' ? <CancellationCard key={card.uuid} data={card} /> : ""
                     ))}
                 </div>
