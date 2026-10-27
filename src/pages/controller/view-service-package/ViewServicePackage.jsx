@@ -176,7 +176,7 @@ const ViewServicePackage = () => {
 
     return (
         <div className="view-service-package-page">
-            {user?.allowed_origins?.includes('vessel_c_admin') &&
+            {user?.allowed_origins?.includes('service_c_admin') &&
                 <div className="top-section">
                     <div className="action-buttons">
 

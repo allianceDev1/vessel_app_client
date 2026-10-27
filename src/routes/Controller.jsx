@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react'
-// import ControllerLayout from '../components/layout/controllerLayout/ControllerLayout'
 import { useSelector } from 'react-redux';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -70,7 +69,7 @@ const ControllerMap = React.lazy(() => import('../pages/controller/map/Controlle
 
 const Controller = () => {
     const { user } = useSelector((state) => state.user)
-    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("vessel_c_"));
+    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("service_c_"));
 
 
 

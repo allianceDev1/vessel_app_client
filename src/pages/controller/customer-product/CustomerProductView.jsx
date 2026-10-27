@@ -11,14 +11,14 @@ const CustomerProductView = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('');
-    const {  product_id } = useParams();
+    const { product_id } = useParams();
 
     const navigateSubMenu = (url) => {
         navigate(url)
     }
 
     useEffect(() => {
-        dispatch(page.config({ title: product_id, note: "Customer Product View" }))
+        dispatch(page.config({ title: 'Product View - ' + product_id, note: "Customer Product About, Spares, Eligibility, Service cards and Subscriptions" }))
         // eslint-disable-next-line
     }, [])
 

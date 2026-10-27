@@ -269,14 +269,14 @@ const UpdatePackageService = ({ packageId, serviceData, onSuccess }) => {
                                     <Select
                                         label={'Price of Spares'}
                                         name={'target_spare_parts_price_type'}
-                                        options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                                        options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                         onChange={handleChangePositionValue}
                                         value={form.target_spare_parts_price_type || ''}
                                     />
                                     <Select
                                         label={'Price of service work'}
                                         name={'target_service_work_price_type'}
-                                        options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                                        options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                         onChange={handleChangePositionValue}
                                         value={form.target_service_work_price_type || ''}
                                     />

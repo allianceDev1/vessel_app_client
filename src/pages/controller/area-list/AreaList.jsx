@@ -221,7 +221,7 @@ const AreaList = () => {
                     { header: 'Products', accessorKey: 'Products', enableSorting: false },
                 ]
 
-                if (user?.allowed_origins?.some(origin => ['vessel_c_writer', 'vessel_c_admin']?.includes(origin))) {
+                if (user?.allowed_origins?.some(origin => ['service_c_writer', 'service_c_admin']?.includes(origin))) {
                     cols.push({
                         header: 'Actions',
                         enableSorting: false,
@@ -235,15 +235,14 @@ const AreaList = () => {
                                         icon={<TbPencil />} size='small' outlined severity={'secondary'}
                                         onClick={() => openEditModal(row.original)}
                                     />
-                                    {user?.allowed_origins?.includes('vessel_c_admin') &&
-                                        <Button rounded severity={'danger'} title={'Delete'}
-                                            icon={<TbTrash />} size='small' outlined
-                                            spinIcon={deletingKey === rowKey}
-                                            disabled={deletingKey === rowKey}
-                                            onClick={() => handleDeleteTech([
-                                                { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
-                                            ])}
-                                        />}
+                                    <Button rounded severity={'danger'} title={'Delete'}
+                                        icon={<TbTrash />} size='small' outlined
+                                        spinIcon={deletingKey === rowKey}
+                                        disabled={deletingKey === rowKey}
+                                        onClick={() => handleDeleteTech([
+                                            { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
+                                        ])}
+                                    />
                                 </div>
                             )
                         },

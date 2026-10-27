@@ -171,7 +171,7 @@ const RegisteredView = () => {
 
   useEffect(() => {
 
-    if (!data?.status?.status || !user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+    if (!data?.status?.status || !user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
       return;
     }
 
@@ -196,7 +196,7 @@ const RegisteredView = () => {
       )
     }
 
-    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin')
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('service_c_admin')
       && !data?.about.is_under_rnd && data?.about?.service_type === 'COMPLAINT') {
 
       actions[0].items.push(
@@ -210,7 +210,7 @@ const RegisteredView = () => {
       actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', onClick: () => openUnschedulePopUp({ registrationId: reg_no }) })
     }
 
-    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin') && data?.about.is_under_rnd) {
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('service_c_admin') && data?.about.is_under_rnd) {
 
       actions[1].items.push(
         { icon: <TbHomeSearch />, label: 'Retrieve from R&D', onClick: () => retrieveFromRND(reg_no) }
@@ -265,8 +265,8 @@ const RegisteredView = () => {
           <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
             onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} severity={'secondary'} />
           <Button label={'Service Jobs'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }}
-            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} severity={'secondary'} />
-          {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
+            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}&p=l`)} severity={'secondary'} />
+          {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))
             && <Dropdown button={{
               label: 'Actions', icon: <TbChevronDown />,
               iconPos: 'right', rounded: true, outlined: true, size: 'small', style: { width: '120px' }

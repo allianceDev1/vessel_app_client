@@ -44,7 +44,7 @@ const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/
 
 const Technician = () => {
   const { user } = useSelector((state) => state.user)
-  const isAuthenticated = user?.allowed_origins?.includes("vessel_t_worker");
+  const isAuthenticated = user?.allowed_origins?.includes("service_t_write");
 
 
   return (

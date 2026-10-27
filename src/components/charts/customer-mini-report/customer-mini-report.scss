@@ -178,7 +178,7 @@
         margin-top: 10px;
     }
 
-    @media screen and (max-width: 1050px) {
+    @media screen and (max-width: 800px) {
         .reports {
             .vessel-report,
             .purifier-report {
@@ -194,34 +194,5 @@
             }
         }
     }
-
-    @media screen and (max-width: 600px) {
-        .reports {
-            grid-template-columns: 1fr;
-            gap: 15px;
-
-            .add-on-report {
-                .content {
-                    .section-one {
-                        grid-template-columns: 1fr 1fr;
-                        gap: 10px;
-
-                        .item-div {
-                            border-right: 1px solid var(--border-light);
-                            border-bottom: 1px solid var(--border-light);
-
-                            &:nth-child(2n) {
-                                border-right: none;
-                            }
-
-                            &:nth-child(3),
-                            &:nth-child(4) {
-                                border-bottom: none;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+   
 }

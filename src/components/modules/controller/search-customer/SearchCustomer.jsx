@@ -42,7 +42,7 @@ const SearchCustomer = () => {
             { header: 'City', accessorKey: 'City' }
         ]
 
-        if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+        if (user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
             tempColumns.push({
                 header: 'Actions',
                 enableSorting: false,

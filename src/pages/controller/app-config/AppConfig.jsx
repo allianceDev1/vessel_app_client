@@ -23,7 +23,7 @@ const AppConfig = () => {
     const { data } = useQuery({
         queryKey: ['controller_access'],
         queryFn: async () => {
-            return await api.ttPv2Axios.get('/worker/account/filter?origins=vessel_c_reader,vessel_c_writer,vessel_c_admin')
+            return await api.ttPv2Axios.get('/worker/account/filter?origins=service_c_reader,service_c_writer,service_c_admin')
         },
         staleTime: 60_000
     })
@@ -105,9 +105,9 @@ const AppConfig = () => {
                                     <h4>{worker?.full_name}</h4>
                                 </div>
                                 <div className="r">
-                                    <p>{worker?.origins?.includes('vessel_c_admin') ? 'Administrator' :
-                                        worker?.origins?.includes('vessel_c_writer') ? 'Editor' :
-                                            worker?.origins?.includes('vessel_c_reader') ? 'Viewer' : 'None'}</p>
+                                    <p>{worker?.origins?.includes('service_c_admin') ? 'Administrator' :
+                                        worker?.origins?.includes('service_c_writer') ? 'Editor' :
+                                            worker?.origins?.includes('service_c_reader') ? 'Viewer' : 'None'}</p>
                                 </div>
                             </div>
                         })}

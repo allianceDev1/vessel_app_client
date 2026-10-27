@@ -65,8 +65,7 @@ const SFormSave = ({ modalId }) => {
                 element: {
                     spare_uuid: item?.element?.spare_uuid,
                     qty: item?.element?.qty
-                },
-                service_charge_estimate: item?.service_charge?.list_price || 0
+                }
             }
         })
 

@@ -22,8 +22,9 @@ const RegisteredServiceTable = () => {
         'Place': 'place',
         'Post': 'post',
         'Status': 'registration_status',
+        'Status': 'registration_status',
         'Action Date': 'action_date',
-        'Product Type': 'product_type'
+        'Technician': 'technician'
     })[id] || id
 
     const allowedKeys = ['fl'];
@@ -67,7 +68,8 @@ const RegisteredServiceTable = () => {
                 'City': item.city_name,
                 'Product Type': (item.product_type || item.registration_type) ? toStandardText(item.product_type || item.registration_type) : '',
                 'Service Type': item.service_type,
-                'Technician': item.technician,
+                'Complaint': (item.complaint_category || [])?.join(', '),
+                'Technician': item.technician || '',
                 'Status': item.status_text,
                 'Action Date': isoToDDMonYYYY(new Date(item.action_date)),
                 product_type: item.product_type,
@@ -91,9 +93,8 @@ const RegisteredServiceTable = () => {
 
         setColumnVisibility({
             'Place': false,
-            'Post': false,
-            'City': false,
-            'Reg Date': false,
+            'Action Date': false,
+            'City': false
 
         })
 
@@ -107,7 +108,8 @@ const RegisteredServiceTable = () => {
             { header: 'City', accessorKey: 'City', enableSorting: false },
             { header: 'Product Type', accessorKey: 'Product Type', enableSorting: false },
             { header: 'Service Type', accessorKey: 'Service Type', enableSorting: false },
-            { header: 'Technician', accessorKey: 'Technician', enableSorting: false },
+            { header: 'Complaint', accessorKey: 'Complaint', enableSorting: false },
+            { header: 'Technician', accessorKey: 'Technician' },
             { header: 'Status', accessorKey: 'Status' },
             { header: 'Action Date', accessorKey: 'Action Date' }
         ]

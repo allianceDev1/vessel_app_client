@@ -46,15 +46,16 @@ const AboutProduct = () => {
             items: [
                 { label: 'Change Service Date', icon: <TbCalendarCheck />, onClick: () => openUpdateServiceDateModel() },
                 { label: 'Edit Note', icon: <TbAlignLeft />, onClick: () => openUpdateNoteModel() },
+                { type: "divider" },
+                { label: 'New Spare', icon: <TbPlus />, onClick: () => openAddSpareModal() },
+                ...(data?.product_active && parentProductTypes?.includes(data?.product_type) ?
+                    [{ label: 'New Subscription', icon: <TbPlus />, onClick: () => openAddSubscriptionModal() }] : []),
             ]
         }
     ]
 
-    if (user?.allowed_origins?.includes('vessel_c_admin')) {
+    if (user?.allowed_origins?.includes('service_c_admin')) {
         dropdownOptions[0].items.push(
-            { type: "divider" },
-            { label: 'New Spare', icon: <TbPlus />, onClick: () => openAddSpareModal() },
-            ...(data?.product_active && parentProductTypes?.includes(data?.product_type) ? [{ label: 'New Subscription', icon: <TbPlus />, onClick: () => openAddSubscriptionModal() }] : []),
             ...(data?.product_active ? [{ label: 'Disconnect', theme: 'danger', icon: <TbLinkOff />, onClick: () => openStatusChangeModel('DISCONNECT') }] : []),
             { label: 'Transfer', theme: 'danger', icon: <TbFlagShare />, onClick: () => openTransferOwnerShip() }
         )
@@ -137,9 +138,9 @@ const AboutProduct = () => {
 
     return (
         <div className="controller-about-customer-container">
-            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+            {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) &&
                 <div className="menu-buttons">
-                    {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                    {user?.allowed_origins?.includes('service_c_admin') && <>
                         {!data?.product_active &&
                             <Button icon={<TbLink />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
                                 onClick={() => openStatusChangeModel('CONNECT')} />}
@@ -180,9 +181,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Product Name & Order Id</p>
+                        <p className='label'>Product Name</p>
                         <div>
-                            <p className='text-value'>{data?.product_name} {data?.order_id ? `(${data?.order_id})` : ''} </p>
+                            <p className='text-value'>{data?.product_name} </p>
                         </div>
                     </div>
                     <div className="item">

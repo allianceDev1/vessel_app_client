@@ -78,7 +78,7 @@ const CompletedServiceTable = () => {
                         'CID': item.customer_id,
                         "Customer name": item.customer_name,
                         'Product Id': item.product_id,
-                        'Product Type': item.product_type,
+                        'Product Type': toStandardText(item.product_type),
                         'Origin': toStandardText(item.origin_category),
                         'Service': item.category_name,
                         'Service Srl No': item.service_srl_no,

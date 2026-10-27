@@ -18,7 +18,10 @@ const ServicePackageView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.config({ title: serial_number, note: "Subscription View" }))
+        dispatch(page.config({
+            title: 'Subscription - ' + serial_number,
+            note: "View subscription about, services, extensions and freeze history"
+        }))
         // eslint-disable-next-line
     }, [])
 

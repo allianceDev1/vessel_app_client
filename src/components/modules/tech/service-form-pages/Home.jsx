@@ -56,8 +56,7 @@ const Home = ({ pageKey }) => {
     const clickNewAddOnButton = () => {
         dispatch(modal.push({
             title: 'Add New Add-On',
-            body: <AddNewAddOn availableAddOns={formResources?.add_on_products} serviceCharges={formResources?.add_on_installation_charges}
-                addOnSpareList={formResources?.spare_list?.filter(e => e.spare_category === 'CHEMICALS')} />
+            body: <AddNewAddOn />
         }))
     }
 
@@ -117,11 +116,6 @@ const Home = ({ pageKey }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const formProductCount = Object.keys(serviceForm?.service_products || {}).length || 0
-        const saveProductCount = Object.values(
-            serviceFormSettings?.products ?? {}
-        ).filter(product => product?.is_saved === true).length || 0;
 
         if (serviceFormSettings?.form_saved) {
 
@@ -349,7 +343,7 @@ const Home = ({ pageKey }) => {
                                         )}
                                     </div>
                                     <h4 className="addon-title">{item?.product_name}</h4>
-                                    <p className="addon-price">₹{item?.total_amount?.charged || 0}</p>
+                                    <p className="addon-price">₹{item?.charged_amount || 0}</p>
                                 </div>
                                 <Button
                                     icon={<TbTrash />}

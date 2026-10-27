@@ -220,7 +220,7 @@ const ServiceForm = () => {
 
                         {serviceFormSettings?.activePage === 1000 && !serviceFormSettings?.activeProduct?.[0]
                             && ![1001, 1002, 1003].includes(serviceFormSettings?.activePage) &&
-                            < Home pageKey={1000} />}
+                            <Home pageKey={1000} />}
 
                         {serviceFormSettings?.activePage === 1001 && <>
                             {!openedBill?.service_srl_no && <ReviewSection setOpenedBill={setOpenedBill} pageKey={1001} />}

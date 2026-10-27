@@ -59,7 +59,7 @@ const ReviewSection = ({ pageKey, setOpenedBill }) => {
 
     // Current work bill amount must match the total amount of the current work form
     const currentWorkBill = review?.bills?.find(b => b?.this_work_bill)
-    const billAmount = currentWorkBill ? Number(calculateBillTotalAmount(currentWorkBill?.items, review?.zero_fee_items || [])) : null
+    const billAmount = currentWorkBill ? Number(calculateBillTotalAmount(currentWorkBill?.items)) : null
     const formAmount = calculateServiceFormTotal(serviceForm)
     const amountMismatch = billAmount !== null && billAmount !== formAmount
 

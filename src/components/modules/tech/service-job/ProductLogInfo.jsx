@@ -114,11 +114,12 @@ const ProductLogInfo = () => {
     return (
         <div className="tech-service-job-log-view-container">
 
-            <Message
-                type='warning'
-                head={'Package Renewal Update'}
-                message={'Customer was informed about renewal but is not ready to renew at this time.'}
-            />
+            {data?.service_data?.package_renewal_declined &&
+                < Message
+                    type='warning'
+                    head={'Package Renewal Update'}
+                    message={'Customer was informed about renewal but is not ready to renew at this time.'}
+                />}
 
             <div className="text-content">
                 <div className="item">
@@ -259,76 +260,3 @@ const ProductLogInfo = () => {
 }
 
 export default ProductLogInfo
-
-
-const AssessmentVesselCurrentCondition = ({ title, data }) => {
-    return (
-        <div className="section-border">
-            <h4>{title}</h4>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Color</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.color}</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Odor</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.odor}</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Iron Ferrous</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.i_ferrous} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Iron Ferric</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.i_ferric} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Ph</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.ph} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>TDS</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.tds} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Flow</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.flow} L/min</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Other Contaminants</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.contaminants || 'Nil'}</p>
-                </div>
-            </div>
-        </div>
-    )
-}

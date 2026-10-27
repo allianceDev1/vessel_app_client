@@ -15,6 +15,7 @@ import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { downloadServiceBill, downloadServiceReceipt } from '../../../utils/services/finance_service';
 import { generateUniqueId } from '../../../utils/helpers/generate_Id';
+import Message from '../../../components/UI_Primitives/message/Message';
 
 
 
@@ -138,7 +139,10 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill') },
+                                    {
+                                        icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill'),
+                                        disabled: data?.bills?.length > 0 ? false : true,
+                                    },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
                                         onClick: () => downloadAction('Receipt')
@@ -154,7 +158,7 @@ const ServiceJob = () => {
                     <Outlet />
                 </div>
                 : <div className='about-content'>
-                    <div className="payment-border">
+                    {data?.bills?.length > 0 ? <div className="payment-border">
                         <div className="summery-box">
                             <div className="amount">
                                 <div className="left-section">
@@ -168,6 +172,13 @@ const ServiceJob = () => {
                             </div>
                         </div>
                     </div>
+                        : <div style={{ marginTop: '20px' }}>
+                            <Message
+                                type={'info'}
+                                head={'Bill not generated'}
+                                message={'The bill is not generated yet. Bills are generated only after the service registration is closed.'}
+                            />
+                        </div>}
                     <div className="text-content">
                         <div className="item">
                             <p className='label'>Customer Id & Customer Name</p>

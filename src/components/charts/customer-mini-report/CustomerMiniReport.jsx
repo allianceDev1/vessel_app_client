@@ -291,7 +291,7 @@ const CustomerMiniReport = () => {
                         <h4>Customer Report</h4>
                     </div>
                     <div className="content">
-                        <ResponsiveContainer width="100%" height={170}>
+                        <ResponsiveContainer width="100%" height={140}>
                             <PieChart>
                                 <Pie
                                     accessibilityLayer

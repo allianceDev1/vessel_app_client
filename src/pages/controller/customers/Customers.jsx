@@ -41,7 +41,7 @@ const Customers = () => {
     return (
         <div className="customers-page">
             <div className="action-buttons">
-                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && < Button label={'Product'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
+                {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) && < Button label={'Product'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
                     onClick={openAddProductPopUp} />}
                 <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
                     onClick={openFilterCustomerProductPopUp} severity={'secondary'} disabled={isSearchPage} />

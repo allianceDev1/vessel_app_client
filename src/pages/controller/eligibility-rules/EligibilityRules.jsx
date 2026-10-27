@@ -61,7 +61,7 @@ const EligibilityRules = () => {
         <div className="eligibility-rules-page-container">
             <div className="action-section">
                 <InputText label={'Search'} size='small' />
-                {user?.allowed_origins?.includes('vessel_c_admin') &&
+                {user?.allowed_origins?.includes('service_c_admin') &&
                     <Button label={'Rule'} icon={<TbPlus />} size='small' rounded onClick={() => navigate('/controller/app-config/eligibility-rules/new')}
                         severity={'primary'} style={{ width: '130px' }} />}
             </div>

@@ -33,7 +33,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     const now = new Date().getHours() + Number((new Date().getMinutes() / 60).toFixed(2));
     const DAY_START = 6;
     const DAY_END = 19;
-  
+
 
     function toHHMM(decimal) {
         const h = Math.floor(decimal);
@@ -52,7 +52,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     function buildChartData(technicians) {
         return technicians.map((tech) => {
             const works = workFlows.filter((w) => w.techId === tech.worker_uuid);
-           
+
             const segments = [];
             works.forEach((w) => {
                 const status = getStatus(w);
@@ -217,16 +217,13 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
     return (
         <div className="chart-controller-today-work-flow-container" >
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '10px', paddingLeft: '8px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-disabled)', fontWeight: 500 }}>Visit Type:</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-disabled)', fontWeight: 500 }}>Reg Type:</span>
                 {Object.entries(VISIT_TYPE_CONFIG).map(([key, config]) => (
                     <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: config.color, display: 'inline-block' }} />
                         <span style={{ fontSize: '12px', color: 'var(--text-secondary-alt)', fontWeight: 500 }}>{config.label}</span>
                     </div>
                 ))}
-                <span style={{ fontSize: '11px', color: 'var(--text-disabled)', fontWeight: 500, marginLeft: '6px' }}>
-                    (Light: Travel, Solid: Work)
-                </span>
             </div>
             <div >
                 <ResponsiveContainer width="100%" height={(technicians.length * 50) + 30}>
@@ -238,7 +235,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                         <CartesianGrid
                             horizontal={false}
                             vertical={true}
-                            stroke="var(--surface-1)"
+                            stroke="var(--surface-3)"
                             strokeDasharray="0"
                         />
                         <XAxis

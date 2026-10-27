@@ -14,6 +14,7 @@ import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import WaterPurifierV2 from './assessments/WaterPurifierV2'
 import VesselFilterV2 from './assessments/VesselFilterV2'
 import AddOnV2 from './assessments/AddOnV2'
+import Message from '../../../UI_Primitives/message/Message'
 
 
 const ProductLogInfo = () => {
@@ -121,6 +122,12 @@ const ProductLogInfo = () => {
 
     return (
         <div className="service-job-product-log-view-container">
+            {data?.service_data?.package_renewal_declined &&
+                < Message
+                    type='warning'
+                    head={'Package Renewal Update'}
+                    message={'Customer was informed about renewal but is not ready to renew at this time.'}
+                />}
             <div className="text-content">
                 <div className="item">
                     <p className='label'>Product ID & Type</p>

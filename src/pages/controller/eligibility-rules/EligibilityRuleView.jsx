@@ -167,21 +167,23 @@ const EligibilityRuleView = () => {
 
   return (
     <div className="eligibility-rule-view-page-container">
-      <div className="action-section">
-        <Button label={'Condition'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '120px' }}
-          onClick={() => openCUConditionModal('CREATE')} />
-        {data?.enabled && <Button label={'Disable'} icon={<TbEyeClosed />} size='small' rounded outlined severity={'danger'}
-          onClick={() => handelChangeStatus('DISABLE')} style={{ width: '110px' }} />}
-        {!data?.enabled && <Button label={'Enable'} icon={<TbEye />} size='small' rounded outlined severity={'info'}
-          onClick={() => handelChangeStatus('ENABLE')} style={{ width: '110px' }} />}
-        <Button label={'Remove'} icon={<TbTrash />} size='small' rounded outlined severity={'danger'} style={{ width: '110px' }}
-          onClick={handelRemoveRule} />
-      </div>
+      {user?.allowed_origins?.includes('service_c_admin') &&
+        <div className="action-section">
+          <Button label={'Condition'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '120px' }}
+            onClick={() => openCUConditionModal('CREATE')} />
+          {data?.enabled && <Button label={'Disable'} icon={<TbEyeClosed />} size='small' rounded outlined severity={'danger'}
+            onClick={() => handelChangeStatus('DISABLE')} style={{ width: '110px' }} />}
+          {!data?.enabled && <Button label={'Enable'} icon={<TbEye />} size='small' rounded outlined severity={'info'}
+            onClick={() => handelChangeStatus('ENABLE')} style={{ width: '110px' }} />}
+          <Button label={'Remove'} icon={<TbTrash />} size='small' rounded outlined severity={'danger'} style={{ width: '110px' }}
+            onClick={handelRemoveRule} />
+        </div>}
 
       <div className="content">
         <div className='content-title'>
-          <h2>{data?.rule_name} <span style={{ color: 'var(--color-info)', cursor: 'pointer' }}
-            onClick={() => openEditNameModal(data?.rule_name)}><TbPencil /></span></h2>
+          <h2>{data?.rule_name} {user?.allowed_origins?.includes('service_c_admin') &&
+            <span style={{ color: 'var(--color-info)', cursor: 'pointer' }}
+              onClick={() => openEditNameModal(data?.rule_name)}><TbPencil /></span>}</h2>
           {data?.enabled
             ? <Badge value={'Enabled'} severity={'primary'} />
             : <Badge value={'Disabled'} severity={'danger'} />}
@@ -194,23 +196,24 @@ const EligibilityRuleView = () => {
             { header: 'Condition', accessorKey: 'Condition', enableHiding: false },
             { header: 'Criteria', accessorKey: 'Criteria', enableHiding: false },
             { header: 'Direction', accessorKey: 'Direction', enableHiding: false },
-            {
-              header: 'Action', accessorKey: 'Action', enableHiding: false,
-              enableSorting: false,
-              enableColumnFilter: false,
-              cell: ({ row }) => {
-                const rowKey = row.original.condition_uuid;
+            ...(user?.allowed_origins?.includes('service_c_admin')
+              ? [{
+                header: 'Action', accessorKey: 'Action', enableHiding: false,
+                enableSorting: false,
+                enableColumnFilter: false,
+                cell: ({ row }) => {
+                  const rowKey = row.original.condition_uuid;
 
-                return (user?.allowed_origins?.includes('vessel_c_admin') &&
-                  <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
+                  return <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
 
                     <Button rounded severity={'danger'} title={'Delete'}
                       icon={<TbTrash />} size='small' outlined onClick={() => handleDeleteCondition(rowKey)}
                       spinIcon={deletingKey === rowKey}
                       disabled={deletingKey === rowKey} />
-                  </div>)
-              }
-            }
+                  </div>
+                }
+              }]
+              : [])
           ]}
           data={data?.conditions?.map((condition) => ({
             condition_uuid: condition?.condition_uuid,

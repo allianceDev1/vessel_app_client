@@ -138,13 +138,13 @@ const AboutPackage = () => {
     return (
         <div className="controller-about-customer-container">
             <div className="menu-buttons">
-                {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                {user?.allowed_origins?.includes('service_c_admin') && <>
                     {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
                         onClick={openActivationModel} />}
                     {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
                         onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
                 </>}
-                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && <>
+                {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) && <>
                     {data?.package_status === 2 && <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
                         outlined onClick={() => openCancellationModal()} />}
                     {data?.is_blacklisted && <Button label={'Clear Overdue'} severity={'info'} size='small' rounded style={{ width: '140px' }}
@@ -157,7 +157,7 @@ const AboutPackage = () => {
                 {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
                     onClick={openTopUpsHistoryModel} severity={'secondary'} />}
 
-                {data?.package_status === 2 && user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown button={{
+                {data?.package_status === 2 && user?.allowed_origins?.includes('service_c_admin') && <Dropdown button={{
                     icon: <IoIosArrowDown />,
                     label: 'Action',
                     size: "small",

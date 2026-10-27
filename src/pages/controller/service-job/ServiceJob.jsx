@@ -43,7 +43,7 @@ const ServiceJob = () => {
             const balance = grandTotal - paid;
             const paymentStatus = grandTotal === paid ? 'Paid' : paid > 0 ? 'Partially Paid' : 'Unpaid';
             const paidPercentage = (paid / grandTotal) * 100;
-        
+
             return {
                 ...data,
                 tat: { day: diff.days, hour: diff.hours, minute: diff.minutes },
@@ -163,7 +163,7 @@ const ServiceJob = () => {
                         style: { width: '120px' }
                     }}
                         list={[
-                            (!data?.verification?.verified && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) && {
+                            (!data?.verification?.verified && user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) && {
                                 items: [
                                     { icon: <TbPasswordFingerprint />, label: "Verify Service", onClick: verifyService },
                                     { type: 'divider' },
@@ -192,10 +192,13 @@ const ServiceJob = () => {
                 </div>
                 : <div className='about-content'>
                     <div className="text-content">
-                        <div className="item">
-                            <p className='label'>Customer Id & Customer Name</p>
+                        <div className="item action-button" onClick={() => navigate(`/controller/customer/${data?.customer_id}/about`)}>
+                            <p className='label'>Customer ID & Name</p>
                             <div>
                                 <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
+                            </div>
+                            <div className="right-icon">
+                                <TbArrowUpRight />
                             </div>
                         </div>
                         <div className="item">

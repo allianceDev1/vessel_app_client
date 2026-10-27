@@ -10,7 +10,6 @@ import Badge from '../../../components/UI_Primitives/badge/Badge'
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
 import {
-    TbArrowLeft,
     TbArrowUpRight,
     TbRotate,
     TbExclamationCircle,
@@ -151,7 +150,7 @@ const RegisteredWorkflow = () => {
 
     useEffect(() => {
         dispatch(
-            page.config({})
+            page.config({ title: 'Registration Workflow', note: 'Reg no : ' + reg_no })
         )
         // eslint-disable-next-line
     }, [])
@@ -263,7 +262,6 @@ const RegisteredWorkflow = () => {
                 <div className="nav-left">
                     <div className="title-block">
                         <div className="heading-row">
-                            <h2>Registration Workflow</h2>
                             <span className="reg-id-badge">{registrationId}</span>
                         </div>
                         <div className="meta-badges">

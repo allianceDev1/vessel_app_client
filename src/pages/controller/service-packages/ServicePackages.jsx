@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './service-packages.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { TbCarouselHorizontal, TbCheck, TbPlus, TbX } from "react-icons/tb";
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
@@ -22,7 +22,7 @@ const ServicePackages = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
+    const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_packages', (searchParams.get('parent_product') || parent_product_types[0])],
@@ -98,9 +98,10 @@ const ServicePackages = () => {
                     }]}
                     selected={searchParams.get('parent_product') || parent_product_types[0]} />
 
-                <Button label={'Package'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '120px' }}
-                    onClick={openCreateModal}
-                />
+                {user?.allowed_origins?.includes('service_c_admin') &&
+                    <Button label={'Package'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '120px' }}
+                        onClick={openCreateModal}
+                    />}
             </div>
 
             {!data.length && <EmptyState

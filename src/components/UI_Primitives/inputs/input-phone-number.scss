@@ -169,13 +169,15 @@
         left: 0px;
         top: 1px;
         color: var(--text-secondary);
-        padding: 13px 0px 13px 15px;
+        padding: 13px 0px 13px 10px;
+        margin-left: 60px;
         font-size: 16px;
         font-weight: 500;
         transition: all 0.2s ease-in-out;
         pointer-events: none;
         border-radius: 10px;
         @include threeDots();
+        background-color: var(--surface-1);
 
         .required {
             color: var(--color-danger-text);
@@ -223,7 +225,7 @@
             background: none;
             padding: 0;
             border: none;
-            left: 70px;
+            left: 10px;
             top: 3px;
             font-size: 12px;
             font-weight: 400;

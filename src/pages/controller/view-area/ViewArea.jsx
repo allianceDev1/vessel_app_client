@@ -159,9 +159,10 @@ const ViewArea = () => {
                 </div>
                 <div className="actions">
                     {/* <Button label={'Report'} icon={<TbReport />} size='small' outlined rounded style={{ width: '100px' }} /> */}
-                    {user?.allowed_origins?.includes('vessel_c_admin') && <Button label={'Worker'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
-                        onClick={() => openCreateModal('Add new city worker', <AddAreaTech cityId={data?.city_id}
-                            activeWorkers={data?.service_technicians} />)} />}
+                    {user?.allowed_origins?.some(origin => ['service_c_writer', 'service_c_admin']?.includes(origin))
+                        && <Button label={'Worker'} icon={<TbPlus />} size='small' rounded severity={'primary'} style={{ width: '100px' }}
+                            onClick={() => openCreateModal('Add new city worker', <AddAreaTech cityId={data?.city_id}
+                                activeWorkers={data?.service_technicians} />)} />}
                 </div>
             </div>
             <div className="contents">
@@ -214,7 +215,7 @@ const ViewArea = () => {
                                         <p>{worker?.from_date ? isoToDDMonYYYY(new Date(worker?.from_date)) : 'Nil'}</p>
                                         <p>{worker?.to_date ? isoToDDMonYYYY(new Date(worker?.to_date)) : 'Nil'}</p>
                                         <p>{worker?.product_types?.map(i => textSortFormate(i))?.join(', ')}</p>
-                                        {user?.allowed_origins?.some(origin => ['vessel_c_writer', 'vessel_c_admin']?.includes(origin)) &&
+                                        {user?.allowed_origins?.some(origin => ['service_c_writer', 'service_c_admin']?.includes(origin)) &&
                                             <Dropdown button={{
                                                 icon: < TbDots />,
                                                 text: true,
@@ -224,8 +225,7 @@ const ViewArea = () => {
                                                 {
                                                     items: [
                                                         { label: 'Update', icon: <TbPencil />, onClick: () => openEditModal(worker) },
-                                                        ...(user?.allowed_origins?.includes('vessel_c_admin') ?
-                                                            [{ label: 'Remove', icon: <TbTrash />, theme: 'danger', onClick: () => handleDeleteTech(worker?.worker_uuid) }] : []),
+                                                        { label: 'Remove', icon: <TbTrash />, theme: 'danger', onClick: () => handleDeleteTech(worker?.worker_uuid) }
                                                     ]
                                                 }
                                             ]} />}

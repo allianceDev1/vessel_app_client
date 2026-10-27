@@ -12,6 +12,7 @@ import AddCallLog from '../../../forms/common/add-call-log/AddCallLog'
 import { TbArrowForwardUpDouble, TbMessagePlus, TbPencilPlus } from 'react-icons/tb'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import PostponeService from '../../../forms/common/postpone-service/PostponeService'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
 
 const UpcomingServiceTable = () => {
     const navigate = useNavigate();
@@ -26,7 +27,9 @@ const UpcomingServiceTable = () => {
         'Customer name': 'customer_name',
         'CID': 'customer_id',
         'Place': 'place',
-        'Post office': 'post'
+        'Post office': 'post',
+        'Service Date': 'next_service_date',
+        'Expire Date': 'expire_date'
     })[id] || id
 
     const allowedKeys = ['fl', 'view_type'];
@@ -104,6 +107,7 @@ const UpcomingServiceTable = () => {
                         'Place': item.place,
                         'Post office': item.post,
                         'City': item.city_name,
+                        'Product Type': toStandardText(item.product_type),
                         'Product': `${item.product_id} - ${item.product_name}`,
                         'Service': `${item.service_type} - S${item.service_index || 1}`,
                         'Service Date': item.next_service_date ? isoToDDMonYYYY(new Date(item.next_service_date)) : '',
@@ -144,13 +148,14 @@ const UpcomingServiceTable = () => {
                     { header: 'Place', accessorKey: 'Place' },
                     { header: 'Post office', accessorKey: 'Post office' },
                     { header: 'City', accessorKey: 'City', enableSorting: false },
-                    { header: 'Service Date', accessorKey: 'Service Date', enableSorting: false },
-                    { header: 'Expire Date', accessorKey: 'Expire Date', enableSorting: false },
+                    { header: 'Service Date', accessorKey: 'Service Date' },
+                    { header: 'Expire Date', accessorKey: 'Expire Date' },
                 ]
 
-                if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+                if (user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
                     cols.push({
                         header: 'Actions',
+                        accessorKey: 'Actions',
                         enableSorting: false,
                         enableColumnFilter: false,
                         meta: { disableRowClick: true },
@@ -178,6 +183,7 @@ const UpcomingServiceTable = () => {
                     'Place': false,
                     'Post office': false,
                     'City': false,
+                    'Product Type': false,
                     'Product': true,
                     'Service': true,
                     'Service Date': true,
@@ -191,9 +197,11 @@ const UpcomingServiceTable = () => {
                     { header: 'Place', accessorKey: 'Place' },
                     { header: 'Post office', accessorKey: 'Post office', },
                     { header: 'City', accessorKey: 'City', enableSorting: false },
+                    { header: 'Product Type', accessorKey: 'Product Type', enableSorting: false },
                     { header: 'Product', accessorKey: 'Product', enableSorting: false },
                     {
                         header: 'Package',
+                        accessorKey: 'Package',
                         enableSorting: false,
                         enableColumnFilter: false,
                         meta: { style: { textAlign: 'center' } },
@@ -208,13 +216,14 @@ const UpcomingServiceTable = () => {
                         },
                     },
                     { header: 'Service', accessorKey: 'Service', enableSorting: false },
-                    { header: 'Service Date', accessorKey: 'Service Date', enableSorting: false },
-                    { header: 'Expire Date', accessorKey: 'Expire Date', enableSorting: false },
+                    { header: 'Service Date', accessorKey: 'Service Date' },
+                    { header: 'Expire Date', accessorKey: 'Expire Date' },
                 ]
 
-                if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+                if (user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
                     cols.push({
                         header: 'Actions',
+                        accessorKey: 'Actions',
                         enableSorting: false,
                         enableColumnFilter: false,
                         meta: { disableRowClick: true },

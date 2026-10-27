@@ -11,7 +11,7 @@ import {
     TbX
 } from 'react-icons/tb'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { doDialog, modal, page, toast } from '../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../components/UI_Primitives/message/Message'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -28,6 +28,7 @@ const ServiceCategoryView = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { category_id } = useParams();
+    const { user } = useSelector((state) => state.user)
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_category', category_id],
@@ -174,50 +175,51 @@ const ServiceCategoryView = () => {
                     </div>
                 </div>
 
-                <div className="action-section">
-                    <Button
-                        label={'Update'}
-                        icon={<TbPencil />}
-                        outlined
-                        size='small'
-                        rounded
-                        style={{ width: '110px' }}
-                        onClick={openUpdateModal}
-                        severity={'secondary'}
-                    />
-                    {data?.is_active ? (
+                {user?.allowed_origins?.includes('service_c_admin') &&
+                    <div className="action-section">
                         <Button
-                            label={'Disable'}
-                            icon={<TbEyeClosed />}
+                            label={'Update'}
+                            icon={<TbPencil />}
+                            outlined
                             size='small'
                             rounded
-                            outlined
+                            style={{ width: '110px' }}
+                            onClick={openUpdateModal}
+                            severity={'secondary'}
+                        />
+                        {data?.is_active ? (
+                            <Button
+                                label={'Disable'}
+                                icon={<TbEyeClosed />}
+                                size='small'
+                                rounded
+                                outlined
+                                severity={'danger'}
+                                onClick={() => handelChangeStatus('DISABLE')}
+                                style={{ width: '110px' }}
+                            />
+                        ) : (
+                            <Button
+                                label={'Enable'}
+                                icon={<TbEye />}
+                                size='small'
+                                rounded
+                                outlined
+                                severity={'info'}
+                                onClick={() => handelChangeStatus('ENABLE')}
+                                style={{ width: '110px' }}
+                            />
+                        )}
+                        <Button
+                            label={'Remove'}
+                            icon={<TbTrash />}
                             severity={'danger'}
-                            onClick={() => handelChangeStatus('DISABLE')}
-                            style={{ width: '110px' }}
-                        />
-                    ) : (
-                        <Button
-                            label={'Enable'}
-                            icon={<TbEye />}
                             size='small'
                             rounded
-                            outlined
-                            severity={'info'}
-                            onClick={() => handelChangeStatus('ENABLE')}
                             style={{ width: '110px' }}
+                            onClick={handelRemove}
                         />
-                    )}
-                    <Button
-                        label={'Remove'}
-                        icon={<TbTrash />}
-                        severity={'danger'}
-                        size='small'
-                        rounded
-                        style={{ width: '110px' }}
-                        onClick={handelRemove}
-                    />
-                </div>
+                    </div>}
             </div>
 
             <div className="info-cards-section">

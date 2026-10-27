@@ -47,7 +47,7 @@ const CustomerView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.config({ title: '', note: "" }))
+        dispatch(page.config({ title: 'Customer View - ' + customer_id, note: "Customer about and products" }))
         // eslint-disable-next-line
     }, [])
 
@@ -63,9 +63,9 @@ const CustomerView = () => {
         <div className="customer-view-controller-container">
             <div className="top-section">
                 <div className="title">
-                    <h2>{`Customer ID : ${customer_id}`}</h2>
+
                 </div>
-                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) &&
                     <div className="actions">
                         <Button label={'Product'} icon={<TbPlus />} size='small' severity={'primary'} rounded style={{ width: '100px' }}
                             onClick={openAddProductPopUp} />

@@ -81,7 +81,7 @@ const SpareCard = ({
                     <h4>{spareName}</h4>
                     <p>{spareId} {uniqueId ? `(${uniqueId}) ` : ''}- {toStandardText(spareCategory)}</p>
                 </div>
-                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+                {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) &&
                     <div className="right-section">
                         {!isReadyOnly && <Dropdown button={{
                             icon: <TbDots />,

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import './report.scss'
 import { Area, Bar, Cell, ComposedChart, Line, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import ChartTooltip from '../primitives/ChartTooltip'
@@ -8,88 +8,15 @@ import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import { upcomingServiceMiniReport } from '../../../utils/services/chart_service'
 import SkeletonGrid from '../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../UI_Primitives/ui-states/ErrorState'
-import { TbAlertCircle, TbFilter, TbDroplet, TbPuzzle, TbLayoutGrid } from 'react-icons/tb'
-import { mockUpcomingReportData } from './mockUpcomingData'
+import { TbAlertCircle, TbFilter, TbDroplet, TbLayoutGrid } from 'react-icons/tb'
+import { useSearchParams } from 'react-router-dom'
 
 const UpcomingReport = ({ data, loading, error, updatedAt }) => {
-  // Selected Product Type tab: 'VESSEL_FILTER' | 'WATER_PURIFIER' | 'ADD_ON' | 'ALL'
-  const [activeProductType, setActiveProductType] = useState('VESSEL_FILTER')
-
-  // Resolve data source: supports updated multi-product API or legacy single report + dummy fallback
-  const resolvedDatasets = useMemo(() => {
-    // 1. Vessel Filter data: use real API data if available, fallback to mock
-    const vfData = data?.vessel_filter || (data?.summary ? data : mockUpcomingReportData.vessel_filter)
-
-    // 2. Water Purifier data: use API data if available, fallback to mock
-    const wpData = data?.water_purifier || mockUpcomingReportData.water_purifier
-
-    // 3. Add-on data: use API data if available, fallback to mock
-    const aoData = data?.add_on || mockUpcomingReportData.add_on
-
-    // 4. Combined ALL dataset (All products don't have package report)
-    const aggregateAll = () => {
-      const sources = [vfData, wpData, aoData]
-
-      const summary = {
-        total_work: sources.reduce((acc, s) => acc + (s?.summary?.total_work || 0), 0),
-        total_service: sources.reduce((acc, s) => acc + (s?.summary?.total_service || 0), 0),
-        total_renewal: sources.reduce((acc, s) => acc + (s?.summary?.total_renewal || 0), 0),
-        this_month_total_work: sources.reduce((acc, s) => acc + (s?.summary?.this_month_total_work || 0), 0)
-      }
-
-      const cityMap = new Map()
-      sources.forEach(s => {
-        (s?.city_chart || []).forEach(c => {
-          const existing = cityMap.get(c.city_name) || { city_name: c.city_name, total_service: 0, total_renewal: 0 }
-          existing.total_service += (c.total_service || 0)
-          existing.total_renewal += (c.total_renewal || 0)
-          cityMap.set(c.city_name, existing)
-        })
-      })
-      const city_chart = Array.from(cityMap.values())
-
-      const monthMap = new Map()
-      sources.forEach(s => {
-        (s?.month_chart || []).forEach(m => {
-          const existing = monthMap.get(m.month) || {
-            month: m.month,
-            total_work: 0,
-            total_service: 0,
-            total_renewal: 0,
-            add_on_works: 0,
-            package_counts: []
-          }
-          existing.total_work += (m.total_work || 0)
-          existing.total_service += (m.total_service || 0)
-          existing.total_renewal += (m.total_renewal || 0)
-          existing.add_on_works += (m.add_on_works || 0)
-          monthMap.set(m.month, existing)
-        })
-      })
-
-      // All products do not include package report
-      const month_chart = Array.from(monthMap.values()).map(m => ({
-        ...m,
-        package_counts: []
-      })).sort((a, b) => a.month.localeCompare(b.month))
-
-      return { summary, city_chart, month_chart }
-    }
-
-    return {
-      VESSEL_FILTER: vfData,
-      WATER_PURIFIER: wpData,
-      ADD_ON: aoData,
-      ALL: aggregateAll()
-    }
-  }, [data])
-
-  // Current active dataset
-  const currentDataset = resolvedDatasets[activeProductType] || resolvedDatasets.VESSEL_FILTER
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Generate chart data using standard chart_service function
   const { summeryData, countsData, chartData, monthChart, monthCharPackageColorCode } = useMemo(() => {
-    if (!currentDataset?.summary) {
+    if (!data?.summary) {
       return {
         summeryData: [],
         countsData: {},
@@ -98,11 +25,21 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
         monthCharPackageColorCode: {}
       }
     }
-    return upcomingServiceMiniReport(currentDataset)
-  }, [currentDataset])
+    return upcomingServiceMiniReport(data)
+
+    // eslint-disable-next-line
+  }, [data, searchParams.get("parent_type"), searchParams.get('view_type')])
 
   const firstItem = monthChart?.[0] || {}
   const { name, Works, Renewal, Service, Addon, ...packages } = firstItem
+
+  const selectTab = (key) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('parent_type', key);
+      return next;
+    })
+  }
 
   // Tab configurations
   const productTabs = [
@@ -110,29 +47,19 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
       key: 'ALL',
       label: 'All Products',
       icon: <TbLayoutGrid />,
-      count: resolvedDatasets.ALL?.summary?.total_work || 0,
       className: 'tab-all'
     },
     {
       key: 'VESSEL_FILTER',
       label: 'Vessel Filter',
       icon: <TbFilter />,
-      count: resolvedDatasets.VESSEL_FILTER?.summary?.total_work || 0,
       className: 'tab-vessel'
     },
     {
       key: 'WATER_PURIFIER',
       label: 'Water Purifier',
       icon: <TbDroplet />,
-      count: resolvedDatasets.WATER_PURIFIER?.summary?.total_work || 0,
       className: 'tab-purifier'
-    },
-    {
-      key: 'ADD_ON',
-      label: 'Add-on',
-      icon: <TbPuzzle />,
-      count: resolvedDatasets.ADD_ON?.summary?.total_work || 0,
-      className: 'tab-addon'
     }
   ]
 
@@ -167,12 +94,11 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
           <button
             key={tab.key}
             type="button"
-            className={`product-tab-btn ${tab.className} ${activeProductType === tab.key ? 'active' : ''}`}
-            onClick={() => setActiveProductType(tab.key)}
+            className={`product-tab-btn ${tab.className} ${searchParams.get('parent_type') === tab.key ? 'active' : ''}`}
+            onClick={() => selectTab(tab.key)}
           >
             <span className="tab-icon">{tab.icon}</span>
             <span className="tab-label">{tab.label}</span>
-            <span className="tab-badge">{tab.count}</span>
           </button>
         ))}
       </div>
@@ -198,11 +124,11 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               <Area type="monotone" dataKey="Works" fill={chartLabelColors[11]} stroke={chartLabelColors[5]} fillOpacity={.3} />
               <Line type="monotone" dataKey="Service" strokeWidth={2} stroke={chartLabelColors[10]} />
               <Line type="monotone" dataKey="Renewal" stroke={chartLabelColors[9]} strokeWidth={2} />
-              {activeProductType !== 'ALL' && Boolean(Object.keys(packages || {}).length) && (
+              {searchParams.get('parent_type') !== 'ALL' && Boolean(Object.keys(packages || {}).length) && (
                 <Line type="monotone" dataKey="Addon" stroke={chartLabelColors[8]} strokeWidth={2} />
               )}
               {/* Packages only shown for specific product types (All products do not have package report) */}
-              {activeProductType !== 'ALL' && Object.keys(packages || {}).map((key) => (
+              {searchParams.get('parent_type') !== 'ALL' && Object.keys(packages || {}).map((key) => (
                 <Bar
                   key={key}
                   dataKey={key}

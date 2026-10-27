@@ -95,9 +95,10 @@ const ServiceCategory = () => {
                     }]}
                     selected={searchParams.get('product_product') || product_types[0]} />
 
-                <Button label={'Category'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '130px' }}
-                    onClick={openCreateModal}
-                />
+                {user?.allowed_origins?.includes('service_c_admin') &&
+                    <Button label={'Category'} icon={<TbPlus />} severity={'primary'} size='small' rounded style={{ width: '130px' }}
+                        onClick={openCreateModal}
+                    />}
             </div>
 
 

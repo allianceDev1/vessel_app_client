@@ -55,7 +55,7 @@ const ArrayElem = ({ deleteData }) => {
             })) || [])
         ]
 
-        if (user?.allowed_origins?.includes('vessel_c_admin')) {
+        if (user?.allowed_origins?.includes('service_c_admin')) {
             columns.push({
                 header: 'Actions',
                 enableSorting: false,
@@ -109,7 +109,7 @@ const ArrayElem = ({ deleteData }) => {
 
     return (
         <div>
-            {user?.allowed_origins?.includes('vessel_c_admin') &&
+            {user?.allowed_origins?.includes('service_c_admin') &&
                 <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: '15px' }}>
                     <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
                         onClick={createModel} />

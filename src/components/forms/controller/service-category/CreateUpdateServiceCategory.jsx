@@ -14,7 +14,7 @@ import Radio from '../../../UI_Primitives/inputs/Radio';
 import Button from '../../../UI_Primitives/buttons/Button';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { parentProductTypes, productTypes } from '../../../../assets/javascript/pre_data/product';
+import { productTypes } from '../../../../assets/javascript/pre_data/product';
 import { toStandardText } from '../../../../utils/helpers/text-formatting';
 import { work_modes } from '../../../../assets/javascript/pre_data/package';
 
@@ -327,18 +327,22 @@ const CreateUpdateServiceCategory = ({ action = 'CREATE', data }) => {
 
                     <h3 className='sub-title'>Current position price types</h3>
                     <div className="section">
-                        <Select label={'Price of Spares'} name={'current_spare_parts_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                        <Select label={'Price of Spares'} name={'current_spare_parts_price_type'}
+                            options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value !== 'PACKAGE_PRICE')]}
                             onChange={handleChangePositionValue} value={form.current_spare_parts_price_type || '_NO'} />
-                        <Select label={'Price of service work'} name={'current_service_work_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                        <Select label={'Price of service work'} name={'current_service_work_price_type'}
+                            options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value !== 'PACKAGE_PRICE')]}
                             onChange={handleChangePositionValue} value={form.current_service_work_price_type || '_NO'} />
                     </div>
 
                     {form?.mode === 'RENEWAL' && <>
                         <h3 className='sub-title'>Target position price types</h3>
                         <div className="section">
-                            <Select label={'Price of Spares'} name={'target_spare_parts_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                            <Select label={'Price of Spares'} name={'target_spare_parts_price_type'}
+                                options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                 onChange={handleChangePositionValue} value={form.target_spare_parts_price_type || '_NO'} />
-                            <Select label={'Price of service work'} name={'target_service_work_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                            <Select label={'Price of service work'} name={'target_service_work_price_type'}
+                                options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                 onChange={handleChangePositionValue} value={form.target_service_work_price_type || '_NO'} />
                         </div>
                     </>}

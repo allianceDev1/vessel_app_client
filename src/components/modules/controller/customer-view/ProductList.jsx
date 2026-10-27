@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../../api';
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState';
-import { TbManualGearbox } from 'react-icons/tb';
+import { TbChevronRight, TbManualGearbox } from 'react-icons/tb';
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState';
 import { toStandardText } from '../../../../utils/helpers/text-formatting';
 import { getContrastText } from '../../../../utils/helpers/color-utils';
@@ -43,22 +43,38 @@ const PRODUCT_GROUPS = [
 ];
 
 const ProductCard = ({ product, fallbackCode, onNavigate }) => {
+    const hasBadges = Boolean(
+        product?.product_warranty ||
+        product?.package?.has_service_package ||
+        product?.rental ||
+        !product?.active
+    );
+
     return (
         <div
             className="product-item"
             key={product?.product_id}
             onClick={onNavigate}
         >
-            <div className="order-section">
-                <h4>{product?.order_id ? product?.order_id : fallbackCode}</h4>
-            </div>
-            <div className="content">
-                <div className="x1">
-                    <p className='text-1'>ID : {product?.product_id}</p>
-                    <p className='text-2'>{toStandardText(product?.origin_category)}</p>
+            <div className="product-item-header">
+                <div className="product-meta">
+                    <span className="product-id">ID : {product?.product_id}</span>
+                    <span className="product-order">{product?.order_id ? product?.order_id : fallbackCode}</span>
+                    {product?.origin_category && (
+                        <span className="product-category">
+                            {toStandardText(product?.origin_category)}
+                        </span>
+                    )}
                 </div>
-                <h3>{product?.product_name}</h3>
-                <div className="x3">
+                <div className="product-arrow">
+                    <TbChevronRight />
+                </div>
+            </div>
+
+            <h3 className="product-title">{product?.product_name}</h3>
+
+            {hasBadges && (
+                <div className="product-badges">
                     {product?.product_warranty && <Badge severity={'info'} value={'Warranty'} />}
                     {product?.package?.has_service_package && (
                         <Badge
@@ -72,7 +88,7 @@ const ProductCard = ({ product, fallbackCode, onNavigate }) => {
                     {product?.rental && <Badge value={'Rental'} />}
                     {!product?.active && <Badge severity={'danger'} value={'Disconnected'} />}
                 </div>
-            </div>
+            )}
         </div>
     );
 };

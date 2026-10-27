@@ -73,7 +73,7 @@ export const calculateServiceFormTotal = (serviceForm) => {
     );
 
     const addOnsTotal = (serviceForm?.new_add_ons ?? []).reduce(
-        (acc, item) => acc + Number(item?.total_amount?.charged || 0), 0
+        (acc, item) => acc + Number(item?.charged_amount || 0), 0
     );
 
     return Math.floor(productsTotal + addOnsTotal);

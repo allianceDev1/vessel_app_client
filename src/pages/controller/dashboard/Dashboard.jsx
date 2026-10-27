@@ -22,7 +22,7 @@ const Dashboard = () => {
     const redirectButtons = [
         {
             label: 'R&D Jobs',
-            redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes`
+            redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes&p=l`
         },
         {
             label: 'R&D Registrations',
@@ -99,7 +99,7 @@ const Dashboard = () => {
                     vessel_filter: nonVerified.vessel_filter,
                     desc: 'Customer not verified jobs',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes`
+                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes&p=l`
                 }
             ]
         },
@@ -109,13 +109,13 @@ const Dashboard = () => {
     const workerQuery = useQuery({
         queryKey: ['workers_current_status'],
         queryFn: async () => {
-            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=vessel_t_worker')
+            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=service_t_write')
             return res?.map((w, i) => ({
                 worker_uuid: w?.worker_uuid,
                 worker_name: `${w?.first_name || ''} ${w?.last_name || ''}`,
                 attendance_status: w?.status,
                 color: chartLabelColors[i],
-                status_color: w?.status === 'PENDING' ? 'yellow' : w?.status === "IN" ? 'green' : "red"
+                status_color: w?.status === 'PENDING' ? 'var(--color-warning)' : w?.status === "IN" ? 'green' : "red"
             }))
         },
         staleTime: 1000 * 60 * 30,

@@ -71,6 +71,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
                                 worker_uuid: form?.worker_uuid,
                                 full_name: selectedWorker?.full_name,
                                 from_date: form?.from_date,
+                                product_types: form?.product_types,
                                 to_date: form?.to_date,
                                 is_deleted: false
                             },

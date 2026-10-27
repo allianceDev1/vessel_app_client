@@ -39,9 +39,13 @@ const UpcomingServices = () => {
         error: reportError,
         dataUpdatedAt: reportDataUpdatedAt,
     } = useQuery({
-        queryKey: ['upcoming_mini_report', searchParams.get('view_type') || 'product'],
+        queryKey: ['upcoming_mini_report', searchParams.get('view_type') || 'product', searchParams.get('parent_type') || ''],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/service/upcoming/mini-report/${searchParams.get('view_type') || 'product'}`)
+            const res = await api.vfCv2Axios.get(`/service/upcoming/mini-report/${searchParams.get('view_type') || 'product'}`, {
+                params: {
+                    parent_type: searchParams.get('parent_type') === 'ALL' ? '' : (searchParams.get('parent_type') || '')
+                }
+            })
             return res
         },
         enabled: searchParams.get('fl') !== 'Yes',

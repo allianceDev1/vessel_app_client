@@ -250,9 +250,11 @@ const CreatePackageService = ({ productType, packageId }) => {
                         {form?.mode === 'RENEWAL' && <>
                             <h3 className='sub-title'>Target position price types</h3>
                             <div className="section" style={{ display: 'grid', gridTemplateColumns: "1fr 1fr" }}>
-                                <Select label={'Price of Spares'} name={'target_spare_parts_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                                <Select label={'Price of Spares'} name={'target_spare_parts_price_type'}
+                                    options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                     onChange={handleChangePositionValue} value={form.target_spare_parts_price_type || '_NO'} />
-                                <Select label={'Price of service work'} name={'target_service_work_price_type'} options={[{ label: 'No Access', value: "" }, ...price_unit_objects]}
+                                <Select label={'Price of service work'} name={'target_service_work_price_type'}
+                                    options={[{ label: 'No Access', value: "" }, ...price_unit_objects?.filter(i => i?.value === 'PURCHASE_COST')]}
                                     onChange={handleChangePositionValue} value={form.target_service_work_price_type || '_NO'} />
                             </div>
                         </>}
