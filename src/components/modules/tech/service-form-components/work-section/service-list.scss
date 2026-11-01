@@ -1,0 +1,242 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.service-list-comp-container {
+    position: relative;
+
+    .service-list-border {
+
+        .title {
+            margin: 15px 0;
+
+            h3 {
+                @include subTitleSmall();
+            }
+        }
+
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 100px;
+
+            .item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                background-color: var(--surface-1);
+                border: 1px solid var(--border-light);
+                border-radius: 12px;
+                padding: 12px 14px;
+                box-sizing: border-box;
+                cursor: pointer;
+                user-select: none;
+                position: relative;
+                transition: all 0.18s ease-in-out;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+                &:hover:not(.is-selected) {
+                    border-color: var(--border-default);
+                    background-color: var(--surface-2);
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+                }
+
+                &.is-selected,
+                &.active {
+                    border-color: var(--color-primary);
+                    background-color: var(--color-primary-bg);
+                    box-shadow: 0 0 0 1px var(--color-primary), 0 2px 8px rgba(0, 0, 0, 0.05);
+                }
+
+                &.is-disabled,
+                &.disabled {
+                    opacity: 0.55;
+                    cursor: not-allowed;
+                    background-color: var(--surface-1);
+                    border-color: var(--border-light);
+
+                    &:hover {
+                        border-color: var(--border-light);
+                        background-color: var(--surface-1);
+                        box-shadow: none;
+                    }
+
+                    .checkbox-section {
+                        .checkbox {
+                            cursor: not-allowed;
+                            border-color: var(--border-disabled);
+                            background-color: var(--surface-disabled);
+
+                            .check-icon,
+                            svg {
+                                color: var(--text-disabled);
+                            }
+                        }
+                    }
+
+                    .item-content {
+                        .title-row {
+                            .work-name,
+                            h4 {
+                                color: var(--text-disabled);
+                            }
+                        }
+
+                        .meta-row {
+                            .work-id-code {
+                                color: var(--text-disabled);
+                            }
+
+                            .disabled-pill {
+                                font-size: 10px;
+                                font-weight: 600;
+                                padding: 1px 6px;
+                                border-radius: 4px;
+                                background-color: var(--surface-3);
+                                color: var(--text-tertiary);
+                            }
+                        }
+                    }
+
+                    .price {
+                        .real-price,
+                        .real-price.free-price,
+                        .real-price.zero-price {
+                            color: var(--text-disabled);
+                        }
+
+                        .hash-price {
+                            color: var(--text-disabled);
+                        }
+                    }
+                }
+
+                .checkbox-section {
+                    flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .checkbox {
+                        border: 2px solid var(--border-medium);
+                        border-radius: 7px;
+                        background-color: var(--surface-1);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 22px;
+                        height: 22px;
+                        cursor: pointer;
+                        transition: all 0.15s ease-in-out;
+
+                        .check-icon,
+                        svg {
+                            font-size: 14px;
+                            stroke-width: 2.5;
+                            transform: scale(0);
+                            transition: transform 0.15s ease;
+                            color: var(--color-white);
+                        }
+
+                        &.active,
+                        &.checked {
+                            border-color: var(--color-primary);
+                            background-color: var(--color-primary);
+
+                            .check-icon,
+                            svg {
+                                transform: scale(1);
+                                color: var(--color-white);
+                            }
+                        }
+                    }
+                }
+
+                .item-content {
+                    flex: 1;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+
+                    .title-row {
+                        .work-name,
+                        h4 {
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                            margin: 0;
+                            line-height: 1.35;
+                            @include threeDots(2);
+                        }
+                    }
+
+                    .meta-row {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+
+                        .work-id-code {
+                            font-size: 11px;
+                            font-family: monospace;
+                            color: var(--text-tertiary);
+                            font-weight: 600;
+                            letter-spacing: 0.3px;
+                        }
+                    }
+                }
+
+                .price {
+                    text-align: right;
+                    flex-shrink: 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 1px;
+
+                    .hash-price {
+                        font-size: 11.5px;
+                        color: var(--text-muted);
+                        font-weight: 400;
+                        text-decoration: line-through;
+                        line-height: 1.2;
+                        margin: 0;
+                    }
+
+                    .real-price {
+                        font-size: 15px;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                        line-height: 1.2;
+                        margin: 0;
+                        letter-spacing: -0.2px;
+
+                        &.free-price,
+                        &.zero-price {
+                            color: var(--color-success);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .fixed-section {
+        position: fixed;
+        width: 100%;
+        bottom: 55px;
+        left: 0;
+        padding: 5px 0;
+        display: flex;
+        justify-content: center;
+        background-color: var(--background);
+        z-index: 5;
+
+        .submit-button {
+            max-width: 500px;
+            width: 500px;
+            padding: 0 10px;
+        }
+    }
+
+}

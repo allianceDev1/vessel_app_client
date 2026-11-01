@@ -1,0 +1,74 @@
+@use '../../../assets/scss/mixins/mixin.scss' as *;
+
+.eligibility-rules-page-container {
+
+    .action-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+
+        input {
+            width: 300px;
+        }
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 20px;
+
+        .rule-item {
+            background-color: var(--surface-1);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+
+            h4 {
+                @include threeDots();
+            }
+
+            .sub-line {
+                display: flex;
+                gap: 10px;
+                margin-top: 5px;
+
+                p {
+                    font-size: 14px;
+                    color: var(--text-tertiary);
+                }
+            }
+
+        }
+    }
+
+    .note-section {
+        margin-top: 25px;
+
+        p {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+    }
+
+
+    @media screen and (max-width:650px) {
+        .content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media screen and (max-width:550px) {
+        .action-section {
+            flex-direction: column-reverse;
+            justify-content: flex-end;
+            align-items: flex-end;
+
+            input {
+                width: 100%;
+            }
+        }
+    }
+}

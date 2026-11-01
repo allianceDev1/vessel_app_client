@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react'
-import ControllerLayout from '../components/layout/controllerLayout/ControllerLayout'
 import { useSelector } from 'react-redux';
 import SkeletonPage from '../components/UI_Primitives/skeleton/SkeletonPage';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Page404 from '../components/layout/404/Page404';
 import env from '../config/env';
+
 
 
 // Lazy
@@ -24,6 +24,7 @@ const ServiceCategory = React.lazy(() => import('../pages/controller/service-cat
 const UpcomingServices = React.lazy(() => import('../pages/controller/upcoming/UpcomingServices'))
 const RegisteredService = React.lazy(() => import('../pages/controller/registered/RegisteredService'))
 const RegisteredView = React.lazy(() => import('../pages/controller/registered/RegisteredView'))
+const RegisteredWorkflow = React.lazy(() => import('../pages/controller/registered/RegisteredWorkflow'))
 const CompletedService = React.lazy(() => import('../pages/controller/completed/CompletedServices'))
 const CustomerView = React.lazy(() => import('../pages/controller/customer-view/CustomerView'))
 const AboutCustomer = React.lazy(() => import('../components/modules/controller/customer-view/AboutCustomer'))
@@ -45,14 +46,15 @@ const ProductLogInfo = React.lazy(() => import('../components/modules/controller
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/controller/service-job/PurchaseLogInfo'))
 const Subscriptions = React.lazy(() => import("../pages/controller/subscriptions/Subscriptions"))
 const RunningKms = React.lazy(() => import("../pages/controller/running-kms/RunningKms"))
-
-
-
-
-
-
-
-
+const EligibilityRules = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRules"))
+const CreateRule = React.lazy(() => import("../pages/controller/eligibility-rules/CreateRule"))
+const EligibilityRuleView = React.lazy(() => import("../pages/controller/eligibility-rules/EligibilityRuleView"))
+const ControllerLayout = React.lazy(() => import('../components/layout/controllerLayout/ControllerLayout'));
+const ServiceCategoryView = React.lazy(() => import("../pages/controller/service-category/ServiceCategoryView"))
+const PackageServiceCategoryView = React.lazy(() => import("../pages/controller/package-service-category/PackageServiceCategoryView"))
+const ControllerMap = React.lazy(() => import('../pages/controller/map/ControllerMap'));
+const PurifierServiceJobAbout = React.lazy(() => import('../pages/public/purifier-service-job/PurifierServiceJobAbout'))
+const ServiceCardImageList = React.lazy(() => import('../pages/public/service-card-image-page/ServiceCardImageList'))
 
 
 
@@ -63,16 +65,20 @@ const RunningKms = React.lazy(() => import("../pages/controller/running-kms/Runn
 
 const Controller = () => {
     const { user } = useSelector((state) => state.user)
-    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("vessel_c_"));
+    const isAuthenticated = user?.allowed_origins?.some((k) => k.startsWith("service_c_"));
 
 
 
     return (
-        <ControllerLayout>
-            <Suspense fallback={<SkeletonPage />}>
+        <Suspense fallback={<SkeletonPage />}>
+            <ControllerLayout>
                 <Routes>
                     {/* Dashboard */}
-                    <Route path='/' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
+                    <Route path="/" element={<Navigate to="/controller/home" replace />} />
+                    <Route path='/home' element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
+
+                    {/* Live Map */}
+                    <Route path='/map' element={<PrivateRoute element={<ControllerMap />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Area */}
                     <Route path='/area-list' element={<PrivateRoute element={<AreaList />} isAuthenticated={isAuthenticated} />} />
@@ -99,6 +105,7 @@ const Controller = () => {
                         <Route path="spares" element={<CustomerProductSpares />} />
                         <Route path="eligibility" element={<CustomerProductEligibility />} />
                         <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+                        <Route path="service-card-images" element={<ServiceCardImageList />} />
                         <Route path="package-history" element={<CustomerProductPackageHistory />} />
                     </Route>
 
@@ -117,6 +124,7 @@ const Controller = () => {
                     {/* Registered */}
                     <Route path='/registered' element={<PrivateRoute element={<RegisteredService />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/registered/:reg_no' element={<PrivateRoute element={<RegisteredView />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/registered/:reg_no/workflow' element={<PrivateRoute element={<RegisteredWorkflow />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Completed */}
                     <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
@@ -125,6 +133,7 @@ const Controller = () => {
                         <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
                         <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
                     </Route>
+                    <Route path='/completed/service-job/v1.5/p/:service_srl_no/about' element={<PrivateRoute element={<PurifierServiceJobAbout />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Subscriptions */}
                     <Route path='/subscriptions' element={<PrivateRoute element={<Subscriptions />} isAuthenticated={isAuthenticated} />} />
@@ -135,23 +144,31 @@ const Controller = () => {
                     {/* Package */}
                     <Route path='/app-config/service-packages' element={<PrivateRoute element={<ServicePackages />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/app-config/service-packages/:package_id' element={<PrivateRoute element={<ViewServicePackage />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/service-packages/:package_id/service-category/:service_id' element={<PrivateRoute element={<PackageServiceCategoryView />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Category */}
                     <Route path='/app-config/service-categories' element={<PrivateRoute element={<ServiceCategory />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/service-categories/:category_id' element={<PrivateRoute element={<ServiceCategoryView />} isAuthenticated={isAuthenticated} />} />
 
                     {/* Form Resources */}
                     <Route path='/app-config/form-resources' element={<PrivateRoute element={<FormResources />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/app-config/form-resources/:stretcher_model/:title' element={<PrivateRoute element={<ResourceStretcher />} isAuthenticated={isAuthenticated} />} />
+
+                    {/* eligibility rules */}
+                    <Route path='/app-config/eligibility-rules' element={<PrivateRoute element={<EligibilityRules />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/eligibility-rules/new' element={<PrivateRoute element={<CreateRule />} isAuthenticated={isAuthenticated} />} />
+                    <Route path='/app-config/eligibility-rule/:rule_uuid' element={<PrivateRoute element={<EligibilityRuleView />} isAuthenticated={isAuthenticated} />} />
+
 
                     {/* Running Kms */}
                     <Route path='/running-kms/:month' element={<PrivateRoute element={<RunningKms />} isAuthenticated={isAuthenticated} />} />
 
                     {/* 404 */}
                     <Route path="/*" element={<Page404 />} />
-                    
+
                 </Routes>
-            </Suspense>
-        </ControllerLayout>
+            </ControllerLayout>
+        </Suspense>
     )
 }
 

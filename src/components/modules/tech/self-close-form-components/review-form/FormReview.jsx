@@ -7,21 +7,21 @@ import Button from '../../../../UI_Primitives/buttons/Button';
 import { calculateBillTotalAmount } from '../../../../../utils/helpers/math-equations';
 
 
-const ReviewForm = ({ page, review, payment, setOpenedBill, setActivePage }) => {
+const ReviewForm = ({ pageKey, review, setOpenedBill, setActivePage }) => {
 
 
     return (
         <div className="tech-service-form-page form-review">
             {/* Title */}
             <div className="title-section">
-                <h3>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
             {/* Content */}
             <div className='tech-sf-review-page'>
                 {/* Bill Summery */}
-                <BillSummery review={review} payment={payment} />
+                <BillSummery review={review} />
 
                 {/* Bills */}
                 <div className="bills-container">
@@ -39,8 +39,9 @@ const ReviewForm = ({ page, review, payment, setOpenedBill, setActivePage }) => 
                         </div>
                     ))}
                 </div>
-                <div className="submit-section">
-                    <Button label={'Next'} rounded style={{ width: '100%' }} onClick={() => setActivePage(102)} />
+                <div className="submit-section" style={{ marginTop: "25px" }}>
+                    <Button label={'Next'} rounded style={{ width: '100%' }} onClick={() => setActivePage(1002)}
+                        severity={'secondary'} />
                 </div>
             </div>
         </div>

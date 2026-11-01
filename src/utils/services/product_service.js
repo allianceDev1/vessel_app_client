@@ -4,42 +4,38 @@ import { TbDropletCog, TbDropletHeart, TbDropletStar } from "react-icons/tb";
 
 
 export const buildCustomerPGStretcher = (products = []) => {
-    const vessels = products.filter(p => p.product_type === 'VESSEL_FILTER');
-    const addOns = products.filter(p => p.product_type === 'ADD_ON');
 
-    // Group vessels by order prefix (A, B, C, etc.)
-    const vesselGroups = {};
-    vessels.forEach(vessel => {
-        const prefix = vessel.order_id?.charAt(0);
-        if (!vesselGroups[prefix]) {
-            vesselGroups[prefix] = [];
-        }
-        vesselGroups[prefix].push(vessel);
-    });
+    const purifier = products.filter(p => p.product_type === 'WATER_PURIFIER')?.map(p => p?.product_id);
+    const vessels = products.filter(p => p.product_type === 'VESSEL_FILTER')?.map(p => p?.product_id);
+    const addOns = products.filter(p => p.product_type === 'ADD_ON')?.map(p => p?.product_id);
 
-    // Sort vessels within each group by their number
-    Object.keys(vesselGroups).forEach(prefix => {
-        vesselGroups[prefix].sort((a, b) => {
-            const numA = parseInt(a.order_id.slice(1));
-            const numB = parseInt(b.order_id.slice(1));
-            return numA - numB;
-        });
-    });
+    const productStretcher = []
 
-    // Convert to array format
-    const result = [];
+    // ? Water purifier
+    if (purifier?.length) {
+        productStretcher.push({
+            title: 'Water purifier',
+            productIds: purifier
+        })
+    }
 
-    // Add vessel groups
-    Object.keys(vesselGroups).sort().forEach(prefix => {
-        result.push(vesselGroups[prefix]);
-    });
+    // ? Vessel filter
+    if (vessels?.length) {
+        productStretcher.push({
+            title: 'Vessel filter',
+            productIds: vessels
+        })
+    }
 
-    // Add each add-on as separate array
-    addOns.forEach(addOn => {
-        result.push([addOn]);
-    });
+    // ? Add-on
+    if (addOns?.length) {
+        productStretcher.push({
+            title: 'Add-on',
+            productIds: addOns
+        })
+    }
 
-    return result
+    return productStretcher
 }
 
 export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) => {
@@ -65,73 +61,45 @@ export const getUpcomingServiceType = (serviceDate = null, expireDate = null,) =
 
 }
 
-export const setupAvailableServiceCategories = (categories, product, productEligibility, regData) => {
+export const setupAvailableServiceCategories = (categories, serviceEligibility) => {
 
     const arrangedCategories = categories?.map((c) => {
 
         let is_disable = false, disable_reason = null, icon = null;
 
-        const categoryServiceLimit = c?.service_limit || 0;
+        const eligibility = serviceEligibility?.find(e => e?.category === c?.category_id) || null
 
-        switch (c?.mode) {
-            case 'COMPLAINT':
-                icon = <TbDropletCog />
+        icon = c?.mode === 'COMPLAINT' ? <TbDropletCog />
+            : c?.mode === 'SERVICE' ? <TbDropletHeart />
+                : c?.mode === 'RENEWAL' ? <TbDropletStar />
+                    : ''
 
-                if (!productEligibility?.complaint?.[0]) {
-                    is_disable = true
-                    disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                // } else if (regData?.service_type !== 'COMPLAINT') {
-                //     is_disable = true
-                //     disable_reason = "It is not complaint registration."
-                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_complaints) {
-                    is_disable = true
-                    disable_reason = 'The service limit reached'
-                }
-
-                break;
-
-            case 'SERVICE':
-                icon = <TbDropletHeart />
-
-                if (!productEligibility?.service?.[0]) {
-                    is_disable = true
-                    disable_reason = productEligibility?.service?.[1] || 'Not apply for eligibility'
-                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_services) {
-                    is_disable = true
-                    disable_reason = 'The service limit reached'
-                }
-
-                break;
-
-            case 'RENEWAL':
-                icon = <TbDropletStar />
-
-                const renewalEliKey = c?.target_package?.package_id?.toLowerCase().replace(/\s+/g, "_");
-
-                if (!c?.target_package?.package_id) {
-                    is_disable = true
-                    disable_reason = 'The renewal target package is not active'
-                } else if (!productEligibility?.renewal?.[0]) {
-                    is_disable = true
-                    disable_reason = productEligibility?.renewal?.[1] || 'Not apply for eligibility'
-                } else if (productEligibility?.[`${renewalEliKey}_renewal`] && !productEligibility?.[`${renewalEliKey}_renewal`]?.[0]) {
-                    is_disable = true
-                    disable_reason = productEligibility?.[`${renewalEliKey}_renewal`]?.[1] || 'Not apply for eligibility'
-                } else if (categoryServiceLimit && categoryServiceLimit <= product?.package?.total_renewals) {
-                    is_disable = true
-                    disable_reason = 'The service limit reached'
-                }
-
-                break;
-
-            default:
-                break;
+        if (eligibility && eligibility?.isEligible) {
+            is_disable = false
+            disable_reason = null
+        } else if (eligibility && !eligibility?.isEligible) {
+            is_disable = true
+            disable_reason = 'Service not eligible. Review customer product details.'
+        } else {
+            is_disable = true
+            disable_reason = 'Not apply for eligibility'
         }
 
         return { ...c, icon, is_disable, disable_reason }
     })
 
-    return arrangedCategories
+    const order = {
+        COMPLAINT: 1,
+        SERVICE: 2,
+        RENEWAL: 3,
+    };
+
+    const sortedData = [...arrangedCategories].sort(
+        (a, b) => order[a.mode] - order[b.mode]
+    );
+
+
+    return sortedData
 }
 
 export const setupAddOnServiceCategories = (categories, regData, productEligibility) => {
@@ -146,9 +114,9 @@ export const setupAddOnServiceCategories = (categories, regData, productEligibil
                 if (!productEligibility?.complaint?.[0]) {
                     is_disable = true
                     disable_reason = productEligibility?.complaint?.[1] || 'Not apply for eligibility'
-                // } else if (regData?.service_type !== 'COMPLAINT') {
-                //     is_disable = true
-                //     disable_reason = "It is not complaint registration."
+                    // } else if (regData?.service_type !== 'COMPLAINT') {
+                    //     is_disable = true
+                    //     disable_reason = "It is not complaint registration."
                 }
                 break;
 

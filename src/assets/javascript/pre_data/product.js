@@ -1,5 +1,7 @@
 
 
 export const originCategories = ['IN_HOUSE', "OUT_SIDE"]
-export const productTypes = ['VESSEL_FILTER', "WATER_PURIFIER", "ADD_ON"]
-export const vesselProductTypes = ['VESSEL_FILTER', "ADD_ON"]
+export const productTypes = ["WATER_PURIFIER", 'VESSEL_FILTER', "ADD_ON"]
+export const parentProductTypes = ["WATER_PURIFIER", 'VESSEL_FILTER']
+export const REGISTRATION_TYPES = ["DEFAULT", "WATER_PURIFIER", 'VESSEL_FILTER']
+export const PUMP_BRAND_TYPES = ['E-CHEN', 'KEMFLOW', 'E-FLOW', 'CRUZE', 'WAVE', 'PENTAIR']

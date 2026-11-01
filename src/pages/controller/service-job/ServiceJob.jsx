@@ -11,6 +11,7 @@ import { api } from '../../../api'
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import Badge from '../../../components/UI_Primitives/badge/Badge';
+import Message from '../../../components/UI_Primitives/message/Message';
 import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, getTimeDiff, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import VerifyService from '../../../components/forms/controller/completed-service/VerifyService';
@@ -26,7 +27,7 @@ const ServiceJob = () => {
     const { user } = useSelector((state) => state.user)
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: service_srl_no, note: "Service Job View" }))
+        dispatch(page.config({ title: service_srl_no, note: "Service Job View" }))
         // eslint-disable-next-line
     }, [])
 
@@ -63,6 +64,7 @@ const ServiceJob = () => {
             title: "Service Manual Verification",
             body: <VerifyService
                 registrationId={data?.registration_id} serviceSrlNo={service_srl_no} verifyType={'SUPERVISOR_APPROVAL'}
+                productType={data?.product_type}
             />
         }))
     }
@@ -123,7 +125,7 @@ const ServiceJob = () => {
             <div className="buttons">
                 <div className="menu-buttons">
                     <Button label={'About'} rounded outlined={pl_product_id || pp_product_id ? true : false} size='small' style={{ width: '100px' }}
-                        onClick={() => navigate(`/controller/completed/service-job/${service_srl_no}`)} />
+                        onClick={() => navigate(`/controller/completed/service-job/${service_srl_no}`)} severity={'secondary'} />
                     {(data?.service_products?.length > 0 || data?.purchase_products?.length > 0) && <Dropdown button={{
                         icon: <TbChevronDown />,
                         label: "Products",
@@ -151,7 +153,7 @@ const ServiceJob = () => {
                 </div>
                 <div className='action-buttons'>
                     <Button icon={<TbArrowUpRight />} label={'Registration'} rounded outlined size='small' style={{ width: '150px' }}
-                        onClick={() => navigate(`/controller/registered/${data?.registration_id}`)} iconPos='right' />
+                        onClick={() => navigate(`/controller/registered/${data?.registration_id}`)} iconPos='right' severity={'secondary'} />
                     <Dropdown button={{
                         icon: <TbChevronDown />,
                         label: "Actions",
@@ -161,7 +163,7 @@ const ServiceJob = () => {
                         style: { width: '120px' }
                     }}
                         list={[
-                            (!data?.verification?.verified && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) && {
+                            (!data?.verification?.verified && user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) && {
                                 items: [
                                     { icon: <TbPasswordFingerprint />, label: "Verify Service", onClick: verifyService },
                                     { type: 'divider' },
@@ -170,7 +172,10 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill') },
+                                    {
+                                        icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill'),
+                                        disabled: data?.bills?.length > 0 ? false : true,
+                                    },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
                                         onClick: () => downloadAction('Receipt')
@@ -187,8 +192,8 @@ const ServiceJob = () => {
                 </div>
                 : <div className='about-content'>
                     <div className="text-content">
-                        <div className="item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/controller/customer/${data?.customer_id}/about`)}>
-                            <p className='label'>Customer Id & Customer Name</p>
+                        <div className="item action-button" onClick={() => navigate(`/controller/customer/${data?.customer_id}/about`)}>
+                            <p className='label'>Customer ID & Name</p>
                             <div>
                                 <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
                             </div>
@@ -203,11 +208,20 @@ const ServiceJob = () => {
                             </div>
                         </div>
                         <div className="item">
-                            <p className='label'>Service Srl No & Job Status</p>
+                            <p className='label'>Service Srl No & Work Status</p>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <p className='text-value'>{data?.service_srl_no}</p>
-                                <Badge size='small' value={toStandardText(data?.job_status)} severity={'success'} />
+                                <Badge size='small' value={data?.work_closed ? 'Reg Closed' : 'Reg Not Closed'}
+                                    severity={data?.work_closed ? 'success' : 'warning'}
+                                    title={data?.work_closed ? 'Registration closed with this work' : 'Registration not closed with this work'}
+                                />
                                 {data?.rnd_uuid && <Badge size='small' value={'R&D'} severity={'warning'} />}
+                            </div>
+                        </div>
+                        <div className="item">
+                            <p className='label'>Product Type</p>
+                            <div>
+                                <p className='text-value'>{toStandardText(data?.product_type) || '-'}</p>
                             </div>
                         </div>
                         <div className="item">
@@ -237,7 +251,7 @@ const ServiceJob = () => {
                         <div className="item">
                             <p className='label'>Call Summery (Applied / Estimate)</p>
                             <div>
-                                <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
+                                <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-muted)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
                             </div>
                         </div>
                         <div className="item">
@@ -273,63 +287,75 @@ const ServiceJob = () => {
                             </div>
                         </div>}
                     </div>
-                    <div className="payment-border">
-                        <div className="summery-box">
-                            <div className="amount">
-                                <div className="left-section">
-                                    <h2>₹{(data?.bill_summery?.grand_total || 0).toFixed(2)}</h2>
-                                    <p>Total Amount</p>
+                    {data?.bills?.length > 0 ? (
+                        <>
+                            <div className="payment-border">
+                                <div className="summery-box">
+                                    <div className="amount">
+                                        <div className="left-section">
+                                            <h2>₹{(data?.bill_summery?.grand_total || 0).toFixed(2)}</h2>
+                                            <p>Total Amount</p>
+                                        </div>
+                                        <div className="right-section">
+                                            <h2>₹{(data?.bill_summery?.paid || 0).toFixed(2)}</h2>
+                                            <p>Paid Amount</p>
+                                        </div>
+                                    </div>
+                                    <div className="graph">
+                                        <div className="graph-outer-line">
+                                            <div className="graph-inner-line" style={{ width: `${data?.bill_summery?.paid_percentage || 0}%` }}></div>
+                                        </div>
+                                        <div className='footer'>
+                                            <h4>{data?.bill_summery?.grand_total > 0 ? data?.bill_summery?.payment_status : 'No Amounts'}</h4>
+                                            <h4>₹{(data?.bill_summery?.balance || 0).toFixed(2)} Balance</h4>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="right-section">
-                                    <h2>₹{(data?.bill_summery?.paid || 0).toFixed(2)}</h2>
-                                    <p>Paid Amount</p>
+                                <div className="bills-list">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Bill No</th>
+                                                <th>Total</th>
+                                                <th>Paid</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data?.bills?.map((bill) => (
+                                                <tr key={bill?.bill_no} style={{ color: bill?.status === 'DRAFT' ? 'var(--color-warning)' : '' }}>
+                                                    <td>{bill?.bill_no}</td>
+                                                    <td>₹ {(bill?.grand_total || 0).toFixed(2)}</td>
+                                                    <td>₹ {(bill?.paid_amount || 0).toFixed(2)}</td>
+                                                    <td>
+                                                        {bill?.status === 'DRAFT'
+                                                            ? <Badge size='small' value={'DRAFT'} severity={'warning'} />
+                                                            : bill?.payment_status === 'UNPAID'
+                                                                ? <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'danger'} />
+                                                                : <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'success'} />}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div className="graph">
-                                <div className="graph-outer-line">
-                                    <div className="graph-inner-line" style={{ width: `${data?.bill_summery?.paid_percentage || 0}%` }}></div>
-                                </div>
-                                <div className='footer'>
-                                    <h4>{data?.bill_summery?.grand_total > 0 ? data?.bill_summery?.payment_status : 'No Amounts'}</h4>
-                                    <h4>₹{(data?.bill_summery?.balance || 0).toFixed(2)} Balance</h4>
-                                </div>
+                            <div className="info">
+                                <p>
+                                    Only issued bills are ready for payment. Draft bills are converted to issued bills only after the service registration is closed. <br></br>
+                                    In some cases, there may be a mismatch between the bill amount and the service or spare part amounts. This usually happens due to manual overrides by technicians or adjustments made during billing.
+                                </p>
                             </div>
+                        </>
+                    ) : (
+                        <div style={{ marginTop: '20px' }}>
+                            <Message
+                                type={'info'}
+                                head={'Bill not generated'}
+                                message={'The bill is not generated yet. Bills are generated only after the service registration is closed.'}
+                            />
                         </div>
-                        <div className="bills-list">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Bill No</th>
-                                        <th>Total</th>
-                                        <th>Paid</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data?.bills?.map((bill) => (
-                                        <tr key={bill?.bill_no} style={{ color: bill?.status === 'DRAFT' ? 'var(--color-warning)' : '' }}>
-                                            <td>{bill?.bill_no}</td>
-                                            <td>₹ {(bill?.grand_total || 0).toFixed(2)}</td>
-                                            <td>₹ {(bill?.paid_amount || 0).toFixed(2)}</td>
-                                            <td>
-                                                {bill?.status === 'DRAFT'
-                                                    ? <Badge size='small' value={'DRAFT'} severity={'warning'} />
-                                                    : bill?.payment_status === 'UNPAID'
-                                                        ? <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'danger'} />
-                                                        : <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'success'} />}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="info">
-                        <p>
-                            Only issued bills are ready for payment. Draft bills are converted to issued bills only after the service registration is closed. <br></br>
-                            In some cases, there may be a mismatch between the bill amount and the service or spare part amounts. This usually happens due to manual overrides by technicians or adjustments made during billing.
-                        </p>
-                    </div>
+                    )}
                 </div>}
         </div>
     )

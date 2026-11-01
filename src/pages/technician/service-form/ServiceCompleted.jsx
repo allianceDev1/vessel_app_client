@@ -3,13 +3,17 @@ import './service-completed.scss'
 import ServiceSuccess from '../../../components/modules/tech/service-form-components/service-completion/ServiceSuccess'
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import { TbShare2 } from 'react-icons/tb';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { initAudio, vibrateSuccess } from '../../../utils/services/success_audio_services';
 import { playSuccessAudio } from '../../../utils/services/success_audio_services';
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
+import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice'
 
 
 const ServiceCompleted = () => {
+    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
     const shareRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -43,6 +47,13 @@ const ServiceCompleted = () => {
         }
 
         setData(location?.state)
+
+        // Clear submitted service form data and query cache
+        dispatch(sfSetting.clearAll())
+        dispatch(sfActions.clearAll())
+        queryClient.removeQueries({
+            queryKey: ['service_form_resources']
+        })
         // eslint-disable-next-line
     }, [])
 
@@ -57,7 +68,8 @@ const ServiceCompleted = () => {
                 </div>
 
                 <div className="buttons">
-                    <Button label={'Share'} style={{ width: '100%' }} icon={<TbShare2 />} rounded onClick={handleShareClick} />
+                    <Button label={'Share'} style={{ width: '100%' }} icon={<TbShare2 />} rounded onClick={handleShareClick}
+                        severity={'secondary'} />
                     <Button label={'Done'} rounded style={{ width: '100%' }} severity={'primary'} onClick={closePage} />
                 </div>
             </div>

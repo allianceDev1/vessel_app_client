@@ -3,8 +3,10 @@ import './message.scss'
 import { FaRegCircleCheck, FaRegCircleXmark } from 'react-icons/fa6'
 import { TbAlertCircle, TbAlertHexagon } from 'react-icons/tb';
 
-const Message = ({ icon, type, head, message, content, className, style }) => {
+const Message = ({ icon, iconDisable = false, type = 'default', head, message, content, className, style }) => {
     const iconMap = {
+        default: <TbAlertCircle />,
+        secondary: <TbAlertCircle />,
         success: <FaRegCircleCheck />,
         danger: <FaRegCircleXmark />,
         warning: <TbAlertHexagon />,
@@ -13,7 +15,7 @@ const Message = ({ icon, type, head, message, content, className, style }) => {
 
     return (
         <div className={`alert-message ${type ? 'alert-message-' + type : ''} ${className}`} style={style}>
-            {(icon || type) && <div className="icon">
+            {(icon || type) && !iconDisable && <div className="icon">
                 {icon ? icon : type ? iconMap[type] : ''}
             </div>}
             <div className="content">

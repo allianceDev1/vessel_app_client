@@ -11,7 +11,7 @@ import InstallationCard from '../../common/cards/InstallationCard'
 import CancellationCard from '../../common/cards/CancellationCard'
 
 const ServiceCardList = () => {
-    const { product_id } = useParams();
+    const { customer_id, product_id } = useParams();
     const navigate = useNavigate();
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
@@ -70,7 +70,13 @@ const ServiceCardList = () => {
     return (
         <div className="tech-customer-service-cards-container"
             style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }} >
+
+
             <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '400px' }}>
+                <div className="image-button" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button label={'Card images'} size='small' severity={'secondary'} outlined rounded
+                        onClick={() => navigate(`/tech/customer/${customer_id}/product/${product_id}/service-card-images`)} />
+                </div>
                 {!allCards.length && <ErrorState
                     icon={<TbPlayCard4 />}
                     title={'No service history yet.'}
@@ -85,8 +91,12 @@ const ServiceCardList = () => {
 
                         case "SERVICE_CARD":
                             return <ServiceCard key={card.uuid} data={card}
-                                pointer={card?.version === 2}
-                                onClick={() => card?.version === 2 ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} />
+                                pointer={card?.version === 1 ? false : true}
+                                onClick={() => card?.version === 2
+                                    ? navigate(`/tech/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`)
+                                    : card?.version === 1.5
+                                        ? navigate(`/tech/completed/service-job/v1.5/p/${card?.service_srl_no}/about`)
+                                        : null} />
 
                         case "SERVICE_CANCEL_CARD":
                             return <CancellationCard key={card.uuid} data={card} />
@@ -99,7 +109,7 @@ const ServiceCardList = () => {
                 {hasNextPage &&
                     <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                         <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                            spinIcon={isFetchingNextPage}
+                            spinIcon={isFetchingNextPage} severity={'secondary'}
                             onClick={() => {
                                 if (!isFetchingNextPage) fetchNextPage();
                             }} />

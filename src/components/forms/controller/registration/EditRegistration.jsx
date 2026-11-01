@@ -3,6 +3,7 @@ import './service-registration.scss'
 import { vfCv2Axios } from '../../../../api/axios/axiosConfig'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SERVICE_PRIORITY_TEXT, SERVICE_TYPES } from '../../../../assets/javascript/pre_data/service'
+import { REGISTRATION_TYPES } from '../../../../assets/javascript/pre_data/product'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { serviceRegistration } from '../../../../utils/validators/registration'
 import { api } from '../../../../api'
@@ -23,7 +24,15 @@ import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
 
 const EditRegistration = ({ regNo, initialData }) => {
     const dispatch = useDispatch()
-    const [form, setForm] = useState({})
+    const [form, setForm] = useState({
+        product_type: initialData?.about?.product_type || initialData?.product_type || '',
+        service_type: initialData?.about?.service_type || initialData?.service_type || '',
+        complaint_category: initialData?.about?.complaint_category || [],
+        priority: initialData?.about?.priority || '1',
+        additional_number: initialData?.customer?.additional_number || {},
+        assigned_technician_uuid: initialData?.technician?.worker_uuid || null,
+        comment: initialData?.about?.comment || null
+    })
     const [vErr, setVErr] = useState({})
     const [loading, setLoading] = useState('')
     const queryClient = useQueryClient()
@@ -32,9 +41,9 @@ const EditRegistration = ({ regNo, initialData }) => {
     const fetchResources = async () => {
         const [workers, inputs] = await Promise.all([
             await vfCv2Axios.get('/resources/service-workers/VESSEL_FILTER'),
-            await vfCv2Axios.get('/resources/form-resources?titles=vf_complaint_reasons')
+            await vfCv2Axios.get('/resources/form-resources?titles=complaint_registration_reasons')
         ])
-        return { workers, inputs: inputs?.find(i => i?.title === 'vf_complaint_reasons')?.values?.map(i => i?.data?.[0]) }
+        return { workers, inputs: inputs?.find(i => i?.title === 'complaint_registration_reasons')?.values?.map(i => i?.data?.[0]) }
     }
 
     const { data: regData } = useQuery({
@@ -56,6 +65,7 @@ const EditRegistration = ({ regNo, initialData }) => {
     useEffect(() => {
         if (regData) {
             setForm({
+                product_type: regData?.about?.product_type || regData?.product_type || '',
                 service_type: regData?.about?.service_type,
                 complaint_category: regData?.about?.complaint_category || [],
                 priority: regData?.about?.priority || '1',
@@ -112,6 +122,7 @@ const EditRegistration = ({ regNo, initialData }) => {
             setLoading('submit')
 
             const body = {
+                product_type: form?.product_type,
                 service_type: form?.service_type,
                 complaint_category: form?.service_type === 'COMPLAINT' ? form?.complaint_category : [],
                 priority: Number(form?.priority) || 1,
@@ -167,6 +178,9 @@ const EditRegistration = ({ regNo, initialData }) => {
                     <h5>Customer ID : {regData?.customer?.customer_id || '____'}</h5>
                     <h3>{regData?.customer?.customer_name || '______'}</h3>
                 </div>
+
+                <Select label={'Product type'} name={'product_type'} required value={form?.product_type || ''} onChange={handleChange}
+                    options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]} />
 
                 <Select label={'Service Type'} name={'service_type'} required value={form?.service_type || ''} onChange={handleChange}
                     options={[{ label: '', value: '' }, ...SERVICE_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]}

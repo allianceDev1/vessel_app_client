@@ -78,7 +78,7 @@ const PaymentMethods = () => {
                 </>}
 
                 {/* Button */}
-                <Button label={'Add Method'} rounded style={{ marginTop: '20px', width: '100%' }} />
+                <Button label={'Add Method'} rounded style={{ marginTop: '20px', width: '100%' }} severity={'secondary'} />
 
 
             </form>

@@ -15,6 +15,7 @@
             background-color: var(--surface-2);
             padding: 15px 15px;
             border-radius: 10px;
+            margin-bottom: 25px;
 
 
             .side-one {
@@ -35,28 +36,10 @@
             }
         }
 
-        .radio-group {
-            h4 {
-                font-size: 14px;
-                font-weight: 500;
-                color: var(--text-secondary-1);
-                margin-bottom: 5px;
-
-                span{
-                    color: var(--color-danger);
-                }
-            }
-
-            >div {
-                display: flex;
-                gap: 10px;
-            }
-        }
-
-        p{
+        p {
             font-size: 13px;
             font-weight: 400;
-            color: var(--text-secondary-2);
+            color: var(--text-tertiary);
         }
     }
 }

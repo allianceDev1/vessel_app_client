@@ -10,12 +10,12 @@
         .success-icon {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, var(--color-success-6) 0%, var(--color-success-3) 100%);
+            background: linear-gradient(135deg, var( --color-success-text) 0%, var(--color-success-border) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 30px var(--color-success-trans-33);
+            box-shadow: 0 10px 30px var(--color-success-bg);
             position: relative;
         }
 
@@ -45,14 +45,14 @@
         .title {
             font-size: 25px;
             font-weight: 600;
-            color: var(--color-natural-10);
+            color: var(--surface-inverse);
             margin-bottom: 5px;
             letter-spacing: -0.5px;
         }
 
         .subtitle {
             font-size: 14px;
-            color: var(--color-natural-7);
+            color: var(--text-tertiary);
             font-weight: 400;
         }
     }
@@ -68,7 +68,7 @@
         .card-title {
             font-size: 13px;
             font-weight: 500;
-            color: var(--text-secondary-3);
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 10px;
@@ -120,14 +120,14 @@
 
         .amount-subtitle {
             font-size: 14px;
-            color: var(--text-secondary-1);
+            color: var(--text-secondary-alt);
         }
 
         .amount-note {
             font-size: 12px;
             font-weight: 400;
             font-style: italic;
-            color: var(--text-secondary-1);
+            color: var(--text-secondary-alt);
         }
 
         .payment-id-section {
@@ -141,7 +141,7 @@
 
         .payment-id-label {
             font-size: 13px;
-            color: var(--text-secondary-3);
+            color: var(--text-muted);
             font-weight: 500;
         }
 
@@ -184,7 +184,7 @@
 
         .customer-label {
             font-size: 12px;
-            color: var(--text-secondary-3);
+            color: var(--text-muted);
             margin-bottom: 2px;
         }
 
@@ -206,7 +206,7 @@
         p {
             font-size: 13px;
             font-weight: 400;
-            color: var(--text-secondary-3);
+            color: var(--text-muted);
             text-align: center;
         }
 
@@ -239,12 +239,12 @@
             0%,
             100% {
                 transform: scale(1);
-                opacity: 1;
+                // opacity: 1;
             }
 
             50% {
                 transform: scale(1.15);
-                opacity: 0.5;
+                // opacity: 0.5;
             }
         }
 
@@ -271,7 +271,7 @@
     @keyframes scaleIn {
         0% {
             transform: scale(0);
-            opacity: 0;
+            // opacity: 0;
         }
 
         50% {
@@ -280,7 +280,7 @@
 
         100% {
             transform: scale(1);
-            opacity: 1;
+            // opacity: 1;
         }
     }
 

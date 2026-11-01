@@ -47,12 +47,14 @@ const SpareList = () => {
                     ? <div className='list-items' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {data?.map((spare) => {
                             return <SpareCard
-                                key={spare?.spare_id}
+                                key={spare?.component_uuid || spare?.spare_id || spare?.spare_uuid}
                                 customerId={customer_id}
                                 productId={product_id}
                                 spareUuid={spare?.spare_uuid}
+                                componentUuid={spare?.component_uuid || spare?.componentUuid}
                                 spareId={spare?.spare_id}
                                 spareName={spare?.spare_name}
+                                trackingType={spare?.tracking_type || spare?.trackingType}
                                 spareCategory={spare?.spare_category}
                                 Qty={spare?.qty}
                                 Unit={spare?.unit}

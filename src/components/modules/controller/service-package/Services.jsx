@@ -60,8 +60,13 @@ const Services = () => {
                     {data?.data?.map((card) => {
                         switch (card.card_type) {
                             case "SERVICE_CARD":
-                                return <ServiceCard key={card.uuid} data={card} pointer={card?.version === 2}
-                                    onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`) : null} />
+                                return <ServiceCard key={card.uuid} data={card}
+                                    pointer={card?.version === 1 ? false : true}
+                                    onClick={() => card?.version === 2
+                                        ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${card?.product_id}`)
+                                        : card?.version === 1.5
+                                            ? navigate(`/controller/completed/service-job/v1.5/p/${card?.service_srl_no}/about`)
+                                            : null} />
 
                             case "SERVICE_CANCEL_CARD":
                                 return <CancellationCard key={card.uuid} data={card} />

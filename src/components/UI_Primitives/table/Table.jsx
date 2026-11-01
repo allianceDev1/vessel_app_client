@@ -291,6 +291,7 @@ const Table = ({
                 <div className="table-filter-right">
                     <Button
                         style={{ marginRight: '10px' }}
+                        severity={'secondary'}
                         icon={<TbColumns3 />}
                         onClick={handleColumnHide}
                         rounded outlined size="small"
@@ -407,12 +408,14 @@ const Table = ({
                     <div className="pagination-buttons">
                         <Button
                             size="small" icon={<IoIosArrowBack />}
+                            severity={'secondary'}
                             onClick={() => { setPage(page - 1) }}
                             disabled={!canPrevPage}
                             rounded outlined
                         />
                         <Button
                             size="small" icon={<IoIosArrowForward />}
+                            severity={'secondary'}
                             onClick={() => { setPage(page + 1) }}
                             disabled={!canNextPage}
                             rounded outlined

@@ -70,7 +70,7 @@ const UnscheduleService = ({ registrationId, isController = false }) => {
     return (
         <div className="tech-unschedule-service-comp">
             <form action="" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleSubmit}>
-                <p style={{ fontSize: '14px', textAlign: 'justify', color: 'var(--text-secondary-2)' }}>The selected service will be removed from the
+                <p style={{ fontSize: '14px', textAlign: 'justify', color: 'var(--text-tertiary)' }}>The selected service will be removed from the
                     schedule and returned to Proceed status without changing the assigned technician.</p>
                 <TextArea label={'Reason of unschedule'} type='text' value={form?.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} required />
                 <Button label={'Unschedule work'} spinIcon={loading} severity={'danger'} rounded

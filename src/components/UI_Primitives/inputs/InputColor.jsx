@@ -14,20 +14,27 @@ const InputColor = ({
     helperText,
     required
 }) => {
-    const [colorList, setColorList] = useState(preColors)
-    const [selectedColor, setSelectedColor] = useState(value)
+    const [colorList, setColorList] = useState(preColors?.map(i => i.toUpperCase()))
+    const [selectedColor, setSelectedColor] = useState(value || '')
 
     const handleChange = (colorCode) => {
-        setSelectedColor(colorCode)
-        onChange({ target: { name, value: colorCode } })
+        const code = String(colorCode).toUpperCase()
+        setSelectedColor(code)
+        onChange({ target: { name, value: code } })
     }
 
     useEffect(() => {
         if (defaultColors && !preColors.length) {
-            setColorList(['#cf0000', '#00ccff', '#03d200', '#fdc801', '#9801fe', '#0008cf'])
+            setColorList(['#CF0000', '#00CCFF', '#03D200', '#FDC801', '#9801FE', '#0008CF'])
         }
         // eslint-disable-next-line
     }, [])
+
+    useEffect(() => {
+        if (value) {
+            setSelectedColor(value)
+        }
+    }, [value])
 
     return (
         <div className="ui-input-color-container">
@@ -37,7 +44,7 @@ const InputColor = ({
                     {required && <span className="required">*</span>}
                 </label>}
                 <div className="color-inputs">
-                    {!colorList?.includes(selectedColor) &&
+                    {!colorList?.includes(selectedColor) && selectedColor &&
                         <label className="color-option">
                             <input type="radio" name="color" value={selectedColor} checked={true} />
                             <span className="color-circle" style={{ backgroundColor: value }}></span>
@@ -51,7 +58,8 @@ const InputColor = ({
                         )
                     })}
                     {customColors && <label className="color-option custom-picker" data-name="Advanced" title="Advanced Color">
-                        <input type="color" name="color" id="customColor" aria-label="Advanced color picker" onChange={(e) => handleChange(e.target.value)} />
+                        <input type="color" name="color" id="customColor" aria-label="Advanced color picker"
+                            onChange={(e) => handleChange(e.target.value)} required={true} value={selectedColor} />
                         <span className="color-circle rainbow"></span>
                     </label>}
                 </div>

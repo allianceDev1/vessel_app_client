@@ -18,7 +18,7 @@ const RegistrationInfo = ({ data }) => {
                         <div className="item">
                             <p className='label'>Reg Number</p>
                             <div>
-                                <p className='text-value'>{data?.registration_id}</p>
+                                <p className='text-value'>{data?.registration_id} - {toStandardText(data?.about?.product_type)}</p>
                             </div>
                         </div>
                         <div className="item">
@@ -36,19 +36,25 @@ const RegistrationInfo = ({ data }) => {
                             </div>
                         </div>
                         <div className="item">
+                            <p className='label'>Product type / Reg type</p>
+                            <div>
+                                <p className='text-value'>{toStandardText(data?.about?.product_type)}</p>
+                            </div>
+                        </div>
+                        <div className="item">
                             <p className='label'>Service Type & Priority</p>
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                                 <p className='text-value'>{toStandardText(data?.about?.service_type)}</p>
                                 {data?.about?.priority ? <Badge value={reg_priority[data?.about?.priority][0]} severity={reg_priority[data?.about?.priority][1]} /> : ''}
                             </div>
                         </div>
-                        <div className="item span-item">
+                        <div className="item">
                             <p className='label'>{data?.about?.service_type === 'COMPLAINT' ? 'Complaint Category' : 'Comment'}</p>
                             <div>
                                 {data?.about?.complaint_category?.length > 0
-                                    ? <p className='text-value'>{data?.about?.complaint_category?.map(c => `${c}, `)}</p>
+                                    ? <p className='text-value'>{data?.about?.complaint_category?.join(', ')}</p>
                                     : ''}
-                                <p className='text-value'>{data?.about?.comment || 'No Comment'}</p>
+                                {data?.about?.comment ? <p className='text-value'>{data?.about?.comment}</p> : data?.about?.service_type !== 'COMPLAINT' ? 'No comment' : ''}
                             </div>
                         </div>
                         <div className="item">

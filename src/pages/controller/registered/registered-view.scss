@@ -1,8 +1,6 @@
 @use '../../../assets/scss/mixins/mixin.scss' as *;
 
 .service-registered-view-page-container {
-    margin-bottom: 40px;
-    margin-top: 20px;
 
     .top-section {
         display: flex;
@@ -20,7 +18,7 @@
             p {
                 font-size: 16px;
                 font-weight: 500;
-                color: var(--text-secondary-2);
+                color: var(--text-tertiary);
                 margin-top: 3px;
                 @include threeDots();
             }

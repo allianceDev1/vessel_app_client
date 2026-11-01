@@ -7,6 +7,10 @@ const env = {
         CONTROLNEX: process.env.REACT_APP_API_CONTROLNEX_SERVER,
         VESSEL: process.env.REACT_APP_API_VESSEL_SERVER,
         FINANCE: process.env.REACT_APP_API_FINANCE
+    },
+    GOOGLE_MAPS_API_KEY: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    APP_SETTINGS: {
+        TECH_LOCATION_ACCESS: process.env.REACT_APP_SETTINGS_LOCATION_ACCESS,
     }
 }
 

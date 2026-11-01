@@ -37,33 +37,15 @@ const SFormSave = ({ modalId }) => {
 
         // setup Body
         const body = {
-            service_job_uuid: serviceForm?.service_form_uuid,
-            customer_id: serviceForm?.customer_id,
-            registration_id: serviceForm?.registration_id,
-            visit_uuid: serviceForm?.visit_uuid,
-            technician_uuid: serviceForm?.technician_uuid,
             site_info: {
-                work_site: serviceForm?.work_site,
-                source: serviceForm?.source,
-                tank_capacity_ltr: serviceForm?.tank_capacity_ltr,
-                floor_hight: serviceForm?.floor_hight,
-                t_hight: serviceForm?.t_hight
+                work_site: serviceForm?.work_site || '',
+                source: serviceForm?.source || '',
+                tank_capacity_ltr: serviceForm?.tank_capacity_ltr || '',
+                floor_hight: serviceForm?.floor_hight || '',
+                t_hight: serviceForm?.t_hight || ''
             },
             service_products: [],
-            new_add_ons: (serviceForm?.new_add_ons || [])?.map((value) => {
-                return {
-                    unique_id: value?.unique_id,
-                    variant_uuid: value?.variant_uuid,
-                    purchase_type: value?.purchase_type,
-                    is_zero_fee: value?.is_zero_fee || false,
-                    expire_date: value?.expire_date,
-                    element: {
-                        spare_uuid: value?.element?.spare_uuid,
-                        qty: value?.element?.qty
-                    },
-                    service_charge_estimate: value?.service_charge?.list_price || 0
-                }
-            }),
+            new_add_ons: [],
             work_status: {
                 closed: serviceForm?.work_status?.closed || false,
                 schedule_date: serviceForm?.work_status?.schedule_date || null,
@@ -72,117 +54,82 @@ const SFormSave = ({ modalId }) => {
             }
         }
 
-        Object.entries(serviceForm?.service_products || {}).forEach(([key, value]) => {
-            const isVessel = key.startsWith("V") ? true : false;
+        // Add-on
+        const newAddOns = (serviceForm?.new_add_ons || [])?.map((item) => {
+            return {
+                unique_id: item?.unique_id,
+                parent_type: item?.parent_type,
+                variant_uuid: item?.variant_uuid,
+                purchase_type: item?.purchase_type,
+                is_zero_fee: item?.is_zero_fee || false,
+                element: {
+                    spare_uuid: item?.element?.spare_uuid,
+                    qty: item?.element?.qty
+                }
+            }
+        })
 
-            if (!serviceFormSettings?.products?.[key]?.is_submitted) {
+        body.new_add_ons.push(...newAddOns)
+
+        // Product
+        Object.entries(serviceForm?.service_products || {}).forEach(([productId, entry]) => {
+
+            if (!serviceFormSettings?.products?.[productId]?.is_submitted) {
                 return;
             }
 
-            if (isVessel) {
-                body?.service_products?.push({
-                    product_id: key,
-                    current_condition: value?.current_condition,
-                    inspection_report: {
-                        condition_status: value?.inspection_report?.condition === "Good",
-                        tech_analyze: value?.inspection_report?.tech_analyze || null
+            body?.service_products?.push({
+                product_id: productId,
+
+                // checkup
+                current_condition: entry?.current_condition || null,
+                with_new_spun: entry?.with_new_spun || null,
+                membrane_tds: entry?.membrane_tds || null,
+                pump_membrane_checkups: entry?.pump_membrane_checkups || null,
+                inspection_report: entry?.inspection_report || null,
+                evaluation: entry?.evaluation || null,
+
+                // work
+                service_data: {
+                    is_skipped: !entry?.service_data?.category_id || false,
+                    service_id: entry?.service_data?.service_id || null,
+                    category_id: entry?.service_data?.category_id || null,
+                    service_charge_estimate: entry?.service_data?.service_charge?.estimate || null,
+                    extra_service_charge_reason:
+                        entry?.service_data?.service_charge?.charge_index !== entry?.service_data?.service_charge?.start_index
+                            ? entry?.service_data?.service_charge?.remark : entry?.service_data?.service_charge?.start_index !== 0
+                                ? 'System conditions increased start index' : '',
+                    repeat: {
+                        tech_say: entry?.service_data?.repeat?.tech_say || false,
+                        comment: entry?.service_data?.repeat?.comment || null
                     },
-                    service_data: {
-                        is_skipped: !value?.service_data?.category_id || false,
-                        service_id: value?.service_data?.service_id || null,
-                        category_id: value?.service_data?.category_id || null,
-                        mode: value?.service_data?.mode || null,
-                        service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
-                        renewed_package: value?.service_data?.renewed_package?.is_renewed ? {
-                            is_renewed: true,
-                            package_id: value?.service_data?.renewed_package?.package_id
-                        } : null,
-                        repeat: {
-                            system_say: value?.service_data?.repeat?.system_say || false,
-                            tech_say: value?.service_data?.repeat?.tech_say || false,
-                            comment: value?.service_data?.repeat?.comment || null
-                        }
-                    },
-                    work: {
-                        service_list: (value?.work?.services_list || [])?.map(s => ({
-                            service_uuid: s?.service_uuid,
-                            service_type: s?.service_type
-                        })),
-                        components_list: (value?.work?.components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_uuid,
-                            spare_type: c?.spare_type,
-                            qty: c?.qty
-                        })),
-                        removed_components_list: (value?.work?.removed_components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_uuid,
-                            spare_type: c?.spare_type,
-                        }))
-                    },
-                    evaluation: {
-                        filtered_water: value?.evaluation?.filtered_water,
-                        water_quality: {
-                            status: value?.evaluation?.water_quality?.status === 'Good',
-                            comment: value?.evaluation?.water_quality?.comment
-                        }
-                    }
-                })
-            } else {
-                body?.service_products?.push({
-                    product_id: key,
-                    current_condition: {
-                        working: {
-                            status: value?.current_condition?.working?.status === 'Good',
-                            comment: value?.current_condition?.working?.comment || null
-                        },
-                        lead_crack: {
-                            status: value?.current_condition?.lead_crack?.status === 'Yes',
-                            comment: value?.current_condition?.lead_crack?.comment || null
-                        },
-                    },
-                    service_data: {
-                        is_skipped: !value?.service_data?.category_id || false,
-                        category_id: value?.service_data?.category_id || null,
-                        mode: value?.service_data?.mode || null,
-                        service_charge_estimate: value?.service_data?.service_charge?.estimate || null,
-                        repeat: {
-                            system_say: value?.service_data?.repeat?.system_say || false,
-                            tech_say: value?.service_data?.repeat?.tech_say || false,
-                            comment: value?.service_data?.repeat?.comment || null
-                        }
-                    },
-                    work: {
-                        service_list: (value?.work?.services_list || [])?.map(s => ({
-                            service_uuid: s?.service_uuid,
-                            service_type: s?.service_type
-                        })),
-                        components_list: (value?.work?.components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_uuid,
-                            spare_type: c?.spare_type,
-                            qty: c?.qty
-                        })),
-                        removed_components_list: (value?.removed_components_list || [])?.map(c => ({
-                            spare_uuid: c?.spare_uuid,
-                            spare_type: c?.spare_type,
-                        }))
-                    },
-                    evaluation: {
-                        working: {
-                            status: value?.evaluation?.working?.status === 'Good',
-                            comment: value?.evaluation?.working?.comment || null
-                        },
-                        lead_crack: {
-                            status: value?.evaluation?.lead_crack?.status === 'Yes',
-                            comment: value?.evaluation?.lead_crack?.comment || null
-                        }
-                    }
-                })
-            }
+                    package_renewal_declined: entry?.service_data?.package_renewal_declined === 'Yes' ? true : false
+                },
+                components_list: (entry?.work?.components_list || [])?.map(c => ({
+                    spare_type: c?.selection_context,
+                    original_spare_uuid: c?.original_spare_uuid || null,
+                    component_uuid: c?.component_uuid || null,
+                    spare_uuid: c?.spare_uuid,
+                    qty: c?.qty,
+                    policy_mode: c?.policy_mode || null,
+                    policy_reason: c?.policy_reason || null
+                })),
+                removed_components_list: (entry?.work?.removed_components_list || [])?.map(c => ({
+                    spare_uuid: c?.spare_uuid,
+                    component_uuid: c?.component_uuid,
+                })),
+                service_list: (entry?.work?.services_list || [])?.map(s => ({
+                    service_type: s?.selection_context,
+                    work_uuid: s?.work_uuid,
+                }))
+            })
+
         })
 
         try {
             setLoading(true)
 
-            const result = await api.vfTv2Axios.post('/service/service-form/save', body, {
+            const result = await api.vfTv2Axios.post(`/service/service-form/save?work_key=${serviceForm?.work_key}`, body, {
                 timeout: 5 * 60 * 1000,
                 onUploadProgress: (progressEvent) => {
                     if (!progressEvent.total) return;
@@ -223,10 +170,11 @@ const SFormSave = ({ modalId }) => {
                 sfSetting.update({
                     form_saved: true,
                     form_saved_time: new Date(result?.saved_time).toISOString(),
-                    activePage: 101,
                     products: updatedProducts
                 })
             );
+
+            dispatch(sfSetting.page.next(1001))
 
             if (!verification?.is_verified && !verification?.verification_type) {
                 dispatch(sfActions.updateVerification({
@@ -258,10 +206,8 @@ const SFormSave = ({ modalId }) => {
 
     useEffect(() => {
         // Check required element
-        if (!serviceForm?.customer_id || !serviceForm?.registration_id || !serviceForm?.in_time || !serviceForm?.visit_uuid
-            || !serviceForm?.technician_uuid) {
+        if (!serviceForm?.customer_id || !serviceForm?.work_key || !serviceForm?.start_time) {
             setFormVerification({ ok: false, type: 'danger', message: "The required form element are missing" })
-
             return;
         }
 
@@ -273,16 +219,7 @@ const SFormSave = ({ modalId }) => {
         // Check saved product count
         if (!saveProductCount) {
             setFormVerification({
-                ok: false, type: 'danger', message: `You have not saved any product, To continue please save any product.`
-            })
-            return;
-        }
-
-        // Check all product saved.
-        if (formProductCount !== saveProductCount) {
-            setFormVerification({
-                ok: true, type: 'warning', message: `You have submitted only ${saveProductCount} products out of the ${formProductCount} selected products. 
-                Please confirm and proceed with the submitted products.`
+                ok: false, type: 'danger', message: `You have not submitted any product, To continue please submit any product.`
             })
             return;
         }
@@ -308,6 +245,15 @@ const SFormSave = ({ modalId }) => {
             return;
         }
 
+        // Check all product saved.
+        if (formProductCount !== saveProductCount) {
+            setFormVerification({
+                ok: true, type: 'warning', message: `You have submitted only ${saveProductCount} products out of the ${formProductCount} selected products. 
+                Please confirm and proceed with the submitted products.`
+            })
+            return;
+        }
+
         setFormVerification({ ok: true })
 
     }, [serviceForm, serviceFormSettings])
@@ -316,30 +262,40 @@ const SFormSave = ({ modalId }) => {
     return (
         <div className="s-form-save-and-review-container">
             {/* Proceed */}
-            {!error?.error && !loading && <div className='submit-section'>
-                <div className="text-section">
-                    <h2>Ready to Save</h2>
-                    <p>
-                        By proceeding, the information you entered will be sent to the server. The server will verify the data and product
-                        conditions, then temporarily save your information.
-                        <br></br>
-                        <br></br>
-                        You can edit the details before the final submission of the service form. If you make any changes to the product data, you must save it again.
-                        <br></br>
-                        <br></br>
-                        After saving, review the information carefully. If any mismatches are found, please correct the entered data. If the issue cannot be resolved, contact your manager before taking any further action.
-                    </p>
-                </div>
 
-                {/* Messages */}
-                {formVerification?.message ? <Message type={formVerification?.type} message={formVerification?.message} /> : ''}
-                {!internet ? <Message type={'danger'} message={"No internet connection"} /> : ''}
+            {!error?.error && !loading && <div className='submit-section'>
+
+                {!formVerification?.ok && <Message
+                    type={formVerification?.type}
+                    head={formVerification?.type === 'danger' ? 'Not ready to save' : 'Save with warning'}
+                    message={formVerification?.message} />}
+
+
+                {formVerification?.ok && <>
+
+                    <div className="text-section">
+                        <h2>Ready to Save</h2>
+                        <p>
+                            By proceeding, your entered information will be submitted to the server for validation. The system will verify the form details and product conditions before temporarily saving the information.
+                            <br></br>
+                            <br></br>
+                            You can review and edit the details before the final submission of the service form. If you modify any product information, you must save the form again to apply the changes.
+                            <br></br>
+                            <br></br>
+                            After saving, carefully review the information for accuracy. If you find any discrepancies, correct them before proceeding. If you cannot resolve an issue, contact your manager for assistance.
+                        </p>
+                    </div>
+
+                    {!internet ? <Message type={'danger'} head={'No network'} message={"No internet connection"} /> : ''}
+
+                </>}
 
                 {/* Buttons */}
-                <div className="buttons-div">
-                    <Button label={'Close'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
-                    <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
-                        onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
+                <div className="buttons-div" style={{ gridTemplateColumns: formVerification?.ok ? '1fr 1fr' : '1fr' }}>
+                    <Button label={'Close'} severity={'secondary'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    {formVerification?.ok &&
+                        <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
+                            onClick={handleProceed} disabled={!internet} />}
                 </div>
             </div>}
 
@@ -348,7 +304,7 @@ const SFormSave = ({ modalId }) => {
                 <h4>{apiStatus || 'Wait a moment...'}</h4>
 
                 <div className="progress-bar">
-                     <div className={apiProgress ? "progress" : "progress spin"} style={{ width: `${apiProgress}%` }}></div>
+                    <div className={apiProgress ? "progress" : "progress spin"} style={{ width: `${apiProgress}%` }}></div>
                 </div>
 
                 <p>Your request is currently being processed. <br></br>
@@ -362,13 +318,15 @@ const SFormSave = ({ modalId }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Close'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Close'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} severity={'secondary'} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet || !formVerification?.ok} />
 
                 </div>
 
             </div>}
+
+
         </div>
     )
 }

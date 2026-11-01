@@ -49,7 +49,7 @@ const Schedules = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Your schedules', note: "All scheduled and progress services" }))
+        dispatch(page.config({ title: 'Your schedules', note: "All scheduled and progress services" }))
 
         // eslint-disable-next-line
     }, [])

@@ -38,7 +38,7 @@ const ResourceStretcher = () => {
   }
 
   return (
-    <div className='resources-stretcher' style={{ marginTop: '20px' }}>
+    <div className='resources-stretcher'>
 
       {stretcher_model === 'arrayElem' && <ArrayElem deleteData={deleteData} />}
       {stretcher_model === 'array3Elem' && <Array3Elem deleteData={deleteData} />}

@@ -45,7 +45,7 @@ const FreezeUnfreeze = ({ type, packageSrlNo }) => {
 
     return (
         <div className="freeze-comp-form-container">
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 Freezing this package will disable all package-based features and services for this customer.
                 The package will continue as a normal non-package product until it is unfrozen.
                 Please provide a reason/comment before continuing.

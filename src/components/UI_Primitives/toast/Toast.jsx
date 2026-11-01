@@ -57,7 +57,7 @@ const Toast = ({ id, type, icon, head, message, doClose = true, autoClose = true
   /**
    * {
         id: random id,
-        type: alert type , success, danger, warning , info, natural,
+        type: alert type , success, danger, warning , info, secondary,
         head: alert head,
         message: alert message,
         icon: alert icon,

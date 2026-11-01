@@ -12,7 +12,7 @@ import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
 const PackageHistory = () => {
     const { product_id } = useParams();
 
-    const fetchServiceCards = async ({ pageParam = 0 }) => {
+    const fetchPackageHistory = async ({ pageParam = 0 }) => {
 
         const res = await api.vfTv2Axios.get(`/product/${product_id}/package-history?page=${pageParam}&limit=6`)
         return {
@@ -31,7 +31,7 @@ const PackageHistory = () => {
         error
     } = useInfiniteQuery({
         queryKey: ["product_service_package_history", product_id],
-        queryFn: fetchServiceCards,
+        queryFn: fetchPackageHistory,
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
             const totalLoaded = allPages
@@ -83,7 +83,7 @@ const PackageHistory = () => {
             {hasNextPage &&
                 <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                     <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                        spinIcon={isFetchingNextPage}
+                        spinIcon={isFetchingNextPage} severity={'secondary'} 
                         onClick={() => {
                             if (!isFetchingNextPage) fetchNextPage();
                         }} />

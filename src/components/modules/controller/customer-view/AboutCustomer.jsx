@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './about-customer.scss'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbMapPin, TbMoodSpark } from 'react-icons/tb'
+import { TbEye, TbEyeOff, TbMapPin, TbMoodSpark } from 'react-icons/tb'
 import { redirectViewLocation } from '../../../../utils/services/location_services'
 import Badge from '../../../UI_Primitives/badge/Badge'
 
 const AboutCustomer = () => {
     const { customer_id } = useParams();
+    // Only one contact number is visible at a time (privacy)
+    const [visibleNumber, setVisibleNumber] = useState(null)
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_profile', customer_id],
@@ -27,6 +29,28 @@ const AboutCustomer = () => {
         }
         redirectViewLocation(null, data?.address?.location?.[0], data?.address?.location?.[1], data?.address?.place, data?.address?.post)
     };
+
+    const renderNumberItem = (key, label, value) => {
+        const hasValue = Boolean(value)
+        const isVisible = visibleNumber === key
+        return (
+            <div className="item">
+                <p className='label'>{label}</p>
+                <div>
+                    <p className='text-value'>
+                        {!hasValue ? 'Not available' : isVisible ? value : '••••••••••'}
+                    </p>
+                    {hasValue && (
+                        <span className='right-icon' style={{ cursor: 'pointer' }}
+                            title={isVisible ? 'Hide number' : 'Show number'}
+                            onClick={() => setVisibleNumber(isVisible ? null : key)}>
+                            {isVisible ? <TbEyeOff /> : <TbEye />}
+                        </span>
+                    )}
+                </div>
+            </div>
+        )
+    }
 
     if (isLoading) {
         return <div>
@@ -89,24 +113,9 @@ const AboutCustomer = () => {
                             {data?.address?.location?.length ? <TbMapPin /> : ""}
                         </div>
                     </div>
-                    <div className="item">
-                        <p className='label'>Primary Number</p>
-                        <div>
-                            <p className='text-value'>{data?.primary_number}</p>
-                        </div>
-                    </div>
-                    <div className="item">
-                        <p className='label'>Secondary Number</p>
-                        <div>
-                            <p className='text-value'>{data?.secondary_number}</p>
-                        </div>
-                    </div>
-                    <div className="item">
-                        <p className='label'>Whatsapp Number</p>
-                        <div>
-                            <p className='text-value'>{data?.whatsapp_number}</p>
-                        </div>
-                    </div>
+                    {renderNumberItem('primary', 'Primary Number', data?.primary_number)}
+                    {renderNumberItem('secondary', 'Secondary Number', data?.secondary_number)}
+                    {renderNumberItem('whatsapp', 'Whatsapp Number', data?.whatsapp_number)}
                     <div className="item success-item">
                         <p className='label'>Debit / Complimentary Amount</p>
                         <div>

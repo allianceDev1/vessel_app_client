@@ -2,24 +2,20 @@ import React, { useEffect, useState } from 'react'
 import './submit-form.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../../../../api'
-import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 import { audio, modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import Message from '../../../../UI_Primitives/message/Message'
 import Button from '../../../../UI_Primitives/buttons/Button'
-import { getLocation } from '../../../../../utils/services/location_services'
 import { initAudio, unlockAudio } from '../../../../../utils/services/success_audio_services'
 import { useNavigate } from 'react-router-dom'
 import { calculateBillsSummery } from '../../../../../utils/helpers/math-equations'
 import { convertIsoToAmPm, isoToDDMonYYYY } from '../../../../../utils/helpers/date-helpers'
 import { getPaymentDisplay } from '../../../../../utils/services/work_services'
-import { useQueryClient } from '@tanstack/react-query'
 
 
 
 const SubmitForm = ({ modalId, unenablePayment }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const queryClient = useQueryClient()
     const { internet } = useSelector((state) => state.system)
     const { serviceForm, serviceFormSettings, review, payment } = useSelector((state) => state.application)
     const [formVerification, setFormVerification] = useState({ ok: false, type: null, message: null })
@@ -44,6 +40,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             return;
         }
 
+
         if (!formVerification?.ok) {
             setLoading(false)
             return;
@@ -53,38 +50,35 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
         dispatch(audio.setUnlocked());
 
         try {
+            const grandTotal = calculateBillsSummery(review?.bills ?? [], review?.zero_fee_items ?? []);
+            const allPaymentMethods = payment?.payment_methods ?? []
 
-            // collect location
-            const locationData = await getLocation()
-            const location = locationData.latitude && locationData.longitude ? [locationData.latitude, locationData.longitude] : []
+            if (payment?.compliment_amount > 0 && review?.is_ready_to_pay) {
+                allPaymentMethods.push({
+                    unique_id: 82657944156,
+                    method: 'WALLET',
+                    amount: payment?.compliment_amount
+                })
+            }
 
-            const summery = calculateBillsSummery(
-                review?.bills ?? [],
-                review?.zero_fee_items ?? [],
-                payment?.complement_amount ?? 0
-            )
-            const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-            const balance = summery?.grandTotal - enteredAmount
+            const enteredAmount = allPaymentMethods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+            const balance = grandTotal - enteredAmount
+
             // Setup Body
             const body = {
-                service_job_uuid: serviceForm?.service_form_uuid,
-                customer_id: serviceForm?.customer_id,
-                registration_id: serviceForm?.registration_id,
-                visit_uuid: serviceForm?.visit_uuid,
-                technician_uuid: serviceForm?.technician_uuid,
-                location: location,
-                grand_total: summery?.subTotal || 0,
-                receivable_amount: summery?.grandTotal || 0, // without compliment
-                payment_methods: payment?.payment_methods,
-                promise_amount: balance,
-                promise_date: payment?.balance_payment_date,
-                promise_reason: payment?.balance_payment_reason,
+                grand_total: grandTotal || 0,
+                payment_methods: allPaymentMethods,
+                promise_amount: review?.is_ready_to_pay ? balance ?? 0 : 0,
+                promise_date: payment?.balance_payment_date ?? null,
+                promise_reason: payment?.balance_payment_reason ?? null,
                 paid_amount: enteredAmount,
-                paid_from_compliment: payment?.complement_amount,
                 zero_fee_items: review?.zero_fee_items
             }
 
             const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {
+                params: {
+                    work_key: serviceForm?.work_key
+                },
                 timeout: 5 * 60 * 1000,
                 onUploadProgress: (progressEvent) => {
                     if (!progressEvent.total) return;
@@ -103,15 +97,13 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 }
             })
 
-            dispatch(sfSetting.clearAll())
-            dispatch(sfActions.clearAll())
-            dispatch(modal.pull.single(modalId))
-
             const { status, description, color } = getPaymentDisplay({
                 total: result?.totalBillAmount,
                 paid: result?.paidAmount,
                 verified: result?.verifiedAmount
             })
+
+            dispatch(modal.pull.single(modalId))
 
             navigate("/tech/service/work-success", {
                 replace: true,
@@ -132,11 +124,6 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             });
 
 
-            queryClient.removeQueries({
-                queryKey: ['service_form_resources']
-            })
-
-
         } catch (error) {
             setError({
                 error: true,
@@ -155,8 +142,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
 
     useEffect(() => {
         // Check required element
-        if (!serviceForm?.customer_id || !serviceForm?.registration_id || !serviceForm?.in_time || !serviceForm?.visit_uuid
-            || !serviceForm?.technician_uuid) {
+        if (!serviceForm?.customer_id || !serviceForm?.work_key) {
             setFormVerification({ ok: false, type: 'danger', message: "The required form element are missing" })
 
             return;
@@ -234,7 +220,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
 
                 {/* Buttons */}
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} severity={'secondary'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
                     <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet} />
                 </div>
@@ -259,7 +245,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 <p>{error?.message}</p>
 
                 <div className="buttons-div">
-                    <Button label={'Cancel'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
+                    <Button label={'Cancel'} severity={'secondary'} rounded style={{ width: '100%', marginTop: '20px' }} onClick={closeModal} />
                     <Button label={'Try again'} severity={'primary'} rounded style={{ width: '100%', marginTop: '20px' }}
                         onClick={handleProceed} disabled={!internet} />
 

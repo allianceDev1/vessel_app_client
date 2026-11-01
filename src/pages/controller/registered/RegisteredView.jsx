@@ -70,7 +70,7 @@ const RegisteredView = () => {
         onClick: async () => {
           try {
             await api.cnAv1Axios.post('/service/registration/rnd/convert', {
-              product_type: "VESSEL_FILTER",
+              product_type: data?.about?.product_type,
               registration_id: regNo
             })
 
@@ -91,7 +91,8 @@ const RegisteredView = () => {
 
             dispatch(toast.push({
               type: 'success',
-              head: 'Converted to R&D',
+              head: 'Converted',
+              message: "Registration converted to R&D"
             }))
 
           } catch (error) {
@@ -113,7 +114,7 @@ const RegisteredView = () => {
         onClick: async () => {
           try {
             await api.cnAv1Axios.post('/service/registration/rnd/retrieve', {
-              product_type: "VESSEL_FILTER",
+              product_type: data?.about?.product_type,
               registration_id: regNo
             })
 
@@ -134,7 +135,8 @@ const RegisteredView = () => {
 
             dispatch(toast.push({
               type: 'success',
-              head: 'Retrieved from R&D',
+              head: 'Retrieved',
+              message: 'Registration retrieved from R&D'
             }))
 
           } catch (error) {
@@ -162,14 +164,14 @@ const RegisteredView = () => {
   })
 
   useEffect(() => {
-    dispatch(page.setTitle({ title: 'Registration Info', note: "Registration info by reg number." }))
+    dispatch(page.config({ title: 'Registration Info', note: "Registration info by reg number." }))
 
     // eslint-disable-next-line
   }, [])
 
   useEffect(() => {
 
-    if (!data?.status?.status || !user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+    if (!data?.status?.status || !user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
       return;
     }
 
@@ -194,7 +196,7 @@ const RegisteredView = () => {
       )
     }
 
-    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin')
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('service_c_admin')
       && !data?.about.is_under_rnd && data?.about?.service_type === 'COMPLAINT') {
 
       actions[0].items.push(
@@ -208,7 +210,7 @@ const RegisteredView = () => {
       actions[1].items.push({ icon: <TbCalendarX />, label: 'Unschedule', onClick: () => openUnschedulePopUp({ registrationId: reg_no }) })
     }
 
-    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('vessel_c_admin') && data?.about.is_under_rnd) {
+    if ([1, 2, 3].includes(data?.status?.status) && user?.allowed_origins?.includes('service_c_admin') && data?.about.is_under_rnd) {
 
       actions[1].items.push(
         { icon: <TbHomeSearch />, label: 'Retrieve from R&D', onClick: () => retrieveFromRND(reg_no) }
@@ -258,11 +260,13 @@ const RegisteredView = () => {
           <p>{data?.customer?.address?.address} House, {data?.customer?.address?.place}, P.O {data?.customer?.address?.post}</p>
         </div>
         <div className="right-section">
+          <Button label={'Workflow'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
+            onClick={() => navigate(`/controller/registered/${reg_no}/workflow`)} severity={'secondary'} />
           <Button label={'Customer'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '130px' }}
-            onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} />
+            onClick={() => navigate(`/controller/customer/${data?.customer?.customer_id}/about`)} severity={'secondary'} />
           <Button label={'Service Jobs'} icon={<TbArrowUpRight />} iconPos='right' size='small' outlined rounded style={{ width: '140px' }}
-            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}`)} />
-          {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))
+            onClick={() => navigate(`/controller/completed?fl=Yes&reg_no=${data?.registration_id}&p=l`)} severity={'secondary'} />
+          {[1, 2, 3, 4].includes(data?.status?.status) && user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))
             && <Dropdown button={{
               label: 'Actions', icon: <TbChevronDown />,
               iconPos: 'right', rounded: true, outlined: true, size: 'small', style: { width: '120px' }

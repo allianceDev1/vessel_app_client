@@ -4,7 +4,10 @@ import env from "../../config/env";
 
 const downloadServiceBill = async (serviceSrlNumber) => {
 
-    const response = await axios.get(`${env.API.FINANCE}/p/download/pdf/bill/rf/VESSEL_SERVICE/${serviceSrlNumber}/group`, {
+    const firstTwoText = serviceSrlNumber?.slice(0, 2)
+    const refType = firstTwoText === 'VF' ? 'VESSEL_FILTER' : "SERVICE_JOB"
+
+    const response = await axios.get(`${env.API.FINANCE}/p/download/pdf/bill/rf/${refType}/${serviceSrlNumber}/group`, {
         responseType: "blob"
     });
 

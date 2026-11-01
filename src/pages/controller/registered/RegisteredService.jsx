@@ -21,7 +21,7 @@ const RegisteredService = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Registered Services', note: "Registered service list and tracking." }))
+        dispatch(page.config({ title: 'Registered Services', note: "Registered service list and tracking." }))
 
         // eslint-disable-next-line
     }, [])
@@ -30,7 +30,7 @@ const RegisteredService = () => {
         <div className="registered-services-page-controller">
             <div className="top-section">
                 <Button label={'Filter'} icon={<TbFilter />} size='small' outlined rounded style={{ width: '100px' }}
-                    onClick={onClickFilter} />
+                    onClick={onClickFilter} severity={'secondary'} />
             </div>
             <div className="content">
                 {searchParams.get('fl') !== "Yes" && <RegisteredReport />}

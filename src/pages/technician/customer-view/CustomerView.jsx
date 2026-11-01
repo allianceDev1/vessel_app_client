@@ -27,7 +27,7 @@ const CustomerView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: `Customer Id : ${customer_id}`, note: "Customer View" }))
+        dispatch(page.config({ title: `Customer Id : ${customer_id}`, note: "Customer View" }))
         // eslint-disable-next-line
     }, [])
 
@@ -62,7 +62,7 @@ const CustomerView = () => {
                 <Outlet />
             </div>
             <div className="fixed-section">
-                <Button icon={<TbMessagePlus />} size='large'  rounded
+                <Button icon={<TbMessagePlus />} size='large' rounded severity={'secondary'}
                     onClick={() => openEnterCallLogPopUp({ customer_id })} />
             </div>
         </div>

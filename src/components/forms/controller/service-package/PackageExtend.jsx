@@ -10,13 +10,13 @@ import { api } from '../../../../api'
 import { useQueryClient } from '@tanstack/react-query'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
+import Message from '../../../UI_Primitives/message/Message'
 
-const PackageExtend = ({ expireDate, packageSrlNo }) => {
+const PackageExtend = ({ expireDate, packageSrlNo, packageStatus }) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({})
     // eslint-disable-next-line
-    const [error, setError] = useState({})
     const queryClient = useQueryClient()
 
 
@@ -71,6 +71,19 @@ const PackageExtend = ({ expireDate, packageSrlNo }) => {
 
     }
 
+    // Expiry date is over but the package is still marked active (status 2): must be force expired first
+    if (expired && Number(packageStatus) === 2) {
+        return (
+            <div className="package-extension-comp-form-container">
+                <Message
+                    type='warning'
+                    head='Action not allowed'
+                    message='The package expiry date is over, but the package status is still Active. Please force expire the package first, then try this action.'
+                />
+            </div>
+        )
+    }
+
     return (
         <div className="package-extension-comp-form-container">
 
@@ -93,7 +106,6 @@ const PackageExtend = ({ expireDate, packageSrlNo }) => {
                 </p>
                 <InputText label={'Confirmation'} name={'verify_text'} value={form?.verify_text}
                     required onChange={handleChange} rightIcon={form?.verify_text === 'EXTEND' && <TbCircleCheck />}
-                    error={error?.errors?.verify_text}
                     onPaste={(e) => e.preventDefault()}
                     onCopy={(e) => e.preventDefault()}
                     onCut={(e) => e.preventDefault()}

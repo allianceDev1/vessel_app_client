@@ -18,13 +18,13 @@ const CustomerProductView = () => {
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: `Product : ${product_id}`, note: "Customer Product View" }))
+        dispatch(page.config({ title: `Product : ${product_id}`, note: "Customer Product View" }))
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         const segments = location?.pathname?.split('/').filter(Boolean)
-        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history'].includes((segments.at(-1) || ''))
+        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history', 'service-card-images'].includes((segments.at(-1) || ''))
             ? segments.at(-1) || '' : null
 
         setActiveSegment(lastSegment)
@@ -34,9 +34,6 @@ const CustomerProductView = () => {
         <div className="tech-customer-view-container">
             <div className="menu-box">
                 <div className="slide-menus">
-                    <div className={`menu-item`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/about`)}>
-                        <TbSmartHome />
-                    </div>
                     <div className={`menu-item ${(activeSegment === 'about' || !activeSegment) && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/about`)}>
                         <TbDropletStar />
                         <p>Product</p>
@@ -49,7 +46,7 @@ const CustomerProductView = () => {
                         <TbCircleCheck />
                         <p>Eligibility</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/service-cards`)}>
+                    <div className={`menu-item ${(activeSegment === 'service-cards' || activeSegment === 'service-card-images') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/service-cards`)}>
                         <TbPlayCard4 />
                         <p>Service Cards</p>
                     </div>

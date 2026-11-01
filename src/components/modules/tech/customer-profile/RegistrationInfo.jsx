@@ -3,8 +3,9 @@ import './registration-info.scss';
 import { TbAlignJustified, TbCircleDashedLetterT, TbClockHour10, TbFileDescription, TbGrid3X3 } from 'react-icons/tb';
 import Badge from '../../../UI_Primitives/badge/Badge';
 import { reg_priority } from '../../../../assets/javascript/pre_data/package';
+import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
-const RegistrationInfo = ({ regId = null, regStatus = null, regType = null, regTime = null, note = null, priority = 0, complaints = null }) => {
+const RegistrationInfo = ({ regId = null, regStatus = null, regType = null, serviceType = null, regTime = null, note = null, priority = 0, complaints = null }) => {
     return (
         <div className="tech-registration-info-comp">
             <div className="title">
@@ -29,8 +30,8 @@ const RegistrationInfo = ({ regId = null, regStatus = null, regType = null, regT
                 </div>
                 <div className="item">
                     <TbCircleDashedLetterT />
-                    <p>Reg Type</p>
-                    <p>: {regType} {priority ? <Badge value={reg_priority[priority][0]} severity={reg_priority[priority][1]} /> : ''}</p>
+                    <p>Type & Priority</p>
+                    <p>: {toStandardText(regType ||'')} for {toStandardText(serviceType ||'')} {priority ? <Badge value={reg_priority[priority][0]} severity={reg_priority[priority][1]} /> : ''}</p>
                 </div>
                 {complaints && <div className="item">
                     <TbAlignJustified />

@@ -5,14 +5,14 @@ const initialState = {
     serviceForm: {},
     serviceFormSettings: {
         activePage: null,
-        activeSubPage: null,
+        pageHistory: [],
         activeProduct: null,
-        storageTankAvailable: false,
         products: {}
     },
     verification: {},
     review: {},
-    payment: {}
+    payment: {},
+    formResources: {}
 }
 
 export const appDataSlice = createSlice({
@@ -20,25 +20,36 @@ export const appDataSlice = createSlice({
     initialState,
     reducers: {
 
-        // ServiceForm
+        // ? SERVICE FORM ACTIONS
+        // Clear
         clearServiceForm: (state) => {
             state.serviceForm = {}
             state.verification = {}
             state.review = {}
             state.payment = {}
+            state.formResources = {}
         },
+
+        // Start work
         startServiceWork: (state, action) => {
+            const payload = action.payload || {}
             state.serviceForm = {
-                service_form_uuid: action.payload.service_form_uuid,
-                customer_id: action.payload.customer_id,
-                registration_id: action.payload.registration_id,
-                visit_uuid: action.payload.visit_uuid,
-                technician_uuid: action.payload.technician_uuid,
-                in_time: new Date(action.payload.attended.in_time).toISOString(),
-                out_time: null,
+                work_key: payload?.work_key,
+                customer_id: payload.customer_id,
+                start_time: new Date(payload.start_time).toISOString()
             }
+            state.serviceFormSettings.pageHistory = [1000]
+            state.serviceFormSettings.activePage = 1000
         },
-        updateServiceProduct: (state, action) => {
+
+        // Form resources
+        setUpFormResources: (state, action) => {
+            const payload = action?.payload;
+            state.formResources = payload
+        },
+
+        // Updates
+        updateProductFormInnerField: (state, action) => {
             const payload = action?.payload;
 
             if (!state?.serviceForm?.service_products) {
@@ -62,16 +73,100 @@ export const appDataSlice = createSlice({
                 };
             });
         },
-        resetServiceCategory: (state, action) => {
-            const productId = action?.payload?.product_id;
+        updateProductFormParentValue: (state, action) => {
+            const payload = action?.payload;
 
-            state.serviceForm.service_products[productId] = {
-                ...(state.serviceForm.service_products[productId] || {}),
-                service_data: {},
-                work: {}
+            if (!state?.serviceForm?.service_products) {
+                state.serviceForm.service_products = {};
+            }
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            if (!state?.serviceForm?.service_products?.[productId]) {
+                state.serviceForm.service_products[productId] = {};
+            }
+
+            Object.entries(payload).forEach(([key, updates]) => {
+                state.serviceForm.service_products[productId][key] = updates;
+            });
+        },
+        resetServiceCategory: (state) => {
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (productId) {
+                state.serviceForm.service_products[productId] = {
+                    ...(state.serviceForm.service_products[productId] || {}),
+                    service_data: null,
+                    work: null,
+                    service_category: null
+                };
+            }
+        },
+        increaseServiceChargeIndex: (state) => {
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            const serviceCharge = state.serviceForm.service_products[productId].service_data.service_charge
+
+            let startIndex = serviceCharge?.start_index || 0;
+            let chargeIndex = serviceCharge?.charge_index || 0;
+            let estimate = serviceCharge?.estimate || '';
+
+            if (serviceCharge?.start_index === 0 && serviceCharge?.charge_index === 0) {
+                startIndex = 1;
+                chargeIndex = 1;
+                estimate = state.serviceForm.service_products[productId]?.service_category?.service_charges?.[1]?.charge_amount || 0;
+            } else if (serviceCharge?.start_index === 0) {
+                startIndex = 1;
+            }
+
+            state.serviceForm.service_products[productId].service_data.service_charge = {
+                ...(state.serviceForm.service_products[productId].service_data.service_charge || {}),
+                charge_index: chargeIndex,
+                start_index: startIndex,
+                estimate: estimate
             };
 
         },
+        decreaseServiceChargeIndex: (state) => {
+
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) {
+                return;
+            }
+
+            // find condition apply items 1 or 0
+
+            const spares = state.serviceForm.service_products[productId].work?.components_list?.filter(c => {
+                if (c?.spare_category === 'PUMP' || (c?.spare_category === "MEMBRANE" && c?.selection_context !== 'RENEWAL_SPARE')) {
+                    return c
+                }
+            })
+
+            const qty = spares?.reduce((acc, crr) => acc + crr?.qty || 0, 0)
+            const serviceCharge = state.serviceForm.service_products[productId].service_data.service_charge
+
+            if (!qty && serviceCharge?.start_index !== 0) {
+
+                state.serviceForm.service_products[productId].service_data.service_charge = {
+                    ...(state.serviceForm.service_products[productId].service_data.service_charge || {}),
+                    charge_index: 0,
+                    start_index: 0,
+                    estimate: state.serviceForm.service_products[productId]?.service_category?.service_charges?.[0]?.charge_amount || 0
+                };
+            }
+        },
+
+
         updateServiceForm: (state, action) => {
             const payload = action?.payload;
             state.serviceForm = {
@@ -80,18 +175,24 @@ export const appDataSlice = createSlice({
             }
         },
 
+        // ? SERVICE FORM SETTINGS
+
         // service form settings
-        setSfActivePage: (state, action) => {
-            state.serviceFormSettings = {
-                ...(state.serviceFormSettings || {}),
-                activePage: action.payload
+        setFormNextPage: (state, action) => {
+            const pageKey = action.payload
+            if (!state.serviceFormSettings.pageHistory) {
+                state.serviceFormSettings.pageHistory = []
             }
+            state.serviceFormSettings.pageHistory.push(pageKey)
+            state.serviceFormSettings.activePage = pageKey
         },
-        setActiveSubPage: (state, action) => {
-            state.serviceFormSettings = {
-                ...(state.serviceFormSettings || {}),
-                activeSubPage: action.payload
-            }
+        setFormBackPage: (state) => {
+            const { pageHistory } = state.serviceFormSettings;
+
+            if (pageHistory.length <= 1) return;
+
+            pageHistory.pop();
+            state.serviceFormSettings.activePage = pageHistory[pageHistory.length - 1];
         },
         setActiveProduct: (state, action) => {
             state.serviceFormSettings = {
@@ -105,9 +206,6 @@ export const appDataSlice = createSlice({
                 ...action.payload
             }
         },
-        clearServiceFormSettings: (state) => {
-            state.serviceFormSettings = {}
-        },
         updateSubmitStatus: (state, action) => {
             const { product_id, ...status } = action.payload;
 
@@ -115,10 +213,34 @@ export const appDataSlice = createSlice({
                 state.serviceFormSettings.products = {};
             }
 
+            const product = state.serviceFormSettings.products?.[product_id] || {};
+          
+            if (product?.is_submitted) return;
+
+            product.is_submitted = true;
+            product.is_saved = false;
+
+            state.serviceFormSettings.form_saved = false;
+            state.serviceFormSettings.form_saved_time = null;
+
             state.serviceFormSettings.products[product_id] = {
-                ...(state.serviceFormSettings.products[product_id] || {}),
-                ...status
+                ...product
             };
+        },
+        updateSubmitStatusToFalse: (state) => {
+            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+
+            if (!productId) return;
+
+            const product = state.serviceFormSettings.products?.[productId];
+
+            if (!product?.is_submitted) return;
+
+            product.is_submitted = false;
+            product.is_saved = false;
+
+            state.serviceFormSettings.form_saved = false;
+            state.serviceFormSettings.form_saved_time = null;
         },
         setVerification: (state, action) => {
             state.verification = {
@@ -131,34 +253,49 @@ export const appDataSlice = createSlice({
         },
         setPayment: (state, action) => {
             state.payment = action.payload
-        }
+        },
+        clearServiceFormSettings: (state) => {
+            state.serviceFormSettings = {}
+        },
     }
 })
 
 
 const {
-    clearServiceForm, startServiceWork, setSfActivePage, setActiveSubPage, setActiveProduct, clearServiceFormSettings, updateServiceProduct,
-    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment
+    clearServiceForm, startServiceWork, setFormBackPage, setFormNextPage, setActiveProduct, clearServiceFormSettings, updateProductFormInnerField,
+    resetServiceCategory, updateSubmitStatus, updateServiceForm, setFormSettings, setVerification, setReview, setPayment, setUpFormResources,
+    updateSubmitStatusToFalse, updateProductFormParentValue, increaseServiceChargeIndex, decreaseServiceChargeIndex,
 } = appDataSlice.actions;
 
 
 const sfSetting = {
-    setActivePage: setSfActivePage,
-    setActiveSubPage: setActiveSubPage,
+    page: {
+        back: setFormBackPage,
+        next: setFormNextPage,
+    },
+    productSubmit: {
+        setStatus: updateSubmitStatus,
+        resetStatus: updateSubmitStatusToFalse
+    },
     setActiveProduct: setActiveProduct,
     clearAll: clearServiceFormSettings,
-    updateSubmitStatus: updateSubmitStatus,
     update: setFormSettings
 }
 const sfActions = {
     clearAll: clearServiceForm,
     startWork: startServiceWork,
-    updateProduct: updateServiceProduct,
+    updateProduct: {
+        innerFields: updateProductFormInnerField,
+        parentValue: updateProductFormParentValue,
+        increaseSCIndex: increaseServiceChargeIndex,
+        decreaseSCIndex: decreaseServiceChargeIndex
+    },
     updateForm: updateServiceForm,
     resetService: resetServiceCategory,
     updateVerification: setVerification,
     updateReview: setReview,
-    updatePayment: setPayment
+    updatePayment: setPayment,
+    setUpFormResources: setUpFormResources,
 }
 
 export { sfSetting, sfActions }
