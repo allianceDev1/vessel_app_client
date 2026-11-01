@@ -31,10 +31,10 @@ import env from '../../../config/env';
 // Sidebar menus
 const MENU_ITEMS = [
     { key: "home", title: "Home", icon: <IconHome />, url: '/controller/home', hide: false },
-    { key: "map", title: "Live map", icon: <IconCurrentLocation />, url: '/controller/map', hide: false },
+    // { key: "map", title: "Live map", icon: <IconCurrentLocation />, url: '/controller/map', hide: false },
     { key: "area-list", title: "Aria list", icon: <IconWorldMap />, url: '/controller/area-list', hide: false },
     { key: "customers", title: "Customers", icon: <IconMoodSpark />, url: '/controller/customers', hide: false },
-    { key: "upcoming", title: "Upcoming", icon: <IconClockStar />, url: '/controller/upcoming?view_type=product', hide: false },
+    { key: "upcoming", title: "Upcoming", icon: <IconClockStar />, url: '/controller/upcoming?view_type=product&parent_type=ALL', hide: false },
     { key: "registered", title: "Registered", icon: <IconPaperclip />, url: '/controller/registered', hide: false },
     { key: "completed", title: "Completed", icon: <IconClipboardText />, url: '/controller/completed', hide: false },
     { key: "subscriptions", title: "Subscriptions", icon: <IconCrown />, url: '/controller/subscriptions', hide: false },
