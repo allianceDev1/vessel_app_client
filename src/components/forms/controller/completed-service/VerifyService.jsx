@@ -6,7 +6,7 @@ import { modal, toast } from '../../../../redux/features/non_persisted/miniSyste
 import { api } from '../../../../api'
 import { useQueryClient } from '@tanstack/react-query'
 
-const VerifyService = ({ registrationId, serviceSrlNo, verifyType }) => {
+const VerifyService = ({ registrationId, serviceSrlNo, verifyType, productType }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const [loading, setLoading] = useState(false)
@@ -30,7 +30,7 @@ const VerifyService = ({ registrationId, serviceSrlNo, verifyType }) => {
         try {
 
             await api.cnAv1Axios.post('/service-job/manual-verification', {
-                product_type: "VESSEL_FILTER",
+                product_type: productType,
                 registration_id: registrationId,
                 service_srl_no: serviceSrlNo,
                 verification_type: verifyType,

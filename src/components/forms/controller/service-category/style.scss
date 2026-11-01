@@ -1,0 +1,52 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.update-service-category-modal {
+    form {
+        .inputs {
+            gap: 10px;
+
+            .section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+
+                .radio-input-label {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: var(--text-secondary-alt);
+                }
+
+                .required-span {
+                    color: var(--color-danger-text);
+                }
+            }
+
+            .sub-title {
+                @include subTitleSmall();
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+
+            @media screen and (max-width:500px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .button-div {
+            display: flex;
+            justify-content: flex-end;
+
+            button {
+                margin-top: 20px;
+            }
+        }
+
+    }
+
+    .description {
+        font-size: 13px;
+        text-align: justify;
+        color: var(--text-tertiary);
+        margin: 20px 0 5px 0;
+    }
+}

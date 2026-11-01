@@ -134,7 +134,7 @@ const Dropdown = ({ button, list, selected = null }) => {
 
     return (
         <div className='dropdown-wrapper' ref={wrapperRef}>
-            <Button {...button} onClick={toggleDropdown} />
+            <Button {...button} onClick={toggleDropdown} severity={'secondary'}/>
             {open && createPortal(dropDownItem, document.body)}
         </div>
 

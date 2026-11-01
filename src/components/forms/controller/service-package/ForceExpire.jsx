@@ -51,7 +51,7 @@ const ForceExpire = ({ packageSrlNo }) => {
 
     return (
         <div className="">
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary-2)' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-tertiary)' }}>
                 Force Expire lets you close a package before its package expire.
                 If you need to reactivate the package later, you can do so using the Extend Package feature.
                 Please provide a reason/comment before continuing.
@@ -62,7 +62,7 @@ const ForceExpire = ({ packageSrlNo }) => {
 
             <form action="" style={{ marginTop: '15px' }} onSubmit={handelSubmit}>
 
-                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-secondary-2)', marginBottom: '10px' }}>
+                <p style={{ marginTop: '30px', fontSize: '13px', color: 'var(--text-tertiary)', marginBottom: '10px' }}>
                     To expire the service package, Type <b>EXPIRE</b> in the field below to confirm.
                 </p>
                 <InputText label={'Confirmation'} name={'verify_text'} value={text}

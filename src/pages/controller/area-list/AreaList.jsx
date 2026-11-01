@@ -14,6 +14,7 @@ import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
 import UpdateAreaTech from '../../../components/forms/controller/update-area-tech/UpdateAreaTech';
 import { isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { textSortFormate } from '../../../utils/helpers/text-formatting';
 
 
 const AreaList = () => {
@@ -35,7 +36,7 @@ const AreaList = () => {
     })[id] || id
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Area List', note: "View all cities and related information." }))
+        dispatch(page.config({ title: 'Area List', note: "View all cities and related information." }))
         // eslint-disable-next-line
     }, [])
 
@@ -104,8 +105,8 @@ const AreaList = () => {
                         'State name': item.state_name,
                         'Pin codes': item.pin_codes_count,
                         'Post offices': item.post_offices_count,
-                        'Tech count': item.vf_technicians_count,
-                        _rowClassName: !item.vf_technicians_count ? 'danger-row' : '',
+                        'Tech count': item.service_technicians_count,
+                        _rowClassName: !item.service_technicians_count ? 'danger-row' : '',
                         _rowStyle: { cursor: 'pointer' },
                         _rowNavigateUrl: `/controller/area-list/${item.city_id}`,
                     }
@@ -119,7 +120,9 @@ const AreaList = () => {
                         city_id: item.city_id,
                         'From date': item.from_date ? isoToDDMonYYYY(new Date(item.from_date)) : '',
                         'To date': item.to_date ? isoToDDMonYYYY(new Date(item.to_date)) : '',
+                        'Products': (item?.product_types || [])?.map(i => textSortFormate(i))?.join(', '),
                         _rowClassName: item.is_deleted ? 'danger-row' : '',
+                        product_types: item?.product_types
                     }
 
                 case 'postBase':
@@ -159,7 +162,8 @@ const AreaList = () => {
                     city_name: workerData?.['City name'],
                     worker_name: workerData?.['Worker name'],
                     from_date: workerData?.['From date'],
-                    to_date: workerData?.['To date']
+                    to_date: workerData?.['To date'],
+                    product_types: workerData?.product_types
                 }}
                 submitAction={() => {
                     queryClient.invalidateQueries({ queryKey: ['area-data', viewType] })
@@ -214,9 +218,10 @@ const AreaList = () => {
                     { header: 'City name', accessorKey: 'City name' },
                     { header: 'From date', accessorKey: 'From date', enableSorting: false },
                     { header: 'To date', accessorKey: 'To date', enableSorting: false },
+                    { header: 'Products', accessorKey: 'Products', enableSorting: false },
                 ]
 
-                if (user?.allowed_origins?.some(origin => ['vessel_c_writer', 'vessel_c_admin']?.includes(origin))) {
+                if (user?.allowed_origins?.some(origin => ['service_c_writer', 'service_c_admin']?.includes(origin))) {
                     cols.push({
                         header: 'Actions',
                         enableSorting: false,
@@ -227,18 +232,17 @@ const AreaList = () => {
                             return (
                                 <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
                                     <Button rounded title={'Edit'}
-                                        icon={<TbPencil />} size='small' outlined
+                                        icon={<TbPencil />} size='small' outlined severity={'secondary'}
                                         onClick={() => openEditModal(row.original)}
                                     />
-                                    {user?.allowed_origins?.includes('vessel_c_admin') &&
-                                        <Button rounded severity={'danger'} title={'Delete'}
-                                            icon={<TbTrash />} size='small' outlined
-                                            spinIcon={deletingKey === rowKey}
-                                            disabled={deletingKey === rowKey}
-                                            onClick={() => handleDeleteTech([
-                                                { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
-                                            ])}
-                                        />}
+                                    <Button rounded severity={'danger'} title={'Delete'}
+                                        icon={<TbTrash />} size='small' outlined
+                                        spinIcon={deletingKey === rowKey}
+                                        disabled={deletingKey === rowKey}
+                                        onClick={() => handleDeleteTech([
+                                            { worker_uuid: row.original.worker_uuid, city_id: row.original.city_id }
+                                        ])}
+                                    />
                                 </div>
                             )
                         },
@@ -307,7 +311,6 @@ const AreaList = () => {
                     queryKey={['area-data', viewType]}
                     tableKey="area"
                     data={[]}
-                    rowCheckBox={searchParams.get('view_type') === 'techBase' && user?.allowed_origins?.includes('vfcr_areas_write')}
                     bulkActions={(selectedRows, clearSelection) => (
                         <Button icon={<TbTrash />} label={'Delete'} text
                             onClick={() => handleDeleteTech(

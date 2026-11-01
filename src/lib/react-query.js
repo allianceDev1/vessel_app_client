@@ -44,6 +44,13 @@ const localStoragePersister = {
     },
 }
 
+// Clear all TanStack Query data (in-memory cache + persisted localStorage copy)
+export const clearQueryData = async () => {
+    await queryClient.cancelQueries()
+    queryClient.clear()
+    await localStoragePersister.removeClient()
+}
+
 // Persist Query Client
 persistQueryClient({
     queryClient,

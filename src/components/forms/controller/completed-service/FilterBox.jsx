@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import moment from 'moment';
 import Select from '../../../UI_Primitives/inputs/Select'
+import MultiSelectInput from '../../../UI_Primitives/inputs/MultiSelect'
 import Button from '../../../UI_Primitives/buttons/Button'
-import ButtonGroup from '../../../UI_Primitives/buttons/ButtonGroup'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
 import InputText from '../../../UI_Primitives/inputs/InputText'
@@ -21,19 +21,32 @@ const FilterBox = () => {
         from_date: searchParams.get('from_date') || (searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD')),
         end_date: searchParams.get('end_date') || (searchParams.get('fl') ? "" : moment().format('YYYY-MM-DD')),
         technician_id: searchParams.get('technician_id') || '',
+        tech_name: searchParams.get('tech_name') || '',
         customer_id: searchParams.get('customer_id') || '',
         product_id: searchParams.get('product_id') || '',
         reg_no: searchParams.get('reg_no') || '',
         rnd: searchParams.get('rnd') || '',
         unverified: searchParams.get('unverified') || '',
+        product_type: searchParams.get('product_type')?.split(',')?.filter(Boolean) || [],
+        view_type: searchParams.get('view_type') || 'customer',
     })
 
+    const productTypeList = [
+        { label: 'Default', value: 'DEFAULT' },
+        { label: 'Water Purifier', value: 'WATER_PURIFIER' },
+        { label: 'Vessel Filter', value: 'VESSEL_FILTER' },
+    ]
+
+    const viewTypeList = [
+        { label: 'Customer View', value: 'customer' },
+        { label: 'Product View', value: 'product' },
+    ]
     const {
         data: techList,
         isLoading: techLoading,
         error: techError,
     } = useQuery({
-        queryKey: ['vessel_staff_list', 'name_only'],
+        queryKey: ['workers_list', 'name_only'],
         queryFn: async () => {
             const res = await api.ttPv2Axios('/worker/account/list?nameOnly=Yes')
             return res
@@ -42,10 +55,27 @@ const FilterBox = () => {
     })
 
     const handleChange = (e) => {
+
+        if (e.target.name === 'technician_id') {
+            const selectedTech = e.target.value ? techList.find(t => t?.worker_uuid === e.target.value) : ''
+
+            setForm({
+                ...form,
+                [e.target.name]: e.target.value,
+                tech_name: selectedTech?.full_name || ''
+            })
+
+            return;
+        }
+
         setForm({
             ...form,
             [e.target.name]: e.target.value
         })
+    }
+
+    const handleMultiInputChange = (e) => {
+        setForm({ ...form, [e.name]: e.selectedValues?.map((c) => c.value) })
     }
 
     const handleSubmit = async (e) => {
@@ -61,41 +91,21 @@ const FilterBox = () => {
             form.from_date ? next.set('from_date', form.from_date) : next.delete('from_date')
             form.end_date ? next.set('end_date', form.end_date) : next.delete('end_date')
             form.technician_id ? next.set('technician_id', form.technician_id) : next.delete('technician_id')
+            form.tech_name ? next.set('tech_name', form.tech_name) : next.delete('tech_name')
             form.customer_id ? next.set('customer_id', form.customer_id) : next.delete('customer_id')
             form.product_id ? next.set('product_id', form.product_id) : next.delete('product_id')
             form.reg_no ? next.set('reg_no', form.reg_no) : next.delete('reg_no')
             form.rnd ? next.set('rnd', form.rnd) : next.delete('rnd')
             form.unverified ? next.set('unverified', form.unverified) : next.delete('unverified')
+            form.product_type?.length ? next.set('product_type', form.product_type.join(',')) : next.delete('product_type')
+            form.view_type ? next.set('view_type', form.view_type) : next.delete('view_type')
+
+            if (!searchParams.get('p')) next.set('p', 'l')
+
             return next;
         })
 
         dispatch(modal.pull.all())
-    }
-
-    const handleClear = () => {
-        setForm({
-            from_date: '',
-            end_date: '',
-            technician_id: '',
-            customer_id: '',
-            product_id: '',
-            reg_no: '',
-            rnd: '',
-            unverified: '',
-        })
-        setSearchParams((prev) => {
-            const next = new URLSearchParams(prev);
-            next.delete('fl');
-            next.delete('from_date');
-            next.delete('end_date');
-            next.delete('technician_id');
-            next.delete('customer_id');
-            next.delete('product_id');
-            next.delete('reg_no');
-            next.delete('rnd');
-            next.delete('unverified');
-            return next;
-        })
     }
 
     return (
@@ -118,6 +128,11 @@ const FilterBox = () => {
                             min={form.from_date} required={true} />
                     </div>
 
+                    <Select label={'View Type'} name={'view_type'} value={form.view_type} onChange={handleChange} options={viewTypeList} />
+
+                    <MultiSelectInput label={'Product Type'} name={'product_type'} options={productTypeList} onChange={handleMultiInputChange}
+                        selected={productTypeList.filter(item => form.product_type?.includes(item.value))} />
+
                     <Select label={'Technician'} name={'technician_id'} value={form.technician_id} onChange={handleChange}
                         options={[{ label: '', value: '' }, ...techList?.map((t) => ({ label: t.full_name, value: t.worker_uuid }))]} />
 
@@ -127,11 +142,8 @@ const FilterBox = () => {
 
                     <InputText label={'Reg No'} name={'reg_no'} type='text' style={{ textTransform: "uppercase" }} value={form.reg_no} onChange={handleChange} />
 
-                    <ButtonGroup style={{ dispatch: "grid", }} rounded>
-                        <Button label={'Clear'} type={'button'} severity={'primary'} outlined style={{ width: '100%' }} disabled={searchParams.get('fl') !== 'Yes'}
-                            onClick={handleClear} />
-                        <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }} disabled={(!form.from_date && !form.end_date && !form.technician_id && !form.customer_id && !form.status?.length && !form.product_id)} />
-                    </ButtonGroup>
+                    <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }} rounded
+                        disabled={(!form.from_date && !form.end_date && !form.technician_id && !form.customer_id && !form.status?.length && !form.product_id)} />
                 </form>}
         </div>
     )

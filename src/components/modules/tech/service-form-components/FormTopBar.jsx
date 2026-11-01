@@ -1,35 +1,34 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom';
 import './form-top-bar.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { TbChevronLeft, TbClockHour5, TbRotate2, TbStopwatch } from 'react-icons/tb';
+import { TbCalculator, TbChevronLeft, TbClockHour5, TbRotate2, TbStopwatch } from 'react-icons/tb';
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice';
-import { getPreviousServicePageKey } from '../../../../utils/flows/service_form_utils';
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice';
-import Button from '../../../UI_Primitives/buttons/Button';
-import StopWatch from './StopWatch';
-import { useQueryClient } from '@tanstack/react-query';
+import StopWatch from './tools/StopWatch';
+import Calculator from './tools/Calculator';
 
 
+// top margin of `.body-container` in techLayout.scss (space reserved for the layout header)
+const LAYOUT_BODY_OFFSET = 50
 
-const FormTopBar = () => {
+
+const FormTopBar = ({ refreshResources, isSyncing }) => {
   const dispatch = useDispatch();
-  const queryClient = useQueryClient()
+  const barRef = useRef(null)
+  const [barHeight, setBarHeight] = useState(LAYOUT_BODY_OFFSET)
   const [currentTime, setCurrentTime] = useState(Date.now());
   const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
 
 
-  const handleReloadResources = () => {
-    queryClient.invalidateQueries({
-      queryKey: ['service_form_resources']
-    })
+  const handleReloadResources = async () => {
+    await refreshResources()
   }
 
   const handleBack = () => {
-    const [mainKey, subKey] = getPreviousServicePageKey(serviceFormSettings?.activePage, serviceFormSettings?.activeSubPage)
-    dispatch(sfSetting.setActivePage(mainKey))
-    dispatch(sfSetting.setActiveSubPage(subKey))
+    dispatch(sfSetting.page.back())
 
-    if (subKey === null && mainKey === 100) {
+    if ([1100, 1200, 1300].includes(serviceFormSettings?.activePage)) {
       dispatch(sfSetting.setActiveProduct(null))
     }
   }
@@ -41,13 +40,20 @@ const FormTopBar = () => {
     }))
   }
 
+  const openCalculator = () => {
+    dispatch(modal.push({
+      title: "Calculator",
+      body: <Calculator />
+    }))
+  }
+
   const elapsedTime = useMemo(() => {
 
-    if (!serviceForm?.in_time) {
+    if (!serviceForm?.start_time) {
       return "00:00:00"
     }
 
-    const start = new Date(serviceForm?.in_time).getTime();
+    const start = new Date(serviceForm?.start_time).getTime();
     const elapsed = Math.floor((currentTime - start) / 1000);
 
     const hours = Math.floor(elapsed / 3600);
@@ -55,7 +61,7 @@ const FormTopBar = () => {
     const seconds = elapsed % 60;
 
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  }, [serviceForm?.in_time, currentTime]);
+  }, [serviceForm?.start_time, currentTime]);
 
 
   useEffect(() => {
@@ -66,25 +72,69 @@ const FormTopBar = () => {
   }, []);
 
 
-  return (
-    <div className="tech-service-form-top-bar-container">
-      <div className="action-section">
-        <div className='buttons'>
-          <Button title={'Back'} type='button' rounded size='small' icon={<TbChevronLeft />} onClick={handleBack}
-            disabled={serviceFormSettings?.activePage === 100 && !serviceFormSettings?.activeSubPage} />
-          <Button title={'Timer'} type='button' rounded size='small' outlined icon={<TbClockHour5 />} label={elapsedTime} style={{ minWidth: '110px', cursor: 'not-allowed' }}
-          />
+  // keep page content from hiding under the fixed bar (works for both desktop & mobile wrap heights)
+  useLayoutEffect(() => {
+    const node = barRef.current
+    if (!node) return
+    const update = () => setBarHeight(node.offsetHeight)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(node)
+    return () => ro.disconnect()
+  }, []);
+
+
+  const customerId = serviceForm?.customer_id
+  const productId = serviceFormSettings?.activeProduct?.[0]
+  const packageName = productId && serviceFormSettings?.activeProduct?.[2]
+    ? serviceFormSettings?.activeProduct?.[2]
+    : ''
+
+  const bar = (
+    <div className="tech-service-form-top-bar-fixed" ref={barRef}>
+      <div className="tech-service-form-top-bar-container">
+        <button type="button" className="tb-icon-btn back" title="Back" onClick={handleBack}
+          disabled={serviceFormSettings?.activePage === 1000 || !serviceFormSettings?.activePage}>
+          <TbChevronLeft />
+        </button>
+
+        <div className="tb-info">
+          <div className="tb-timer" title="Service elapsed time">
+            <span className="dot" />
+            <TbClockHour5 className="clock" />
+            <span className="time">{elapsedTime}</span>
+          </div>
+          <div className="tb-chips">
+            <span className={`tb-chip customer ${!customerId ? 'error' : ''}`} title={`Customer ID : ${customerId || 'Error'}`}>
+              <span className="value">{customerId || 'Error'}</span>
+            </span>
+            {productId && <span className="tb-chip product" title={`Product ID : ${productId || 'Error'}`}>
+              <span className="value">{productId}</span>
+            </span>}
+            {packageName && <span className="tb-chip product" title={`Package name : ${packageName}`}>
+              <span className="value">{packageName}</span>
+            </span>}
+          </div>
         </div>
-        <div className='buttons'>
-          <Button title="Refresh" type='button' rounded size='small' outlined icon={<TbRotate2 />} onClick={handleReloadResources} />
-          <Button title='Stopwatch' type='button' rounded size='small' outlined icon={<TbStopwatch />} onClick={openStopWatch} />
+
+        <div className="tb-tools">
+          {![1001, 1002, 1003].includes(serviceFormSettings.activePage) &&
+            <button type="button" className="tb-icon-btn" title="Stopwatch" onClick={openStopWatch}><TbStopwatch /></button>}
+          <button type="button" className="tb-icon-btn" title="Calculator" onClick={openCalculator}><TbCalculator /></button>
+          {![1001, 1002, 1003].includes(serviceFormSettings.activePage) &&
+            <button type="button" className="tb-icon-btn" title="Refresh" disabled={isSyncing} onClick={handleReloadResources}><TbRotate2 /></button>}
         </div>
-      </div>
-      <div className="name-section">
-        <p>Customer ID : {serviceForm?.customer_id || 'Error'} </p>
-        <p>{serviceFormSettings?.activeProduct?.[0] ? `${serviceFormSettings?.activeProduct?.[0]}${serviceFormSettings?.activeProduct?.[3] ? ' - ' + serviceFormSettings?.activeProduct?.[3] : ''}` : ''}</p>
       </div>
     </div>
+  )
+
+  return (
+    <>
+      {/* Portal to body so the bar can sit above the layout header (layout-body creates its own stacking context) */}
+      {createPortal(bar, document.body)}
+      {/* body-container already has LAYOUT_BODY_OFFSET top margin for the header, so only reserve the extra height */}
+      <div style={{ height: Math.max(0, barHeight - LAYOUT_BODY_OFFSET) }} />
+    </>
   )
 }
 

@@ -7,7 +7,6 @@ import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
 import { TbMapPin, TbMoodSpark } from 'react-icons/tb'
 import { redirectViewLocation } from '../../../../utils/services/location_services'
-import Contacts from '../customer-profile/Contacts'
 
 const AboutCustomer = () => {
     const { customer_id } = useParams();
@@ -48,7 +47,6 @@ const AboutCustomer = () => {
 
     return (
         <div className="tech-about-customer-container">
-            <Contacts contacts={{ primary: data?.primary_number, secondary: data?.secondary_number, whatsapp: data?.whatsapp_number, }} />
             <div className="reg-content">
                 <div className="list">
                     <div className="item">
@@ -67,6 +65,12 @@ const AboutCustomer = () => {
                         <p className='label'>Post , Pin code</p>
                         <div>
                             <p className='text-value'>{data?.address?.post}, {data?.address?.pin_code}</p>
+                        </div>
+                    </div>
+                    <div className="item">
+                        <p className='label'>City name</p>
+                        <div>
+                            <p className='text-value'>{data?.address?.city_name || 'No assigned'}</p>
                         </div>
                     </div>
                     <div className="item">

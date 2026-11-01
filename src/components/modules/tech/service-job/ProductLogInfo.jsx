@@ -5,11 +5,15 @@ import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
+import Message from '../../../UI_Primitives/message/Message'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
+import WaterPurifierV2 from './assessments/WaterPurifierV2'
+import VesselFilterV2 from '../../controller/service-job/assessments/VesselFilterV2'
+import AddOnV2 from '../../controller/service-job/assessments/AddOnV2'
 
 
 const ProductLogInfo = () => {
@@ -109,6 +113,14 @@ const ProductLogInfo = () => {
 
     return (
         <div className="tech-service-job-log-view-container">
+
+            {data?.service_data?.package_renewal_declined &&
+                < Message
+                    type='warning'
+                    head={'Package Renewal Update'}
+                    message={'Customer was informed about renewal but is not ready to renew at this time.'}
+                />}
+
             <div className="text-content">
                 <div className="item">
                     <p className='label'>Product ID & Type</p>
@@ -166,7 +178,7 @@ const ProductLogInfo = () => {
                                 : <Badge size='small' value={'No'} severity={'success'} />}
                         </div>
                     </div>}
-                {!data?.service_data?.skip_actions &&
+                {data?.service_data?.service_charge?.estimate &&
                     <div className="item">
                         <p className='label'>Service Charge</p>
                         <div>
@@ -206,178 +218,9 @@ const ProductLogInfo = () => {
 
             <h4 className='sub-title'>Assessments report</h4>
 
-            <div className="assessment-report-border">
-                {/* Current Condition */}
-                {data?.product_type === 'VESSEL_FILTER' && <>
-                    {/* Vessel : Current Condition : Direct Water */}
-                    <AssessmentVesselCurrentCondition
-                        title={'Current Condition (Direct Water)'}
-                        data={data?.assessment_report?.current_condition?.direct_water || {}} />
-
-                    {/* Vessel : Current Condition : Filtered Water */}
-                    <AssessmentVesselCurrentCondition
-                        title={'Current Condition (Filtered Water)'}
-                        data={data?.assessment_report?.current_condition?.filtered_water || {}} />
-
-                    {/* Vessel : Current Condition : Filtered Water */}
-                    {data?.assessment_report?.current_condition?.storage_tank?.color && <AssessmentVesselCurrentCondition
-                        title={'Current Condition (Storage Tank)'}
-                        data={data?.assessment_report?.current_condition?.storage_tank || {}} />}
-                </>}
-
-                {data?.product_type === 'ADD_ON' && <>
-                    {/* AddOn : Current Condition  */}
-                    <div className="section-border">
-                        <h4>Current Condition</h4>
-                        <div className="list">
-                            <div className="left">
-                                <p className='label'>Working</p>
-                            </div>
-                            <div className="right">
-                                {data?.assessment_report?.current_condition?.working?.status
-                                    ? <Badge size='small' value={"Yes"} severity={'success'} />
-                                    : <Badge size='small' value={"No"} severity={'danger'} />}
-                            </div>
-                        </div>
-                        {!data?.assessment_report?.current_condition?.working?.status &&
-                            <div className="list">
-                                <div className="left">
-                                    <p className='label'>Working (Reason)</p>
-                                </div>
-                                <div className="right">
-                                    <p className='text-value'>{data?.assessment_report?.current_condition?.working?.comment}</p>
-                                </div>
-                            </div>}
-                        <div className="list">
-                            <div className="left">
-                                <p className='label'>Lead & Crack</p>
-                            </div>
-                            <div className="right">
-                                {data?.assessment_report?.current_condition?.lead_crack?.status
-                                    ? <Badge size='small' value={"Yes"} severity={'danger'} />
-                                    : <Badge size='small' value={"No"} severity={'success'} />}
-                            </div>
-                        </div>
-                        {data?.assessment_report?.current_condition?.lead_crack?.status &&
-                            <div className="list">
-                                <div className="left">
-                                    <p className='label'>Lead & Crack (Reason)</p>
-                                </div>
-                                <div className="right">
-                                    <p className='text-value'>{data?.assessment_report?.current_condition?.lead_crack?.comment}</p>
-                                </div>
-                            </div>}
-                    </div>
-                </>}
-
-                {/* Inspection Report */}
-                {data?.product_type === 'VESSEL_FILTER' && <div className="section-border">
-                    <h4>Inspection Report</h4>
-                    <div className="list">
-                        <div className="left">
-                            <p className='label'>Condition</p>
-                        </div>
-                        <div className="right">
-                            {data?.assessment_report?.inspection_report?.condition_status
-                                ? <Badge size='small' value={"Good"} severity={'success'} />
-                                : <Badge size='small' value={"Bad"} severity={'danger'} />}
-                        </div>
-                    </div>
-
-                    {data?.assessment_report?.inspection_report?.tech_analyze?.length && <h4>Analyze</h4>}
-
-                    {data?.assessment_report?.inspection_report?.tech_analyze?.map((analyze) => {
-                        return <div className="list" key={analyze?.nature}>
-                            <div className="left">
-                                <p className='label'>{analyze?.nature}</p>
-                            </div>
-                            <div>
-                                <p className='text-value' style={{ textAlign: 'end' }}>{analyze?.reasons?.map(i => `${i}, `)}</p>
-                            </div>
-                            <div className="right">
-                                <p className='text-value' style={{ textAlign: 'end' }}>{analyze?.solutions?.map(i => `${i}, `)}</p>
-                            </div>
-                        </div>
-                    })}
-                </div>}
-
-                {/* Evaluation */}
-                {data?.product_type === 'VESSEL_FILTER' && <>
-
-                    {/* Vessel : Evaluation : Filtered Water */}
-                    <AssessmentVesselCurrentCondition
-                        title={'Evaluation (Filtered Water)'}
-                        data={data?.assessment_report?.evaluation?.filtered_water || {}} />
-
-                    <div className="section-border">
-                        <h4>Evaluation Report</h4>
-                        <div className="list">
-                            <div className="left">
-                                <p className='label'>Water Quality</p>
-                            </div>
-                            <div className="right">
-                                {data?.assessment_report?.evaluation?.water_quality?.status
-                                    ? <Badge size='small' value={"Yes"} severity={'success'} />
-                                    : <Badge size='small' value={"No"} severity={'danger'} />}
-                            </div>
-                        </div>
-                        {!data?.assessment_report?.evaluation?.water_quality?.status &&
-                            <div className="list">
-                                <div className="left">
-                                    <p className='label'>Water Quality (Reason)</p>
-                                </div>
-                                <div className="right">
-                                    <p className='text-value'>{data?.assessment_report?.evaluation?.water_quality?.comment}</p>
-                                </div>
-                            </div>}
-                    </div>
-                </>}
-
-                {data?.product_type === 'ADD_ON' && <>
-                    {/* AddOn : Evaluation  */}
-                    <div className="section-border">
-                        <h4>Evaluation</h4>
-                        <div className="list">
-                            <div className="left">
-                                <p className='label'>Working</p>
-                            </div>
-                            <div className="right">
-                                {data?.assessment_report?.evaluation?.working?.status
-                                    ? <Badge size='small' value={"Yes"} severity={'success'} />
-                                    : <Badge size='small' value={"No"} severity={'danger'} />}
-                            </div>
-                        </div>
-                        {!data?.assessment_report?.evaluation?.working?.status &&
-                            <div className="list">
-                                <div className="left">
-                                    <p className='label'>Working (Reason)</p>
-                                </div>
-                                <div className="right">
-                                    <p className='text-value'>{data?.assessment_report?.evaluation?.working?.comment}</p>
-                                </div>
-                            </div>}
-                        <div className="list">
-                            <div className="left">
-                                <p className='label'>Lead & Crack</p>
-                            </div>
-                            <div className="right">
-                                {data?.assessment_report?.evaluation?.lead_crack?.status
-                                    ? <Badge size='small' value={"Yes"} severity={'danger'} />
-                                    : <Badge size='small' value={"No"} severity={'success'} />}
-                            </div>
-                        </div>
-                        {data?.assessment_report?.evaluation?.lead_crack?.status &&
-                            <div className="list">
-                                <div className="left">
-                                    <p className='label'>Lead & Crack (Reason)</p>
-                                </div>
-                                <div className="right">
-                                    <p className='text-value'>{data?.assessment_report?.evaluation?.lead_crack?.comment}</p>
-                                </div>
-                            </div>}
-                    </div>
-                </>}
-            </div>
+            {data?.product_type === 'WATER_PURIFIER' && <WaterPurifierV2 data={data?.assessment_report} />}
+            {data?.product_type === 'VESSEL_FILTER' && <VesselFilterV2 data={data?.assessment_report} />}
+            {data?.product_type === 'ADD_ON' && <AddOnV2 data={data?.assessment_report} />}
 
             <h4 className='sub-title'>Spare & Service Works</h4>
 
@@ -385,11 +228,11 @@ const ProductLogInfo = () => {
                 <div className="table-list">
                     <div className="table-menu">
                         {data?.spare_changes?.length ? <Button label={'Spare Changes'} rounded outlined={activeSection === 'spare_changes' ? false : true} size='small'
-                            style={{ width: '130px' }} onClick={() => setActionSection('spare_changes')} /> : ""}
+                            style={{ width: '130px' }} onClick={() => setActionSection('spare_changes')} severity={'secondary'} /> : ""}
                         {data?.service_works?.length ? <Button label={'Service Works'} rounded outlined={activeSection === 'service_works' ? false : true} size='small'
-                            style={{ width: '130px' }} onClick={() => setActionSection('service_works')} /> : ''}
+                            style={{ width: '130px' }} onClick={() => setActionSection('service_works')} severity={'secondary'} /> : ''}
                         {data?.removed_spares?.length ? <Button label={'Removed Spares'} rounded outlined={activeSection === 'removed_spares' ? false : true} size='small'
-                            style={{ width: '150px' }} onClick={() => setActionSection('removed_spares')} /> : ''}
+                            style={{ width: '150px' }} onClick={() => setActionSection('removed_spares')} severity={'secondary'} /> : ''}
                     </div>
 
                     <div className="table-box">
@@ -417,76 +260,3 @@ const ProductLogInfo = () => {
 }
 
 export default ProductLogInfo
-
-
-const AssessmentVesselCurrentCondition = ({ title, data }) => {
-    return (
-        <div className="section-border">
-            <h4>{title}</h4>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Color</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.color}</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Odor</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.odor}</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Iron Ferrous</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.i_ferrous} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Iron Ferric</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.i_ferric} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Ph</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.ph} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>TDS</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.tds} mg/L</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Flow</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.flow} L/min</p>
-                </div>
-            </div>
-            <div className="list">
-                <div className="left">
-                    <p className='label'>Other Contaminants</p>
-                </div>
-                <div className="right">
-                    <p className='text-value'>{data?.contaminants || 'Nil'}</p>
-                </div>
-            </div>
-        </div>
-    )
-}

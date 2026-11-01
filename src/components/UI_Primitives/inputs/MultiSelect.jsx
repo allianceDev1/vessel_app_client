@@ -18,6 +18,7 @@ function MultiSelectInput({
   selected = [],
   searchable = false, // Enable/disable search
   searchPlaceholder = 'Search',
+  required = false,
   ...props
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,19 @@ function MultiSelectInput({
   const searchRef = useRef(null);
 
   useEffect(() => {
-    setSelectedValues(selected || []);
+    const nextSelected = selected ?? [];
+
+    setSelectedValues(prevSelected => {
+      const isSame =
+        prevSelected.length === nextSelected.length &&
+        prevSelected.every(
+          (prev, index) =>
+            prev.value === nextSelected[index]?.value &&
+            prev.label === nextSelected[index]?.label
+        );
+
+      return isSame ? prevSelected : nextSelected;
+    });
   }, [selected]);
 
   const handleToggle = () => {
@@ -91,7 +104,7 @@ function MultiSelectInput({
         tabIndex={0}
         {...props}
       >
-        <span className="multiselect-label">{label}</span>
+        <span className="multiselect-label">{label}  {required && <span className="required">*</span>}</span>
         {displayText}
         {rightIcon && (
           <div className="icon-container" onClick={rightIconAction}>

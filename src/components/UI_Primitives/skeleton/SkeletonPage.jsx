@@ -10,7 +10,7 @@ export const SkeletonPage = () => {
                         preserveAspectRatio="xMidYMid meet">
 
                         <g transform="translate(0.000000,262.000000) scale(0.100000,-0.100000)"
-                            fill="var(--color-natural-5)" stroke="none">
+                            fill="var(--surface-3)" stroke="none">
                             <path d="M1331 2252 c-46 -44 -123 -88 -191 -109 -53 -16 -54 -16 -26 -24 39
 -11 86 -57 86 -86 0 -12 -27 -93 -59 -180 -61 -160 -191 -497 -194 -500 -1 0
 -42 8 -92 19 -114 26 -341 30 -465 8 l-85 -15 125 -7 c148 -8 250 -33 373 -91

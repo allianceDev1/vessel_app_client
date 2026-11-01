@@ -4,7 +4,7 @@ import BillReview from '../self-close-form-components/review-form/BillReview'
 
 
 
-const Review = ({ page, review, payment, setReview, setActivePage }) => {
+const Review = ({ pageKey, review, setReview, setActivePage }) => {
     const [openedBill, setOpenedBill] = useState({})
 
 
@@ -12,8 +12,8 @@ const Review = ({ page, review, payment, setReview, setActivePage }) => {
         <div className="tech-service-from-review">
 
             {!openedBill?.service_srl_no &&
-                <ReviewForm page={page} review={review} payment={payment} setOpenedBill={setOpenedBill} setActivePage={setActivePage} />}
-          
+                <ReviewForm pageKey={pageKey} review={review} setOpenedBill={setOpenedBill} setActivePage={setActivePage} />}
+
             {openedBill?.service_srl_no && <BillReview bill={openedBill} review={review} setOpenedBill={setOpenedBill}
                 setReview={setReview} />}
 

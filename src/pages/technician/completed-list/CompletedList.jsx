@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import './completed-list.scss'
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbDropletCheck, TbFilter, TbReport } from 'react-icons/tb'
+import { TbBriefcase2, TbCircleLetterC, TbCurrencyRupee, TbDropletCheck, TbFilter } from 'react-icons/tb'
 import { useDispatch } from 'react-redux'
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import ServiceJobItem from '../../../components/modules/tech/service-job/ServiceJobItem'
 import FilterBox from '../../../components/forms/tech/completed-service/FilterBox'
 import { useSearchParams } from 'react-router-dom'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { api } from '../../../api'
 import EmptyState from '../../../components/UI_Primitives/ui-states/EmptyState'
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState'
@@ -20,7 +20,7 @@ const CompletedList = () => {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Completed Services', note: "All your closed service jobs" }))
+        dispatch(page.config({ title: 'Completed Services', note: "All your closed service jobs" }))
 
         // eslint-disable-next-line
     }, [])
@@ -77,6 +77,26 @@ const CompletedList = () => {
         staleTime: 60_000
     });
 
+    // Mini Report Query
+    const {
+        data: reportData,
+        isLoading: isReportLoading
+    } = useQuery({
+        queryKey: ['tech_completed_report', filters?.customer_id, filters?.from_date, filters?.end_date],
+        queryFn: async () => {
+            const res = await api.vfTv2Axios.get('/completed/list/report', {
+                params: {
+                    ...filters
+                }
+            });
+            return res;
+        },
+        enabled: (filters?.customer_id || (filters?.from_date && filters?.end_date)) ? true : false,
+        staleTime: 60_000
+    });
+
+    const report = reportData?.data || reportData;
+
     const allServiceJobs = data?.pages?.flatMap(page => page.items) || [];
 
 
@@ -104,10 +124,45 @@ const CompletedList = () => {
             {(filters?.customer_id || (filters?.from_date && filters?.end_date)) ?
                 allServiceJobs?.length ? <>
                     <div className="top-buttons">
-                        <Button icon={<TbReport />} label={'Report'} rounded outlined size='small' style={{ width: '110px' }} />
+                        {/* <Button icon={<TbReport />} label={'Report'} rounded outlined size='small' style={{ width: '110px' }}
+                            severity={'secondary'} /> */}
                         <Button icon={<TbFilter />} label={'Filter'} rounded outlined size='small' style={{ width: '110px' }}
-                            onClick={() => openFilterBox()} />
+                            onClick={() => openFilterBox()} severity={'secondary'} />
                     </div>
+
+                    {/* Report */}
+                    {isReportLoading ? (
+                        <div className="report-skeleton">
+                            <SkeletonGrid rows={1} columns={3} height={'75px'} gap={'10px'} />
+                        </div>
+                    ) : report ? (
+                        <div className="completed-mini-report">
+                            <div className="report-item">
+                                <div className="report-icon works">
+                                    <TbBriefcase2 />
+                                </div>
+                                <span className="report-value">{report?.total_works ?? 0}</span>
+                                <span className="report-label">Total Works</span>
+                            </div>
+                            <div className="report-item">
+                                <div className="report-icon calls">
+                                    <TbCircleLetterC />
+                                </div>
+                                <span className="report-value">{report?.total_calls ?? 0}</span>
+                                <span className="report-label">Total Calls</span>
+                            </div>
+                            <div className="report-item">
+                                <div className="report-icon revenue">
+                                    <TbCurrencyRupee />
+                                </div>
+                                <span className="report-value">
+                                    ₹ {Number(report?.total_revenue || 0).toLocaleString('en-IN')}
+                                </span>
+                                <span className="report-label">Total Revenue</span>
+                            </div>
+                        </div>
+                    ) : null}
+
                     <div className="content">
                         <div className="list-items">
                             {allServiceJobs?.map((job) => {
@@ -118,7 +173,7 @@ const CompletedList = () => {
                         </div>
                         {hasNextPage && <div className="more-button">
                             <Button label={'Load More'} rounded outlined size='small' style={{ width: "100%" }}
-                                spinIcon={isFetchingNextPage}
+                                spinIcon={isFetchingNextPage} severity={'secondary'}
                                 onClick={() => {
                                     if (!isFetchingNextPage) fetchNextPage();
                                 }} />
@@ -131,7 +186,7 @@ const CompletedList = () => {
                     hight='calc(100vh - 220px)'
                     footer={
                         <Button icon={<TbFilter />} label={'Filter'} rounded size='small' style={{ width: '110px' }}
-                            onClick={() => openFilterBox()} />
+                            onClick={() => openFilterBox()} severity={'secondary'} />
                     }
                 /> : <EmptyState
                     icon={<TbDropletCheck />}
@@ -140,7 +195,7 @@ const CompletedList = () => {
                     hight='calc(100vh - 220px)'
                     footer={
                         <Button icon={<TbFilter />} label={'Filter'} rounded size='small' style={{ width: '110px' }}
-                            onClick={() => openFilterBox()} />
+                            onClick={() => openFilterBox()} severity={'secondary'} />
                     }
                 />}
 

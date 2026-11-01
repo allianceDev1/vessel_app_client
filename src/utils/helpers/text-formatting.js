@@ -1,11 +1,21 @@
-export const toStandardText = (text = "") => {
-    return text
-        .toLowerCase()                // approval_pending
-        .split("_")                   // ["approval", "pending"]
-        .map(word =>
-            word?.charAt(0).toUpperCase() + word.slice(1)
-        )                             // ["Approval", "Pending"]
-        .join(" ");                   // "Approval Pending"
+export const toStandardText = (text = "", capitalizeAll = false) => {
+    const words = text
+        .toLowerCase()
+        .split("_");
+
+    if (capitalizeAll) {
+        return words
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
+    }
+
+    return words
+        .map((word, index) =>
+            index === 0
+                ? word.charAt(0).toUpperCase() + word.slice(1)
+                : word
+        )
+        .join(" ");
 };
 
 export const serviceChargeSort = (chargeType) => {
@@ -53,4 +63,95 @@ export const convertAmount = (amount) => {
     } else {
         return (amount / 10000000).toFixed(2) + "Cr"; // Convert to Crores (Cr)
     }
+}
+
+export const getExpiryMessage = ({
+    packageDuration = false,
+    remainingTokens = false,
+    operator = 'OR',
+}) => {
+    const conditions = [];
+
+    if (packageDuration) {
+        conditions.push('the package duration ends');
+    }
+
+    if (remainingTokens) {
+        conditions.push('all remaining tokens are used');
+    }
+
+    if (conditions.length === 0) {
+        return '';
+    }
+
+    if (conditions.length === 1) {
+        return `The package will expire when ${conditions[0]}.`;
+    }
+
+    const joiner = operator === 'AND' ? ' and ' : ' or ';
+
+    return `The package will expire when ${conditions.join(joiner)}.`;
+};
+
+
+export const textSortFormate = (text) => {
+    if (!text) {
+        return ''
+    }
+
+    let short = null
+
+    switch (text) {
+        case 'PURCHASE_COST':
+            short = 'PC'
+            break;
+
+        case 'PACKAGE_PRICE':
+            short = 'P2'
+            break;
+
+        case 'SELLING_RATE':
+            short = 'SR'
+            break;
+
+        case 'WATER_PURIFIER':
+            short = 'WP'
+            break;
+
+        case 'VESSEL_FILTER':
+            short = 'VF'
+            break;
+
+        default:
+            short = null
+            break;
+    }
+
+    return short
+}
+
+export const maskPhoneNumber = (number) => {
+
+    if (!number) return '';
+    const str = String(number).trim();
+    const digits = str.replace(/\D/g, '');
+
+    if (digits.length < 6) {
+        return str;
+    }
+
+    const first3 = digits.slice(0, 2);
+    const last4 = digits.slice(-4);
+    const middleCount = Math.max(digits.length - 6, 2);
+
+    return `+${first3}${'*'.repeat(middleCount)}${last4}`;
+};
+
+export function containsExactWord(text, searchWord) {
+    const words = text
+        .toUpperCase()
+        .split(/[^A-Z0-9]+/)
+        .filter(Boolean);
+
+    return words.includes(searchWord.toUpperCase());
 }

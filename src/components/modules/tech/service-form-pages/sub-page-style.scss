@@ -4,6 +4,16 @@
     margin-bottom: 60px;
     // min-height: 100vh;
 
+    .reset-section{
+        display: flex;
+        justify-content: flex-end;
+
+        button{
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+    }
+    
     .form-section {
         margin-bottom: 20px;
 
@@ -21,6 +31,11 @@
         .box-col2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .box-col-auto-80 {
+            display: grid;
+            grid-template-columns: auto 80px;
             gap: 10px;
         }
 

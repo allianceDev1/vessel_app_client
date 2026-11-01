@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import './payment.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service';
-import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbX } from 'react-icons/tb';
+import { TbBuildingBank, TbCashBanknote, TbCircleDottedLetterC, TbCoinRupeeFilled, TbShieldCheckFilled, TbWallet, TbX } from 'react-icons/tb';
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { sfActions } from '../../../../redux/features/persisted/applicationSlice';
 import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers';
@@ -15,15 +15,20 @@ import InputText from '../../../UI_Primitives/inputs/InputText';
 import TextArea from '../../../UI_Primitives/inputs/TextArea';
 import Button from '../../../UI_Primitives/buttons/Button';
 import SubmitForm from '../service-form-components/payment/SubmitForm';
+import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
 
-const Payment = ({ page }) => {
+const Payment = ({ pageKey }) => {
     const dispatch = useDispatch();
-    const { review, payment } = useSelector((state) => state.application)
-    const [grandTotal, setGrandTotal] = useState(0)
-    const [paidAmount, setPaidAmount] = useState(0)
-    const [balanceAmount, setBalanceAmount] = useState(0)
+    const { review, payment, verification } = useSelector((state) => state.application)
 
+    const setVerificationType = (type) => {
+        dispatch(sfActions.updateVerification({
+            verification_type: type,
+            is_verified: false,
+            verification_at: null
+        }))
+    }
 
     const handleOpenPaymentMethods = () => {
         dispatch(modal.push({
@@ -92,19 +97,23 @@ const Payment = ({ page }) => {
         }))
     }
 
-    useEffect(() => {
-        const summery = calculateBillsSummery(
+    const { grandTotal, paidAmount, balanceAmount, complimentAmount } = useMemo(() => {
+        const grandTotal = calculateBillsSummery(
             review?.bills ?? [],
-            review?.zero_fee_items ?? [],
-            payment?.complement_amount ?? 0
+            review?.zero_fee_items ?? []
         )
 
-        setGrandTotal(summery?.grandTotal || 0)
+        const complimentAmount = payment?.compliment_amount ?? 0
+        const otherMethodAmounts = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
+        const enteredAmount = (otherMethodAmounts || 0) + complimentAmount
+        const balance = grandTotal - enteredAmount
 
-        const enteredAmount = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-        const balance = summery?.grandTotal - enteredAmount
-        setPaidAmount(enteredAmount)
-        setBalanceAmount(balance)
+        return {
+            grandTotal: grandTotal ?? 0,
+            paidAmount: enteredAmount ?? 0,
+            balanceAmount: balance ?? 0,
+            complimentAmount
+        }
 
     }, [payment, review])
 
@@ -113,17 +122,40 @@ const Payment = ({ page }) => {
         <div className="tech-service-form-page sf-page-four">
             {/* Title */}
             <div className="title-section">
-                <h3>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
             {/* Summery */}
-            <BillSummery expand={false} />
+            <BillSummery />
+
+            {/* Verification */}
+            <div className="verification-container">
+                <div>
+                    <TbShieldCheckFilled />
+                    <p>Service verified by {toStandardText(verification?.verification_type)}</p>
+                </div>
+                <div>
+                    {verification?.verification_type !== 'OTP' &&
+                        <p className='action' onClick={() => setVerificationType('OTP')}>Use OTP ?</p>}
+                </div>
+            </div>
+
 
             {/* Payment methods */}
             {(grandTotal > 0 && review?.is_ready_to_pay) ? <div className="payment-container">
                 <h3 className='sub-title'>Payment Methods</h3>
                 <div className="payments-list">
+                    {complimentAmount ? <div className="payment-item" >
+                        <div className="icon">
+                            <TbWallet />
+                        </div>
+                        <div className="text">
+                            <h4>₹ {complimentAmount ?? 0}</h4>
+                            <p>Wallet</p>
+                        </div>
+                    </div> : ''}
+
                     {payment?.payment_methods?.map((pay) => {
                         return <div className="payment-item" key={pay?.unique_id}>
                             <div className="icon">
@@ -133,11 +165,13 @@ const Payment = ({ page }) => {
                             </div>
                             <div className="text">
                                 <h4>
+                                    ₹ {pay?.amount}
+                                </h4>
+                                <p>
                                     {pay?.method === "BANK" && "Bank Transfer"}
                                     {pay?.method === "CHEQUE" && "Cheque"}
                                     {pay?.method === "CASH" && "Cash On Service"}
-                                </h4>
-                                <p>₹{pay?.amount}</p>
+                                </p>
                             </div>
                             <div className="action" onClick={() => handleRemoveMethod(pay?.unique_id)}>
                                 <TbX />

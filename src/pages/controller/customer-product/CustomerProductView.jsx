@@ -11,20 +11,20 @@ const CustomerProductView = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeSegment, setActiveSegment] = useState('');
-    const {  product_id } = useParams();
+    const { product_id } = useParams();
 
     const navigateSubMenu = (url) => {
         navigate(url)
     }
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: product_id, note: "Customer Product View" }))
+        dispatch(page.config({ title: 'Product View - ' + product_id, note: "Customer Product About, Spares, Eligibility, Service cards and Subscriptions" }))
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         const segments = location?.pathname?.split('/').filter(Boolean)
-        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history'].includes((segments.at(-1) || ''))
+        const lastSegment = ['about', 'spares', 'eligibility', 'service-cards', 'package-history', 'service-card-images'].includes((segments.at(-1) || ''))
             ? segments.at(-1) || '' : null
 
         setActiveSegment(lastSegment)
@@ -49,6 +49,10 @@ const CustomerProductView = () => {
                     <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/service-cards`)}>
                         <TbPlayCard4 />
                         <p>Service Cards</p>
+                    </div>
+                    <div className={`menu-item ${(activeSegment === 'service-card-images') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/service-card-images`)}>
+                        <TbPlayCard4 />
+                        <p>Card Images</p>
                     </div>
                     <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/controller/product/${product_id}/package-history`)}>
                         <TbCrown />

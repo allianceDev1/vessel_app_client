@@ -42,7 +42,7 @@ const SearchCustomer = () => {
             { header: 'City', accessorKey: 'City' }
         ]
 
-        if (user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a))) {
+        if (user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a))) {
             tempColumns.push({
                 header: 'Actions',
                 enableSorting: false,
@@ -114,7 +114,7 @@ const SearchCustomer = () => {
                 topComponents={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         {/* <Button label={'Excel'} rounded outlined size='small' icon={<TbDownload />} /> */}
-                        <Button label={'Edit search'} rounded outlined size='small' icon={<TbMoodSearch />}
+                        <Button label={'Edit search'} severity={'secondary'}  rounded outlined size='small' icon={<TbMoodSearch />}
                             onClick={() => dispatch(modal.push({ show: true, title: "Search Customers", body: <SearchCustomerByKey /> }))} />
                     </div>
                 }

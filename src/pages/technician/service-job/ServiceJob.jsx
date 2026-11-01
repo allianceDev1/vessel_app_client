@@ -15,6 +15,7 @@ import { toStandardText } from '../../../utils/helpers/text-formatting';
 import { convertIsoToAmPm, formatDuration, isoToDDMonYYYY } from '../../../utils/helpers/date-helpers';
 import { downloadServiceBill, downloadServiceReceipt } from '../../../utils/services/finance_service';
 import { generateUniqueId } from '../../../utils/helpers/generate_Id';
+import Message from '../../../components/UI_Primitives/message/Message';
 
 
 
@@ -25,7 +26,7 @@ const ServiceJob = () => {
 
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: service_srl_no, note: "Service Job View" }))
+        dispatch(page.config({ title: service_srl_no, note: "Service Job View" }))
         // eslint-disable-next-line
     }, [])
 
@@ -101,7 +102,7 @@ const ServiceJob = () => {
             <div className="buttons">
                 <div className="menu-buttons">
                     <Button icon={<TbHome />} rounded outlined={pl_product_id || pp_product_id ? true : false} size='small'
-                        onClick={() => navigate(`/tech/completed/service-job/${service_srl_no}`)} />
+                        onClick={() => navigate(`/tech/completed/service-job/${service_srl_no}`)} severity={'secondary'} />
                     {(data?.service_products?.length > 0 || data?.purchase_products?.length > 0) && <Dropdown button={{
                         icon: <TbChevronDown />,
                         label: "Products",
@@ -140,7 +141,10 @@ const ServiceJob = () => {
                             {
                                 heading: 'Download',
                                 items: [
-                                    { icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill') },
+                                    {
+                                        icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill'),
+                                        disabled: data?.bills?.length > 0 ? false : true,
+                                    },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
                                         onClick: () => downloadAction('Receipt')
@@ -156,7 +160,7 @@ const ServiceJob = () => {
                     <Outlet />
                 </div>
                 : <div className='about-content'>
-                    <div className="payment-border">
+                    {data?.bills?.length > 0 ? <div className="payment-border">
                         <div className="summery-box">
                             <div className="amount">
                                 <div className="left-section">
@@ -170,6 +174,13 @@ const ServiceJob = () => {
                             </div>
                         </div>
                     </div>
+                        : <div style={{ marginTop: '20px' }}>
+                            <Message
+                                type={'info'}
+                                head={'Bill not generated'}
+                                message={'The bill is not generated yet. Bills are generated only after the service registration is closed.'}
+                            />
+                        </div>}
                     <div className="text-content">
                         <div className="item">
                             <p className='label'>Customer Id & Customer Name</p>
@@ -184,10 +195,12 @@ const ServiceJob = () => {
                             </div>
                         </div>
                         <div className="item">
-                            <p className='label'>Service Srl No & Job Status</p>
+                            <p className='label'>Service Srl No & Reg Status</p>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <p className='text-value'>{data?.service_srl_no}</p>
-                                <Badge size='small' value={toStandardText(data?.job_status)} severity={'success'} />
+                                <Badge size='small'
+                                    value={data?.work_closed ? 'Reg Closed' : 'Reg not closed'}
+                                    severity={data?.work_closed ? 'success' : 'warning'} />
                             </div>
                         </div>
                         <div className="item">
@@ -212,7 +225,7 @@ const ServiceJob = () => {
                             <p className='label'>Call Summery (Applied / Estimate)</p>
                             <div>
                                 <p className='text-value'>
-                                    <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-secondary-3)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
+                                    <p className='text-value'>{data?.call_summery?.call_rate_applied || 0} Call <span style={{ color: 'var(--text-muted)' }}> /  {data?.call_summery?.call_rate_estimate || 0} Call</span></p>
                                 </p>
                             </div>
                         </div>

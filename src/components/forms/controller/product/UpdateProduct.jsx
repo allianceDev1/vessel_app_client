@@ -15,7 +15,7 @@ const UpdateProduct = ({ data, productId }) => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient()
     const [form, setForm] = useState({
-        sku: data?.sku || '',
+        variant_code: data?.variant_code || '',
         order_id: data?.order_id || '',
         origin_category: data?.origin_category || '',
         installation_mode: data?.installation_mode_uuid || '',
@@ -36,9 +36,13 @@ const UpdateProduct = ({ data, productId }) => {
     })
 
     const handleChange = (e) => {
+        let value = e.target.value;
+        if (e.target.name === 'variant_code') {
+            value = String(value).toUpperCase();
+        }
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         })
     }
 
@@ -77,7 +81,7 @@ const UpdateProduct = ({ data, productId }) => {
     return (
         <div>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <InputText label={'SKU'} name={'sku'} value={form?.sku} required
+                <InputText label={'Variant code'} name={'variant_code'} value={form?.variant_code} required
                     onChange={handleChange} />
                 {data?.product_type === 'VESSEL_FILTER' &&
                     <InputText label={'Order Id'} name={'order_id'} required value={form?.order_id}

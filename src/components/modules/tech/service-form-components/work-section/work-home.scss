@@ -1,0 +1,199 @@
+@use '../../../../../assets/scss/mixins/mixin.scss' as *;
+
+.sf-sub-service-work-home {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    /* Choosing Buttons Section */
+    .choosing-menus-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .choosing-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+
+            @media (max-width: 380px) {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-choose-btn {
+                width: 100%;
+                background: var(--surface-1);
+                border: 1px solid var(--border-light);
+                border-radius: 14px;
+                padding: 10px 11px;
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                cursor: pointer;
+                text-align: left;
+                transition: all 0.15s ease-in-out;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+
+                &:hover {
+                    background: var(--surface-2);
+                    border-color: var(--border-default);
+                }
+
+                &:active {
+                    transform: scale(0.97);
+                    background: var(--surface-3);
+                }
+
+                .btn-icon {
+                    width: 34px;
+                    height: 34px;
+                    min-width: 34px;
+                    border-radius: 9px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 18px;
+
+                    &.spares {
+                        background-color: rgba(59, 130, 246, 0.12);
+                        color: #2563eb;
+                    }
+
+                    &.works {
+                        background-color: rgba(16, 185, 129, 0.12);
+                        color: #059669;
+                    }
+                }
+
+                .btn-content {
+                    flex: 1;
+                    min-width: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1px;
+
+                    .btn-tag {
+                        font-size: 10px;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.4px;
+                        line-height: 1.2;
+
+                        &.tag-renewal {
+                            color: #7c3aed;
+                        }
+
+                        &.tag-package {
+                            color: #2563eb;
+                        }
+
+                        &.tag-additional {
+                            color: #d97706;
+                        }
+                    }
+
+                    .btn-title {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        margin: 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        line-height: 1.3;
+                    }
+                }
+
+                .btn-action-icon {
+                    font-size: 15px;
+                    color: var(--text-tertiary);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+        }
+    }
+
+    .renewal-note-description {
+        font-size: 13px;
+        color: var(--text-secondary-alt);
+    }
+
+    .renewal-decision-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border-light);
+        background-color: var(--surface-1);
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+
+        .renewal-header {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+
+            .renewal-icon {
+                flex-shrink: 0;
+                font-size: 22px;
+                color: var(--color-primary);
+                margin-top: 2px;
+            }
+
+            .renewal-text h5 {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin-bottom: 2px;
+            }
+        }
+
+        .renewal-check {
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-medium);
+        }
+
+        &.declined {
+            border-color: var(--color-warning-border);
+            background-color: var(--color-warning-bg);
+
+            .renewal-icon {
+                color: var(--color-warning);
+            }
+        }
+    }
+
+    /* Form Styles */
+    form {
+        margin-top: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        h4 {
+            @include subTitleSmall();
+            margin: 0;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+
+            button {
+                min-height: 44px;
+                font-size: 14px;
+            }
+        }
+    }
+}

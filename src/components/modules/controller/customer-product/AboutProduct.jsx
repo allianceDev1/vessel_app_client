@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbAlignLeft, TbArrowUpRight, TbCalendarCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, } from 'react-icons/tb'
+import { TbAlignLeft, TbArrowUpRight, TbCalendarCheck, TbDropletStar, TbFlagShare, TbLink, TbLinkOff, TbPencil, TbPlus } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
@@ -20,6 +20,9 @@ import UpdateProduct from '../../../forms/controller/product/UpdateProduct'
 import EditNote from '../../../forms/controller/product/EditNote'
 import UpdateServiceDate from '../../../forms/controller/product/UpdateServiceDate'
 import TransferOwnership from '../../../forms/controller/product/TransferOwnership'
+import AddProductSubscription from '../../../forms/controller/product/AddProductSubscription'
+import { parentProductTypes } from '../../../../assets/javascript/pre_data/product'
+import AddSpare from '../../../forms/controller/product/AddSpare'
 
 const AboutProduct = () => {
     const dispatch = useDispatch();
@@ -43,17 +46,34 @@ const AboutProduct = () => {
             items: [
                 { label: 'Change Service Date', icon: <TbCalendarCheck />, onClick: () => openUpdateServiceDateModel() },
                 { label: 'Edit Note', icon: <TbAlignLeft />, onClick: () => openUpdateNoteModel() },
+                { type: "divider" },
+                { label: 'New Spare', icon: <TbPlus />, onClick: () => openAddSpareModal() },
+                ...(data?.product_active && parentProductTypes?.includes(data?.product_type) ?
+                    [{ label: 'New Subscription', icon: <TbPlus />, onClick: () => openAddSubscriptionModal() }] : []),
             ]
         }
     ]
 
-    if (user?.allowed_origins?.includes('vessel_c_admin')) {
+    if (user?.allowed_origins?.includes('service_c_admin')) {
         dropdownOptions[0].items.push(
-            { type: "divider" },
             ...(data?.product_active ? [{ label: 'Disconnect', theme: 'danger', icon: <TbLinkOff />, onClick: () => openStatusChangeModel('DISCONNECT') }] : []),
             { label: 'Transfer', theme: 'danger', icon: <TbFlagShare />, onClick: () => openTransferOwnerShip() }
         )
 
+    }
+
+    const openAddSubscriptionModal = () => {
+        dispatch(modal.push({
+            title: 'New Subscription',
+            body: <AddProductSubscription productId={product_id} productType={data?.product_type} />
+        }))
+    }
+
+    const openAddSpareModal = () => {
+        dispatch(modal.push({
+            title: 'New Spare',
+            body: <AddSpare productId={product_id} productType={data?.product_type} />
+        }))
     }
 
     const openTransferOwnerShip = (status) => {
@@ -118,15 +138,15 @@ const AboutProduct = () => {
 
     return (
         <div className="controller-about-customer-container">
-            {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) &&
+            {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) &&
                 <div className="menu-buttons">
-                    {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                    {user?.allowed_origins?.includes('service_c_admin') && <>
                         {!data?.product_active &&
                             <Button icon={<TbLink />} label={'Reconnect'} size='small' severity={'success'} rounded style={{ width: '120px' }}
                                 onClick={() => openStatusChangeModel('CONNECT')} />}
                     </>}
                     <Button icon={<TbPencil />} label={'Update'} size='small' outlined rounded style={{ width: '120px' }}
-                        onClick={() => openUpdateProductModel()} />
+                        onClick={() => openUpdateProductModel()} severity={"secondary"} />
                     <Dropdown
                         button={{
                             icon: <IoIosArrowDown />,
@@ -161,9 +181,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>Product Name & Order Id</p>
+                        <p className='label'>Product Name</p>
                         <div>
-                            <p className='text-value'>{data?.product_name} {data?.order_id ? `(${data?.order_id})` : ''} </p>
+                            <p className='text-value'>{data?.product_name} </p>
                         </div>
                     </div>
                     <div className="item">
@@ -173,9 +193,9 @@ const AboutProduct = () => {
                         </div>
                     </div>
                     <div className="item">
-                        <p className='label'>SKU</p>
+                        <p className='label'>Variant code</p>
                         <div>
-                            <p className='text-value'>{data?.sku}</p>
+                            <p className='text-value'>{data?.variant_code}</p>
                         </div>
                     </div>
                     <div className="item">

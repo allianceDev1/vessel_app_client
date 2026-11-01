@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbArrowUpRight, TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbHourglassLow, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
+import { TbArrowUpRight, TbBookmarkPlus, TbBorderLeftPlus, TbCircleLetterT, TbCrown, TbHourglassLow, TbPlayCard4, TbPower, TbSnowflake, TbSnowflakeOff } from 'react-icons/tb'
 import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
@@ -22,6 +22,7 @@ import ForceExpire from '../../../forms/controller/service-package/ForceExpire'
 import Dropdown from '../../../UI_Primitives/dropdown/Dropdown'
 import { IoIosArrowDown } from 'react-icons/io'
 import ClearOverdue from '../../../forms/controller/service-package/ClearOverdue'
+import SetLastSubscription from '../../../forms/controller/service-package/SetLastSubscription'
 
 
 const AboutPackage = () => {
@@ -55,6 +56,7 @@ const AboutPackage = () => {
             body: <PackageExtend
                 expireDate={data?.expire_date}
                 packageSrlNo={serial_number}
+                packageStatus={data?.package_status}
             />
         }))
     }
@@ -102,6 +104,13 @@ const AboutPackage = () => {
         }))
     }
 
+    const openSetLastSubscriptionModel = () => {
+        dispatch(modal.push({
+            title: "Set Last Subscription",
+            body: <SetLastSubscription packageSrlNo={serial_number} productId={data?.product_id} />
+        }))
+    }
+
     if (isLoading) {
         return <div>
             <SkeletonGrid rows={4} columns={3} height={'60px'} gap={'10px'} responsive={{
@@ -129,24 +138,26 @@ const AboutPackage = () => {
     return (
         <div className="controller-about-customer-container">
             <div className="menu-buttons">
-                {user?.allowed_origins?.includes('vessel_c_admin') && <>
+                {user?.allowed_origins?.includes('service_c_admin') && <>
                     {data?.package_status === 1 && <Button icon={<TbPower />} label={'Activate'} size='small' severity={'success'} rounded style={{ width: '110px' }}
                         onClick={openActivationModel} />}
                     {data?.package_status === 4 && <Button icon={<TbSnowflakeOff />} label={'Unfreeze'} size='small' severity={'info'} rounded style={{ width: '110px' }}
                         onClick={() => openFreezeUnFreezeModel('UNFREEZE')} />}
                 </>}
-                {user?.allowed_origins?.some(a => ['vessel_c_writer', 'vessel_c_admin'].includes(a)) && <>
+                {user?.allowed_origins?.some(a => ['service_c_writer', 'service_c_admin'].includes(a)) && <>
                     {data?.package_status === 2 && <Button icon={<TbPlayCard4 />} label={'Cancel Service'} size='small' severity={'danger'} rounded style={{ width: '150px' }}
                         outlined onClick={() => openCancellationModal()} />}
                     {data?.is_blacklisted && <Button label={'Clear Overdue'} severity={'info'} size='small' rounded style={{ width: '140px' }}
                         onClick={openClearOverdueModel} />}
-                    {(data?.package_status === 2 || data?.is_last_package) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} size='small' outlined rounded style={{ width: '110px' }}
+                    {(data?.package_status === 2 || data?.is_last_subscription) && <Button icon={<TbBorderLeftPlus />} label={'Extend'} severity={'secondary'} size='small' outlined rounded style={{ width: '110px' }}
                         onClick={openPackageExtensionModel} />}
+                    {data?.package_status === 3 && !(data?.is_last_subscription ?? data?.last_subscription) && <Button icon={<TbBookmarkPlus />} label={'Set Last Subscription'} severity={'secondary'} size='small' outlined rounded style={{ width: '185px' }}
+                        onClick={openSetLastSubscriptionModel} />}
                 </>}
                 {data?.token?.top_up_times > 0 && <Button icon={<TbCircleLetterT />} label={'All Top-ups'} size='small' outlined rounded style={{ width: '125px' }}
-                    onClick={openTopUpsHistoryModel} />}
+                    onClick={openTopUpsHistoryModel} severity={'secondary'} />}
 
-                {data?.package_status === 2 && user?.allowed_origins?.includes('vessel_c_admin') && <Dropdown button={{
+                {data?.package_status === 2 && user?.allowed_origins?.includes('service_c_admin') && <Dropdown button={{
                     icon: <IoIosArrowDown />,
                     label: 'Action',
                     size: "small",
@@ -161,9 +172,9 @@ const AboutPackage = () => {
             <div className="reg-content">
                 <div className="list">
                     <div className="item action-button" onClick={() => navigate(`/controller/product/${data?.product_id}/about`)}>
-                        <p className='label'>Product Id</p>
+                        <p className='label'>Product Id & Type</p>
                         <div>
-                            <p className='text-value'>{data?.product_id}</p>
+                            <p className='text-value'>{data?.product_id} {data?.product_type ? `(${toStandardText(data?.product_type)})` : ''}</p>
                         </div>
                         <div className="right-icon">
                             <TbArrowUpRight />
@@ -171,7 +182,7 @@ const AboutPackage = () => {
                     </div>
                     <div className="item">
                         <p className='label'>Serial Number & Status</p>
-                        <div style={{ display: 'flex', gap: '15px' }}>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                             <p className='text-value'>{data?.serial_number} </p>
                             {data?.package_status === 1 ? <Badge value={'Pending'} /> :
                                 data?.package_status === 2 ? <Badge value={'Active'} severity={'success'} /> :
@@ -179,6 +190,11 @@ const AboutPackage = () => {
                                         data?.package_status === 4 ? <Badge value={'Frozen'} severity={'warning'} /> :
                                             data?.package_status === 5 ? <Badge value={'Cancelled'} severity={'danger'} />
                                                 : ''}
+                            {(data?.is_current_subscription ?? data?.current_subscription) ? (
+                                <Badge value={'Current Subscription'} severity={'success'} />
+                            ) : (data?.is_last_subscription ?? data?.last_subscription) ? (
+                                <Badge value={'Last Subscription'} severity={'info'} />
+                            ) : null}
                         </div>
                     </div>
                     <div className="item">

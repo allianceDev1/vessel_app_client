@@ -50,7 +50,7 @@ const RunningKms = () => {
     }, [data])
 
     useEffect(() => {
-        dispatch(page.setTitle({ title: 'Running Kilometers', note: "Your monthly base running kilometers." }))
+        dispatch(page.config({ title: 'Running Kilometer', note: "Your monthly base running kilometers." }))
 
         if (!searchParams.get('month') && searchParams.get('month') === null) {
             setSearchParams({ month: new Date().toISOString().slice(0, 7) })

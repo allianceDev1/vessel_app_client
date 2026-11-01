@@ -55,14 +55,14 @@ const ArrayElem = ({ deleteData }) => {
             })) || [])
         ]
 
-        if (user?.allowed_origins?.includes('vessel_c_admin')) {
+        if (user?.allowed_origins?.includes('service_c_admin')) {
             columns.push({
                 header: 'Actions',
                 enableSorting: false,
                 enableColumnFilter: false,
                 cell: ({ row }) => (
                     <div className="action-buttons" style={{ display: 'flex', justifyContent: 'center', gap: '3px' }}>
-                        <Button rounded title={'Edit'}
+                        <Button rounded title={'Edit'} severity={'secondary'}
                             icon={<TbPencil />} size='small' outlined
                             onClick={() => editModel(row?.original?.uuid)}
                         />
@@ -92,7 +92,7 @@ const ArrayElem = ({ deleteData }) => {
     }, [data])
 
     useEffect(() => {
-        dispatch(page.setTitle({
+        dispatch(page.config({
             title: toStandardText(title),
             note: 'Add, update and delete the resources'
         }))
@@ -109,7 +109,7 @@ const ArrayElem = ({ deleteData }) => {
 
     return (
         <div>
-            {user?.allowed_origins?.includes('vessel_c_admin') &&
+            {user?.allowed_origins?.includes('service_c_admin') &&
                 <div style={{ display: 'flex', justifyContent: "flex-end", marginBottom: '15px' }}>
                     <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
                         onClick={createModel} />

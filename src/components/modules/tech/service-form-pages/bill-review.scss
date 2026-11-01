@@ -1,0 +1,233 @@
+@use '../../../../assets/scss/mixins/mixin.scss' as *;
+
+.tech-bill-review-page-container {
+    padding-bottom: 20px;
+
+    .bill-border {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .list-section {
+            position: relative;
+
+            .item-header {
+                background-color: var(--surface-1);
+                padding: 10px 15px;
+                position: sticky;
+                top: 70px;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                h5 {
+                    font-size: 14px;
+                    font-weight: 500;
+                    margin: 0;
+                }
+
+                .group-count {
+                    font-size: 11px;
+                    font-weight: 500;
+                    min-width: fit-content;
+                    color: var(--text-tertiary);
+                    background-color: var(--surface-2);
+                    padding: 2px 8px;
+                    border-radius: 20px;
+                    border: 1px solid var(--border-light);
+                }
+            }
+
+            .items-list {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .item {
+                padding: 10px 6px;
+                border-bottom: 1px solid var(--border-medium);
+                display: grid;
+                grid-template-columns: 26px 1fr;
+                gap: 10px;
+                align-items: center;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+
+                &.unselected {
+                    .item-name {
+                        color: var(--text-tertiary);
+                    }
+
+                    .charged-value {
+                        color: var(--text-muted);
+                        text-decoration: line-through;
+                    }
+                }
+
+                &.item-disabled {
+                    cursor: default;
+                }
+
+                .checkbox-section {
+                    display: flex;
+                    align-items: center;
+
+                    .item-checkbox {
+                        width: 22px;
+                        height: 22px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border: 2px solid var(--border-medium);
+                        border-radius: 6px;
+                        background-color: transparent;
+                        transition: all 0.15s ease;
+
+                        svg {
+                            font-size: 15px;
+                            stroke-width: 2.5;
+                            color: #fff;
+                            display: none;
+                        }
+                    }
+
+                    .checked {
+                        background-color: var(--color-primary);
+                        border-color: var(--color-primary);
+
+                        svg {
+                            display: block;
+                        }
+                    }
+
+                    .disabled {
+                        opacity: 0.45;
+                        background-color: var(--surface-2);
+                        border-color: var(--border-medium);
+
+                        &.checked {
+                            background-color: var(--text-muted);
+                            border-color: var(--text-muted);
+                        }
+                    }
+                }
+
+                .item-body {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    min-width: 0;
+
+                    .item-top-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 10px;
+
+                        .item-name {
+                            font-size: 15px;
+                            font-weight: 500;
+                            color: var(--text-primary);
+                            margin: 0;
+                            @include threeDots();
+                        }
+
+                        .charged-value {
+                            flex-shrink: 0;
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                        }
+                    }
+
+                    .item-bottom-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+
+                        .item-meta {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            min-width: 0;
+
+                            .item-type-badge {
+                                font-size: 10px;
+                                font-weight: 600;
+                                text-transform: uppercase;
+                                letter-spacing: 0.3px;
+                                padding: 1px 6px;
+                                border-radius: 4px;
+                                background-color: var(--surface-2);
+                                color: var(--text-secondary);
+                                border: 1px solid var(--border-light);
+                                white-space: nowrap;
+                            }
+
+                            .qty-text {
+                                font-size: 12px;
+                                color: var(--text-tertiary);
+                                white-space: nowrap;
+
+                                strong {
+                                    color: var(--text-secondary);
+                                    font-weight: 500;
+                                }
+                            }
+                        }
+
+                        .estimate-value {
+                            flex-shrink: 0;
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: var(--text-tertiary);
+                        }
+                    }
+                }
+            }
+        }
+
+        .grand-total-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--surface-2);
+            border: 1px solid var(--border-medium);
+            border-radius: 16px;
+            padding: 14px 18px;
+
+            .grand-total-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .gt-label {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                }
+
+                .gt-sub {
+                    font-size: 11px;
+                    color: var(--text-tertiary);
+                }
+            }
+
+            .gt-amount {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--color-primary);
+                margin: 0;
+            }
+        }
+    }
+
+    .bill-review-footer {
+        position: sticky;
+        bottom: 12px;
+        z-index: 5;
+    }
+}

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import './dashboard.scss'
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { useDispatch } from 'react-redux'
 import TodayWorkFlow from '../../../components/charts/dashboard/TodayWorkFlow'
-import { TbArrowRight, TbReload } from 'react-icons/tb'
+import { TbArrowRight, TbChevronDown, TbReload } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../../../api'
@@ -13,6 +13,7 @@ import { isoToDecimalHour, isoToYYYYMMDD } from '../../../utils/helpers/date-hel
 import { chartLabelColors } from '../../../assets/javascript/pre_data/chart'
 import moment from 'moment'
 import Button from '../../../components/UI_Primitives/buttons/Button'
+import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 
 const Dashboard = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Dashboard = () => {
     const redirectButtons = [
         {
             label: 'R&D Jobs',
-            redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes`
+            redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&rnd=Yes&p=l`
         },
         {
             label: 'R&D Registrations',
@@ -42,34 +43,63 @@ const Dashboard = () => {
         queryFn: async () => {
             const res = await api.vfCv2Axios.get('/service/report/dashboard')
 
+            const extractListData = (item, fallbackCount) => {
+                if (item && typeof item === 'object') {
+                    return {
+                        total: item.total ?? 0,
+                        water_purifier: item.water_purifier,
+                        vessel_filter: item.vessel_filter,
+                    }
+                }
+                const total = typeof item === 'number' ? item : (fallbackCount ?? 0)
+                return {
+                    total,
+                    water_purifier: undefined,
+                    vessel_filter: undefined,
+                }
+            }
+
+            const yellow = extractListData(res?.yellow_list, res?.yellow_list_count)
+            const red = extractListData(res?.red_list, res?.red_list_count)
+            const overdue = extractListData(res?.overdue_list, res?.overdue_list_count)
+            const nonVerified = extractListData(res?.non_verified_count)
+
             return [
                 {
                     label: "Yellow List",
-                    value: res?.yellow_list_count || 0,
+                    value: yellow.total,
+                    water_purifier: yellow.water_purifier,
+                    vessel_filter: yellow.vessel_filter,
                     desc: 'Service Under 11 - 20 Days',
                     text_color: 'var(--color-warning)',
                     redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 10)))}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 19)))}&service_type=RENEWAL`
                 },
                 {
                     label: "Red List",
-                    value: res?.red_list_count || 0,
+                    value: red.total,
+                    water_purifier: red.water_purifier,
+                    vessel_filter: red.vessel_filter,
                     desc: 'Service Under 1 - 10 Days',
                     text_color: 'var(--color-danger)',
                     redirect_url: `/controller/upcoming?fl=Yes&view_type=product&from_date=${isoToYYYYMMDD(new Date())}&end_date=${isoToYYYYMMDD(new Date(new Date().setDate(new Date().getDate() + 9)))}&service_type=RENEWAL`
                 },
                 {
                     label: "Overdue List",
-                    value: res?.overdue_list_count || 0,
+                    value: overdue.total,
+                    water_purifier: overdue.water_purifier,
+                    vessel_filter: overdue.vessel_filter,
                     desc: 'Expired package, service pending',
                     text_color: 'var(--text-primary)',
                     redirect_url: `/controller/subscriptions?fl=Yes&blacklisted=Yes`
                 },
                 {
                     label: "Unverified Jobs",
-                    value: res?.non_verified_count || 0,
+                    value: nonVerified.total,
+                    water_purifier: nonVerified.water_purifier,
+                    vessel_filter: nonVerified.vessel_filter,
                     desc: 'Customer not verified jobs',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes`
+                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes&p=l`
                 }
             ]
         },
@@ -79,17 +109,26 @@ const Dashboard = () => {
     const workerQuery = useQuery({
         queryKey: ['workers_current_status'],
         queryFn: async () => {
-            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=vessel_t_worker')
+            const res = await api.ttPv2Axios.get('/worker/account/current-status?origins=service_t_write')
             return res?.map((w, i) => ({
                 worker_uuid: w?.worker_uuid,
                 worker_name: `${w?.first_name || ''} ${w?.last_name || ''}`,
                 attendance_status: w?.status,
                 color: chartLabelColors[i],
-                status_color: w?.status === 'PENDING' ? 'yellow' : w?.status === "IN" ? 'green' : "red"
+                status_color: w?.status === 'PENDING' ? 'var(--color-warning)' : w?.status === "IN" ? 'green' : "red"
             }))
         },
         staleTime: 1000 * 60 * 30,
     })
+
+    const [autoRefreshInterval, setAutoRefreshInterval] = useState(0);
+
+    const autoRefreshOptions = [
+        { label: 'Manual', value: 0 },
+        { label: '10 min', value: 10 * 60 * 1000 },
+        { label: '30 min', value: 30 * 60 * 1000 },
+        { label: '1 hr', value: 60 * 60 * 1000 },
+    ];
 
     const servicesQuery = useQuery({
         queryKey: ['workers_today_work_flow'],
@@ -99,6 +138,7 @@ const Dashboard = () => {
             return res?.map((w, i) => ({
                 techId: w?.technician_uuid,
                 id: w?.customer_id,
+                visit_type: w?.visit_type || w?.product_type || 'DEFAULT',
                 label: `${w?.customer_id} - ${w?.customer_name}`,
                 travelStart: w?.pickup_work_at ? isoToDecimalHour(w?.pickup_work_at) : null,
                 workStart: w?.start_work_at ? isoToDecimalHour(w?.start_work_at) : null,
@@ -108,14 +148,24 @@ const Dashboard = () => {
         staleTime: 1000 * 60 * 30,
     })
 
-    const reloadWorkFlow = () => {
+    const reloadWorkFlow = useCallback(() => {
         countQuery.refetch()
         workerQuery.refetch()
         servicesQuery.refetch()
-    }
+    }, [countQuery, workerQuery, servicesQuery])
 
     useEffect(() => {
-        dispatch(page.setTitle({}))
+        if (!autoRefreshInterval || autoRefreshInterval <= 0) return;
+
+        const timer = setInterval(() => {
+            reloadWorkFlow();
+        }, autoRefreshInterval);
+
+        return () => clearInterval(timer);
+    }, [autoRefreshInterval, reloadWorkFlow]);
+
+    useEffect(() => {
+        dispatch(page.config({}))
         // eslint-disable-next-line
     }, [])
 
@@ -137,17 +187,31 @@ const Dashboard = () => {
 
             <div className="count-card-list">
                 {countQuery?.data?.map((c, index) => (
-                    <div className="count-card" onClick={() => navigate(c?.redirect_url)}>
+                    <div key={c?.label || index} className="count-card" onClick={() => navigate(c?.redirect_url)}>
                         <h4>{c?.label}</h4>
                         <p>{c?.desc}</p>
-                        <h2 style={{ color: c?.text_color }}>{c?.value}</h2>
+                        <div className="count-content">
+                            <h2 style={{ color: c?.text_color }}>{c?.value}</h2>
+                            {(c?.water_purifier !== undefined || c?.vessel_filter !== undefined) && (
+                                <div className="sub-counts">
+                                    <div className="sub-item">
+                                        <span className="sub-label">Water Purifier:</span>
+                                        <span className="sub-value">{c?.water_purifier ?? 0}</span>
+                                    </div>
+                                    <div className="sub-item">
+                                        <span className="sub-label">Vessel Filter:</span>
+                                        <span className="sub-value">{c?.vessel_filter ?? 0}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
 
             <div className="direct-buttons-list">
                 {redirectButtons.map((c, index) => (
-                    <div className="button-card" onClick={() => navigate(c?.redirect_url)}>
+                    <div key={c?.label || index} className="button-card" onClick={() => navigate(c?.redirect_url)}>
                         <h4>{c?.label}</h4>
                         <TbArrowRight />
                     </div>
@@ -160,10 +224,40 @@ const Dashboard = () => {
                     : <div className="report-box work-flow-report">
                         <div className="title-section">
                             <h4>Today work flow</h4>
-                            <div>
+                            <div className="action-section">
                                 <p>Last update at {new Date(servicesQuery?.dataUpdatedAt).toLocaleString()}</p>
-                                <Button icon={<TbReload />} rounded outlined size='small' onClick={reloadWorkFlow}
-                                    spinIcon={servicesQuery?.isFetching} />
+                                <Dropdown
+                                    button={{
+                                        label: autoRefreshOptions.find((o) => o.value === autoRefreshInterval)?.label || 'Manual',
+                                        icon: <TbChevronDown />,
+                                        iconPos: 'right',
+                                        rounded: true,
+                                        outlined: true,
+                                        size: 'small',
+                                        severity: 'secondary'
+                                    }}
+                                    list={[
+                                        {
+                                            heading: 'Auto Refresh',
+                                            items: autoRefreshOptions.map((opt) => ({
+                                                label: opt.label,
+                                                value: opt.value,
+                                                onClick: () => setAutoRefreshInterval(opt.value)
+                                            }))
+                                        }
+                                    ]}
+                                    selected={autoRefreshInterval}
+                                />
+                                <Button
+                                    icon={<TbReload />}
+                                    rounded
+                                    outlined
+                                    size='small'
+                                    onClick={reloadWorkFlow}
+                                    spinIcon={servicesQuery?.isFetching}
+                                    severity={'secondary'}
+                                    title="Refresh"
+                                />
                             </div>
                         </div>
                         <div className="content">

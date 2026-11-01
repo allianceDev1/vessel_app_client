@@ -30,7 +30,7 @@
                 .day {
                     font-size: 15px;
                     font-weight: 600;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
 
                     &:first-child {
                         color: var(--color-danger);
@@ -74,10 +74,10 @@
                     }
 
                     &.today {
-                        background-color: var(--color-primary-trans-53);
+                        background-color: var(--color-primary-bg);
 
                         small {
-                            background-color: var(--color-primary-trans-53);
+                            background-color: var(--color-primary-bg);
                         }
                     }
 
@@ -117,7 +117,7 @@
                 p {
                     font-size: 14px;
                     font-weight: 500;
-                    color: var(--text-secondary-2);
+                    color: var(--text-tertiary);
                 }
 
                 &:last-child {

@@ -15,7 +15,6 @@ const Schedules = React.lazy(() => import('../pages/technician/schedules/Schedul
 const ScheduleProfile = React.lazy(() => import('../pages/technician/schedule-profile/ScheduleProfile'))
 const ServiceForm = React.lazy(() => import('../pages/technician/service-form/ServiceForm'))
 const ServiceCompleted = React.lazy(() => import('../pages/technician/service-form/ServiceCompleted'))
-const More = React.lazy(() => import('../pages/technician/more/More'))
 const ServiceAreaList = React.lazy(() => import('../pages/technician/service-area/ServiceAreaList'))
 const RunningKms = React.lazy(() => import('../pages/technician/running-km/RunningKms'))
 const TopUp = React.lazy(() => import('../pages/technician/top-up/TopUp'))
@@ -36,7 +35,10 @@ const ServicesUnderProductPackage = React.lazy(() => import('../components/modul
 const ServiceJob = React.lazy(() => import('../pages/technician/service-job/ServiceJob'))
 const ProductLogInfo = React.lazy(() => import('../components/modules/tech/service-job/ProductLogInfo'))
 const PurchaseLogInfo = React.lazy(() => import('../components/modules/tech/service-job/PurchaseLogInfo'))
+const Settings = React.lazy(() => import('../pages/technician/settings/Settings'))
 const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/SelfCloseForm'))
+const PurifierServiceJobAbout = React.lazy(() => import('../pages/public/purifier-service-job/PurifierServiceJobAbout'))
+const ServiceCardImageList = React.lazy(() => import('../pages/public/service-card-image-page/ServiceCardImageList'))
 
 
 
@@ -44,7 +46,7 @@ const SelfCloseForm = React.lazy(() => import('../pages/technician/service-form/
 
 const Technician = () => {
   const { user } = useSelector((state) => state.user)
-  const isAuthenticated = user?.allowed_origins?.includes("vessel_t_worker");
+  const isAuthenticated = user?.allowed_origins?.includes("service_t_write");
 
 
   return (
@@ -67,8 +69,8 @@ const Technician = () => {
           <Route path='/service/work-success' element={<PrivateRoute element={<ServiceCompleted />} isAuthenticated={isAuthenticated} />} />
           <Route path='/service/self-close' element={<PrivateRoute element={<SelfCloseForm />} isAuthenticated={isAuthenticated} />} />
 
-          {/* More */}
-          <Route path='/more' element={<PrivateRoute element={<More />} isAuthenticated={isAuthenticated} />} />
+          {/* Settings */}
+          <Route path='/settings' element={<PrivateRoute element={<Settings />} isAuthenticated={isAuthenticated} />} />
 
           {/* More Pages */}
           <Route path='/service-area' element={<PrivateRoute element={<ServiceAreaList />} isAuthenticated={isAuthenticated} />} />
@@ -82,6 +84,8 @@ const Technician = () => {
             <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
             <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
           </Route>
+          <Route path='/completed/service-job/v1.5/p/:service_srl_no/about' element={<PrivateRoute element={<PurifierServiceJobAbout />} isAuthenticated={isAuthenticated} />} />
+
 
           {/* Customer */}
           <Route path='/customer/:customer_id' element={<PrivateRoute element={<CustomerView />} isAuthenticated={isAuthenticated} />} >
@@ -98,6 +102,7 @@ const Technician = () => {
             <Route path="spares" element={<CustomerProductSpares />} />
             <Route path="eligibility" element={<CustomerProductEligibility />} />
             <Route path="service-cards" element={<CustomerProductServiceCardList />} />
+            <Route path="service-card-images" element={<ServiceCardImageList />} />
             <Route path="package-history" element={<CustomerProductPackageHistory />} />
           </Route>
 

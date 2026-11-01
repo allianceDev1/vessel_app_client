@@ -8,15 +8,16 @@ import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const InstallationCard = ({ data, pointer = false }) => {
     const tempColor = '#004b10'
-    const gradientId = useId();
+    const rawId = useId();
+    const gradientId = `install-grad-${rawId.replace(/:/g, '')}`;
 
 
     return (
         <div className="service-card-item-container"
-            style={{ backgroundColor: 'var(--color-success-trans-33)', cursor: pointer ? 'pointer' : 'default' }}
+            style={{ backgroundColor: 'var(--color-success-bg)', cursor: pointer ? 'pointer' : 'default' }}
         >
             <div className="card-header" style={{ color: 'white' }}>
-                <svg className='gradient-background' viewBox="0 0 700 150">
+                <svg className='gradient-background' viewBox="0 0 700 150" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id={gradientId}>
                             <stop offset="0%" stopColor={tempColor} />

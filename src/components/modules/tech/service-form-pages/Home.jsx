@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import './home.scss'
 import { serviceFormPageRoute } from '../../../../assets/javascript/pre_data/service'
-import { TbAlertCircle, TbPlus, TbSitemap, TbTrash } from 'react-icons/tb'
+import { TbAlertCircle, TbChevronRight, TbPlus, TbPuzzle, TbShieldCheck, TbSitemap, TbTrash } from 'react-icons/tb'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUpcomingServiceType } from '../../../../utils/services/product_service'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { sfActions, sfSetting } from '../../../../redux/features/persisted/applicationSlice'
-import { PACKAGE_STATUSES, packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
+import { packageExpireTypes } from '../../../../assets/javascript/pre_data/package'
 import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
-import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { isoToYYYYMMDD, normalizeDate } from '../../../../utils/helpers/date-helpers'
 import { generateUniqueId } from '../../../../utils/helpers/generate_Id'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
 import Badge from '../../../UI_Primitives/badge/Badge'
@@ -17,27 +16,47 @@ import AddNewAddOn from '../service-form-components/AddNewAddOn'
 import Select from '../../../UI_Primitives/inputs/Select'
 import InputText from '../../../UI_Primitives/inputs/InputText'
 import SFormSave from '../service-form-components/SFormSave'
-import Radio from '../../../UI_Primitives/inputs/Radio'
+import RadioCard from '../../../UI_Primitives/inputs/RadioCard'
+import { toStandardText } from '../../../../utils/helpers/text-formatting'
+import { IconCrown } from '@tabler/icons-react'
 
 
 
-const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareList, resources, repeatWork, serviceCharges }) => {
+const Home = ({ pageKey }) => {
     const dispatch = useDispatch();
-    const { serviceForm, serviceFormSettings } = useSelector((state) => state.application)
+    const { formResources, serviceForm, serviceFormSettings } = useSelector((state) => state.application)
     const [workSites, setWorkSites] = useState([])
     const [waterSources, setWaterSources] = useState([])
 
 
-    const selectProduct = (productId, orderId = null, productType, packageName) => {
-        dispatch(sfSetting.setActiveSubPage(200))
-        dispatch(sfSetting.setActiveProduct([productId, orderId, productType, packageName]))
+    const selectProduct = (productId, productType, packageName) => {
+
+        dispatch(sfSetting.setActiveProduct([productId, productType, packageName]))
+
+        switch (productType) {
+            case "WATER_PURIFIER":
+                dispatch(sfSetting.page.next(1100))
+
+                break;
+            case "VESSEL_FILTER":
+                dispatch(sfSetting.page.next(1200))
+
+                break;
+            case "ADD_ON":
+                dispatch(sfSetting.page.next(1300))
+
+                break;
+
+            default:
+                break;
+        }
+
     }
 
     const clickNewAddOnButton = () => {
         dispatch(modal.push({
-            title: 'Select New Add-On',
-            body: <AddNewAddOn availableAddOns={availableAddOns} serviceCharges={serviceCharges}
-                addOnSpareList={addOnSpareList?.filter(e => e.spare_category === 'CHEMICALS')} />
+            title: 'Add New Add-On',
+            body: <AddNewAddOn />
         }))
     }
 
@@ -64,36 +83,6 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
             form_saved_time: null
         }))
     }
-
-    // const handleChangeRepeat = (e) => {
-    //     const { name, value } = e.target;
-
-    //     if (name === 'repeat_status') {
-    //         dispatch(sfActions.updateForm({
-    //             repeat: {
-    //                 ...(serviceForm?.repeat || {}),
-    //                 tech_say: value === 'Yes',
-    //                 comment: ''
-    //             }
-    //         }))
-
-    //         return;
-    //     }
-
-    //     if (name === 'repeat_comment') {
-    //         dispatch(sfActions.updateForm({
-    //             repeat: {
-    //                 ...(serviceForm?.repeat || {}),
-    //                 comment: e.target.value || ""
-    //             }
-    //         }))
-    //     }
-
-    //     dispatch(sfSetting.update({
-    //         form_saved: false,
-    //         form_saved_time: null
-    //     }))
-    // }
 
     const handleChangeWorkStatus = (e) => {
         const { name, value } = e.target;
@@ -128,15 +117,10 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const formProductCount = Object.keys(serviceForm?.service_products || {}).length || 0
-        const saveProductCount = Object.values(
-            serviceFormSettings?.products ?? {}
-        ).filter(product => product?.is_saved === true).length || 0;
-
-        if (formProductCount === saveProductCount && serviceFormSettings?.form_saved) {
+        if (serviceFormSettings?.form_saved) {
 
             // redirect to next page
-            dispatch(sfSetting.setActivePage(101))
+            dispatch(sfSetting.page.next(1001))
             return;
         }
 
@@ -153,123 +137,167 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
     }
 
     useEffect(() => {
-        if (!customer) return;
+        if (formResources?.input_resources?.length) {
+            let colorOptions = (formResources?.input_resources || [])?.filter(r => r.title === 'work_sites')?.[0]?.values || []
+            colorOptions = colorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
+            setWorkSites(colorOptions)
 
-        const fields = [
-            'work_site',
-            'source',
-            'tank_capacity_ltr',
-            'floor_hight',
-            't_hight',
-        ];
-
-        const payload = fields.reduce((acc, key) => {
-            if (!serviceForm?.[key] && customer?.[key]) {
-                acc[key] = customer[key];
-            }
-            return acc;
-        }, {});
-
-        if (Object.keys(payload).length > 0) {
-            dispatch(sfActions.updateForm(payload));
+            let odorOptions = formResources?.input_resources?.filter(r => r.title === 'water_sources')?.[0]?.values || []
+            odorOptions = odorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
+            setWaterSources(odorOptions)
         }
-        // eslint-disable-next-line
-    }, [customer])
 
-    useEffect(() => {
-        if (!repeatWork) return;
+        // Site info
+        if (formResources?.site_info) {
+            const fields = [
+                'work_site',
+                'source',
+                'tank_capacity_ltr',
+                'floor_hight',
+                't_hight',
+            ];
 
-        if (!serviceForm?.repeat) {
-            dispatch(sfActions.updateForm({
-                repeat: {
-                    system_say: repeatWork?.is_repeat,
-                    tech_say: repeatWork?.is_repeat,
-                    comment: null
+            const payload = fields.reduce((acc, key) => {
+                if (!serviceForm?.[key] && formResources?.site_info?.[key]) {
+                    acc[key] = formResources.site_info[key];
                 }
-            }));
+                return acc;
+            }, {});
+
+            if (Object.keys(payload).length > 0) {
+                dispatch(sfActions.updateForm(payload));
+            }
         }
+
         // eslint-disable-next-line
-    }, [repeatWork])
+    }, [formResources])
 
-    useEffect(() => {
-        let colorOptions = resources?.filter(r => r.title === 'work_sites')?.[0]?.values || []
-        colorOptions = colorOptions.sort((a, b) => a.order - b.order)
-        colorOptions = colorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
-        setWorkSites(colorOptions)
 
-        let odorOptions = resources?.filter(r => r.title === 'water_sources')?.[0]?.values || []
-        odorOptions = odorOptions.sort((a, b) => a.order - b.order)
-        odorOptions = odorOptions.map(v => ({ label: v?.data?.[0], value: v?.data?.[0] }))
-        setWaterSources(odorOptions)
-
-    }, [resources])
 
     return (
         <div className="tech-service-form-page sf-page-one">
             {/* Title */}
             <div className="title-section">
-                <h3>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.title}</h3>
-                <p>{serviceFormPageRoute?.filter(p => p.key === page?.index)?.[0]?.description}</p>
+                <h3>{serviceFormPageRoute?.find(p => p.key === pageKey)?.title}</h3>
+                <p>{serviceFormPageRoute?.find(p => p.key === pageKey)?.description}</p>
             </div>
 
-            {/* Page Section */}
-            {/* {customer?.images?.length > 0 ?
-                <div className="images-list">
-                    {customer?.images?.map((image, index) => {
-                        return <div className="image" key={index}>
-                            <img alt='product ' src={image?.thump?.url} />
-                        </div>
-                    })}
+            {/* Account Info */}
+            <div className="account-info-box">
+                <div className="info-item">
+                    <span className="label">Work pending amount</span>
+                    <span className="value">₹ {formResources?.pending_work_amount ?? 0}</span>
                 </div>
-                : ''} */}
+                <div className="info-item">
+                    <span className="label">Wallet Amount</span>
+                    <span className="value">₹ {formResources?.site_info?.debit_amount ?? 0}</span>
+                </div>
+                <div className="info-item">
+                    <span className="label">Credit amount</span>
+                    <span className="value">₹ {formResources?.site_info?.credit_amount ?? 0}</span>
+                </div>
+            </div>
 
             {/* Product list */}
             <div className="products-chart">
-                {customer?.productStretcher?.length > 0 ?
-                    <>{customer?.productStretcher?.map((pg, pgIndx) => {
-                        return <div className="group-product" key={pgIndx}>
-                            {pg?.map((item, productIndex) => {
-                                const product = customerProducts?.filter(p => p.product_id === item?.product_id)?.[0]
-                                const productPackage = product?.package?.package_status === PACKAGE_STATUSES.ACTIVE ? product?.package : null
-                                const packageFreeze = product?.package?.package_status === PACKAGE_STATUSES.FROZEN ? true : false
-                                const packageExpire = product?.package?.package_status === PACKAGE_STATUSES.EXPIRED ? true : false
+                {formResources?.product_stretcher?.length > 0 ?
+                    <>{formResources?.product_stretcher?.map((section, sectionIdx) => {
+                        return <div className="group-product" key={sectionIdx}>
+                            <div className="sub-title-section" style={{ marginBottom: "10px" }}>
+                                <h3 className='form-sub-title'>{section?.title}</h3>
+                                <Badge value={`${section?.productIds?.length || 0} Items`} severity={'primary'} />
+                            </div>
+
+                            {section?.productIds?.map((productId) => {
+
+                                const product = formResources?.products?.find(p => p.product_id === productId)
+                                const productPackage = product?.package?.package_id ? product?.package : null
+
+                                const productWarranty = Boolean(
+                                    !productPackage &&
+                                    product?.product?.wr_expire_date &&
+                                    (normalizeDate(new Date()) <= normalizeDate(new Date(product?.product?.wr_expire_date))))
+
                                 const upcomingServiceType = getUpcomingServiceType(product?.service?.next_service_date || null, product?.service?.package_expire_date || null)
                                 const lowTokens = productPackage?.expire_types?.includes(packageExpireTypes?.REMAINING_TOKENS) && productPackage?.remaining_tokens < 2 ? true : false
-                                const isWorked = serviceForm?.service_products?.[item?.product_id]?.service_data?.category_id ? true : false
-                                const alertText = packageFreeze ? "The current product package is frozen"
-                                    : packageExpire ? "The current product package is expired"
-                                        : (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens'
-                                            : lowTokens ? 'May be chance to expire the product package on this service' : ''
-                                const isSubmitted = serviceFormSettings?.products?.[product?.product_id]?.is_submitted || false
-                                const isSaved = serviceFormSettings?.products?.[product?.product_id]?.is_saved || false
 
-                                return <div className="single-product" key={productIndex} onClick={() => selectProduct(product?.product_id, product?.order_id, product?.product_type, productPackage?.package_name)}>
-                                    <div className={`order-box`}>
-                                        <div className={`order-index ${isSaved ? 'saved' : isSubmitted ? 'submitted' : ''}`}>
-                                            <p>{product?.product_type === 'VESSEL_FILTER' ? (product?.order_id || "UN") : 'AD'}</p>
-                                        </div>
-                                        {pg?.length !== productIndex + 1 && <div className="order-line"></div>}
-                                    </div>
-                                    <div className="product-content">
-                                        <div className="id-status">
-                                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                                <p>{product?.product_id}</p>
-                                                {productPackage?.package_id ? <Badge value={productPackage?.package_name}
-                                                    style={{ backgroundColor: product?.package?.color_code, color: getContrastText(product?.package?.color_code) }} />
-                                                    : <Badge value={'No subscription'} />}
-                                            </div>
-                                            <p>
-                                                {upcomingServiceType}
-                                                {(productPackage?.package_id && upcomingServiceType) && ` - S${productPackage?.service_count + 1 || 1}`}
-                                            </p>
-                                        </div>
-                                        <div className="name">
-                                            <p>{product?.product_name}</p>
-                                        </div>
+                                const isWorked = serviceForm?.service_products?.[productId]?.service_data?.category_id ? true : false
+                                const isSubmitted = serviceFormSettings?.products?.[productId]?.is_submitted || false
+                                const isSaved = serviceFormSettings?.products?.[productId]?.is_saved || false
 
-                                        {/* Alert */}
-                                        {alertText && <div className="alert"><TbAlertCircle /> <p>{alertText}</p>  </div>}
+                                const alertText = (lowTokens && isWorked) ? 'This product expire today, Please top-up the tokens'
+                                    : lowTokens ? 'May be chance to expire the product package on this service' : ''
+
+                                const statusInfo = isSaved
+                                    ? { label: 'Service details saved', type: 'saved' }
+                                    : isSubmitted
+                                        ? { label: 'Service submitted', type: 'submitted' }
+                                        : isWorked
+                                            ? { label: 'Service in progress', type: 'in-progress' }
+                                            : null
+
+                                const isRepeatWork = Array.isArray(formResources?.repeat_works) && formResources.repeat_works.some(rw => {
+                                    return rw?.product_id === productId
+                                })
+
+                                return <div className="single-product" key={productId}
+                                    onClick={() => selectProduct(product?.product_id, product?.product_type, productPackage?.package_name)}>
+                                    <div className="product-card-top">
+                                        <div className="badge-group">
+                                            <span className="product-id-pill">
+                                                {product?.product_id}
+                                            </span>
+                                            {upcomingServiceType && (
+                                                <span className="service-type-pill">
+                                                    {upcomingServiceType}
+                                                </span>
+                                            )}
+                                            {isRepeatWork && (
+                                                <span className="repeat-pill" title="Repeat service work">
+                                                    Repeat
+                                                </span>
+                                            )}
+                                        </div>
+                                        <TbChevronRight className="arrow-icon" />
                                     </div>
+
+                                    <div className="product-title">
+                                        <h4>{product?.product_name}</h4>
+                                    </div>
+
+                                    {(productPackage?.package_name || productWarranty) && (
+                                        <div className="package-info">
+                                            {productPackage?.package_name && (
+                                                <div className="package-item" style={{ color: productPackage?.color_code }}>
+                                                    <IconCrown className="pkg-icon" size={17} />
+                                                    <span className="pkg-name">{productPackage?.package_name} Subscription</span>
+                                                </div>
+                                            )}
+
+                                            {productPackage?.package_name && productWarranty && (
+                                                <span className="meta-dot">•</span>
+                                            )}
+
+                                            {productWarranty && (
+                                                <div className="warranty-item">
+                                                    <TbShieldCheck className="warranty-icon" size={17} />
+                                                    <span className="warranty-name">Product warranty</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {alertText ? (
+                                        <div className="alert-banner warning">
+                                            <TbAlertCircle className="alert-icon" />
+                                            <p>{alertText}</p>
+                                        </div>
+                                    ) : statusInfo ? (
+                                        <div className={`status-banner ${statusInfo.type}`}>
+                                            <span className="status-dot"></span>
+                                            <p>{statusInfo.label}</p>
+                                        </div>
+                                    ) : null}
                                 </div>
                             })}
                         </div>
@@ -278,41 +306,68 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                         size='sm'
                         icon={<TbSitemap />}
                         title={'Customer products not listed'}
-                        description={'Vessel filter products not available, please contact the administrator'}
+                        description={'Service products not available, please contact the administrator'}
                         hight='50vh'
                     />}
             </div >
 
-            {/* New Add-On */}
-            {!serviceForm?.new_add_ons?.length && <div className="new-product-initial-box">
-                <h4>Install Add-ons</h4>
-                <p>To add a new add-on, click the button below. After submitting the form, the product will be added to
-                    the customer’s list. You can add the product as either a rental or a new item.</p>
-                <Button label={'Select Add-on'} severity={'info'} outlined style={{ width: '150px' }} rounded size='small'
-                    icon={<TbPlus />} onClick={clickNewAddOnButton} />
-            </div>}
-
-            {serviceForm?.new_add_ons?.length ? <div className="new-product-list">
-                <h3>Install Add-ons</h3>
-
-                <div className="addon-list">
-                    {serviceForm?.new_add_ons?.map((item) =>
-                        <div className="addon-item-border" key={item?.unique_id}>
-                            <div className="product-name">
-                                <h4>{item?.product_name}</h4>
-                                <p>₹{item?.total_amount?.charged || 0}</p>
-                            </div>
-                            <div className="action-section">
-                                <Button icon={<TbTrash />} rounded size='small' outlined severity={'danger'}
-                                    onClick={() => handleDeleteNewAddOn(item?.unique_id)} />
-                            </div>
-                        </div>
-                    )}
+            {/* Install Add-ons Section */}
+            <div className="install-addons-card">
+                <div className="card-header">
+                    <div className="icon-wrapper">
+                        <TbPuzzle className="plus-icon" />
+                    </div>
+                    <div className="header-text">
+                        <h4>Install Add-ons</h4>
+                        <p className="sub-tag">Create Supplemental Equipment</p>
+                    </div>
                 </div>
 
-                <Button label={'Select Add-on'} severity={'info'} outlined style={{ width: '150px' }} rounded size='small'
-                    icon={<TbPlus />} onClick={clickNewAddOnButton} />
-            </div> : ''}
+                <p className="card-description">
+                    To add a new add-on, click the button below. After submitting the form,
+                    the product will be added to the customer’s list.
+                </p>
+
+                {serviceForm?.new_add_ons?.length > 0 && (
+                    <div className="installed-addons-list">
+                        {serviceForm?.new_add_ons?.map((item) => (
+                            <div className="installed-addon-item" key={item?.unique_id}>
+                                <div className="addon-meta">
+                                    <div className="addon-tags">
+                                        {item?.variant_code && <span className="sku-pill">{item?.variant_code}</span>}
+                                        <span className="type-pill">
+                                            {toStandardText(item?.parent_type)}
+                                        </span>
+                                        {item?.is_zero_fee && (
+                                            <span className="zero-fee-pill">Zero Fee</span>
+                                        )}
+                                    </div>
+                                    <h4 className="addon-title">{item?.product_name}</h4>
+                                    <p className="addon-price">₹{item?.charged_amount || 0}</p>
+                                </div>
+                                <Button
+                                    icon={<TbTrash />}
+                                    rounded
+                                    size="small"
+                                    outlined
+                                    severity="danger"
+                                    title="Remove Add-on"
+                                    onClick={() => handleDeleteNewAddOn(item?.unique_id)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <Button
+                    label="Add New Add-on"
+                    icon={<TbPlus />}
+                    severity="secondary"
+                    size="medium"
+                    rounded
+                    onClick={clickNewAddOnButton}
+                />
+            </div>
 
             {/* Common Data */}
             <div className="site-data-form">
@@ -323,21 +378,42 @@ const Home = ({ page, customer, customerProducts, availableAddOns, addOnSpareLis
                             options={[{}, ...workSites]} onChange={handleChangeForm} />
                         <Select label={'Water Source'} name={'source'} value={serviceForm?.source} required
                             options={[{}, ...waterSources]} onChange={handleChangeForm} />
-                        <InputText label={'Storage Capacity (Ltr)'} name={'tank_capacity_ltr'} value={(serviceForm?.tank_capacity_ltr)} required
-                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
-                        <InputText label={'Floor Hight (Feet)'} name={'floor_hight'} value={(serviceForm?.floor_hight)} required
-                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
-                        <InputText label={'T Hight (Feet)'} name={'t_hight'} value={(serviceForm?.t_hight)} required
-                            onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                        {formResources?.access?.product_access?.includes('VESSEL_FILTER') && <>
+                            <InputText label={'Storage Capacity (Ltr)'} name={'tank_capacity_ltr'} value={(serviceForm?.tank_capacity_ltr)} required
+                                onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                            <InputText label={'Floor Hight (Feet)'} name={'floor_hight'} value={(serviceForm?.floor_hight)} required
+                                onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                            <InputText label={'T Hight (Feet)'} name={'t_hight'} value={(serviceForm?.t_hight)} required
+                                onChange={handleChangeForm} type='number' step={0.1} min={0} />
+                        </>}
+
                     </div>
 
                     {/* Work Status */}
                     <h3 style={{ marginTop: '20px' }}>Work Status</h3>
                     <div className="form-section">
-                        <Radio label={'Work Closed'} name={'work_status'} radioValue={'Yes'} onChange={handleChangeWorkStatus}
-                            checked={serviceForm?.work_status?.closed === true} required />
-                        <Radio label={'Not Closed'} name={'work_status'} radioValue={'No'} onChange={handleChangeWorkStatus}
-                            checked={serviceForm?.work_status?.closed === false} required />
+                        <div className="work-status-cards-grid">
+                            <RadioCard
+                                label="Work Closed"
+                                description="Registration closed"
+                                name="work_status"
+                                id="work_status_closed"
+                                radioValue="Yes"
+                                onChange={handleChangeWorkStatus}
+                                checked={serviceForm?.work_status?.closed === true}
+                                required
+                            />
+                            <RadioCard
+                                label="Not Closed"
+                                description="Pending & Reschedule"
+                                name="work_status"
+                                id="work_status_not_closed"
+                                radioValue="No"
+                                onChange={handleChangeWorkStatus}
+                                checked={serviceForm?.work_status?.closed === false}
+                                required
+                            />
+                        </div>
 
                         {serviceForm?.work_status?.closed === false && <>
                             <InputText label={'Next Schedule Date'} name={'schedule_date'} value={serviceForm?.work_status?.schedule_date} required

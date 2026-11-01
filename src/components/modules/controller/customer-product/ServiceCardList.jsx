@@ -85,8 +85,12 @@ const ServiceCardList = () => {
 
                         case "SERVICE_CARD":
                             return <ServiceCard key={card.uuid} data={card}
-                                pointer={card?.version === 2}
-                                onClick={() => card?.version === 2 ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${product_id}`) : null} />
+                                pointer={card?.version === 1 ? false : true}
+                                onClick={() => card?.version === 2
+                                    ? navigate(`/controller/completed/service-job/${card?.service_srl_no}/pl/${product_id}`)
+                                    : card?.version === 1.5
+                                        ? navigate(`/controller/completed/service-job/v1.5/p/${card?.service_srl_no}/about`)
+                                        : null} />
 
                         case "SERVICE_CANCEL_CARD":
                             return <CancellationCard key={card.uuid} data={card} />
@@ -99,7 +103,7 @@ const ServiceCardList = () => {
                 {hasNextPage &&
                     <div style={{ display: "flex", justifyContent: 'center', marginTop: '20px' }}>
                         <Button icon={<TbRotate />} label={'See More'} rounded size='small' outlined style={{ width: '120px' }}
-                            spinIcon={isFetchingNextPage}
+                            spinIcon={isFetchingNextPage} severity={'secondary'}
                             onClick={() => {
                                 if (!isFetchingNextPage) fetchNextPage();
                             }} />

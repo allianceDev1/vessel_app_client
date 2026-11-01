@@ -8,6 +8,74 @@
         gap: 10px;
     }
 
+    .report-skeleton {
+        margin-top: 15px;
+    }
+
+    .completed-mini-report {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        background-color: var(--surface-1);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        padding: 12px 6px;
+        margin-top: 15px;
+
+        .report-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-right: 1px dashed var(--border-medium);
+            padding: 0 4px;
+
+            &:last-child {
+                border-right: none;
+            }
+
+            .report-icon {
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 4px;
+
+                &.works {
+                    color: var(--color-primary);
+                }
+
+                &.calls {
+                    color: var(--color-info, #0284c7);
+                }
+
+                &.revenue {
+                    color: var(--color-success);
+                }
+            }
+
+            .report-value {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--text-primary);
+                line-height: 1.2;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .report-label {
+                font-size: 11px;
+                font-weight: 500;
+                color: var(--text-tertiary);
+                margin-top: 4px;
+                line-height: 1.1;
+                white-space: nowrap;
+            }
+        }
+    }
+
     .content {
         margin-top: 15px;
 

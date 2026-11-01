@@ -1,0 +1,240 @@
+.vms-perf-report {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  // Pill tab track (design.md 6.7)
+  &__tabs {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    border-radius: 25px;
+    background-color: var(--surface-1);
+  }
+
+  &__tab {
+    flex: 1;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 20px; // 25px track radius - 5px track padding (concentric)
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &.active {
+      background-color: var(--color-primary-active);
+      color: #fff;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: perfFadeIn 0.25s ease;
+  }
+
+  // Highlighted revenue card
+  &__revenue {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 16px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--color-primary-active) 0%, var(--color-primary) 100%);
+    box-shadow: 0 4px 12px var(--shadow-sm);
+
+    // decorative soft circles
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+
+    &::before {
+      width: 120px;
+      height: 120px;
+      right: -30px;
+      top: -50px;
+    }
+
+    &::after {
+      width: 80px;
+      height: 80px;
+      right: 50px;
+      bottom: -45px;
+    }
+  }
+
+  &__revenue-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__revenue-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &__revenue-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  &__revenue-icon {
+    position: relative;
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #fff;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  &__metric {
+    --tone-bg: var(--color-primary-bg);
+    --tone-text: var(--color-primary-text);
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px;
+    border-radius: 15px;
+    background-color: var(--surface);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 4px var(--shadow-xs);
+    transition: transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &.tone-info {
+      --tone-bg: var(--color-info-bg);
+      --tone-text: var(--color-info-text);
+    }
+
+    &.tone-success {
+      --tone-bg: var(--color-success-bg);
+      --tone-text: var(--color-success-text);
+    }
+
+    &.tone-warning {
+      --tone-bg: var(--color-warning-bg);
+      --tone-text: var(--color-warning-text);
+    }
+
+    &.tone-danger {
+      --tone-bg: var(--color-danger-bg);
+      --tone-text: var(--color-danger-text);
+    }
+  }
+
+  &__metric-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  &__metric-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background-color: var(--tone-bg);
+    color: var(--tone-text);
+  }
+
+  &__metric-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+  }
+
+  &__metric-value {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+
+    .tone-danger & {
+      color: var(--color-danger-text);
+    }
+  }
+
+  &__metric-sub {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-placeholder);
+  }
+
+  &__detail {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 100px;
+    background-color: var(--color-primary-bg);
+    color: var(--color-primary-text);
+    transition: transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+@keyframes perfFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

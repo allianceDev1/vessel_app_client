@@ -1,350 +1,750 @@
 @use '../../../assets/scss//mixins/mixin.scss' as *;
 
+// ─── Layout dimensions ─────────────────────────────────────────────────────────
+$sidebar-w: 220px;
+$sidebar-collapsed-w: 64px;
+$header-h: 58px;
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ROOT LAYOUT
+// ══════════════════════════════════════════════════════════════════════════════
 .controller-layout {
     width: 100%;
     position: relative;
     min-height: 100vh;
     min-height: 100dvh;
-    color: var(--text-primary);
 
-    // Background Container
-    .color-temp-div {
+
+    // ── Mobile backdrop ────────────────────────────────────────────────────────
+    .sidebar-backdrop {
+        display: none;
         position: fixed;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.8;
-        will-change: transform;
-        z-index: -1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-
-
-        // Common Ball Style
-        .box {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.8;
-            will-change: transform;
-            z-index: 0;
-        }
-
-        .box-one {
-            background: radial-gradient(circle, rgba(0, 219, 193, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 195vh;
-            width: 195dvh;
-            height: 95vh;
-            height: 95dvh;
-            left: -40%;
-            top: -10vh;
-            top: -10dvh;
-        }
-
-        .box-two {
-            background: radial-gradient(circle, rgba(255, 0, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 210vh;
-            width: 210dvh;
-            height: 110vh;
-            height: 110dvh;
-            right: -50%;
-            bottom: -40%;
-        }
-
-        .box-three {
-            background: radial-gradient(circle, rgba(170, 100, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 230vh;
-            width: 230dvh;
-            height: 130vh;
-            height: 130dvh;
-            left: -10%;
-            bottom: -60%;
-        }
-
-        .box-four {
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.25) 0%, rgba(4, 43, 7, 0) 50%);
-            width: 175vh;
-            width: 175dvh;
-            height: 75vh;
-            height: 75dvh;
-            right: -20%;
-            top: -20%;
-        }
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        z-index: 4;
+        animation: backdropFadeIn 0.2s ease;
     }
 
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // SIDEBAR
+    // ══════════════════════════════════════════════════════════════════════════
     .layout-navbar {
-        background-color: var(--color-natural-trans-18);
-        backdrop-filter: blur(5px);
+        background-color: var(--background-alt);
         border-right: 1px solid var(--border-light);
         color: var(--text-primary);
         position: fixed;
         height: 100vh;
         height: 100dvh;
-        width: 220px;
+        width: $sidebar-w;
         top: 0;
         left: 0;
-        transition: ease-in-out .3s;
-        -webkit-transition: ease-in-out .3s;
-        -moz-transition: ease-in-out .3s;
-        -ms-transition: ease-in-out .3s;
-        -o-transition: ease-in-out .3s;
+        transition: width 0.28s ease;
         overflow: hidden;
         z-index: 5;
 
         .nav-sections {
             height: 100vh;
             height: 100dvh;
-            padding: 15px 12px;
+            padding: 14px 10px;
             display: grid;
-            grid-template-rows: 50px auto 60px;
-            width: 220px;
+            grid-template-rows: #{$header-h} 1fr 68px;
+            width: $sidebar-w; // Fixed — keeps content from reflowing during collapse animation
 
+            // ── Brand section ──────────────────────────────────────────────────
             .title-section {
                 display: flex;
                 align-items: center;
-                gap: 0 15px;
+                gap: 0 10px;
+                padding: 0 4px;
 
                 .brand-logo {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 100%;
-                    -webkit-border-radius: 100%;
-                    -moz-border-radius: 100%;
-                    -ms-border-radius: 100%;
-                    -o-border-radius: 100%;
-                    border: 1px solid var(--border-medium);
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50px;
+                    border: 1px solid var(--border-light);
                     overflow: hidden;
+                    flex-shrink: 0;
 
                     img {
                         width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        display: block;
                     }
                 }
 
                 .head-text {
+                    flex: 1;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    transition: opacity 0.2s ease;
+
                     h3 {
-                        font-size: 28px;
-                        font-weight: 600;
-                        color: var(--text-secondary);
-                        transition: ease-in-out .3s;
-                        -webkit-transition: ease-in-out .3s;
-                        -moz-transition: ease-in-out .3s;
-                        -ms-transition: ease-in-out .3s;
-                        -o-transition: ease-in-out .3s;
+                        font-size: 15px;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                        line-height: 1.25;
                     }
 
                     p {
-                        font-size: 13px;
-                        margin-top: -5px;
-                        color: var(--text-secondary-2);
-                        transition: ease-in-out .3s;
-                        -webkit-transition: ease-in-out .3s;
-                        -moz-transition: ease-in-out .3s;
+                        font-size: 11px;
+                        color: var(--text-secondary);
+                        font-weight: 400;
+                        margin-top: 1px;
                     }
                 }
             }
 
+
+            // ── Menu items ─────────────────────────────────────────────────────
             .items-section {
-                overflow: auto;
+                overflow-y: auto;
+                overflow-x: hidden;
                 @include scrollBar();
                 display: flex;
                 flex-direction: column;
-                gap: 5px;
-                margin-top: 20px;
-                padding-bottom: 15px;
+                gap: 2px;
+                margin-top: 14px;
+                padding-bottom: 8px;
 
                 .item {
                     display: flex;
                     gap: 10px;
                     align-items: center;
-                    padding: 10px 15px;
-                    border-radius: 50px;
-                    -webkit-border-radius: 50px;
-                    -moz-border-radius: 50px;
-                    -ms-border-radius: 50px;
-                    -o-border-radius: 50px;
+                    padding: 10px 11px;
+                    border-radius: 20px;
                     cursor: pointer;
+                    position: relative;
+                    white-space: nowrap;
+                    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+                    flex-shrink: 0;
 
                     svg {
-                        font-size: 23px;
+                        flex-shrink: 0;
+                        width: 20px;
+                        height: 20px;
+                        pointer-events: none;
                     }
 
                     span {
                         font-weight: 500;
-                        font-size: 15px;
-                        transition: ease-in-out .3s;
-                        -webkit-transition: ease-in-out .3s;
-                        -moz-transition: ease-in-out .3s;
-                        -ms-transition: ease-in-out .3s;
-                        -o-transition: ease-in-out .3s;
+                        font-size: 14px;
+                        flex: 1;
+                        overflow: hidden;
+                        transition: opacity 0.18s ease;
+                        pointer-events: none;
+                    }
+
+                    .submenu-chevron {
+                        flex-shrink: 0;
+                        width: 14px;
+                        height: 14px;
+                        transition: transform 0.25s ease, opacity 0.18s ease;
+                        pointer-events: none;
+
+                        &.open {
+                            transform: rotate(180deg);
+                        }
                     }
 
                     &:hover {
-                        background-color: var(--color-natural-trans-53);
+                        background-color: var(--surface-1);
                     }
 
+                    &:active {
+                        transform: scale(0.97);
+                    }
+
+                    // Active — solid primary pill
                     &.active {
-                        background-color: var(--nav-active-bg);
-                        color: var(--nav-active-text);
-                    }
-
-                    &.danger {
-                        color: var(--color-danger);
-
-                        &:hover,
-                        &:focus {
-                            background-color: var(--color-danger-trans-81);
-                        }
+                        background-color: var(--color-primary);
+                        color: var(--text-inverse);
+                        border-radius: 20px;
                     }
                 }
 
 
+                // ── Sub-items (animated tree) ──────────────────────────────────
+                .sub-items {
+
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.28s ease;
+                    flex-shrink: 0;
+                    position: relative;
+
+
+                    &.open {
+                        max-height: 400px;
+                    }
+
+                    .sub-line {
+                        position: absolute;
+                        width: 2px;
+                        height: 100%;
+                        background-color: var(--border-medium);
+                        left: 20px;
+                        bottom: 18px;
+                        pointer-events: none;
+                    }
+
+                    .sub-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        padding: 10px 11px;
+                        border-radius: 20px;
+                        cursor: pointer;
+                        white-space: nowrap;
+                        transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+                        margin-top: 2px;
+                        position: relative;
+                        z-index: 1;
+
+                        // Bullet dot
+                        svg {
+                            flex-shrink: 0;
+                            width: 20px;
+                            height: 20px;
+                            color: var(--border-medium);
+                            pointer-events: none;
+                        }
+
+                        span {
+                            font-weight: 500;
+                            font-size: 14px;
+                            pointer-events: none;
+                        }
+
+                        &:hover {
+                            background-color: var(--surface-1);
+                        }
+
+                        &:active {
+                            transform: scale(0.97);
+                        }
+
+                        &.active {
+                            background-color: var(--color-primary-bg);
+                            color: var(--color-primary-text);
+                            font-weight: 600;
+
+                            svg {
+                                color: var(--color-primary-text)
+                            }
+                        }
+                    }
+
+
+                }
             }
 
+
+            // ── Profile footer ─────────────────────────────────────────────────
             .footer-section {
-                display: flex;
-                flex-direction: column;
                 border-top: 1px solid var(--border-light);
-                padding: 15px 12px 15px 12px;
+                padding: 12px 4px 10px;
+                display: flex;
+                align-items: center;
 
                 .profile {
                     display: flex;
-                    gap: 5px;
-                    color: var(--text-secondary);
+                    align-items: center;
+                    gap: 9px;
+                    width: 100%;
+                    overflow: hidden;
 
                     .profile-image {
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 100%;
-                        -webkit-border-radius: 100%;
-                        -moz-border-radius: 100%;
-                        -ms-border-radius: 100%;
-                        -o-border-radius: 100%;
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 9px;
                         border: 1px solid var(--border-light);
-                        overflow: hidden;
+                        flex-shrink: 0;
+                        position: relative;
+                        overflow: visible; // allow online-dot to bleed out
 
                         img {
                             width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            display: block;
+                        }
+
+                        .network-dot {
+                            position: absolute;
+                            bottom: -2px;
+                            right: -2px;
+                            width: 9px;
+                            height: 9px;
+                            border-radius: 50%;
+                            background-color: var(--text-primary);
+                            border: 2px solid var(--background-alt);
+
+                            &.online {
+                                background-color: var(--color-success);
+                            }
+
+                            &.offline {
+                                background-color: var(--color-danger);
+                            }
                         }
                     }
 
                     .profile-name {
+                        flex: 1;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        transition: opacity 0.18s ease;
+
                         h4 {
-                            font-size: 15px;
+                            font-size: 13px;
                             font-weight: 600;
+                            color: var(--text-primary);
                             @include threeDots();
+                            line-height: 1.3;
                         }
 
                         p {
-                            font-size: 12px;
+                            font-size: 11px;
                             font-weight: 400;
+                            color: var(--text-secondary);
+                            @include threeDots();
                         }
                     }
 
+                    .profile-action {
+                        width: 28px;
+                        height: 28px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 7px;
+                        cursor: pointer;
+                        color: var(--text-secondary);
+                        flex-shrink: 0;
+                        opacity: 0.45;
+                        transition: opacity 0.15s ease, background 0.15s ease;
+
+                        &:hover {
+                            opacity: 1;
+                            background: var(--surface-1);
+                            color: var(--color-danger-text);
+                        }
+                    }
                 }
             }
         }
     }
 
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // MAIN CONTENT AREA
+    // ══════════════════════════════════════════════════════════════════════════
     .layout-body {
-        position: relative;
-        padding: 0 3% 0 25px;
-        margin-left: 220px;
-        transition: ease-in-out .3s;
-        -webkit-transition: ease-in-out .3s;
-        -moz-transition: ease-in-out .3s;
-        -ms-transition: ease-in-out .3s;
-        -o-transition: ease-in-out .3s;
+        margin-left: $sidebar-w;
+        min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        transition: margin-left 0.28s ease;
 
-        .body-container {
-            width: 100%;
-            max-width: 1600px;
-            min-height: 100vh;
-            min-height: 100dvh;
+        // ── Sticky top header ─────────────────────────────────────────────────
+        .layout-header {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            height: $header-h;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px 0 24px;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border-light);
+            gap: 16px;
 
-            .header {
+            .header-left {
                 display: flex;
-                justify-content: space-between;
-                gap: 0;
+                align-items: center;
+                gap: 12px;
 
-                .title-section {
-                    margin-top: 20px;
+                // Hidden on desktop, shown on mobile
+                .mobile-menu-btn {
+                    display: none;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border-light);
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    color: var(--text-primary);
+                    flex-shrink: 0;
+                    transition: background 0.15s ease;
 
-                    h3 {
-                        font-size: 23px;
-                        font-weight: 700;
-                        @include threeDots();
-                        color: var(--text-primary);
-                    }
-
-                    p {
-                        font-size: 15px;
-                        font-weight: 500;
-                        color: var(--text-secondary-2);
+                    &:hover {
+                        background: var(--surface-1);
                     }
                 }
 
-                .nav-icon-section {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background-color: var(--color-natural-trans-53);
-                    backdrop-filter: blur(5px);
-                    border: 1px solid var(--border-light);
-                    color: var(--text-primary);
-                    width: 45px;
-                    height: 45px;
-                    display: none;
+                .page-header {
+                    display: flex;
+                    flex-direction: column;
                     justify-content: center;
+                    min-width: 0;
+
+                    .page-title-wrap {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        min-width: 0;
+
+                        .page-title-icon {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: var(--color-primary);
+                            flex-shrink: 0;
+
+                            svg {
+                                width: 20px;
+                                height: 20px;
+                            }
+                        }
+
+                        .page-title {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                            line-height: 1.25;
+                            letter-spacing: -0.01em;
+                            margin: 0;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+
+                    .page-note {
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: var(--text-tertiary);
+                        line-height: 1.2;
+                        margin: 2px 0 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+
+            .header-right {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                .header-btn {
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 8px;
+                    border: 1px solid var(--border-light);
+                    display: flex;
                     align-items: center;
-                    border-radius: 100%;
+                    justify-content: center;
                     cursor: pointer;
-                    opacity: .5;
-                    z-index: 5;
+                    color: var(--text-secondary);
+                    background: transparent;
+                    position: relative;
+                    transition: background 0.15s ease, color 0.15s ease;
+                    flex-shrink: 0;
 
-                    svg {
-                        font-size: 25px;
-                        color: var(--text-primary);
-
+                    // Reset button defaults
+                    &.theme-btn {
+                        outline: none;
+                        font-family: inherit;
                     }
 
                     &:hover {
-                        opacity: 1;
+                        background: var(--surface-1);
+                        color: var(--text-primary);
                     }
                 }
             }
         }
 
+
+        // ── Page content ──────────────────────────────────────────────────────
+        .body-container {
+            flex: 1;
+            padding: 22px 28px 32px;
+            width: 100%;
+            max-width: 1600px;
+            align-self: center;
+
+            &.body-container-unset {
+                padding: 0;
+            }
+        }
     }
 
-}
 
-@media screen and (max-width:950px) {
-    .controller-layout {
+    // ══════════════════════════════════════════════════════════════════════════
+    // COLLAPSED SIDEBAR STATE
+    // ══════════════════════════════════════════════════════════════════════════
+    &.sidebar-collapsed {
+
         .layout-navbar {
-            left: -230px;
-            transition: all 0.3s ease-in-out;
+            width: $sidebar-collapsed-w;
+
+            .nav-sections {
+                .title-section {
+                    gap: 0;
+                    padding: 0;
+                    justify-content: center;
+
+                    // Hide logo when collapsed — button needs the full width
+                    .brand-logo {
+                        display: none;
+                    }
+
+                    .head-text {
+                        opacity: 0;
+                        width: 0;
+                        pointer-events: none;
+                    }
+
+                    // Expand button stands alone, centered
+                    .collapse-btn {
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 9px;
+                    }
+                }
+
+                .items-section {
+                    .item {
+                        padding: 10px;
+                        justify-content: center;
+                        gap: 0;
+                        border-radius: 9px;
+
+                        span {
+                            opacity: 0;
+                            width: 0;
+                            pointer-events: none;
+                        }
+
+                        .submenu-chevron {
+                            opacity: 0;
+                            width: 0;
+                            pointer-events: none;
+                        }
+
+                        // Keep accent bar even in collapsed state
+                        &.active {
+                            border-radius: 9px;
+                        }
+                    }
+
+                    // Force all submenus closed in collapsed state
+                    .sub-items {
+                        max-height: 0 !important;
+                        border-left: none;
+                        margin-left: 0;
+                        padding-left: 0;
+                    }
+
+                    .item-divider {
+                        margin: 6px 8px;
+                    }
+                }
+
+                .footer-section {
+                    padding: 12px 0;
+                    justify-content: center;
+
+                    .profile {
+                        justify-content: center;
+                        gap: 0;
+
+                        .profile-name,
+                        .profile-action {
+                            opacity: 0;
+                            width: 0;
+                            pointer-events: none;
+                            overflow: hidden;
+                        }
+                    }
+                }
+            }
         }
 
         .layout-body {
-            margin-left: 0px;
-            padding: 0 3%;
+            margin-left: $sidebar-collapsed-w;
+        }
+    }
+}
+
+
+// ── Backdrop animation ─────────────────────────────────────────────────────────
+@keyframes backdropFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MOBILE
+// ══════════════════════════════════════════════════════════════════════════════
+@media screen and (max-width: 950px) {
+    .controller-layout {
+
+        // Show backdrop on mobile
+        .sidebar-backdrop {
+            display: block;
+        }
+
+        // Sidebar slides in from left on mobile
+        .layout-navbar {
+            width: $sidebar-w !important; // always full width on mobile
+            left: -($sidebar-w + 10px);
+            transition: left 0.28s ease;
+
+            // Hide collapse button on mobile (no collapse mode on mobile)
+            .nav-sections .title-section .collapse-btn {
+                display: none;
+            }
+        }
+
+        // Content takes full width on mobile
+        .layout-body {
+            margin-left: 0 !important;
+
+            .layout-header {
+                padding: 0 16px;
+
+                .header-left .mobile-menu-btn {
+                    display: flex;
+                }
+            }
+
+            .page-title-bar {
+                padding: 18px 16px 0;
+            }
 
             .body-container {
-                .header {
-                    .nav-icon-section {
-                        display: flex;
-                    }
+                padding: 18px 16px 24px;
+
+                &.body-container-unset {
+                    padding: 0;
                 }
             }
         }
 
+        // Open state — slide sidebar in
         &.show-navbar {
             .layout-navbar {
-                backdrop-filter: blur(11px);
                 left: 0;
+            }
+        }
+
+        // No collapsed state on mobile — when sidebar opens, always show full labels
+        &.sidebar-collapsed {
+            .layout-navbar {
+                left: -($sidebar-w + 10px) !important;
+            }
+
+            // Sidebar is open on mobile: restore full sidebar appearance regardless of collapsed state
+            &.show-navbar {
+                .layout-navbar {
+                    left: 0 !important;
+                    width: $sidebar-w !important;
+
+                    .nav-sections {
+                        .title-section {
+                            justify-content: flex-start;
+                            gap: 10px;
+                            padding: 0 4px;
+
+                            .brand-logo {
+                                display: block;
+                            }
+
+                            .head-text {
+                                opacity: 1;
+                                width: auto;
+                                pointer-events: auto;
+                            }
+
+                            .collapse-btn {
+                                display: none;
+                            }
+
+                            // still hidden on mobile
+                        }
+
+                        .items-section {
+                            .item {
+                                padding: 10px 11px;
+                                justify-content: flex-start;
+                                gap: 10px;
+                                border-radius: 9px;
+
+                                span {
+                                    opacity: 1;
+                                    width: auto;
+                                    pointer-events: none;
+                                }
+
+                                .submenu-chevron {
+                                    opacity: 1;
+                                    width: 14px;
+                                    pointer-events: none;
+                                }
+                            }
+
+                            // Allow submenus to open again
+                            .sub-items {
+                                max-height: revert !important;
+                                border-left: 1.5px solid var(--border-light);
+                                margin-left: 18px;
+                                padding-left: 16px;
+                            }
+                        }
+
+                        .footer-section {
+                            padding: 12px 4px 10px;
+                            justify-content: flex-start;
+
+                            .profile {
+                                gap: 9px;
+                                justify-content: flex-start;
+
+                                .profile-name,
+                                .profile-action {
+                                    opacity: 1;
+                                    width: auto;
+                                    pointer-events: auto;
+                                    overflow: visible;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .layout-body {
+                margin-left: 0 !important;
             }
         }
     }

@@ -1,42 +1,3 @@
-const MAIN_PAGE_BACK_MAP = new Map([
-    [103, 102],
-    [102, 101],
-    [101, 100],
-    [100, null] // exit
-]);
-
-const SUB_PAGE_BACK_MAP = new Map([
-    [203, 202],
-    [202, 201],
-    [201, 200],
-    [200, null]
-]);
-
-
-export const getPreviousServicePageKey = (mainPageKey = null, subPageKey = null) => {
-    // 1️⃣ Sub page flow
-    if (subPageKey !== null) {
-        const prevSub = SUB_PAGE_BACK_MAP.get(subPageKey) ?? null;
-
-        return [
-            mainPageKey, // main page stays same
-            prevSub
-        ];
-    }
-
-    // 2️⃣ Main page flow
-    if (mainPageKey !== null) {
-        const prevMain = MAIN_PAGE_BACK_MAP.get(mainPageKey) ?? null;
-
-        return [
-            prevMain,
-            null
-        ];
-    }
-
-    // 3️⃣ Exit
-    return [null, null];
-}
 
 // find spare amount type
 /**
@@ -46,26 +7,27 @@ export const getPreviousServicePageKey = (mainPageKey = null, subPageKey = null)
  * @param {boolean} warranty
  * @returns {{ list_price: number, charged: number, ledger_cost: number }}
  */
-export const findSpareTypeAmount = (spare, amountType, servicePackageId, warranty = false) => {
-    if (!spare || !amountType) {
-        throw new Error('Invalid arguments');
-    }
+export const findSpareTypeAmount = (
+    sparePriceList = {},
+    amountType = 'SELLING_RATE',
+    servicePackageId = null,
+    warranty = false,
+    warrantyReason = null
+) => {
 
     const {
         selling_rate = 0,
         purchase_cost = 0,
         ...packagePricing
-    } = spare?.pricing ?? {};
+    } = sparePriceList ?? {};
 
     let pricing;
-    let reason = null;
 
     switch (amountType) {
         case 'SELLING_RATE':
             pricing = {
                 list_price: selling_rate,
-                charged: selling_rate,
-                ledger_cost: selling_rate
+                charged: selling_rate
             };
             break;
 
@@ -73,27 +35,151 @@ export const findSpareTypeAmount = (spare, amountType, servicePackageId, warrant
             pricing = {
                 list_price: selling_rate,
                 charged: 0,
-                ledger_cost: purchase_cost
+                reason: 'Zero price coverage item'
             };
-            reason = 'Zero fee category'
             break;
 
         case 'PACKAGE_PRICE':
             pricing = {
                 list_price: selling_rate,
-                charged: packagePricing?.[servicePackageId] ?? selling_rate,
-                ledger_cost: packagePricing?.[servicePackageId] ?? selling_rate
+                charged: packagePricing?.[servicePackageId] ?? selling_rate
             };
             break;
 
         default:
             throw new Error(`Unsupported amountType: ${amountType}`);
     }
-
+  
     // Warranty override (only charged becomes zero)
     if (warranty === true) {
         pricing.charged = 0;
+        pricing.reason = warrantyReason || 'Spare warranty override';
     }
 
-    return { ...pricing, reason };
+    return pricing;
 };
+
+export const findTdsStatus = (inputValue = 0, outputValue = 0, productInfo = {}) => {
+
+    if (typeof inputValue !== 'number' || typeof outputValue !== 'number') {
+        throw Error('TDS inValue / outValue is not Number')
+    }
+
+    // NO
+    if (!inputValue || !outputValue) {
+        return 'NO'
+    }
+
+    // LOW
+    if (outputValue < 5) {
+        return 'LOW'
+    }
+
+    // TYPE : UV
+    if (productInfo?.hasUV) {
+        if (outputValue > (inputValue + 50)) {
+            return 'HIGH'
+        } else {
+            return 'NORMAL'
+        }
+    }
+
+    // TYPE : ALKALINE
+    if (productInfo?.hasAlkaline) {
+        if (outputValue > ((inputValue * 0.15) + 40)) {
+            return 'HIGH'
+        } else {
+            return 'NORMAL'
+        }
+    }
+
+    // Input TDS < 50
+    if (inputValue < 50) {
+        if (outputValue > 10) {
+            return 'HIGH'
+        } else {
+            return "NORMAL"
+        }
+    }
+
+
+    // TYPE : RO only
+    if (outputValue > (inputValue * 0.15)) {
+        return 'HIGH'
+    } else {
+        return 'NORMAL'
+    }
+
+}
+
+export const findFilteredWaterFlowStatus = (flowValue = 0, criteria = 11) => {
+
+    if (typeof flowValue !== 'number' || typeof criteria !== 'number') {
+        throw Error('Value is not Number')
+    }
+
+    // NO
+    if (!flowValue || flowValue === 0) {
+        return 'NO'
+    }
+
+    // LOW
+    if (flowValue < criteria) {
+        return 'LOW'
+    }
+
+    // NORMAL
+    if (flowValue >= criteria) {
+        return 'NORMAL'
+    }
+
+}
+
+export const findRejectWaterFlowStatus = (flowValue = 0, frValue = 0) => {
+
+    if (typeof flowValue !== 'number' || typeof frValue !== 'number') {
+        throw Error('Flow value / fr value is not Number')
+    }
+
+    // NO
+    if (!flowValue || !frValue) {
+        return 'NO'
+    }
+
+    // LOW
+    if (flowValue < frValue) {
+        return 'LOW'
+    }
+
+    // TYPE : RO only
+    if (flowValue >= frValue) {
+        return 'NORMAL'
+    }
+
+}
+
+export const findPhStatus = (phValue = 0) => {
+
+    if (typeof phValue !== 'number') {
+        throw Error('Value is not Number')
+    }
+
+    // NO
+    if (!phValue || phValue === 0) {
+        return 'NO'
+    }
+
+    // LOW
+    if (phValue < 6.5) {
+        return 'LOW'
+    }
+
+    // HIGH
+    if (phValue > 8.5) {
+        return 'HIGH'
+    }
+
+    // NORMAL
+    return 'NORMAL'
+
+}

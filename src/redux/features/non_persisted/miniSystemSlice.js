@@ -6,7 +6,7 @@ const initialState = {
     toasts: [],
     dialog: {},
     modals: [],
-    pageTitle: {},
+    page: {},
     audioUnlocked: false,
 }
 
@@ -103,11 +103,12 @@ export const miniSystemSlice = createSlice({
             state.modals = []
         },
 
-        // pageTitle
-        setPageTitle: (state, action) => {
-            state.pageTitle = {
+        // page
+        pageConfig: (state, action) => {
+            state.page = {
                 title: action.payload.title,
-                note: action.payload.note
+                note: action.payload.note || '',
+                unsetPageContainer: action.payload.unsetPageContainer || false,
             }
         },
 
@@ -121,7 +122,7 @@ export const miniSystemSlice = createSlice({
 
 const {
     toastPush, pullSingleToast, pullAllToast, alert, confirm, pullDialog, pushModal, pullSingleModal, pullAllModal, removeModal,
-    setPageTitle, setAudioUnlocked
+    pageConfig, setAudioUnlocked
 } = miniSystemSlice.actions
 
 // ✅ Thunk (delay remove modal after closing)
@@ -135,7 +136,7 @@ export const closeModalWithDelay = (id, delay = 5000) => async (dispatch) => {
 export const toast = { pull: { single: pullSingleToast, all: pullAllToast }, push: toastPush }
 export const doDialog = { alert, confirm, clear: pullDialog }
 export const modal = { push: pushModal, pull: { single: closeModalWithDelay, all: pullAllModal } }
-export const page = { setTitle: setPageTitle }
+export const page = { config: pageConfig }
 export const audio = { setUnlocked: setAudioUnlocked }
 
 

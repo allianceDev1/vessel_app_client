@@ -1,0 +1,94 @@
+.tech-more-page-container {
+    .menu-list {
+        .menu {
+            display: grid;
+            grid-template-columns: 45px 1fr 40px;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+
+            .icon,
+            .label,
+            .action {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 50px;
+            }
+
+            .label {
+                justify-content: flex-start;
+            }
+
+            .icon {
+                svg {
+                    font-size: 22px;
+                }
+            }
+
+            .label {
+                .label-name {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+
+            .action {
+                svg {
+                    font-size: 20px;
+                }
+            }
+
+            &:hover {
+                background-color: var(--surface);
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .theme-menu {
+            grid-template-columns: 45px 1fr auto;
+            padding-right: 12px;
+
+            .theme-icon svg {
+                font-size: 22px;
+            }
+
+            .label-note {
+                font-size: 11px;
+                color: var(--text-disabled);
+                margin-top: 2px;
+            }
+
+            .theme-pill {
+                height: auto;
+                align-self: center;
+                padding: 5px 14px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--color-primary);
+                background-color: var(--color-primary-bg);
+                transition: background-color 0.2s;
+            }
+
+            &:hover .theme-pill {
+                background-color: var(--color-primary-bg-hover);
+            }
+        }
+
+        .danger-menu {
+
+            .icon,
+            .label .label-name,
+            .action {
+                color: var(--color-danger-text);
+            }
+
+            &:hover {
+                background-color: var(--color-danger-bg);
+            }
+        }
+    }
+}
