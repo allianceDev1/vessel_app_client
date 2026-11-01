@@ -40,7 +40,7 @@ const EditRegistration = ({ regNo, initialData }) => {
 
     const fetchResources = async () => {
         const [workers, inputs] = await Promise.all([
-            await vfCv2Axios.get('/resources/service-workers/VESSEL_FILTER'),
+            await vfCv2Axios.get('/resources/service-workers'),
             await vfCv2Axios.get('/resources/form-resources?titles=complaint_registration_reasons')
         ])
         return { workers, inputs: inputs?.find(i => i?.title === 'complaint_registration_reasons')?.values?.map(i => i?.data?.[0]) }
