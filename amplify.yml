@@ -1,17 +1,28 @@
+
 version: 1
+
 frontend:
   phases:
     preBuild:
       commands:
-        - npm ci  # Install dependencies efficiently
+        - echo "Node.js version:"
+        - node -v
+        - echo "NPM version:"
+        - npm -v
+        - echo "Lock file version:"
+        - node -p "require('./package-lock.json').lockfileVersion"
+        - npm ci
+
     build:
       commands:
-        - export NODE_OPTIONS="--max-old-space-size=6144"  # Set heap size to 6 GB
-        - npm run build  # Default build command
+        - export NODE_OPTIONS="--max-old-space-size=6144"
+        - npm run build
+
   artifacts:
-    baseDirectory: build  # Adjust this based on your output folder
+    baseDirectory: build
     files:
       - '**/*'
+
   cache:
     paths:
       - node_modules/**/*
