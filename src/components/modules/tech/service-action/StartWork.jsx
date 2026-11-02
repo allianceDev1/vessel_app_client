@@ -91,7 +91,7 @@ const StartWork = ({ registrationId, visitId }) => {
                     </p>
                 </div>
                 <Button label={'Proceed'} severity={'primary'} rounded style={{ width: '100%' }} onClick={handleProceed}
-                    spinIcon={loading} />
+                    spinIcon={loading} disabled={loading}/>
             </>}
         </div>
     )
