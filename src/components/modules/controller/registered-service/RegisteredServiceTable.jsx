@@ -51,7 +51,7 @@ const RegisteredServiceTable = () => {
             ...filteredParams
         })
 
-        const res = await api.vfCv2Axios.get(`/service-registration/list?${params}`)
+        const res = await api.ssCv2Axios.get(`/service-registration/list?${params}`)
 
         const transformed = res.data.map((item, index) => {
             const globalIndex = page * pageSize + index + 1

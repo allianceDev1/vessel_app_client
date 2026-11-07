@@ -27,7 +27,7 @@ const Extensions = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_package_extensions', serial_number],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/package/${serial_number}/extensions`)
+            const res = await api.ssCv2Axios.get(`/package/${serial_number}/extensions`)
 
             return res?.map((item, index) => {
                 return {

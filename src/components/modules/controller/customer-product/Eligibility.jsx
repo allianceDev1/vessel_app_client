@@ -50,7 +50,7 @@ const Eligibility = () => {
     const { data, isLoading, isFetching, error, refetch } = useQuery({
         queryKey: ['controller_customer_pr_eligibility', product_id],
         queryFn: async () => {
-            const res = await api.vfCv2Axios(`/product/${product_id}/eligibility`);
+            const res = await api.ssCv2Axios(`/product/${product_id}/eligibility`);
             const payload = res?.data || res;
             if (res?.success === false || payload?.success === false) {
                 throw new Error(res?.message || payload?.message || 'Failed to fetch eligibility information');

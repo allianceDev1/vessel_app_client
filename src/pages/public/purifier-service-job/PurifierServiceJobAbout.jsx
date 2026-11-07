@@ -65,7 +65,7 @@ const PurifierServiceJobAbout = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['purifier_service_job_about', service_srl_no],
         queryFn: async () => {
-            const res = await api.vfPv1Axios.get(`/service/completed/v1.5/${service_srl_no}/about`)
+            const res = await api.ssPv1Axios.get(`/service/completed/v1.5/${service_srl_no}/about`)
             const job = Array.isArray(res) ? res[0] : res
 
             if (!job) {

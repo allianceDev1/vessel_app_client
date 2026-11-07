@@ -39,7 +39,7 @@ const Services = () => {
             sort_dir: searchParams.get('order') || undefined,
         }
 
-        const res = await api.vfTv2Axios('/service/upcoming-services', {
+        const res = await api.ssTv2Axios('/service/upcoming-services', {
             params
         })
 

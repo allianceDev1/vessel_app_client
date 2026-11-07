@@ -38,7 +38,7 @@ const CustomerMiniReport = () => {
     } = useQuery({
         queryKey: ['customer_mini_report', 'v3'],
         queryFn: async () => {
-            const reports = await api.vfCv2Axios.get('/product/mini-report')
+            const reports = await api.ssCv2Axios.get('/product/mini-report')
 
             // 1. Vessel Report Calculations
             const vProducts = Number(reports?.vessel_report?.products || 0)

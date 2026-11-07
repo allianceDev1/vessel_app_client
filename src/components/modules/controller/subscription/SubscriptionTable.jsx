@@ -68,7 +68,7 @@ const SubscriptionTable = () => {
       ...filteredParams
     })
 
-    const res = await api.vfCv2Axios.get(`/package/filter?${params}`)
+    const res = await api.ssCv2Axios.get(`/package/filter?${params}`)
 
     const transformed = res.data.map((item, index) => {
       const globalIndex = page * pageSize + index + 1

@@ -55,7 +55,7 @@ const FilterBox = () => {
   } = useQuery({
     queryKey: ['cn', 'package_input_list'],
     queryFn: async () => {
-      const res = await api.vfCv2Axios.get('/config/service-package/list?fields=package_name')
+      const res = await api.ssCv2Axios.get('/config/service-package/list?fields=package_name')
       return res
     },
     staleTime: 30 * 60_000

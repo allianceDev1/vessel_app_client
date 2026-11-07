@@ -23,7 +23,7 @@ const ArrayElem = ({ deleteData }) => {
         queryKey: ['resources_values', title],
         queryFn: async () => {
 
-            const data = await api.vfCv2Axios.get(`/resources/form-resources?titles=${title}`)
+            const data = await api.ssCv2Axios.get(`/resources/form-resources?titles=${title}`)
             return { title: data?.[0]?.title, values: data?.[0]?.values, title_stretcher: data?.[0]?.title_stretcher?.title_stretcher };
         },
         staleTime: 60_000

@@ -18,7 +18,7 @@ const FreezeUnfreeze = ({ type, packageSrlNo }) => {
 
         try {
             setLoading(true)
-            const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/${String(type).toLowerCase()}`, { comment })
+            const res = await api.ssCv2Axios.post(`/package/${packageSrlNo}/${String(type).toLowerCase()}`, { comment })
 
             queryClient.invalidateQueries({
                 queryKey: ['customer_package_info', packageSrlNo],

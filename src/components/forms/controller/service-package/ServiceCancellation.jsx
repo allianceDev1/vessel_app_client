@@ -27,7 +27,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
         }
 
         try {
-            await api.vfCv2Axios.post(`/package/${packageSrlNo}/cancel-service`, form)
+            await api.ssCv2Axios.post(`/package/${packageSrlNo}/cancel-service`, form)
 
             queryClient.invalidateQueries({
                 queryKey: ['package_service_cards', packageSrlNo],
@@ -58,7 +58,7 @@ const ServiceCancellation = ({ package_id, packageSrlNo }) => {
     const { data: categoryList, isLoading } = useQuery({
         queryKey: ['package_sr_category_service_mode_list', package_id],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name`)
+            const res = await api.ssCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name`)
             return res.filter((c) => c.mode === 'SERVICE')
         },
         staleTime: 60_000

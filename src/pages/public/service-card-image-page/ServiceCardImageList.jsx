@@ -31,7 +31,7 @@ const ServiceCardImageList = () => {
     const { data: images = [], isLoading, error } = useQuery({
         queryKey: ['service_card_images', product_id],
         queryFn: async () => {
-            const res = await api.vfPv1Axios.get(`/service/service-card/images/${product_id}`)
+            const res = await api.ssPv1Axios.get(`/service/service-card/images/${product_id}`)
             const list = Array.isArray(res) ? res : res?.data || res?.images || []
 
             return [...list].sort(

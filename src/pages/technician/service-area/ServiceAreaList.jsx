@@ -20,7 +20,7 @@ const ServiceAreaList = () => {
         queryKey: ['tech_branch_area_access_list'],
         queryFn: async () => {
 
-            const cityResponse = await api.vfTv2Axios.get('/service/area')
+            const cityResponse = await api.ssTv2Axios.get('/service/area')
             return cityResponse
         },
         staleTime: 60_000 

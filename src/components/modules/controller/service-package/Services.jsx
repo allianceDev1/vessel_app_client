@@ -15,7 +15,7 @@ const Services = () => {
     const navigate = useNavigate();
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
-        const res = await api.vfCv2Axios(`/package/${serial_number}/services`)
+        const res = await api.ssCv2Axios(`/package/${serial_number}/services`)
         return res
     };
 

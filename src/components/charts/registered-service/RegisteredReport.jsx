@@ -20,7 +20,7 @@ const RegisteredReport = () => {
     const { isLoading: reportLoading, data: reportData, error: reportError, dataUpdatedAt: updatedAt } = useQuery({
         queryKey: ['reg_mini_report'],
         queryFn: async () => {
-            let result = await api.vfCv2Axios.get('/service-registration/mini-report')
+            let result = await api.ssCv2Axios.get('/service-registration/mini-report')
 
             result = normalizeRegistrationMiniReports(result)
             return result

@@ -43,7 +43,7 @@ const PostponeService = ({ customerId, products, serviceType, isController = fal
             setLoading('submit')
 
             if (isController) {
-                await api.vfCv2Axios.post(`/service/${customerId}/postpone`, {
+                await api.ssCv2Axios.post(`/service/${customerId}/postpone`, {
                     postpone_date: form?.postpone_date,
                     products: selectedProducts,
                     reason: form?.reason
@@ -56,7 +56,7 @@ const PostponeService = ({ customerId, products, serviceType, isController = fal
                     message: "Service date Updated."
                 }))
             } else {
-                await api.vfTv2Axios.post(`/service/${customerId}/postpone`, {
+                await api.ssTv2Axios.post(`/service/${customerId}/postpone`, {
                     postpone_date: form?.postpone_date,
                     products: selectedProducts,
                     reason: form?.reason
@@ -111,7 +111,7 @@ const PostponeService = ({ customerId, products, serviceType, isController = fal
     } = useQuery({
         queryKey: ['service_postpone_reasons'],
         queryFn: async () => {
-            const res = await api.vfTv2Axios.get(`/service/form-resources?titles=service_postpone_reasons`)
+            const res = await api.ssTv2Axios.get(`/service/form-resources?titles=service_postpone_reasons`)
             const postponeList = res?.[0] || {}
             return postponeList?.values?.map(v => v.data?.[0]) || []
         },

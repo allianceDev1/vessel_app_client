@@ -24,7 +24,7 @@ const ProductLogInfo = () => {
     const { data } = useQuery({
         queryKey: ['service_job_product_log_view', service_srl_no, "pl", pl_product_id],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/completed/${service_srl_no}/product-log/${pl_product_id}`);
+            const data = await api.ssTv2Axios.get(`/completed/${service_srl_no}/product-log/${pl_product_id}`);
             return data
         },
         staleTime: 60_000

@@ -41,7 +41,7 @@ const Dashboard = () => {
     const countQuery = useQuery({
         queryKey: ['controller_dash_count_report'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/service/report/dashboard')
+            const res = await api.ssCv2Axios.get('/service/report/dashboard')
 
             const extractListData = (item, fallbackCount) => {
                 if (item && typeof item === 'object') {
@@ -133,7 +133,7 @@ const Dashboard = () => {
     const servicesQuery = useQuery({
         queryKey: ['workers_today_work_flow'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
+            const res = await api.ssCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
 
             return res?.map((w, i) => ({
                 techId: w?.technician_uuid,

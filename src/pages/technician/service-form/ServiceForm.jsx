@@ -64,7 +64,7 @@ const ServiceForm = () => {
         queryKey: ['service_form_resources', serviceForm?.work_key],
         queryFn: async () => {
 
-            const { otp_logs, ...res } = await api.vfTv2Axios.get(`/service/service-job/form-resources?work_key=${serviceForm?.work_key}`)
+            const { otp_logs, ...res } = await api.ssTv2Axios.get(`/service/service-job/form-resources?work_key=${serviceForm?.work_key}`)
 
             const pgStretcher = buildCustomerPGStretcher(res?.products)
 

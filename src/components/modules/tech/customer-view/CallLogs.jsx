@@ -11,7 +11,7 @@ const CallLogs = () => {
     const fetchData = useMemo(() => async ({ page, pageSize }) => {
 
         const params = new URLSearchParams({ page, limit: pageSize })
-        const res = await api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?${params}`)
+        const res = await api.ssTv2Axios.get(`/customer/${customer_id}/call-logs?${params}`)
 
         const transformed = res.data.map((item, index) => {
             return {

@@ -75,7 +75,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 zero_fee_items: review?.zero_fee_items
             }
 
-            const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {
+            const result = await api.ssTv2Axios.post('/service/service-form/submit', body, {
                 params: {
                     work_key: serviceForm?.work_key
                 },

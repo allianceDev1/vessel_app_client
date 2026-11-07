@@ -96,7 +96,7 @@ const ProductList = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ["tech", 'customer_products', customer_id],
         queryFn: async () => {
-            const res = await api.vfTv2Axios(`/customer/${customer_id}/products`)
+            const res = await api.ssTv2Axios(`/customer/${customer_id}/products`)
 
             return res || [];
         },

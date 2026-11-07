@@ -78,7 +78,7 @@ const SearchCustomer = () => {
             post: searchParams.get('post') || ''
         })
 
-        const res = await api.vfCv2Axios.get(`/customer/search?${params}`)
+        const res = await api.ssCv2Axios.get(`/customer/search?${params}`)
 
         const transformed = res.data.map((item, index) => {
             const globalIndex = page * pageSize + index + 1

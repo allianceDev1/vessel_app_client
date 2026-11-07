@@ -17,7 +17,7 @@ const PurchaseLogInfo = () => {
     const { data, isLoading } = useQuery({
         queryKey: ['service_job_purchase_log_view', service_srl_no, "pp", pp_product_id],
         queryFn: async () => {
-            const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
+            const data = await api.ssCv2Axios.get(`/service/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
 
             return {
                 ...data,

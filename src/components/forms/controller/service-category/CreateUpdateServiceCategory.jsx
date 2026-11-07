@@ -32,8 +32,8 @@ const CreateUpdateServiceCategory = ({ action = 'CREATE', data }) => {
     const { data: resources, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_category_resources'],
         queryFn: async () => {
-            const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?fields=fields=package_id,package_name,product_type,is_active&hidden=Yes`)
-            const rulesRes = await api.vfCv2Axios.get(`/config/eligibility-rules`)
+            const packageRes = await api.ssCv2Axios.get(`/config/service-package/list?fields=fields=package_id,package_name,product_type,is_active&hidden=Yes`)
+            const rulesRes = await api.ssCv2Axios.get(`/config/eligibility-rules`)
 
             return {
                 packages: packageRes,
@@ -191,7 +191,7 @@ const CreateUpdateServiceCategory = ({ action = 'CREATE', data }) => {
                 body.product_type = form?.product_type
                 body.mode = form?.mode
 
-                await api.vfCv2Axios.post(`/config/service-category`, body)
+                await api.ssCv2Axios.post(`/config/service-category`, body)
 
                 queryClient.refetchQueries({
                     queryKey: ['cn', 'service_category_list', form?.product_type],
@@ -199,7 +199,7 @@ const CreateUpdateServiceCategory = ({ action = 'CREATE', data }) => {
 
             } else if (action === 'UPDATE') {
 
-                await api.vfCv2Axios.put(`/config/service-categories/${data?.category_id}`, body)
+                await api.ssCv2Axios.put(`/config/service-categories/${data?.category_id}`, body)
 
                 queryClient.refetchQueries({
                     queryKey: ['cn', 'service_category', data?.category_id],

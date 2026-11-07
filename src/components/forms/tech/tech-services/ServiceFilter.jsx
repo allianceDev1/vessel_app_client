@@ -41,8 +41,8 @@ const ServiceFilter = () => {
     } = useQuery({
         queryKey: ['city_list_and_service_packages'],
         queryFn: async () => {
-            const cities = await api.vfTv2Axios('/service/area')
-            const packages = await api.vfTv2Axios('/package/list?fields=package_id,package_name,product_type')
+            const cities = await api.ssTv2Axios('/service/area')
+            const packages = await api.ssTv2Axios('/package/list?fields=package_id,package_name,product_type')
 
             return {
                 cityList: cities,

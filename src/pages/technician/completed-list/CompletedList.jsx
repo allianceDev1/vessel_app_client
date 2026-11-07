@@ -50,7 +50,7 @@ const CompletedList = () => {
     } = useInfiniteQuery({
         queryKey: ['tech_completed-services', filters?.customer_id, filters?.from_date, filters?.end_date],
         queryFn: async ({ pageParam = 0 }) => {
-            const res = await api.vfTv2Axios.get('/completed/list', {
+            const res = await api.ssTv2Axios.get('/completed/list', {
                 params: {
                     page: pageParam,
                     limit: LIMIT,
@@ -84,7 +84,7 @@ const CompletedList = () => {
     } = useQuery({
         queryKey: ['tech_completed_report', filters?.customer_id, filters?.from_date, filters?.end_date],
         queryFn: async () => {
-            const res = await api.vfTv2Axios.get('/completed/list/report', {
+            const res = await api.ssTv2Axios.get('/completed/list/report', {
                 params: {
                     ...filters
                 }

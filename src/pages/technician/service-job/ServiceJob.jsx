@@ -33,7 +33,7 @@ const ServiceJob = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['service_job_view', service_srl_no, 'about'],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/completed/${service_srl_no}/about`);
+            const data = await api.ssTv2Axios.get(`/completed/${service_srl_no}/about`);
             const grandTotal = data?.bills?.reduce((acc, curr) => acc + (curr?.grand_total || 0), 0)
             const paid = data?.bills?.reduce((acc, curr) => acc + (curr?.paid_amount || 0), 0)
 

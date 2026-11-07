@@ -154,7 +154,7 @@ const RegisteredView = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['registration_info_controller', reg_no],
     queryFn: async () => {
-      const res = await api.vfCv2Axios.get(`/service-registration/registration/${reg_no}`)
+      const res = await api.ssCv2Axios.get(`/service-registration/registration/${reg_no}`)
 
       const diff = getTimeDiff(new Date(res?.status?.status_at), new Date(res?.registered_at))
 

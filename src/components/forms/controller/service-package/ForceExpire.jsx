@@ -25,7 +25,7 @@ const ForceExpire = ({ packageSrlNo }) => {
         }
 
         try {
-            await api.vfCv2Axios.post(`/package/${packageSrlNo}/force-expire`)
+            await api.ssCv2Axios.post(`/package/${packageSrlNo}/force-expire`)
 
             queryClient.invalidateQueries({
                 queryKey: ['customer_package_info', packageSrlNo],

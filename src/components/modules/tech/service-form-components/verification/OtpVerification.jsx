@@ -40,7 +40,7 @@ const OtpVerification = ({ resetType }) => {
         try {
             setLoading('refetch')
 
-            const logs = await api.vfTv2Axios.get(`/registered-service/verify/otp-logs`, {
+            const logs = await api.ssTv2Axios.get(`/registered-service/verify/otp-logs`, {
                 params: {
                     work_key: serviceForm?.work_key
                 }
@@ -61,7 +61,7 @@ const OtpVerification = ({ resetType }) => {
 
     const resendOtp = async (sendType, numberType) => {
         try {
-            await api.vfTv2Axios.post(`/registered-service/resend-otp`, {
+            await api.ssTv2Axios.post(`/registered-service/resend-otp`, {
                 number_type: numberType,
                 send_type: sendType
             }, {
@@ -99,7 +99,7 @@ const OtpVerification = ({ resetType }) => {
         try {
             setLoading('verify')
 
-            await api.vfTv2Axios.post(`/registered-service/verify/otp`, {
+            await api.ssTv2Axios.post(`/registered-service/verify/otp`, {
                 otp: OTP || otp
             }, {
                 params: {

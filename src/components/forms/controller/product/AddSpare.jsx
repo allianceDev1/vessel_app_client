@@ -54,7 +54,7 @@ const AddSpare = ({ productId, productType }) => {
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.post(`/product/${productId}/spare`, form)
+            await api.ssCv2Axios.post(`/product/${productId}/spare`, form)
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_spare_list', productId],

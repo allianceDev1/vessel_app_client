@@ -41,8 +41,8 @@ const ViewServicePackage = () => {
         queryFn: async () => {
 
             const [packageRes, serviceRes] = await Promise.all([
-                api.vfCv2Axios.get(`/config/service-package/${package_id}`),
-                api.vfCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,is_active`)
+                api.ssCv2Axios.get(`/config/service-package/${package_id}`),
+                api.ssCv2Axios.get(`/config/service-package/service/list?hidden=Yes&packageIds=${package_id}&fields=service_name,is_active`)
             ]);
 
             const { pricing_config, ...pInfo } = packageRes;
@@ -74,7 +74,7 @@ const ViewServicePackage = () => {
                 onClick: async () => {
                     try {
 
-                        await api.vfCv2Axios.patch(`/config/service-package/${package_id}/active-status`, { is_active })
+                        await api.ssCv2Axios.patch(`/config/service-package/${package_id}/active-status`, { is_active })
 
                         queryClient.setQueryData(
                             ['cn', 'service_package', package_id],
@@ -109,7 +109,7 @@ const ViewServicePackage = () => {
                 onClick: async () => {
                     try {
 
-                        await api.vfCv2Axios.delete(`/config/service-package/${package_id}`)
+                        await api.ssCv2Axios.delete(`/config/service-package/${package_id}`)
 
                         queryClient.refetchQueries({
                             queryKey: ['cn', 'service_packages', data?.packageInfo?.product_type]

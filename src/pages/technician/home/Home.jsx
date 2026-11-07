@@ -24,10 +24,10 @@ const Home = () => {
         queryFn: async () => {
 
             const res = await Promise.all([
-                api.vfTv2Axios.get('/tech/report/today-performance'),
-                api.vfTv2Axios.get('/tech/report/month-performance'),
-                api.vfTv2Axios.get('/tech/report/chart/week/revenue'),
-                api.vfTv2Axios.get('/tech/report/chart/week/works')
+                api.ssTv2Axios.get('/tech/report/today-performance'),
+                api.ssTv2Axios.get('/tech/report/month-performance'),
+                api.ssTv2Axios.get('/tech/report/chart/week/revenue'),
+                api.ssTv2Axios.get('/tech/report/chart/week/works')
             ])
 
             const successVisits = (res?.[1]?.completed_visits ?? 0) - (res?.[1]?.cancelled_visits ?? 0)

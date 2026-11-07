@@ -11,7 +11,7 @@ export const mapApi = {
      * @param {Object} bounds - { north, south, east, west, limit }
      */
     getCustomersInViewport: async ({ north, south, east, west, limit = 500 }) => {
-        return await api.vfCv2Axios.get('/map/customers', {
+        return await api.ssCv2Axios.get('/map/customers', {
             params: { north, south, east, west, limit },
         });
     },
@@ -20,14 +20,14 @@ export const mapApi = {
      * Retrieve all active technicians with latest GPS locations and status
      */
     getActiveTechnicians: async () => {
-        return await api.vfCv2Axios.get('/map/technicians');
+        return await api.ssCv2Axios.get('/map/technicians');
     },
 
     /**
      * Retrieve all technician travels currently in progress
      */
     getActiveTravels: async () => {
-        return await api.vfCv2Axios.get('/map/travels');
+        return await api.ssCv2Axios.get('/map/travels');
     },
 
     /**
@@ -36,7 +36,7 @@ export const mapApi = {
      */
     getTravelDetails: async (travelId) => {
         if (!travelId) return null;
-        return await api.vfCv2Axios.get(`/map/travels/${travelId}`);
+        return await api.ssCv2Axios.get(`/map/travels/${travelId}`);
     },
 
     /**
@@ -46,7 +46,7 @@ export const mapApi = {
      */
     getTechnicianHistory: async (technicianId, params = {}) => {
         if (!technicianId) return [];
-        return await api.vfCv2Axios.get(`/map/technicians/${technicianId}/history`, {
+        return await api.ssCv2Axios.get(`/map/technicians/${technicianId}/history`, {
             params,
         });
     },
@@ -57,7 +57,7 @@ export const mapApi = {
      * @param {{ latitude: number, longitude: number }} destination
      */
     calculateRoute: async (origin, destination) => {
-        return await api.vfCv2Axios.post('/map/routes', {
+        return await api.ssCv2Axios.post('/map/routes', {
             origin,
             destination,
         });

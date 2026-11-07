@@ -35,7 +35,7 @@ const AboutProduct = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['controller_customer_product_info', product_id],
         queryFn: async () => {
-            const data = await api.vfCv2Axios(`/product/${product_id}/about`)
+            const data = await api.ssCv2Axios(`/product/${product_id}/about`)
             return data;
         },
         staleTime: 60_000

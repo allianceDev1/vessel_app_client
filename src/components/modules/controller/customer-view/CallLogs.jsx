@@ -31,7 +31,7 @@ const CallLogs = () => {
             sort_dir: sortDir
         })
 
-        const res = await api.vfCv2Axios.get(`/customer/${customer_id}/call-logs?${params}`)
+        const res = await api.ssCv2Axios.get(`/customer/${customer_id}/call-logs?${params}`)
 
         const transformed = res.data.map((item, index) => {
             return {

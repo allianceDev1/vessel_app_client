@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './service-registration.scss'
-import { vfCv2Axios } from '../../../../api/axios/axiosConfig'
+import { ssCv2Axios } from '../../../../api/axios/axiosConfig'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SERVICE_PRIORITY_TEXT, SERVICE_TYPES } from '../../../../assets/javascript/pre_data/service'
 import { REGISTRATION_TYPES } from '../../../../assets/javascript/pre_data/product'
@@ -40,8 +40,8 @@ const EditRegistration = ({ regNo, initialData }) => {
 
     const fetchResources = async () => {
         const [workers, inputs] = await Promise.all([
-            await vfCv2Axios.get('/resources/service-workers'),
-            await vfCv2Axios.get('/resources/form-resources?titles=complaint_registration_reasons')
+            await ssCv2Axios.get('/resources/service-workers'),
+            await ssCv2Axios.get('/resources/form-resources?titles=complaint_registration_reasons')
         ])
         return { workers, inputs: inputs?.find(i => i?.title === 'complaint_registration_reasons')?.values?.map(i => i?.data?.[0]) }
     }
@@ -49,7 +49,7 @@ const EditRegistration = ({ regNo, initialData }) => {
     const { data: regData } = useQuery({
         queryKey: ['registration_info_controller', regNo],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/service-registration/registration/${regNo}`)
+            const res = await api.ssCv2Axios.get(`/service-registration/registration/${regNo}`)
             return res
         },
         initialData: initialData,

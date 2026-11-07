@@ -30,8 +30,8 @@ const CreateRule = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'eligibility_resources'],
         queryFn: async () => {
-            const { subjects, conditions, directions } = await api.vfCv2Axios.get('/config/subject-resources')
-            const packages = await api.vfCv2Axios.get('/config/service-package/list?hidden=Yes&fields=package_id,package_name,product_type,is_active')
+            const { subjects, conditions, directions } = await api.ssCv2Axios.get('/config/subject-resources')
+            const packages = await api.ssCv2Axios.get('/config/service-package/list?hidden=Yes&fields=package_id,package_name,product_type,is_active')
 
             return {
                 subjects, conditions, directions,
@@ -138,7 +138,7 @@ const CreateRule = () => {
         setLoading(true)
         try {
 
-            await api.vfCv2Axios.post('/config/eligibility-rule', {
+            await api.ssCv2Axios.post('/config/eligibility-rule', {
                 rule_name: ruleName,
                 conditions: ruleConditions
             })
