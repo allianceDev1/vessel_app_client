@@ -28,7 +28,7 @@ const RunningKms = () => {
     } = useQuery({
         queryKey: ['controller-running-kms', month, searchParams.get('worker_uuid')],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/worker/running-kms/${month}`, {
+            const res = await api.ssCv2Axios.get(`/worker/running-kms/${month}`, {
                 params: {
                     worker_uuid: searchParams.get('worker_uuid') ? searchParams.get('worker_uuid') : ''
                 }

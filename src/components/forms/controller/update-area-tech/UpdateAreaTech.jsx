@@ -36,7 +36,7 @@ const UpdateAreaTech = ({ data, submitAction }) => {
         // action
         try {
             setLoading('update')
-            await api.vfCv2Axios.patch(`/branch-area/${data?.city_id}/technician`, {
+            await api.ssCv2Axios.patch(`/branch-area/${data?.city_id}/technician`, {
                 worker_uuid: data?.worker_uuid,
                 from_date: form?.from_date,
                 to_date: form?.to_date,

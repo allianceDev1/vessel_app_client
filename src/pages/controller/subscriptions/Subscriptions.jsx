@@ -31,7 +31,7 @@ const Subscriptions = () => {
     } = useQuery({
         queryKey: ['subscription_mini_report'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/package/mini-report`)
+            const res = await api.ssCv2Axios.get(`/package/mini-report`)
             return res
         },
         enabled: searchParams.get('fl') !== 'Yes',

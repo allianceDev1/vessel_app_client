@@ -28,8 +28,8 @@ const CreatePackageService = ({ productType, packageId }) => {
         queryKey: ['cn', 'create_package_service', productType, 'resources'],
         queryFn: async () => {
             const fields = 'service_name,mode,coverage,service_charge_applied,eligibility_rules'
-            const categoryRes = await api.vfCv2Axios.get(`/config/service-categories/list?product_type=${productType}&fields=${fields}`)
-            const rulesRes = await api.vfCv2Axios.get(`/config/eligibility-rules`)
+            const categoryRes = await api.ssCv2Axios.get(`/config/service-categories/list?product_type=${productType}&fields=${fields}`)
+            const rulesRes = await api.ssCv2Axios.get(`/config/eligibility-rules`)
 
             return {
                 categories: categoryRes,
@@ -173,7 +173,7 @@ const CreatePackageService = ({ productType, packageId }) => {
                 )
             }
 
-            await api.vfCv2Axios.post(`/config/service-package/${packageId}/service-category`, body)
+            await api.ssCv2Axios.post(`/config/service-package/${packageId}/service-category`, body)
 
             queryClient.refetchQueries({
                 queryKey: ['cn', 'service_package', packageId]

@@ -3,7 +3,7 @@ import './text-address.scss';
 import { TbMapPin, TbRoute, TbClock, TbLoader2, TbLocationOff } from 'react-icons/tb';
 import Button from '../../../UI_Primitives/buttons/Button';
 import { getLocation, redirectDirectionLocation, redirectViewLocation } from '../../../../utils/services/location_services';
-import { vfTv2Axios } from '../../../../api/axios/axiosConfig';
+import { ssTv2Axios } from '../../../../api/axios/axiosConfig';
 import { formatDistance, formatDuration } from '../../../../utils/map.utils';
 
 const TextAddress = ({
@@ -56,7 +56,7 @@ const TextAddress = ({
                     return;
                 }
 
-                const response = await vfTv2Axios.post('/map/location/routes', {
+                const response = await ssTv2Axios.post('/map/location/routes', {
                     origin: {
                         latitude: locResult.latitude,
                         longitude: locResult.longitude

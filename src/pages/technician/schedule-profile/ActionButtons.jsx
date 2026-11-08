@@ -97,7 +97,7 @@ const ActionButtons = ({ regData, workKeyParse }) => {
                 return;
             }
 
-            const work = await api.vfTv2Axios.get(`/registered-service/${regData?.registration_id}/${regData?.last_visit?.visit_id}/retrieve-start-work`)
+            const work = await api.ssTv2Axios.get(`/registered-service/${regData?.registration_id}/${regData?.last_visit?.visit_id}/retrieve-start-work`)
             dispatch(sfActions.startWork(work));
             navigate('/tech/service/attend-work')
 

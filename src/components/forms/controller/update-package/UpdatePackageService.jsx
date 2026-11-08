@@ -22,7 +22,7 @@ const UpdatePackageService = ({ packageId, serviceData, onSuccess }) => {
     const { data: eligibilityRules = [], isLoading: isLoadingRules } = useQuery({
         queryKey: ['cn', 'eligibility_rules_active'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/config/eligibility-rules');
+            const res = await api.ssCv2Axios.get('/config/eligibility-rules');
             return res?.filter(i => i.enabled) || [];
         },
         staleTime: 60_000
@@ -161,7 +161,7 @@ const UpdatePackageService = ({ packageId, serviceData, onSuccess }) => {
             }
 
             const targetServiceId = serviceData?.service_id;
-            await api.vfCv2Axios.put(`/config/service-package/${packageId}/${targetServiceId}`, body);
+            await api.ssCv2Axios.put(`/config/service-package/${packageId}/${targetServiceId}`, body);
 
             await Promise.all([
                 queryClient.refetchQueries({

@@ -76,7 +76,7 @@ const SubmitForm = ({ modalId, unenablePayment, review, payment }) => {
                 zero_fee_items: review?.zero_fee_items
             }
 
-            const result = await api.vfTv2Axios.post(`/registered-service/${review?.registration_id}/self-close/submit`,
+            const result = await api.ssTv2Axios.post(`/registered-service/${review?.registration_id}/self-close/submit`,
                 body,
                 {
                     timeout: 5 * 60 * 1000,

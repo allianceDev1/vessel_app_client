@@ -20,7 +20,7 @@ const UpdateRunningKm = ({ data, setData }) => {
         setLoading(true)
         // api
         try {
-            await api.vfTv2Axios.post('/tech/running-kms/update', {
+            await api.ssTv2Axios.post('/tech/running-kms/update', {
                 date: data?.date,
                 value: Number(km)
             })

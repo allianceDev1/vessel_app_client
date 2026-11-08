@@ -54,7 +54,7 @@ const ArrayElemCU = ({ uuid, title, stretcher, data, isEditMode = false }) => {
                     data: Object.values(acc)
                 }
 
-                await api.vfCv2Axios.put(`/resources/form-resources/${title}/${uuid}`, body)
+                await api.ssCv2Axios.put(`/resources/form-resources/${title}/${uuid}`, body)
 
             } else {
                 // Create New
@@ -65,7 +65,7 @@ const ArrayElemCU = ({ uuid, title, stretcher, data, isEditMode = false }) => {
                     data: Object.values(form)
                 }
 
-                await api.vfCv2Axios.post(`/resources/form-resources`, body)
+                await api.ssCv2Axios.post(`/resources/form-resources`, body)
             }
 
             queryClient.refetchQueries({ queryKey: ['resources_values', title] })

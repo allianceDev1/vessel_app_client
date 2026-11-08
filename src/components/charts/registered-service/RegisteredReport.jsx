@@ -20,7 +20,7 @@ const RegisteredReport = () => {
     const { isLoading: reportLoading, data: reportData, error: reportError, dataUpdatedAt: updatedAt } = useQuery({
         queryKey: ['reg_mini_report'],
         queryFn: async () => {
-            let result = await api.vfCv2Axios.get('/service-registration/mini-report')
+            let result = await api.ssCv2Axios.get('/service-registration/mini-report')
 
             result = normalizeRegistrationMiniReports(result)
             return result
@@ -59,7 +59,6 @@ const RegisteredReport = () => {
                                 "Cancelled": month?.cancelled
                             }))}
                             responsive
-                            margin={{ left: -30 }}
                         >
                             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                             <ChartTooltip />
@@ -82,7 +81,6 @@ const RegisteredReport = () => {
                                 count: status?.count,
                             }))}
                             responsive
-                            margin={{ left: -30 }}
                         >
                             <PolarGrid />
                             <ChartTooltip nameColorVisibility={false} nameVisibility={false} />
@@ -103,10 +101,8 @@ const RegisteredReport = () => {
                                 "Count": month?.count
                             }))}
                             responsive
-                            margin={{ left: -30 }}
                         >
                             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                            <YAxis dataKey="Count" tick={{ fontSize: 11 }} />
                             <ChartTooltip nameColorVisibility={false} nameVisibility={false} />
                             <Bar key={'Count'} dataKey={'Count'} barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 0, 0]} />
                         </ComposedChart>
@@ -126,7 +122,6 @@ const RegisteredReport = () => {
                                 "Renewal": month?.renewal
                             }))}
                             responsive
-                            margin={{ left: -30 }}
                         >
                             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                             <ChartTooltip />

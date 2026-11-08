@@ -27,7 +27,7 @@ const RescheduleService = ({ registrationId, isController = false }) => {
 
       if (isController) {
 
-        await api.vfCv2Axios.patch(`/service-registration/${registrationId}/reschedule`, {
+        await api.ssCv2Axios.patch(`/service-registration/${registrationId}/reschedule`, {
           schedule_slot_start_at: startTime,
           schedule_slot_finish_at: endTime,
           reason: form?.reason
@@ -45,7 +45,7 @@ const RescheduleService = ({ registrationId, isController = false }) => {
         dispatch(modal.pull.all())
 
       } else {
-        await api.vfTv2Axios.patch(`/registered-service/${registrationId}/reschedule`, {
+        await api.ssTv2Axios.patch(`/registered-service/${registrationId}/reschedule`, {
           schedule_slot_start_at: startTime,
           schedule_slot_finish_at: endTime,
           reason: form?.reason

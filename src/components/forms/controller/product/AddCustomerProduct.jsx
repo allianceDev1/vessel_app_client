@@ -27,7 +27,7 @@ const AddCustomerProduct = ({ customerId }) => {
     const { data: installationModes, isLoading: resourcesLoading, error: resourcesError } = useQuery({
         queryKey: ['installation_modes'],
         queryFn: async () => {
-            let result = await api.vfCv2Axios.get('/resources/form-resources?titles=installation_mode')
+            let result = await api.ssCv2Axios.get('/resources/form-resources?titles=installation_mode')
 
             return result?.[0]?.values || []
         },

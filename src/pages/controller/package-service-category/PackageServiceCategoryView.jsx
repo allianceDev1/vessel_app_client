@@ -32,7 +32,7 @@ const PackageServiceCategoryView = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'package_service_category', package_id, service_id],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/config/service-package/${package_id}/${service_id}`);
+            const res = await api.ssCv2Axios.get(`/config/service-package/${package_id}/${service_id}`);
             return res;
         },
         staleTime: 60_000
@@ -52,7 +52,7 @@ const PackageServiceCategoryView = () => {
             accept: {
                 onClick: async () => {
                     try {
-                        await api.vfCv2Axios.post(`/config/service-package/${package_id}/${service_id}/status`, {
+                        await api.ssCv2Axios.post(`/config/service-package/${package_id}/${service_id}/status`, {
                             status: status
                         });
 
@@ -94,7 +94,7 @@ const PackageServiceCategoryView = () => {
             accept: {
                 onClick: async () => {
                     try {
-                        await api.vfCv2Axios.delete(`/config/service-package/${package_id}/${service_id}`);
+                        await api.ssCv2Axios.delete(`/config/service-package/${package_id}/${service_id}`);
 
                         queryClient.refetchQueries({
                             queryKey: ['cn', 'service_package', package_id]

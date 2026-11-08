@@ -41,7 +41,7 @@ const Dashboard = () => {
     const countQuery = useQuery({
         queryKey: ['controller_dash_count_report'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/service/report/dashboard')
+            const res = await api.ssCv2Axios.get('/service/report/dashboard')
 
             const extractListData = (item, fallbackCount) => {
                 if (item && typeof item === 'object') {
@@ -99,7 +99,7 @@ const Dashboard = () => {
                     vessel_filter: nonVerified.vessel_filter,
                     desc: 'Customer not verified jobs',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes&p=l`
+                    redirect_url: `/controller/completed?fl=Yes&unverified=Yes&p=l`
                 }
             ]
         },
@@ -133,7 +133,7 @@ const Dashboard = () => {
     const servicesQuery = useQuery({
         queryKey: ['workers_today_work_flow'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
+            const res = await api.ssCv2Axios.get(`/worker/work-flow/${moment().format('YYYY-MM-DD')}`)
 
             return res?.map((w, i) => ({
                 techId: w?.technician_uuid,

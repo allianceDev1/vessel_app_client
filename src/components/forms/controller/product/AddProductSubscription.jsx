@@ -17,7 +17,7 @@ const AddProductSubscription = ({ productId, productType }) => {
     const { data: packageList = [], isLoading, error } = useQuery({
         queryKey: ['config_service_package_list', productType],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/config/service-package/list?product_type=${productType}`);
+            const res = await api.ssCv2Axios.get(`/config/service-package/list?product_type=${productType}`);
             return res || [];
         },
         enabled: Boolean(productType),
@@ -44,7 +44,7 @@ const AddProductSubscription = ({ productId, productType }) => {
 
         setLoading(true);
         try {
-            const res = await api.vfCv2Axios.post('/package/create', {
+            const res = await api.ssCv2Axios.post('/package/create', {
                 product_id: productId,
                 package_id: selectedPackageId
             });

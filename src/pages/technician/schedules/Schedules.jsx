@@ -21,7 +21,7 @@ const Schedules = () => {
     const { data, isLoading, isFetching, error, refetch } = useQuery({
         queryKey: ['tech_schedules'],
         queryFn: async () => {
-            const services = await api.vfTv2Axios.get('/registered-service/my-schedules')
+            const services = await api.ssTv2Axios.get('/registered-service/my-schedules')
 
             const pickups = services?.filter(s => s.reg_status === 4) || []
             const schedules = groupAndSortByScheduleDate(services?.filter(s => s.reg_status === 3) || [])

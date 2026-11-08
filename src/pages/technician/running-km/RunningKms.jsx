@@ -24,7 +24,7 @@ const RunningKms = () => {
         queryKey: ['tech_running_kms', searchParams.get('month')],
         queryFn: async () => {
 
-            const response = await api.vfTv2Axios.get(`/tech/running-kms/${searchParams.get('month')}`)
+            const response = await api.ssTv2Axios.get(`/tech/running-kms/${searchParams.get('month')}`)
             return response
         },
         staleTime: 60_000,

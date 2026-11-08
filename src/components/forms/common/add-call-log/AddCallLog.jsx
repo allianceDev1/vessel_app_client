@@ -24,7 +24,7 @@ const AddCallLog = ({ customerId, serviceType, isController }) => {
             setLoading('submit')
 
             if (isController) {
-                await api.vfCv2Axios.post(`/customer/${customerId}/call-log`, { message })
+                await api.ssCv2Axios.post(`/customer/${customerId}/call-log`, { message })
                 dispatch(modal.pull.all())
                 dispatch(toast.push({
                     type: "success",
@@ -33,7 +33,7 @@ const AddCallLog = ({ customerId, serviceType, isController }) => {
                 }))
 
             } else {
-                await api.vfTv2Axios.post(`/customer/${customerId}/call-log`, { message })
+                await api.ssTv2Axios.post(`/customer/${customerId}/call-log`, { message })
 
                 queryClient.setQueryData(
                     ['tech_service_profile', customerId, serviceType, searchParams.get('reg_id')],

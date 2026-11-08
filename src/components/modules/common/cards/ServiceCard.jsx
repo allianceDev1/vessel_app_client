@@ -1,74 +1,110 @@
-import React, { useId } from 'react'
+import React, { useState } from 'react'
 import './service-card.scss'
-import { TbHash, TbUser } from 'react-icons/tb'
-import Badge from '../../../UI_Primitives/badge/Badge'
+import { TbArrowUpRight, TbHash, TbSettings, TbTool, TbMessage2 } from 'react-icons/tb'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
+
+// RENEWAL_* / PACKAGE_* / ADDITIONAL_* -> color variant
+const typeClass = (t) => {
+    const v = String(t || '').toUpperCase()
+    if (v.startsWith('RENEWAL')) return 'renewal'
+    if (v.startsWith('PACKAGE')) return 'package'
+    if (v.startsWith('ADDITIONAL')) return 'additional'
+    return ''
+}
+
+const toList = (v) => (Array.isArray(v) ? v.flat(Infinity).filter(Boolean) : [])
+
+const formatAmount = (v) => {
+    const n = Number(v)
+    if (v === null || v === undefined || v === '' || Number.isNaN(n)) return '0.00'
+    return n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
 
 const ServiceCard = ({ data, pointer = false, onClick = () => { } }) => {
-    const tempColor = '#464646'
-    const rawId = useId();
-    const gradientId = `service-grad-${rawId.replace(/:/g, '')}`;
+    // Package color if available, otherwise the palette's primary color
+    const color = data?.package_color_code || 'var(--color-primary)'
+    const total = formatAmount(data?.grand_total_amount)
+    const [expanded, setExpanded] = useState(false)
+
+    const spares = toList(data?.spares)
+    const works = toList(data?.service_works)
+
+    // `pointer` keeps its old meaning: the card has a details page to navigate to
+    const handleNavigate = (e) => {
+        e.stopPropagation()
+        onClick()
+    }
 
     return (
-        <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }} onClick={onClick}>
-            <div className="card-header" style={{ color: 'white' }}>
-                <svg className='gradient-background' viewBox="0 0 700 150" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id={gradientId}>
-                            <stop offset="0%" stopColor={data?.package_color_code || tempColor} />
-                            <stop offset="100%" stopColor="#000000" />
-                        </linearGradient>
-                    </defs>
-
-                    <path
-                        d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill={`url(#${gradientId})`}
-                    />
-                </svg>
-
-                <div className="left">
-                    <h4 style={{ color: getContrastText(data?.package_color_code || tempColor) }}>{data?.card_title}</h4>
-                    <p style={{ color: getContrastText(data?.package_color_code || tempColor) }}>{toStandardText(data?.card_type)}</p>
+        <div
+            className={`service-card-item-container ${expanded ? 'expanded' : ''}`}
+            style={{ cursor: 'pointer', '--pkg-color': color }}
+            onClick={() => setExpanded((p) => !p)}
+        >
+            <div className="top-row">
+                <div className="tags">
+                    {data?.package_name ? <span className="pill pkg-pill"><i className="dot" />{data.package_name}</span> : null}
+                    {data?.mode ? <span className="pill mode-pill">{toStandardText(data.mode)}</span> : null}
+                    {data?.repeat ? <span className="pill repeat-pill">Repeat</span> : null}
                 </div>
-                <div className="right">
-                    <p>{isoToDDMonYYYY(data?.date)}</p>
-                </div>
+                <span className={`amount ${data?.package_id ? '' : 'no-package'}`}>₹{total}</span>
             </div>
 
-            <div className="middle-content">
-                <div className="middle-border-1">
-                    <div className="left">
+            <h4 className="title">{data?.card_title}</h4>
 
+            <div className="bottom-row">
+                <p className="worker">{data?.worker_name}</p>
+                <span className="date">{isoToDDMonYYYY(data?.date)}</span>
+            </div>
+
+            <div className={`details-wrapper ${expanded ? 'open' : ''}`}>
+                <div className="details-inner">
+                    <div className="details-head">
+                        <span className="srl"><TbHash />{data?.service_srl_no}</span>
+                        {pointer && (
+                            <button type="button" className="nav-btn" title="Open details" onClick={handleNavigate}>
+                                <TbArrowUpRight />
+                            </button>
+                        )}
                     </div>
-                    <div className="right">
-                        <p>{toStandardText(data?.mode)}</p>
-                        <div className="badge-container">
-                            {data?.package_id ? <Badge value={data?.package_name} style={{
-                                backgroundColor: data?.package_color_code,
-                                color: getContrastText(data?.package_color_code)
-                            }} /> : ''}
-                            {data?.repeat ? <Badge value={'Repeat'} severity={'danger'} /> : ""}
+
+                    {spares.length > 0 && (
+                        <div className="detail-block">
+                            <h5><TbSettings /> Spares</h5>
+                            <ul className="item-list">
+                                {spares.map((s, i) => (
+                                    <li key={`s-${i}`} className={`item ${typeClass(s?.spare_type)}`} title={toStandardText(s?.spare_type)}>
+                                        <span className="name">{s?.spare_name}</span>
+                                        {s?.qty !== undefined && <span className="qty">×{s.qty}</span>}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    </div>
-                </div>
-                {data?.comment ? <div className="middle-border-2">
-                    <p className='text'>{data?.comment}</p>
-                </div> : ''}
-            </div>
-            <div className="footer-content">
-                <div className="footer-border"
-                    style={{ backgroundColor: `${data?.package_color_code || tempColor}18`, borderColor: `${data?.package_color_code || tempColor}6b` }}
-                >
-                    <div className="left">
-                        <TbHash />
-                        <p>{data?.service_srl_no}</p>
-                    </div>
-                    <div className="right">
-                        <p>{data?.worker_name}</p>
-                        <TbUser />
-                    </div>
+                    )}
+
+                    {works.length > 0 && (
+                        <div className="detail-block">
+                            <h5><TbTool /> Service works</h5>
+                            <ul className="item-list">
+                                {works.map((w, i) => {
+                                    const t = w?.service_type
+                                    return (
+                                        <li key={`w-${i}`} className={`item ${typeClass(t)}`} title={toStandardText(t)}>
+                                            <span className="name">{w?.work_name}</span>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    )}
+
+                    {data?.comment ? (
+                        <div className="detail-block">
+                            <h5><TbMessage2 /> Comment</h5>
+                            <p className="text">{data.comment}</p>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </div>

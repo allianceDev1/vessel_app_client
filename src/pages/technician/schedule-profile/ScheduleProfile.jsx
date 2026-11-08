@@ -34,9 +34,9 @@ const ScheduleProfile = () => {
     queryKey: ['tech_schedule_profile', customer_id, registration_id],
     queryFn: async () => {
       const apis = [
-        api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
-        api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
-        api.vfTv2Axios.get(`/registered-service/${registration_id}/about`)
+        api.ssTv2Axios.get(`/customer/${customer_id}/profile`),
+        api.ssTv2Axios.get(`/service/${customer_id}/upcoming-services`),
+        api.ssTv2Axios.get(`/registered-service/${registration_id}/about`)
       ]
 
       const [customerRes, upServiceRes, regServiceRes] = await Promise.all(apis);

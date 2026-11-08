@@ -21,7 +21,7 @@ const ChangeProductStatus = ({ status, productId }) => {
     }
 
     try {
-      const res = await api.vfCv2Axios.post(`/product/${productId}/status`, { status })
+      const res = await api.ssCv2Axios.post(`/product/${productId}/status`, { status })
 
       queryClient.refetchQueries({
         queryKey: ['controller_customer_product_info', productId],

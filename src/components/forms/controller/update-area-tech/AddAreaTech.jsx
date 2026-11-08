@@ -50,7 +50,7 @@ const AddAreaTech = ({ cityId, activeWorkers, setData }) => {
         // action
         try {
             setLoading('create')
-            await api.vfCv2Axios.post(`/branch-area/${cityId}/technician`, {
+            await api.ssCv2Axios.post(`/branch-area/${cityId}/technician`, {
                 worker_uuid: form?.worker_uuid,
                 from_date: form?.from_date,
                 to_date: form?.to_date,

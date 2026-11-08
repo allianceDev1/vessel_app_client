@@ -27,7 +27,7 @@ const ServicePackages = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_packages', (searchParams.get('parent_product') || parent_product_types[0])],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(
+            const res = await api.ssCv2Axios.get(
                 `/config/service-package/list?product_type=${searchParams.get('parent_product')}&hidden=Yes&fields=package_name,color_code,tokens_count,package_duration_months,is_active,number_of_services`
             )
             return res

@@ -1,75 +1,61 @@
-import React, { useId } from 'react'
+import React, { useState } from 'react'
 import './service-card.scss'
-import { TbHash, TbUser } from 'react-icons/tb'
-import Badge from '../../../UI_Primitives/badge/Badge'
+import { TbHash, TbBox, TbMessage2, TbFileText, TbUserSearch } from 'react-icons/tb'
 import { toStandardText } from '../../../../utils/helpers/text-formatting'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const InstallationCard = ({ data, pointer = false }) => {
-    const tempColor = '#004b10'
-    const rawId = useId();
-    const gradientId = `install-grad-${rawId.replace(/:/g, '')}`;
-
+    const [expanded, setExpanded] = useState(false)
+    const hasComment = !!data?.comment
+    // Prospect id from e-form no: "Q" -> "LES", then drop the last 5 chars (incl. the "-")
+    const prospectId = data?.e_form_srl_no
+        ? String(data.e_form_srl_no).replace('Q', 'LES').slice(0, -5)
+        : null
 
     return (
-        <div className="service-card-item-container"
-            style={{ backgroundColor: 'var(--color-success-bg)', cursor: pointer ? 'pointer' : 'default' }}
+        <div
+            className={`service-card-item-container installation ${expanded ? 'expanded' : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setExpanded((p) => !p)}
         >
-            <div className="card-header" style={{ color: 'white' }}>
-                <svg className='gradient-background' viewBox="0 0 700 150" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id={gradientId}>
-                            <stop offset="0%" stopColor={tempColor} />
-                            <stop offset="100%" stopColor="#000000" />
-                        </linearGradient>
-                    </defs>
-
-                    <path
-                        d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill={`url(#${gradientId})`}
-                    />
-                </svg>
-
-                <div className="left">
-                    <h4 style={{ color: getContrastText(tempColor) }}>{data?.card_title}</h4>
-                    <p style={{ color: getContrastText(tempColor) }}>{toStandardText(data?.card_type)}</p>
-                </div>
-                <div className="right">
-                    <p>{isoToDDMonYYYY(data?.date)}</p>
+            <div className="top-row">
+                <div className="tags">
+                    <span className="pill pkg-pill"><i className="dot" />{toStandardText(data?.card_type) || 'Installation'}</span>
+                    {data?.sku ? <span className="pill mode-pill">{data.sku}</span> : null}
+                    {data?.repeat ? <span className="pill repeat-pill">Repeat</span> : null}
                 </div>
             </div>
 
-            <div className="middle-content">
-                <div className="middle-border-1">
-                    <div className="left">
+            <h4 className="title">{data?.card_title}</h4>
 
-                    </div>
-                    <div className="right">
+            <div className="bottom-row">
+                <p className="worker">{data?.worker_name}</p>
+                <span className="date">{isoToDDMonYYYY(data?.date)}</span>
+            </div>
 
-                        <div className="badge-container">
-                            {data?.repeat ? <Badge value={'Repeat'} severity={'danger'} /> : ""}
-                            {data?.sku ? <Badge value={`${data?.sku}`} severity={'info'} /> : ''}
+            <div className={`details-wrapper ${expanded ? 'open' : ''}`}>
+                <div className="details-inner">
+                    <div className="details-head">
+                        <div className="srl-group">
+                            <span className="srl" title="Installation No"><TbHash />{data?.installation_srl_no || 'Not Linked'}</span>
+                            {data?.e_form_srl_no ? <span className="srl" title="E-Form No"><TbFileText />{data.e_form_srl_no}</span> : null}
+                            {prospectId ? <span className="srl" title="Prospect ID"><TbUserSearch />{prospectId}</span> : null}
                         </div>
                     </div>
-                </div>
-                {(data?.comment || data?.product_name) ? <div className="middle-border-2">
-                    {data?.comment && <p className='text'>{data?.comment}</p>}
-                    {data?.product_name && <p className='text'>{data?.product_name}</p>}
-                </div> : ''}
-            </div>
-            <div className="footer-content">
-                <div className="footer-border"
-                    style={{ backgroundColor: `${tempColor}18`, borderColor: `${tempColor}6b` }}
-                >
-                    <div className="left">
-                        <TbHash />
-                        <p>{data?.installation_srl_no || 'Not Linked'}</p>
-                    </div>
-                    <div className="right">
-                        <p>{data?.worker_name}</p>
-                        <TbUser />
-                    </div>
+
+                    {data?.product_name ? (
+                        <div className="detail-block">
+                            <h5><TbBox /> Product</h5>
+                            <p className="text">{data.product_name}</p>
+                        </div>
+                    ) : null}
+
+                    {hasComment ? (
+                        <div className="detail-block">
+                            <h5><TbMessage2 /> Comment</h5>
+                            <p className="text">{data.comment}</p>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ import {
     TbReplace,
     TbCheckbox
 } from 'react-icons/tb'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../../redux/features/non_persisted/miniSystemSlice'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
 import ReplaceSpareModal from './ReplaceSpareModal'
@@ -100,7 +100,7 @@ const ProductSpareCard = ({
 
         const spareChargeIncreaseFlag = Boolean(
             replacementData?.spare_category === 'PUMP' ||
-            (replacementData?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+            (replacementData?.spare_category === "MEMBRANE" && productInForm?.service_data?.mode !== 'RENEWAL'))
 
         if (spareChargeIncreaseFlag) {
             dispatch(sfActions.updateProduct.increaseSCIndex())
@@ -169,7 +169,7 @@ const ProductSpareCard = ({
 
             const spareChargeIncreaseFlag = Boolean(
                 data?.spare_category === 'PUMP' ||
-                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+                (data?.spare_category === "MEMBRANE" && productInForm?.service_data?.mode !== 'RENEWAL'))
 
             if (spareChargeIncreaseFlag) {
                 dispatch(sfActions.updateProduct.decreaseSCIndex())

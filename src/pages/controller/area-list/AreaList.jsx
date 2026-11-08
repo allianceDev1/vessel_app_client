@@ -48,7 +48,7 @@ const AreaList = () => {
     } = useQuery({
         queryKey: ['area-mini-report'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/branch-area/mini-report')
+            const res = await api.ssCv2Axios.get('/branch-area/mini-report')
             return res
         },
         staleTime: 10 * 60_000,
@@ -90,7 +90,7 @@ const AreaList = () => {
             sort_dir: sortDir,
             ...(search ? { search } : {})
         })
-        const res = await api.vfCv2Axios.get(`/branch-area/cities/${viewType}?${params}`)
+        const res = await api.ssCv2Axios.get(`/branch-area/cities/${viewType}?${params}`)
 
         // Transform raw API rows into table row shape here
         const transformed = res.data.map((item, index) => {
@@ -181,7 +181,7 @@ const AreaList = () => {
                     try {
                         const key = `${arr[0].worker_uuid}-${arr[0].city_id}`;
                         setDeletingKey(key);
-                        await api.vfCv2Axios.delete(`/branch-area/cities/technicians`, { data: { workers: arr } })
+                        await api.ssCv2Axios.delete(`/branch-area/cities/technicians`, { data: { workers: arr } })
                         queryClient.invalidateQueries({ queryKey: ['area-data', viewType] })
                         clearSelection()
                     } catch (error) {

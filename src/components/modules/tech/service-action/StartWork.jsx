@@ -46,7 +46,7 @@ const StartWork = ({ registrationId, visitId }) => {
                 timestamp: locationData?.timestamp || null,
             }
 
-            const work = await api.vfTv2Axios.post(`/registered-service/${registrationId}/${visitId}/start-work`, { location })
+            const work = await api.ssTv2Axios.post(`/registered-service/${registrationId}/${visitId}/start-work`, { location })
             dispatch(sfActions.startWork(work))
             
             navigate('/tech/service/attend-work')

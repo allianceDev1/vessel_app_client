@@ -9,11 +9,11 @@ const TopUp = () => {
 
 
     const fetchCustomerProducts = async (customerId) => {
-        return await api.vfTv2Axios.get(`/customer/${customerId}/top-up/products`)
+        return await api.ssTv2Axios.get(`/customer/${customerId}/top-up/products`)
     }
 
     const doTopUp = async (customerId, body) => {
-        return await api.vfTv2Axios.post(`/customer/${customerId}/top-up`, body)
+        return await api.ssTv2Axios.post(`/customer/${customerId}/top-up`, body)
     }
 
     useEffect(() => {

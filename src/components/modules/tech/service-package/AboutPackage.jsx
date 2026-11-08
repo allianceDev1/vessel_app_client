@@ -18,7 +18,7 @@ const AboutPackage = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_package_info', serial_number],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/package/${serial_number}/about`)
+            const data = await api.ssTv2Axios.get(`/package/${serial_number}/about`)
             return data;
         },
         staleTime: 60_000

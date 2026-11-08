@@ -28,7 +28,7 @@ const ServiceCategory = () => {
         queryFn: async () => {
             const fields = 'service_name,is_active,package_product_only'
             const productType = (searchParams.get('product_product') || product_types[0])
-            const res = await api.vfCv2Axios.get(`/config/service-categories/list?product_type=${productType}&hidden=Yes&fields=${fields}`)
+            const res = await api.ssCv2Axios.get(`/config/service-categories/list?product_type=${productType}&hidden=Yes&fields=${fields}`)
             return res
         },
         staleTime: 10_000

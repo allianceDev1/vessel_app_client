@@ -1,83 +1,123 @@
+// Make the modal that hosts the calculator fill the full viewport height
+.modal-border:has(.tech-calculator) {
+    display: flex;
+    flex-direction: column;
+
+    .modal-header {
+        margin-bottom: 0;
+        padding-bottom: 10px;
+    }
+
+    .modal-body {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        padding: 0;
+        overflow: hidden;
+    }
+}
+
 .tech-calculator {
     width: 100%;
-    padding: 4px 0 2px;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px calc(12px + env(safe-area-inset-bottom));
     outline: none;
     user-select: none;
+    color: var(--text-primary);
 
+    // ---------- Display ----------
     .calc-display {
+        flex: 1;
+        min-height: 120px;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        justify-content: center;
-        height: 52px;
-        padding: 4px 10px;
-        margin-bottom: 6px;
+        justify-content: flex-end;
+        gap: 6px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
         background-color: var(--surface-1);
         border: 1px solid var(--border-light);
-        border-radius: 8px;
+        border-radius: 24px;
         overflow: hidden;
 
         .calc-expr {
-            font-size: 11px;
-            line-height: 14px;
-            opacity: 0.6;
+            font-size: 16px;
+            line-height: 20px;
+            color: var(--text-tertiary);
             white-space: nowrap;
         }
 
         .calc-value {
-            font-size: 26px;
-            line-height: 30px;
+            font-size: 56px;
+            line-height: 1.1;
             font-weight: 600;
             white-space: nowrap;
             font-variant-numeric: tabular-nums;
-            transition: color 0.15s ease;
+            color: var(--text-primary);
+            transition: color .15s ease;
 
             &.is-result {
-                color: var(--color-success);
+                color: var(--color-success-text);
             }
 
             &.small {
-                font-size: 20px;
+                font-size: 38px;
             }
         }
     }
 
+    // ---------- Keys ----------
     .calc-keys {
+        flex: 0 0 auto;
+        height: min(62%, 560px);
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 5px;
+        grid-auto-rows: 1fr;
+        gap: 10px;
 
         .calc-key {
-            height: 38px;
-            font-size: 16px;
+            min-height: 64px;
+            font-size: 28px;
             font-weight: 500;
-            border-radius: 8px;
+            border-radius: 24px;
             border: 1px solid var(--border-light);
-            background-color: var(--surface-1);
-            color: inherit;
+            background-color: var(--surface-2);
+            color: var(--text-primary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
+            transition: background-color .15s ease, transform .1s ease;
 
             &:hover {
-                filter: brightness(0.94);
+                background-color: var(--surface-1);
             }
 
             &:active {
-                transform: scale(0.96);
+                transform: scale(.95);
             }
 
             &.fn {
-                opacity: 0.85;
-                font-size: 15px;
+                color: var(--text-secondary);
+                background-color: var(--surface-1);
+                font-size: 24px;
             }
 
             &.op {
-                color: var(--color-primary);
-                font-size: 18px;
+                color: var(--color-primary-text);
+                background-color: var(--color-primary-bg);
+                border-color: var(--color-primary-border);
+                font-size: 32px;
                 font-weight: 600;
+
+                &:hover {
+                    background-color: var(--color-primary-bg-hover);
+                }
 
                 &.active {
                     background-color: var(--color-primary);
@@ -90,8 +130,12 @@
                 background-color: var(--color-primary);
                 border-color: var(--color-primary);
                 color: var(--color-white);
-                font-size: 18px;
+                font-size: 34px;
                 font-weight: 600;
+
+                &:hover {
+                    background-color: var(--color-primary-hover);
+                }
             }
         }
     }

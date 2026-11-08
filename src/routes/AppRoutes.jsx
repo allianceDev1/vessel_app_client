@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/features/persisted/userSlice';
 import { api } from "../api";
+import { rotateAccessToken } from "../api/axios/tokenHandler";
 import Cookies from 'js-cookie';
 import RotateToken from '../components/layout/rotateToken/RotateToken'
 // import Technician from './Technician';
@@ -18,13 +19,24 @@ const Controller = React.lazy(() => import('./Controller'));
 
 const Master = () => {
     const acc_tkn = Cookies.get('_acc_tkn');
+    const rfs_tkn = Cookies.get('_rfs_tkn');
     const DVC_ID = Cookies.get('DVC_ID');
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if ((DVC_ID && DVC_ID.length === 32) && acc_tkn) {
-            api.ttSv2Axios.get('/worker/initial-info').then((response) => {
+        const initAuth = async () => {
+            if (!(DVC_ID && DVC_ID.length === 32) || (!acc_tkn && !rfs_tkn)) {
+                window.location.href = `${env.REDIRECT_URL}?page=home`;
+                return;
+            }
+
+            try {
+                if (!acc_tkn && rfs_tkn) {
+                    await rotateAccessToken();
+                }
+
+                const response = await api.ttSv2Axios.get('/worker/initial-info');
                 dispatch(setUser({
                     acc_id: response.acc_id,
                     dvc_id: response.dvc_id,
@@ -32,15 +44,15 @@ const Master = () => {
                     last_name: response.last_name,
                     designation: response.designation,
                     allowed_origins: response.allowed_origins
-                }))
-            })
-                .catch(() => {
-                    window.location.href = `${env.REDIRECT_URL}?page=home`
-                })
-                .finally(() => setLoading(false));
-        } else {
-            window.location.href = `${env.REDIRECT_URL}?page=home`
-        }
+                }));
+            } catch {
+                window.location.href = `${env.REDIRECT_URL}?page=home`;
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        initAuth();
         // eslint-disable-next-line
     }, [])
 

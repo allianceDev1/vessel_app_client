@@ -20,13 +20,18 @@ const TechLayout = ({ children }) => {
     const [activeSegment, setActiveSegment] = useState('')
     const [isNavigating, setIsNavigating] = useState(false);
     const { page } = useSelector((state) => state.miniSystem)
-    const {  theme } = useSelector((state) => state.system)
+    const { theme } = useSelector((state) => state.system)
 
     // ── Theme toggle — cycles: os-default → dark → light → os-default ──────────
     const handleThemeToggle = () => {
         const cycle = { 'os-default': 'dark', 'dark': 'light', 'light': 'os-default' }
         const next = cycle[theme] ?? 'os-default'
-        Cookies.set('color_mode', next, { expires: 365 })
+        Cookies.set('color_mode', next, {
+            expires: 365,
+            path: '/',
+            sameSite: 'Lax',
+            secure: window.location.protocol === 'https:'
+        });
         dispatch(changeThemeColor(next))
     }
 

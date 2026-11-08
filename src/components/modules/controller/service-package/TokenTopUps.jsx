@@ -22,7 +22,7 @@ const TokenTopUps = ({ serial_number }) => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_package_token_top_ups', serial_number],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/package/${serial_number}/top-ups-history`)
+            const res = await api.ssCv2Axios.get(`/package/${serial_number}/top-ups-history`)
 
             return res?.map((item, index) => {
                 return {

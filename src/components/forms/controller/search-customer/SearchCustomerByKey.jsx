@@ -122,7 +122,7 @@ const SearchCustomerByKey = () => {
             <form action="" onSubmit={handleSubmit}>
                 <div className="key-search-input">
                     <InputText label={`Enter ${keyType}`} name='key' type={keyType === 'letter' ? 'text' : 'number'} value={form.key} onChange={handleChangeForm}
-                        className={keyType === 'id' ? 'key-upper-case' : ''} />
+                        className={keyType === 'id' ? 'key-upper-case' : ''} autoFocus />
                     <div className={`key-type-icon`} onClick={toggleKeyType} title={keyType}>
                         {keyType === 'letter' ? <TbLetterCase />
                             : keyType === 'number' ? <TbNumber123 />

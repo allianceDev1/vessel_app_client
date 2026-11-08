@@ -3,8 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
 import { api } from '../../../../api'
 import Table from '../../../UI_Primitives/table/Table'
-import Badge from '../../../UI_Primitives/badge/Badge'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from '../../../UI_Primitives/buttons/Button'
 import ServiceRegistration from '../../../forms/controller/registration/ServiceRegistration'
@@ -79,7 +77,7 @@ const UpcomingServiceTable = () => {
             ...filteredParams
         })
 
-        const res = await api.vfCv2Axios.get(`/service/upcoming/list/${listType}?${params}`)
+        const res = await api.ssCv2Axios.get(`/service/upcoming/list/${listType}?${params}`)
 
         const transformed = res.data.map((item, index) => {
             const globalIndex = page * pageSize + index + 1
@@ -109,6 +107,7 @@ const UpcomingServiceTable = () => {
                         'City': item.city_name,
                         'Product Type': toStandardText(item.product_type),
                         'Product': `${item.product_id} - ${item.product_name}`,
+                        'Package': item.package_name || '',
                         'Service': `${item.service_type} - S${item.service_index || 1}`,
                         'Service Date': item.next_service_date ? isoToDDMonYYYY(new Date(item.next_service_date)) : '',
                         'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
@@ -117,10 +116,14 @@ const UpcomingServiceTable = () => {
                         product_id: item.product_id,
                         product_name: item.product_name,
                         service_type: item.service_type,
-                        package_name: item.package_name,
-                        package_color_code: item.package_color_code,
                         _rowStyle: { cursor: 'pointer' },
-                        _rowNavigateUrl: `/controller/product/${item.product_id}/about`
+                        _rowNavigateUrl: `/controller/product/${item.product_id}/about`,
+                        _cellStyle: {
+                            Package: {
+                                color: item.package_color_code,
+                                "text-align": "center"
+                            },
+                        }
                     }
 
                 default:
@@ -199,22 +202,7 @@ const UpcomingServiceTable = () => {
                     { header: 'City', accessorKey: 'City', enableSorting: false },
                     { header: 'Product Type', accessorKey: 'Product Type', enableSorting: false },
                     { header: 'Product', accessorKey: 'Product', enableSorting: false },
-                    {
-                        header: 'Package',
-                        accessorKey: 'Package',
-                        enableSorting: false,
-                        enableColumnFilter: false,
-                        meta: { style: { textAlign: 'center' } },
-                        cell: ({ row }) => {
-                            if (row.original.package_id) {
-                                return <Badge value={row.original.package_name}
-                                    style={{
-                                        backgroundColor: row.original.package_color_code,
-                                        color: getContrastText(row.original.package_color_code)
-                                    }} />
-                            }
-                        },
-                    },
+                    { header: 'Package', accessorKey: 'Package', enableSorting: false },
                     { header: 'Service', accessorKey: 'Service', enableSorting: false },
                     { header: 'Service Date', accessorKey: 'Service Date' },
                     { header: 'Expire Date', accessorKey: 'Expire Date' },

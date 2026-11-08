@@ -30,7 +30,7 @@ const UpdateServiceDate = ({ data, productId }) => {
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.put(`/product/${productId}/service-date`, form)
+            await api.ssCv2Axios.put(`/product/${productId}/service-date`, form)
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_product_info', productId],

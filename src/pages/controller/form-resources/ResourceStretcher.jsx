@@ -23,7 +23,7 @@ const ResourceStretcher = () => {
       accept: {
         onClick: async () => {
           try {
-            await api.vfCv2Axios.delete(`/resources/form-resources/${title}/${uuid}`)
+            await api.ssCv2Axios.delete(`/resources/form-resources/${title}/${uuid}`)
             queryClient.refetchQueries({ queryKey: ['resources_values', title] })
           } catch (error) {
             dispatch(toast.push({

@@ -75,7 +75,7 @@ const ViewArea = () => {
                 onClick: async () => {
                     setLoading('delete' + worker_uuid)
                     try {
-                        await api.vfCv2Axios.delete(`/branch-area/cities/technicians`, {
+                        await api.ssCv2Axios.delete(`/branch-area/cities/technicians`, {
                             data: { workers: [{ worker_uuid, city_id }] }
                         })
 
@@ -114,7 +114,7 @@ const ViewArea = () => {
     } = useQuery({
         queryKey: ['branch_area_details', city_id],
         queryFn: async () => {
-            const res = await await api.vfCv2Axios.get(`/branch-area/city/${city_id}`)
+            const res = await await api.ssCv2Axios.get(`/branch-area/city/${city_id}`)
             return res
         },
         staleTime: 30_000,

@@ -156,7 +156,7 @@ const RegisteredWorkflow = () => {
     }, [])
 
     const fetchWorkflow = async ({ pageParam = 1 }) => {
-        const res = await api.vfCv2Axios.get(
+        const res = await api.ssCv2Axios.get(
             `/service-registration/${reg_no}/workflow?page=${pageParam}`
         )
         const payload = res?.events ? res : res?.data || {}

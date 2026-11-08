@@ -16,7 +16,7 @@ const PurchaseLogInfo = () => {
     const { data } = useQuery({
         queryKey: ['service_job_purchase_log_view', service_srl_no, "pp", pp_product_id],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
+            const data = await api.ssTv2Axios.get(`/completed/${service_srl_no}/purchase-log/${pp_product_id}`);
             return data
         },
         staleTime: 60_000

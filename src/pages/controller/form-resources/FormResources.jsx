@@ -18,7 +18,7 @@ const FormResources = () => {
         queryKey: ['resources_titles'],
         queryFn: async () => {
 
-            const data = await api.vfCv2Axios.get('/resources/form-resources/titles')
+            const data = await api.ssCv2Axios.get('/resources/form-resources/titles')
             return data;
         },
         staleTime: 60_000 * 30
