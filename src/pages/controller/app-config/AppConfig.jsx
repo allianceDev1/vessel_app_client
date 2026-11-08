@@ -48,10 +48,28 @@ const AppConfig = () => {
                     </div>
                 </div>
 
-                {/* System Essentials */}
+                {/* Service Management */}
                 <div className="section">
                     <div className="sub-title">
-                        <h3>System essentials</h3>
+                        <h3>Service management</h3>
+                    </div>
+                    <div className="content">
+                        <div className="list-item hover" onClick={() => navigate('/controller/app-config/form-resources')}>
+                            <div className="l">
+                                <h4>Form resources</h4>
+                                <p className='description'>Maintain reusable form data and configurations used across the application</p>
+                            </div>
+                            <div className="r">
+                                <TbArrowLeft className='arrow' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Service Configuration */}
+                <div className="section">
+                    <div className="sub-title">
+                        <h3>Service configuration</h3>
                     </div>
                     <div className="content">
                         <div className="list-item hover" onClick={() => navigate('/controller/app-config/eligibility-rules')}>
@@ -76,15 +94,6 @@ const AppConfig = () => {
                             <div className="l">
                                 <h4>Service packages</h4>
                                 <p className='description'>Manage service packages, validity, pricing, and included benefits</p>
-                            </div>
-                            <div className="r">
-                                <TbArrowLeft className='arrow' />
-                            </div>
-                        </div>
-                        <div className="list-item hover" onClick={() => navigate('/controller/app-config/form-resources')}>
-                            <div className="l">
-                                <h4>Form resources</h4>
-                                <p className='description'>Maintain reusable form data and configurations used across the application</p>
                             </div>
                             <div className="r">
                                 <TbArrowLeft className='arrow' />

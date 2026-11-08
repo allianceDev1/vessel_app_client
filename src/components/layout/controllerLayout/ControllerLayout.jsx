@@ -76,7 +76,12 @@ const ControllerLayout = ({ children }) => {
     const handleThemeToggle = () => {
         const cycle = { 'os-default': 'dark', 'dark': 'light', 'light': 'os-default' }
         const next = cycle[theme] ?? 'os-default'
-        Cookies.set('color_mode', next, { expires: 365 })
+        Cookies.set('color_mode', next, {
+            expires: 365,
+            path: '/',
+            sameSite: 'Lax',
+            secure: window.location.protocol === 'https:'
+        });
         dispatch(changeThemeColor(next))
     }
 

@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './services.scss';
 import { useDispatch } from 'react-redux';
 import { modal, page } from '../../../redux/features/non_persisted/miniSystemSlice'
-import { TbArrowDown, TbArrowsDownUp, TbCategory2, TbFilter, TbRefresh, TbRotate } from 'react-icons/tb';
+import { TbArrowsDownUp, TbArrowUp, TbCategory2, TbChevronLeft, TbChevronRight, TbFilter, TbRefresh, TbRotate } from 'react-icons/tb';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../../../api';
-import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import UpcomingServiceCard from '../../../components/modules/tech/service-card/UpcomingServiceCard';
 import SkeletonGrid from '../../../components/UI_Primitives/skeleton/SkeletonGrid';
 import ErrorState from '../../../components/UI_Primitives/ui-states/ErrorState';
@@ -103,8 +102,8 @@ const Services = () => {
     const subPageOptions = [
         { label: 'Complaints', value: 'COMPLAINT', onClick: () => handleChangeTab('COMPLAINT') },
         { label: 'Services (Reg)', value: 'REG_SERVICE', onClick: () => handleChangeTab('REG_SERVICE') },
-        { label: 'Services', value: 'SERVICE', onClick: () => handleChangeTab('SERVICE') },
         { label: 'Renewals (Reg)', value: 'REG_RENEWAL', onClick: () => handleChangeTab('REG_RENEWAL') },
+        { label: 'Services', value: 'SERVICE', onClick: () => handleChangeTab('SERVICE') },
         { label: 'Renewals', value: 'RENEWAL', onClick: () => handleChangeTab('RENEWAL') },
         { label: 'Overdue', value: 'OVERDUE', onClick: () => handleChangeTab('OVERDUE'), }
     ]
@@ -121,7 +120,38 @@ const Services = () => {
         // eslint-disable-next-line
     }, [])
 
+    const currentTab = searchParams.get('tab') || 'COMPLAINT';
+    const currentTabLabel = subPageOptions?.find(a => a?.value === currentTab)?.label || 'Complaints';
+    const totalCount = data?.pages?.[0]?.total ?? 0;
 
+    const tabsRef = useRef(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+
+    const updateTabScrollState = () => {
+        const el = tabsRef.current;
+        if (!el) return;
+        setCanScrollLeft(el.scrollLeft > 4);
+        setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    };
+
+    useEffect(() => {
+        updateTabScrollState();
+        window.addEventListener('resize', updateTabScrollState);
+        return () => window.removeEventListener('resize', updateTabScrollState);
+    }, [isLoading]);
+
+    const handleScrollTabs = (dir) => {
+        const el = tabsRef.current;
+        if (!el) return;
+        el.scrollBy({ left: dir === 'left' ? -160 : 160, behavior: 'smooth' });
+    };
+
+    const handleScrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+        document.body.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     // loading
     if (isLoading) {
@@ -145,30 +175,60 @@ const Services = () => {
     return (
         <div className="tech-service-page">
             <div className="top-section">
-                <div className="section-one">
-                    <Dropdown
-                        button={{
-                            label: `${subPageOptions?.find(a => a?.value === searchParams.get('tab'))?.label || 'Complaints'} ${data?.pages?.[0]?.total ? '| ' + data?.pages?.[0]?.total : ""}`,
-                            icon: <TbArrowDown />,
-                            iconPos: 'right',
-                            rounded: true, text: true, size: 'small',
-                        }}
-                        list={[{
-                            items: subPageOptions
-                        }]}
-                        selected={searchParams.get('tab') || 'COMPLAINT'}
-                    />
+                <div className="section-one-wrapper">
+                    {canScrollLeft && (
+                        <button
+                            type="button"
+                            className="tab-scroll-btn left"
+                            onClick={() => handleScrollTabs('left')}
+                            aria-label="Scroll tabs left"
+                        >
+                            <TbChevronLeft />
+                        </button>
+                    )}
+                    <div
+                        className="section-one"
+                        ref={tabsRef}
+                        onScroll={updateTabScrollState}
+                    >
+                        {subPageOptions.map((item) => (
+                            <button
+                                key={item.value}
+                                type="button"
+                                className={`tab-btn ${currentTab === item.value ? 'active' : ''}`}
+                                onClick={item.onClick}
+                            >
+                                {item.label}
+                            </button>
+                        ))}
+                    </div>
+                    {canScrollRight && (
+                        <button
+                            type="button"
+                            className="tab-scroll-btn right"
+                            onClick={() => handleScrollTabs('right')}
+                            aria-label="Scroll tabs right"
+                        >
+                            <TbChevronRight />
+                        </button>
+                    )}
                 </div>
-                <div className="section-two">
-                    <span onClick={resetApi}>
-                        <TbRefresh />
-                    </span>
-                    <span className={searchParams.get('sr') === 'Yes' ? 'active' : ''} onClick={handleOpenSort}>
-                        <TbArrowsDownUp />
-                    </span>
-                    <span className={searchParams.get('fl') === 'Yes' ? 'active' : ''} onClick={handleOpenFilter}>
-                        <TbFilter />
-                    </span>
+                <div className="section-bottom">
+                    <div className="item-count">
+                        <span className="count-label">{currentTabLabel}:</span>
+                        <span className="count-badge">{totalCount}</span>
+                    </div>
+                    <div className="section-two">
+                        <span onClick={resetApi} title="Refresh">
+                            <TbRefresh />
+                        </span>
+                        <span className={searchParams.get('sr') === 'Yes' ? 'active' : ''} onClick={handleOpenSort} title="Sort">
+                            <TbArrowsDownUp />
+                        </span>
+                        <span className={searchParams.get('fl') === 'Yes' ? 'active' : ''} onClick={handleOpenFilter} title="Filter">
+                            <TbFilter />
+                        </span>
+                    </div>
                 </div>
             </div>
             <div className="service-card-container">
@@ -189,6 +249,16 @@ const Services = () => {
                             }} />
                     </div>
                 }
+            </div>
+
+            <div className="scroll-top-btn">
+                <Button
+                    icon={<TbArrowUp />}
+                    rounded
+                    onClick={handleScrollToTop}
+                    aria-label="Scroll to top"
+                    severity={'primary'}
+                />
             </div>
         </div>
     )

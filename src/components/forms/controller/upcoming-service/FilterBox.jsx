@@ -137,7 +137,7 @@ const FilterBox = () => {
           <Select label={'Product type'} name={'product_type'} options={[{ label: '', value: '' }, ...productTypes?.map(i => ({ label: toStandardText(i), value: i }))]} value={form.product_type} onChange={handleChange} />
 
           <Select label={'Package'} name={'package_id'} options={[{ label: '', value: '' }, ...(packageList || [])?.filter(i => i?.product_type === form?.product_type)?.map((pkg) => ({ label: pkg.package_name, value: pkg.package_id }))]}
-            value={form.package_id} onChange={handleChange} />
+            value={form.package_id} onChange={handleChange} helperText={'Select product type first.'} />
 
           <Select label={'Service type'} name={'service_type'} options={[{ label: '', value: '' }, ...serviceTypes]} value={form.service_type} onChange={handleChange} />
 

@@ -99,7 +99,7 @@ const Dashboard = () => {
                     vessel_filter: nonVerified.vessel_filter,
                     desc: 'Customer not verified jobs',
                     text_color: 'var(--text-primary)',
-                    redirect_url: `/controller/completed?fl=Yes&from_date=${moment().startOf('month').format('YYYY-MM-DD')}&end_date=${moment().endOf('month').format('YYYY-MM-DD')}&unverified=Yes&p=l`
+                    redirect_url: `/controller/completed?fl=Yes&unverified=Yes&p=l`
                 }
             ]
         },

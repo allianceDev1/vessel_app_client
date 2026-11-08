@@ -17,6 +17,10 @@ body {
 
 }
 
+svg {
+    pointer-events: none;
+}
+
 
 .tooltip {
     background-color: wheat;

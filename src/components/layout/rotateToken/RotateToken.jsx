@@ -21,7 +21,7 @@ const RotateToken = () => {
                 Cookies.set('_acc_tkn', response?.access_token, cookieOptions);
 
             })
-        }, 4 * 60 * 60 * 1000);
+        },  30000);
 
         return () => clearInterval(interval); // Cleanup interval on unmount
     }, [])

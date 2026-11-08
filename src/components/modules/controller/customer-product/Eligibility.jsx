@@ -157,11 +157,10 @@ const Eligibility = () => {
                         <div className="header-right">
                             <div className={`package-badge ${hasPackage ? 'active' : 'inactive'}`}>
                                 <TbCrown />
-                                <span>{hasPackage ? `Package: ${packageId || 'Active'}` : 'No Active Package'}</span>
+                                <span>{hasPackage ? `Package: ${packageId || 'Active'}` : 'No Subscription'}</span>
                             </div>
                             <Button
                                 icon={<TbRotate />}
-                                label="Refresh"
                                 size="small"
                                 severity={'secondary'}
                                 outlined

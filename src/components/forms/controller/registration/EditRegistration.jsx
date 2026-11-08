@@ -179,7 +179,7 @@ const EditRegistration = ({ regNo, initialData }) => {
                     <h3>{regData?.customer?.customer_name || '______'}</h3>
                 </div>
 
-                <Select label={'Product type'} name={'product_type'} required value={form?.product_type || ''} onChange={handleChange}
+                <Select label={'Registration type'} name={'product_type'} required value={form?.product_type || ''} onChange={handleChange}
                     options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map(i => ({ label: toStandardText(i), value: i }))]} />
 
                 <Select label={'Service Type'} name={'service_type'} required value={form?.service_type || ''} onChange={handleChange}

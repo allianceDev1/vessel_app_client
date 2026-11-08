@@ -121,7 +121,7 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
 
                 <div className="report-box report-two">
                     <div className="title-section">
-                        <h4>Vessel Filters</h4>
+                        <h4>Products</h4>
                     </div>
                     <div className="content">
                         <ResponsiveContainer width={'100%'} height={170}>
