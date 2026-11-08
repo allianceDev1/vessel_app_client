@@ -21,7 +21,7 @@ const SelfCloseForm = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['self_close', 'review_report', registrationId],
         queryFn: async () => {
-            const res = await api.vfTv2Axios.get(`/registered-service/${registrationId}/self-close/resources`)
+            const res = await api.ssTv2Axios.get(`/registered-service/${registrationId}/self-close/resources`)
 
             return res
 

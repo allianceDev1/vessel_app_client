@@ -19,7 +19,7 @@ const CancelRegistration = ({ registrationId }) => {
         try {
             setLoading('submit')
 
-            await api.vfCv2Axios.put(`/service-registration/${registrationId}/cancel`, {
+            await api.ssCv2Axios.put(`/service-registration/${registrationId}/cancel`, {
                 reason: form?.reason
             })
 

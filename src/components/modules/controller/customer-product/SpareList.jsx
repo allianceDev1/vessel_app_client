@@ -21,7 +21,7 @@ const SpareList = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['controller_customer_spare_list', product_id],
         queryFn: async () => {
-            const data = await api.vfCv2Axios(`/product/${product_id}/spares`)
+            const data = await api.ssCv2Axios(`/product/${product_id}/spares`)
             return data;
         },
         staleTime: 60_000

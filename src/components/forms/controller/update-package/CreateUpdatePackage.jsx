@@ -65,7 +65,7 @@ const CreateUpdatePackage = ({ action = 'CREATE', data }) => {
 
     if (action === 'CREATE') {
       try {
-        await api.vfCv2Axios.post(`/config/service-package`, { ...form, product_type: searchParams.get('parent_product') })
+        await api.ssCv2Axios.post(`/config/service-package`, { ...form, product_type: searchParams.get('parent_product') })
 
         queryClient.refetchQueries({
           queryKey: ['cn', 'service_packages', (searchParams.get('parent_product') || parent_product_types[0])]
@@ -84,7 +84,7 @@ const CreateUpdatePackage = ({ action = 'CREATE', data }) => {
 
     } else {
       try {
-        await api.vfCv2Axios.put(`/config/service-package/${form?.package_id}`, form)
+        await api.ssCv2Axios.put(`/config/service-package/${form?.package_id}`, form)
 
         queryClient.refetchQueries({
           queryKey: ['cn', 'service_package', form?.package_id],

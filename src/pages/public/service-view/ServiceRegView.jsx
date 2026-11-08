@@ -21,7 +21,7 @@ const ServiceJobList = () => {
     queryKey: ['public_bill_list', reg_uuid],
     queryFn: async () => {
       try {
-        let result = await api.vfPv1Axios.get(`/service/registration/${reg_uuid}`)
+        let result = await api.ssPv1Axios.get(`/service/registration/${reg_uuid}`)
 
         return {
           success: true,

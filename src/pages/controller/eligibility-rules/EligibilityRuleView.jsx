@@ -26,7 +26,7 @@ const EligibilityRuleView = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cn', 'rule-details', rule_uuid],
     queryFn: async () => {
-      const res = await api.vfCv2Axios.get(`/config/eligibility-rule/${rule_uuid}`)
+      const res = await api.ssCv2Axios.get(`/config/eligibility-rule/${rule_uuid}`)
       return res
     },
     staleTime: 60_000
@@ -39,7 +39,7 @@ const EligibilityRuleView = () => {
         onClick: async () => {
 
           try {
-            await api.vfCv2Axios.post(`/config/eligibility-rule/${rule_uuid}/status`, {
+            await api.ssCv2Axios.post(`/config/eligibility-rule/${rule_uuid}/status`, {
               status: status
             })
 
@@ -75,7 +75,7 @@ const EligibilityRuleView = () => {
       accept: {
         onClick: async () => {
           try {
-            await api.vfCv2Axios.delete(`/config/eligibility-rule/${rule_uuid}`)
+            await api.ssCv2Axios.delete(`/config/eligibility-rule/${rule_uuid}`)
 
             queryClient.refetchQueries({
               queryKey: ['cn', 'eligibility-rules']
@@ -108,7 +108,7 @@ const EligibilityRuleView = () => {
         onClick: async () => {
           try {
             setDeletingKey(condition_uuid);
-            await api.vfCv2Axios.delete(`/config/eligibility-rule/${rule_uuid}/condition/${condition_uuid}`)
+            await api.ssCv2Axios.delete(`/config/eligibility-rule/${rule_uuid}/condition/${condition_uuid}`)
             queryClient.invalidateQueries({ queryKey: ['cn', 'rule-details', rule_uuid] })
 
           } catch (error) {

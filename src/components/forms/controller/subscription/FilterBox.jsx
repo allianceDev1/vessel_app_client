@@ -53,7 +53,7 @@ const FilterBox = () => {
     queryKey: ['package_ids', form?.product_type],
     queryFn: async () => {
       if (!form?.product_type || !parentProductTypes.includes(form?.product_type)) return []
-      const res = await api.vfCv2Axios.get(
+      const res = await api.ssCv2Axios.get(
         `/config/service-package/list?product_type=${form.product_type}&fields=package_id,package_name`
       )
       return res?.map((p) => ({ label: p?.package_name, value: p?.package_id })) || []

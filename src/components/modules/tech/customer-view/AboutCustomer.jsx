@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import SkeletonGrid from '../../../UI_Primitives/skeleton/SkeletonGrid'
 import ErrorState from '../../../UI_Primitives/ui-states/ErrorState'
-import { TbMapPin, TbMoodSpark } from 'react-icons/tb'
-import { redirectViewLocation } from '../../../../utils/services/location_services'
+import { TbMoodSpark } from 'react-icons/tb'
+
 
 const AboutCustomer = () => {
     const { customer_id } = useParams();
@@ -14,18 +14,11 @@ const AboutCustomer = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_profile', customer_id],
         queryFn: async () => {
-            const data = await api.cnAv1Axios(`/customer/${customer_id}/profile`)
+            const data = await api.cnAv1Axios(`/customer/${customer_id}/about`)
             return data;
         },
         staleTime: 60_000
     })
-
-    const handleViewLocation = () => {
-        if (!data?.address?.location?.length) {
-            return
-        }
-        redirectViewLocation(null, data?.address?.location?.[0], data?.address?.location?.[1], data?.address?.place, data?.address?.post)
-    };
 
     if (isLoading) {
         return <div>
@@ -79,15 +72,7 @@ const AboutCustomer = () => {
                             <p className='text-value'>{data?.address?.land_mark}</p>
                         </div>
                     </div>
-                    <div className="item location" onClick={handleViewLocation}>
-                        <p className='label'>Map Location</p>
-                        <div>
-                            <p className='text-value'>{data?.address?.location?.length
-                                ? `${data?.address?.location?.[0]}, ${data?.address?.location?.[1]}`
-                                : 'Not available'}</p>
-                            {data?.address?.location?.length ? <TbMapPin /> : ""}
-                        </div>
-                    </div>
+
                     <div className="item success-item">
                         <p className='label'>Debit / Complimentary Amount</p>
                         <div>

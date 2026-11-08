@@ -119,7 +119,7 @@ const Eligibility = () => {
     const { data: rawData, isLoading, isFetching, error, refetch } = useQuery({
         queryKey: ['tech_product_eligibility', customer_id, product_id],
         queryFn: async () => {
-            const res = await api.vfTv2Axios.get(`/product/${product_id}/eligibility`);
+            const res = await api.ssTv2Axios.get(`/product/${product_id}/eligibility`);
             const payload = res?.data || res;
             if (res?.success === false || payload?.success === false) {
                 throw new Error(res?.message || payload?.message || 'Failed to fetch eligibility information');

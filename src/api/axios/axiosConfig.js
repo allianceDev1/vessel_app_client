@@ -11,15 +11,15 @@ const url = (apiServer, path = "") => `${apiServer}${path}`;
 
 export const recallAxios = axios.create({ headers: apiHeaders });
 
-export const vfCv2Axios = axios.create({
+export const ssCv2Axios = axios.create({
     baseURL: url(env.API.VESSEL, "/c/v2/"),
     headers: apiHeaders,
 });
-export const vfTv2Axios = axios.create({
+export const ssTv2Axios = axios.create({
     baseURL: url(env.API.VESSEL, "/t/v2/"),
     headers: apiHeaders,
 });
-export const vfPv1Axios = axios.create({
+export const ssPv1Axios = axios.create({
     baseURL: url(env.API.VESSEL, "/p/v1/"),
     headers: apiHeaders,
 });
@@ -52,10 +52,10 @@ const instances = [
     ttPv2Axios,
     cnPv2Axios,
     cnAv1Axios,
-    vfCv2Axios,
-    vfTv2Axios,
+    ssCv2Axios,
+    ssTv2Axios,
     fnPv1Axios,
-    vfPv1Axios
+    ssPv1Axios
 ];
 
 instances.forEach((instance) => {
@@ -68,10 +68,10 @@ const axiosClients = {
     ttPv2Axios,
     cnPv2Axios,
     cnAv1Axios,
-    vfCv2Axios,
-    vfTv2Axios,
+    ssCv2Axios,
+    ssTv2Axios,
     fnPv1Axios,
-    vfPv1Axios
+    ssPv1Axios
 };
 
 export default axiosClients;

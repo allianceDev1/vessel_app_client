@@ -34,7 +34,7 @@ const ServiceJob = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['service_job_view', service_srl_no, 'about'],
         queryFn: async () => {
-            const data = await api.vfCv2Axios.get(`/service/completed/${service_srl_no}/about`);
+            const data = await api.ssCv2Axios.get(`/service/completed/${service_srl_no}/about`);
 
             const diff = getTimeDiff(new Date(data?.out_time), new Date(data?.reg_date))
 

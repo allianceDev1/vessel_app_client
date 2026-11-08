@@ -14,7 +14,7 @@ const SpareList = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_spare_list', customer_id, product_id],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/product/${product_id}/spares`)
+            const data = await api.ssTv2Axios.get(`/product/${product_id}/spares`)
             return data;
         },
         staleTime: 60_000

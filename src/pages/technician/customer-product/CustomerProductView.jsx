@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import '../customer-view/customer-view.scss'
 import { useDispatch } from 'react-redux'
 import { page } from '../../../redux/features/non_persisted/miniSystemSlice';
-import { TbCircleCheck, TbCrown, TbDropletStar, TbPlayCard4, TbSmartHome, TbSquareLetterS } from 'react-icons/tb';
+import { TbCircleCheck, TbCrown, TbDropletStar, TbPlayCard4 } from 'react-icons/tb';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
@@ -38,10 +38,6 @@ const CustomerProductView = () => {
                         <TbDropletStar />
                         <p>Product</p>
                     </div>
-                    <div className={`menu-item ${(activeSegment === 'spares') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/spares`)}>
-                        <TbSquareLetterS />
-                        <p>spares</p>
-                    </div>
                     <div className={`menu-item ${(activeSegment === 'eligibility') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/eligibility`)}>
                         <TbCircleCheck />
                         <p>Eligibility</p>
@@ -49,10 +45,6 @@ const CustomerProductView = () => {
                     <div className={`menu-item ${(activeSegment === 'service-cards' || activeSegment === 'service-card-images') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/service-cards`)}>
                         <TbPlayCard4 />
                         <p>Service Cards</p>
-                    </div>
-                    <div className={`menu-item ${(activeSegment === 'package-history') && 'active'}`} onClick={() => navigateSubMenu(`/tech/customer/${customer_id}/product/${product_id}/package-history`)}>
-                        <TbCrown />
-                        <p>Subscriptions</p>
                     </div>
                 </div>
             </div>

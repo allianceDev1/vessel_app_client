@@ -14,20 +14,23 @@ import { api } from '../../../api'
 import { formatSecondsToHHMM } from '../../../utils/helpers/date-helpers';
 import moment from 'moment';
 
+// meters -> "12.5 km"
+const formatKm = (meters) => `${(Number(meters || 0) / 1000).toLocaleString('en-IN', { maximumFractionDigits: 1 })} km`
+
 
 
 const Home = () => {
     const dispatch = useDispatch();
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['tech_home_report', '2'],
+        queryKey: ['tech_home_report', '3'],
         queryFn: async () => {
 
             const res = await Promise.all([
-                api.vfTv2Axios.get('/tech/report/today-performance'),
-                api.vfTv2Axios.get('/tech/report/month-performance'),
-                api.vfTv2Axios.get('/tech/report/chart/week/revenue'),
-                api.vfTv2Axios.get('/tech/report/chart/week/works')
+                api.ssTv2Axios.get('/tech/report/today-performance'),
+                api.ssTv2Axios.get('/tech/report/month-performance'),
+                api.ssTv2Axios.get('/tech/report/chart/week/revenue'),
+                api.ssTv2Axios.get('/tech/report/chart/week/works')
             ])
 
             const successVisits = (res?.[1]?.completed_visits ?? 0) - (res?.[1]?.cancelled_visits ?? 0)
@@ -39,6 +42,7 @@ const Home = () => {
                     pending_works: res?.[0]?.schedules ?? 0,
                     revenue: (res?.[0]?.revenue ?? 0).toLocaleString('en-IN'),
                     travel_duration: res?.[0]?.travel_seconds ?? 0,
+                    distance_meters: res?.[0]?.distance_meters ?? 0,
                     work_duration: res?.[0]?.work_seconds ?? 0,
                     travel_percentage: res?.[0]?.travel_seconds > 0 ? ((res?.[0]?.travel_seconds ?? 0) / ((res?.[0]?.travel_seconds ?? 0) + (res?.[0]?.work_seconds ?? 0))) * 100 : 0,
                     work_percentage: res?.[0]?.work_seconds > 0 ? ((res?.[0]?.work_seconds ?? 0) / ((res?.[0]?.travel_seconds ?? 0) + (res?.[0]?.work_seconds ?? 0))) * 100 : 0,
@@ -48,6 +52,7 @@ const Home = () => {
                     completed_visits: (res?.[1]?.completed_visits ?? 0).toLocaleString('en-IN'),
                     cancelled_visits: (res?.[1]?.cancelled_visits ?? 0).toLocaleString('en-IN'),
                     travel_duration: (res?.[1]?.travel_seconds ?? 0),
+                    distance_meters: res?.[1]?.distance_meters ?? 0,
                     travel_avrg: (res?.[1]?.travel_seconds ?? 0) / successVisits,
                     work_duration: (res?.[1]?.work_seconds ?? 0),
                     work_avrg: (res?.[1]?.work_seconds ?? 0) / successVisits,
@@ -150,9 +155,9 @@ const Home = () => {
                 today={{
                     revenue: data?.today?.revenue,
                     works: data?.today?.completed_works,
-                    schedules: data?.today?.pending_works,
                     workTime: formatSecondsToHHMM(data?.today?.work_duration),
                     travelTime: formatSecondsToHHMM(data?.today?.travel_duration),
+                    distance: formatKm(data?.today?.distance_meters),
                 }}
                 month={{
                     revenue: data?.month?.revenue,
@@ -161,7 +166,7 @@ const Home = () => {
                     workTimeAvg: formatSecondsToHHMM(data?.month?.work_avrg),
                     travelTime: formatSecondsToHHMM(data?.month?.travel_duration),
                     travelTimeAvg: formatSecondsToHHMM(data?.month?.travel_avrg),
-                    cancelled: data?.month?.cancelled_visits,
+                    distance: formatKm(data?.month?.distance_meters),
                 }}
             />
             <br></br>

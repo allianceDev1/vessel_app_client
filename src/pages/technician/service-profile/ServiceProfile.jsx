@@ -37,13 +37,13 @@ const ServiceProfile = () => {
         queryKey: ['tech_service_profile', customer_id, service_type, searchParams.get('reg_id')],
         queryFn: async () => {
             const apis = [
-                api.vfTv2Axios.get(`/customer/${customer_id}/profile`),
-                api.vfTv2Axios.get(`/service/${customer_id}/upcoming-services`),
-                api.vfTv2Axios.get(`/customer/${customer_id}/call-logs?page=0&limit=10`),
+                api.ssTv2Axios.get(`/customer/${customer_id}/profile`),
+                api.ssTv2Axios.get(`/service/${customer_id}/upcoming-services`),
+                api.ssTv2Axios.get(`/customer/${customer_id}/call-logs?page=0&limit=10`),
             ]
 
             if (searchParams.get('reg_id')) {
-                apis.push(api.vfTv2Axios.get(`/registered-service/${searchParams.get('reg_id')}/about`),)
+                apis.push(api.ssTv2Axios.get(`/registered-service/${searchParams.get('reg_id')}/about`),)
             }
 
             const [customerRes, upServiceRes, callLogsRes, regServiceRes] = await Promise.all(apis);

@@ -3,27 +3,134 @@
 
     .top-section {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+        position: sticky;
+        top: var(--top-navbar-height, 55px);
+        z-index: 90;
+        background-color: var(--background);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border-default);
 
-        .section-two {
+        .section-one-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+
+            .tab-scroll-btn {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 1px solid var(--border-medium);
+                background: var(--surface-2);
+                color: var(--text-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 6px var(--shadow-md);
+                cursor: pointer;
+                z-index: 2;
+                padding: 0;
+
+                svg {
+                    font-size: 16px;
+                }
+
+                &.left {
+                    left: 2px;
+                }
+
+                &.right {
+                    right: 2px;
+                }
+            }
+        }
+
+        .section-one {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 2px 4px;
+            width: 100%;
+            scroll-behavior: smooth;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .tab-btn {
+                flex-shrink: 0;
+                padding: 6px 14px;
+                border-radius: 20px;
+                border: 1px solid var(--border-default);
+                background: var(--surface-2);
+                color: var(--text-secondary);
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &.active {
+                    background: var(--color-primary);
+                    color: var(--color-white);
+                    border-color: var(--color-primary-border);
+                }
+            }
+        }
+
+        .section-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            padding-right: 10px;
+            padding: 0 4px;
 
-            span {
-                cursor: pointer;
+            .item-count {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-primary);
 
-                svg {
-                    font-size: 20px;
+                .count-badge {
+                    background: var(--color-primary-bg);
+                    color: var(--color-primary-text);
+                    padding: 2px 8px;
+                    border-radius: 12px;
+                    font-size: 12px;
                 }
+            }
 
-                &.active {
+            .section-two {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 14px;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    color: var(--text-secondary);
+
                     svg {
-                        color: var(--color-primary);
+                        font-size: 20px;
+                    }
+
+                    &.active {
+                        svg {
+                            color: var(--color-primary);
+                        }
                     }
                 }
             }
@@ -39,6 +146,21 @@
         .right {
             display: flex;
             gap: 5px;
+        }
+    }
+
+    .scroll-top-btn {
+        position: fixed;
+        bottom: calc(var(--bottom-navbar-height, 65px) + 15px);
+        right: 16px;
+        z-index: 90;
+
+        .ui-button {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--shadow-lg);
         }
     }
 }

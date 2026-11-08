@@ -26,8 +26,8 @@ const CreateUpdateCondition = ({ action = 'CREATE', ruleUuid, data }) => {
     const { data: resources, isLoading, error } = useQuery({
         queryKey: ['cn', 'eligibility_resources'],
         queryFn: async () => {
-            const { subjects, conditions, directions } = await api.vfCv2Axios.get('/config/subject-resources')
-            const packages = await api.vfCv2Axios.get('/config/service-package/list?hidden=Yes&fields=package_id,package_name,product_type,is_active')
+            const { subjects, conditions, directions } = await api.ssCv2Axios.get('/config/subject-resources')
+            const packages = await api.ssCv2Axios.get('/config/service-package/list?hidden=Yes&fields=package_id,package_name,product_type,is_active')
 
             return {
                 subjects, conditions, directions,
@@ -91,10 +91,10 @@ const CreateUpdateCondition = ({ action = 'CREATE', ruleUuid, data }) => {
         try {
 
             if (action === 'UPDATE') {
-                // await api.vfCv2Axios.patch(`/config/eligibility-rule/${ruleUuid}/condition/${data?.condition_uuid}`, form)
+                // await api.ssCv2Axios.patch(`/config/eligibility-rule/${ruleUuid}/condition/${data?.condition_uuid}`, form)
 
             } else {
-                await api.vfCv2Axios.post(`/config/eligibility-rule/${ruleUuid}/condition`, form)
+                await api.ssCv2Axios.post(`/config/eligibility-rule/${ruleUuid}/condition`, form)
             }
 
             queryClient.refetchQueries({

@@ -19,7 +19,7 @@ const EditNote = ({ note, productId }) => {
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.put(`/product/${productId}/note`, { note: newNote })
+            await api.ssCv2Axios.put(`/product/${productId}/note`, { note: newNote })
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_product_info', productId],

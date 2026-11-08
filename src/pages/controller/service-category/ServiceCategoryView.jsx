@@ -33,7 +33,7 @@ const ServiceCategoryView = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'service_category', category_id],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/config/service-categories/${category_id}`)
+            const res = await api.ssCv2Axios.get(`/config/service-categories/${category_id}`)
             return res
         },
         staleTime: 60_000
@@ -53,7 +53,7 @@ const ServiceCategoryView = () => {
             accept: {
                 onClick: async () => {
                     try {
-                        await api.vfCv2Axios.post(`/config/service-categories/${category_id}/status`, {
+                        await api.ssCv2Axios.post(`/config/service-categories/${category_id}/status`, {
                             status: status
                         })
 
@@ -86,7 +86,7 @@ const ServiceCategoryView = () => {
             accept: {
                 onClick: async () => {
                     try {
-                        await api.vfCv2Axios.delete(`/config/service-categories/${category_id}`)
+                        await api.ssCv2Axios.delete(`/config/service-categories/${category_id}`)
 
                         queryClient.refetchQueries({
                             queryKey: ['cn', 'service_category_list', data?.product_type]

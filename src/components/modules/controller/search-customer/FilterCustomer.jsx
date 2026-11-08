@@ -74,7 +74,7 @@ const FilterCustomer = () => {
             end_date: searchParams.get('end_date') ? searchParams.get('end_date') : '',
         })
 
-        const res = await api.vfCv2Axios.get(`/product/filter?${params}`)
+        const res = await api.ssCv2Axios.get(`/product/filter?${params}`)
 
         const transformed = res.data.map((item, index) => {
             const globalIndex = page * pageSize + index + 1

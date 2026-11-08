@@ -50,7 +50,7 @@ const CompletedServiceTable = () => {
             ...filteredParams
         })
 
-        const res = await api.vfCv2Axios.get(`/service/completed/list/${listType}?${params}`)
+        const res = await api.ssCv2Axios.get(`/service/completed/list/${listType}?${params}`)
 
         const transformed = res.data.map((item, index) => {
 

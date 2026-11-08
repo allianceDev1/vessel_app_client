@@ -21,7 +21,7 @@ const StopTravel = ({ registrationId, visitId }) => {
         try {
             setLoading('submit')
 
-            await api.vfTv2Axios.post(`/registered-service/${registrationId}/stop-travel`, {
+            await api.ssTv2Axios.post(`/registered-service/${registrationId}/stop-travel`, {
                 reason: form?.reason,
                 visit_uuid: visitId
             })

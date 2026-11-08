@@ -43,7 +43,7 @@ const PackageExtend = ({ expireDate, packageSrlNo, packageStatus }) => {
         setLoading(true)
 
         try {
-            await api.vfCv2Axios.post(`/package/${packageSrlNo}/extend`, {
+            await api.ssCv2Axios.post(`/package/${packageSrlNo}/extend`, {
                 extended_to: form?.extended_to,
                 comment: form?.comment
             })

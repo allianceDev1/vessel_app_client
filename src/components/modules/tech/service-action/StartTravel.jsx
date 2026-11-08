@@ -42,7 +42,7 @@ const StartTravel = ({ registrationId, proceedTravel }) => {
                 timestamp: locationData?.timestamp || null,
             }
 
-            const visit = await api.vfTv2Axios.post(`/registered-service/${registrationId}/start-travel`, { location })
+            const visit = await api.ssTv2Axios.post(`/registered-service/${registrationId}/start-travel`, { location })
             setIsProceed(true)
             proceedTravel(visit.visit_uuid)
 

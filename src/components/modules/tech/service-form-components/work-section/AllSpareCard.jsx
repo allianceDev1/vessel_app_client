@@ -89,7 +89,7 @@ const AllSpareCard = ({
         if (spareIndex === -1) {
             const spareChargeIncreaseFlag = Boolean(
                 data?.spare_category === 'PUMP' ||
-                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+                (data?.spare_category === "MEMBRANE" && productInForm?.service_data?.mode !== 'RENEWAL'))
 
             if (spareChargeIncreaseFlag) {
                 dispatch(sfActions.updateProduct.increaseSCIndex())
@@ -143,7 +143,7 @@ const AllSpareCard = ({
         if (spare?.qty === 1) {
             const spareChargeIncreaseFlag = Boolean(
                 data?.spare_category === 'PUMP' ||
-                (data?.spare_category === "MEMBRANE" && coverage?.coverage_section !== 'RENEWAL_SPARE'))
+                (data?.spare_category === "MEMBRANE" && productInForm?.service_data?.mode !== 'RENEWAL'))
 
             if (spareChargeIncreaseFlag) {
                 dispatch(sfActions.updateProduct.decreaseSCIndex())

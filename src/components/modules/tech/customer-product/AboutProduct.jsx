@@ -19,7 +19,7 @@ const AboutProduct = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['tech_customer_product_info', customer_id, product_id],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/product/${product_id}/about`)
+            const data = await api.ssTv2Axios.get(`/product/${product_id}/about`)
             return data;
         },
         staleTime: 60_000
@@ -132,6 +132,14 @@ const AboutProduct = () => {
                         <p className='label'>Package Duration</p>
                         <div>
                             <p className='text-value'>{isoToDDMonYYYY(data?.package?.start_date)} to {isoToDDMonYYYY(data?.package?.expire_date)} </p>
+                        </div>
+                    </div>}
+                    {data?.package?.token?.total_tokens && <div className="item">
+                        <p className='label'>Tokens Available</p>
+                        <div>
+                            <p className='text-value'>
+                                {Number(data?.package?.token?.total_tokens || 0) - Number(data?.package?.token?.remaining_tokens || 0)} out of {Number(data?.package?.token?.total_tokens || 0)} tokens used | Balance : {Number(data?.package?.token?.remaining_tokens || 0)}
+                            </p>
                         </div>
                     </div>}
                     <div className="item">

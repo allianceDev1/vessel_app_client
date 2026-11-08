@@ -60,7 +60,7 @@ const FilterCustomerProduct = () => {
         queryFn: async () => {
             const apis = [
                 api.cnPv2Axios.get(`/l/location/city?area_type=service`),
-                api.vfCv2Axios.get(`/resources/form-resources?titles=installation_mode`),
+                api.ssCv2Axios.get(`/resources/form-resources?titles=installation_mode`),
             ]
 
             const [cityRes, installationModeRes] = await Promise.all(apis);
@@ -77,7 +77,7 @@ const FilterCustomerProduct = () => {
         queryKey: ['customer_filter_packages', form?.product_type],
         queryFn: async () => {
             if (!form?.product_type || !parentProductTypes.includes(form?.product_type)) return [];
-            const packageRes = await api.vfCv2Axios.get(`/config/service-package/list?product_type=${form.product_type}&fields=package_id,package_name`)
+            const packageRes = await api.ssCv2Axios.get(`/config/service-package/list?product_type=${form.product_type}&fields=package_id,package_name`)
             return packageRes?.map(p => ({ label: p?.package_name, value: p?.package_id })) || []
         },
         enabled: Boolean(form?.product_type && parentProductTypes.includes(form?.product_type)),

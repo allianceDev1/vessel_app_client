@@ -35,7 +35,7 @@ const ClearOverdue = ({ expireDate, packageSrlNo }) => {
         setLoading(true)
 
         try {
-            await api.vfCv2Axios.post(`/package/${packageSrlNo}/clear-overdue`, {
+            await api.ssCv2Axios.post(`/package/${packageSrlNo}/clear-overdue`, {
                 comment: form?.comment
             })
 

@@ -53,11 +53,14 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
             const grandTotal = calculateBillsSummery(review?.bills ?? [], review?.zero_fee_items ?? []);
             const allPaymentMethods = payment?.payment_methods ?? []
 
-            if (payment?.compliment_amount > 0 && review?.is_ready_to_pay) {
+            if (payment?.compliment_amount > 0 && review?.is_ready_to_pay && grandTotal > 0) {
+
+                const complementTakes = Math.min(grandTotal ?? 0, payment?.compliment_amount ?? 0)
+
                 allPaymentMethods.push({
                     unique_id: 82657944156,
                     method: 'WALLET',
-                    amount: payment?.compliment_amount
+                    amount: complementTakes
                 })
             }
 
@@ -75,7 +78,7 @@ const SubmitForm = ({ modalId, unenablePayment }) => {
                 zero_fee_items: review?.zero_fee_items
             }
 
-            const result = await api.vfTv2Axios.post('/service/service-form/submit', body, {
+            const result = await api.ssTv2Axios.post('/service/service-form/submit', body, {
                 params: {
                     work_key: serviceForm?.work_key
                 },

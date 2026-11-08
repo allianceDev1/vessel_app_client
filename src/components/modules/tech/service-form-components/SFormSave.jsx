@@ -129,7 +129,7 @@ const SFormSave = ({ modalId }) => {
         try {
             setLoading(true)
 
-            const result = await api.vfTv2Axios.post(`/service/service-form/save?work_key=${serviceForm?.work_key}`, body, {
+            const result = await api.ssTv2Axios.post(`/service/service-form/save?work_key=${serviceForm?.work_key}`, body, {
                 timeout: 5 * 60 * 1000,
                 onUploadProgress: (progressEvent) => {
                     if (!progressEvent.total) return;

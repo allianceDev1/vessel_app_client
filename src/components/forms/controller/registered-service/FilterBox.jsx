@@ -154,7 +154,7 @@ const FilterBox = () => {
                         selected={statusList.filter(item => form.status.includes(item.value))}
                     />
 
-                    <Select label={'Product type'} name={'product_type'} options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map((i) => ({ label: toStandardText(i), value: i }))]} value={form.product_type} onChange={handleChange} />
+                    <Select label={'Reg Type'} name={'product_type'} options={[{ label: '', value: '' }, ...REGISTRATION_TYPES?.map((i) => ({ label: toStandardText(i), value: i }))]} value={form.product_type} onChange={handleChange} />
 
                     <Select label={'Service type'} name={'service_type'} options={[{ label: '', value: '' }, ...serviceTypes]} value={form.service_type} onChange={handleChange} />
 
@@ -166,10 +166,10 @@ const FilterBox = () => {
 
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <InputText label={'From Date'} name={'from_date'} type='date' value={form.from_date} onChange={handleChange}
-                            max={form.end_date} required={form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
+                            max={form.end_date} required={form?.status?.includes(5) || form?.status?.includes(6)} />
 
                         <InputText label={'End Date'} name={'end_date'} type='date' value={form.end_date} onChange={handleChange}
-                            min={form.from_date} required={form.city_id || form?.status?.includes(5) || form?.status?.includes(6)} />
+                            min={form.from_date} required={form?.status?.includes(5) || form?.status?.includes(6)} />
                     </div>
 
                     <ButtonGroup style={{ dispatch: "grid", }} rounded>

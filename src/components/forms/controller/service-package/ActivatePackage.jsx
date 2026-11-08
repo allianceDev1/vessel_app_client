@@ -21,7 +21,7 @@ const ActivatePackage = ({ packageSrlNo }) => {
         }
 
         try {
-            const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/activate`)
+            const res = await api.ssCv2Axios.post(`/package/${packageSrlNo}/activate`)
 
             queryClient.invalidateQueries({
                 queryKey: ['customer_package_info', packageSrlNo],

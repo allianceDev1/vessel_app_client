@@ -16,7 +16,7 @@ const ServiceCardList = () => {
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
 
-        const res = await api.vfCv2Axios(`/product/${product_id}/service-cards?page=${pageParam}&limit=10`)
+        const res = await api.ssCv2Axios(`/product/${product_id}/service-cards?page=${pageParam}&limit=10`)
         return {
             items: res?.data || [],
             total: res?.total || 0,

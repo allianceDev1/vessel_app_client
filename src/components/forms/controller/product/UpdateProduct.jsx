@@ -28,7 +28,7 @@ const UpdateProduct = ({ data, productId }) => {
         queryKey: ['installation_mode_list'],
         queryFn: async () => {
 
-            const res = await api.vfCv2Axios.get(`/resources/form-resources?titles=installation_mode`)
+            const res = await api.ssCv2Axios.get(`/resources/form-resources?titles=installation_mode`)
             const modesList = res?.[0]?.values?.map(v => ({ label: v?.data?.[0], value: v?.uuid }))
             return modesList
         },
@@ -51,7 +51,7 @@ const UpdateProduct = ({ data, productId }) => {
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.put(`/product/${productId}`, form)
+            await api.ssCv2Axios.put(`/product/${productId}`, form)
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_product_info', productId],

@@ -51,7 +51,7 @@ const SpareCard = ({
                             accept: {
                                 onClick: async () => {
                                     try {
-                                        await api.vfCv2Axios.delete(`/product/${productId}/spare/${componentUuid}`)
+                                        await api.ssCv2Axios.delete(`/product/${productId}/spare/${componentUuid}`)
 
                                         queryClient.refetchQueries({
                                             queryKey: ['controller_customer_spare_list', productId],

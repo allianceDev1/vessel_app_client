@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { page, toast } from '../../../redux/features/non_persisted/miniSystemSlice';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/UI_Primitives/buttons/Button'
-import { TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome, TbRefresh, TbArrowUpRight } from 'react-icons/tb';
+import { TbArrowUpRight, TbChevronDown, TbClipboardText, TbDots, TbDownload, TbHome, TbRefresh } from 'react-icons/tb';
 import Dropdown from '../../../components/UI_Primitives/dropdown/Dropdown'
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../../api'
@@ -33,7 +33,7 @@ const ServiceJob = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['service_job_view', service_srl_no, 'about'],
         queryFn: async () => {
-            const data = await api.vfTv2Axios.get(`/completed/${service_srl_no}/about`);
+            const data = await api.ssTv2Axios.get(`/completed/${service_srl_no}/about`);
             const grandTotal = data?.bills?.reduce((acc, curr) => acc + (curr?.grand_total || 0), 0)
             const paid = data?.bills?.reduce((acc, curr) => acc + (curr?.paid_amount || 0), 0)
 
@@ -182,10 +182,13 @@ const ServiceJob = () => {
                             />
                         </div>}
                     <div className="text-content">
-                        <div className="item">
+                        <div className="item" style={{ cursor: 'pointer' }} onClick={() => navigate(`/tech/customer/${data?.customer_id}/about`)}>
                             <p className='label'>Customer Id & Customer Name</p>
                             <div>
                                 <p className='text-value'>{data?.customer_name} ({data?.customer_id})</p>
+                            </div>
+                            <div className="right-icon">
+                                <TbArrowUpRight />
                             </div>
                         </div>
                         <div className="item">

@@ -22,7 +22,7 @@ const UnscheduleService = ({ registrationId, isController = false }) => {
             setLoading('submit')
 
             if (isController) {
-                await api.vfCv2Axios.patch(`/service-registration/${registrationId}/unschedule`, {
+                await api.ssCv2Axios.patch(`/service-registration/${registrationId}/unschedule`, {
                     reason: form?.reason
                 })
 
@@ -39,7 +39,7 @@ const UnscheduleService = ({ registrationId, isController = false }) => {
                 }))
 
             } else {
-                await api.vfTv2Axios.patch(`/registered-service/${registrationId}/unschedule`, {
+                await api.ssTv2Axios.patch(`/registered-service/${registrationId}/unschedule`, {
                     reason: form?.reason
                 })
 

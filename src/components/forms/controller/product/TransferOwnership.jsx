@@ -35,7 +35,7 @@ const TransferOwnership = ({ status, productId, customerId }) => {
         }
 
         try {
-            await api.vfCv2Axios.post(`/product/transfer`, form)
+            await api.ssCv2Axios.post(`/product/transfer`, form)
 
             dispatch(modal.pull.all())
             dispatch(toast.push({

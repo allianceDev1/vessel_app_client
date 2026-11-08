@@ -23,7 +23,7 @@ const EligibilityRules = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'eligibility-rules'],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get('/config/eligibility-rules')
+            const res = await api.ssCv2Axios.get('/config/eligibility-rules')
             return res || []
         },
         staleTime: 30_000

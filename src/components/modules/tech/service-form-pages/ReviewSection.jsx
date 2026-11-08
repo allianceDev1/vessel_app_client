@@ -26,7 +26,7 @@ const ReviewSection = ({ pageKey, setOpenedBill }) => {
         try {
             setLoading('fetch')
 
-            const resReview = await api.vfTv2Axios.get(`/service/service-form/bill-reviews`, {
+            const resReview = await api.ssTv2Axios.get(`/service/service-form/bill-reviews`, {
                 params: {
                     work_key: serviceForm?.work_key
                 }

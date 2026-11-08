@@ -24,7 +24,7 @@ const Array3Elem = ({ deleteData }) => {
         queryKey: ['resources_values', title],
         queryFn: async () => {
 
-            const data = await api.vfCv2Axios.get(`/resources/form-resources?titles=${title}`)
+            const data = await api.ssCv2Axios.get(`/resources/form-resources?titles=${title}`)
             return { title: data?.[0]?.title, values: data?.[0]?.values, title_stretcher: data?.[0]?.title_stretcher?.title_stretcher };
         },
         staleTime: 60_000
@@ -65,7 +65,7 @@ const Array3Elem = ({ deleteData }) => {
 
     return (
         <div className='array-3-elem-page-container'>
-            {user?.allowed_origins?.includes('service_c_admin') &&
+            {user?.allowed_origins?.some(o => ['service_c_writer', 'service_c_admin'].includes(o)) &&
                 <div className='top-section'>
                     <Button icon={<TbPlus />} label={'Add'} rounded size='small' severity={'primary'} style={{ width: '100px' }}
                         onClick={createModel} />
@@ -82,7 +82,7 @@ const Array3Elem = ({ deleteData }) => {
                         return <div class="card" key={box?.uuid}>
                             <div className="top">
                                 <h4>{box?.data?.[0]}</h4>
-                                {user?.allowed_origins?.includes('service_c_admin') && <Dropdown
+                                {user?.allowed_origins?.some(o => ['service_c_writer', 'service_c_admin'].includes(o)) && <Dropdown
                                     button={{
                                         icon: <TbDots />,
                                         size: 'small',

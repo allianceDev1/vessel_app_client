@@ -50,7 +50,12 @@ const Settings = () => {
     // Click cycles: os-default → dark → light → os-default (same as navbar toggle)
     const handleTheme = () => {
         const next = THEME_CYCLE[theme] ?? 'os-default'
-        Cookies.set('color_mode', next, { expires: 365 })
+       Cookies.set('color_mode', next, {
+                  expires: 365,
+                  path: '/',
+                  sameSite: 'Lax',
+                  secure: window.location.protocol === 'https:'
+              });
         dispatch(changeThemeColor(next))
     }
 

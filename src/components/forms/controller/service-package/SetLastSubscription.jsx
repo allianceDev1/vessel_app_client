@@ -23,7 +23,7 @@ const SetLastSubscription = ({ packageSrlNo, productId }) => {
         setLoading(true)
 
         try {
-            const res = await api.vfCv2Axios.post(`/package/${packageSrlNo}/set-last-subscription`)
+            const res = await api.ssCv2Axios.post(`/package/${packageSrlNo}/set-last-subscription`)
 
             // Invalidate package info and product queries
             queryClient.invalidateQueries({

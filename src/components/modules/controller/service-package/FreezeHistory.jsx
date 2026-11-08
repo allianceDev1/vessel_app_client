@@ -25,7 +25,7 @@ const FreezeHistory = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['customer_package_freeze_history', serial_number],
         queryFn: async () => {
-            const res = await api.vfCv2Axios.get(`/package/${serial_number}/freeze-history`)
+            const res = await api.ssCv2Axios.get(`/package/${serial_number}/freeze-history`)
 
             return res?.map((item, index) => {
                 return {

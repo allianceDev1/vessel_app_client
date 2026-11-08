@@ -19,7 +19,7 @@ const StopWork = ({ workKey }) => {
         try {
             setLoading('submit')
 
-            await api.vfTv2Axios.post(`/registered-service/stop-work`,
+            await api.ssTv2Axios.post(`/registered-service/stop-work`,
                 { work_key: workKey }
             )
 

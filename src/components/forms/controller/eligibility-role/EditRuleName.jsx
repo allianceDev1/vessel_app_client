@@ -22,7 +22,7 @@ const EditRuleName = ({ rule_uuid, name }) => {
         try {
             setLoading(true)
 
-            await api.vfCv2Axios.patch(`/config/eligibility-rule/${rule_uuid}/name`, {
+            await api.ssCv2Axios.patch(`/config/eligibility-rule/${rule_uuid}/name`, {
                 rule_name: ruleName
             })
 

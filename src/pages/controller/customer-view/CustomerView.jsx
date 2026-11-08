@@ -95,7 +95,7 @@ const CustomerView = () => {
                         <TbArrowUpRight />
                     </div>
                     <div className={`menu-item ${(activeSegment === 'service-cards') && 'active'}`}
-                        onClick={() => navigate(`/controller/completed?fl=Yes&from_date=${moment().subtract(3, "months").format("YYYY-MM-DD")}&end_date=${moment().format("YYYY-MM-DD")}&customer_id=${customer_id}`)}>
+                        onClick={() => navigate(`/controller/completed?fl=Yes&from_date=${moment().subtract(3, "months").format("YYYY-MM-DD")}&end_date=${moment().format("YYYY-MM-DD")}&customer_id=${customer_id}&p=l`)}>
                         <p>Service Jobs</p>
                         <TbArrowUpRight />
                     </div>

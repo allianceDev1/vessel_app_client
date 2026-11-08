@@ -14,7 +14,7 @@ const PackageHistory = () => {
 
     const fetchServiceCards = async ({ pageParam = 0 }) => {
 
-        const res = await api.vfCv2Axios(`/product/${product_id}/package-history?page=${pageParam}&limit=6`)
+        const res = await api.ssCv2Axios(`/product/${product_id}/package-history?page=${pageParam}&limit=6`)
         return {
             items: res?.data || [],
             total: res?.total || 0,

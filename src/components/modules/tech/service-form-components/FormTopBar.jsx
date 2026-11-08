@@ -7,6 +7,7 @@ import { modal } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { sfSetting } from '../../../../redux/features/persisted/applicationSlice';
 import StopWatch from './tools/StopWatch';
 import Calculator from './tools/Calculator';
+import { useNavigate } from 'react-router-dom';
 
 
 // top margin of `.body-container` in techLayout.scss (space reserved for the layout header)
@@ -15,6 +16,7 @@ const LAYOUT_BODY_OFFSET = 50
 
 const FormTopBar = ({ refreshResources, isSyncing }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const barRef = useRef(null)
   const [barHeight, setBarHeight] = useState(LAYOUT_BODY_OFFSET)
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -26,6 +28,11 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
   }
 
   const handleBack = () => {
+    if (serviceFormSettings?.activePage === 1000) {
+      navigate(-1)
+      return;
+    }
+
     dispatch(sfSetting.page.back())
 
     if ([1100, 1200, 1300].includes(serviceFormSettings?.activePage)) {
@@ -43,7 +50,9 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
   const openCalculator = () => {
     dispatch(modal.push({
       title: "Calculator",
-      body: <Calculator />
+      body: <Calculator />,
+      // full viewport height sheet
+      style: { height: '100dvh', width: '100%', maxWidth: '520px', borderRadius: 0, paddingBottom: 0 }
     }))
   }
 
@@ -93,8 +102,7 @@ const FormTopBar = ({ refreshResources, isSyncing }) => {
   const bar = (
     <div className="tech-service-form-top-bar-fixed" ref={barRef}>
       <div className="tech-service-form-top-bar-container">
-        <button type="button" className="tb-icon-btn back" title="Back" onClick={handleBack}
-          disabled={serviceFormSettings?.activePage === 1000 || !serviceFormSettings?.activePage}>
+        <button type="button" className="tb-icon-btn back" title="Back" onClick={handleBack}>
           <TbChevronLeft />
         </button>
 

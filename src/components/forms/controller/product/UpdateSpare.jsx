@@ -31,7 +31,7 @@ const UpdateSpare = ({ productId, componentUuid, spareId, spareName, warrantySta
 
         setLoading(true)
         try {
-            await api.vfCv2Axios.put(`/product/${productId}/spare/${componentUuid}`, form)
+            await api.ssCv2Axios.put(`/product/${productId}/spare/${componentUuid}`, form)
 
             queryClient.refetchQueries({
                 queryKey: ['controller_customer_spare_list', productId],
