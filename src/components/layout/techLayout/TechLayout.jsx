@@ -28,9 +28,10 @@ const TechLayout = ({ children }) => {
         const next = cycle[theme] ?? 'os-default'
         Cookies.set('color_mode', next, {
             expires: 365,
+            secure: true,
+            sameSite: 'None',
+            domain: '.alliancewatersolutions.com',
             path: '/',
-            sameSite: 'Lax',
-            secure: window.location.protocol === 'https:'
         });
         dispatch(changeThemeColor(next))
     }

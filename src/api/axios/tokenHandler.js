@@ -32,7 +32,7 @@ export const rotateAccessToken = () => {
         const cookieOptions = {
             secure: true,
             sameSite: 'None',
-            domain: '.alliancedev.in',
+            domain: '.alliancewatersolutions.com',
             path: '/',
             expires: new Date(Date.now() + 60 * 60 * 1000)
         };
