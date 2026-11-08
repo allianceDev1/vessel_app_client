@@ -142,7 +142,7 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
                                     dataKey="value"
                                     animationBegin={0}
                                     animationDuration={800}
-                                    paddingAngle={5}
+                                    paddingAngle={1}
                                 >
                                     <Cell key={`cell-1`} fill={chartLabelColors[0]} stroke='none' />
                                     <Cell key={`cell-2`} fill={chartLabelColors[1]} stroke='none' />
@@ -164,7 +164,6 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
                                 <PieChart>
                                     <Pie
                                         accessibilityLayer
-                                        cornerRadius={10}
                                         data={packageNameReport}
                                         stroke='none'
                                         cx="50%"
@@ -176,7 +175,6 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
                                         dataKey="value"
                                         animationBegin={0}
                                         animationDuration={800}
-                                        paddingAngle={5}
                                     >
                                         {packageNameReport?.map((entry, index) => {
                                             return <Cell key={`cell-${index}`} fill={entry?.color_code} stroke='none' />

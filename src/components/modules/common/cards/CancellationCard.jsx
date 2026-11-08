@@ -1,59 +1,52 @@
-import React, { useId } from 'react'
+import React, { useState } from 'react'
 import './service-card.scss'
-import { TbHash, TbUser } from 'react-icons/tb'
+import { TbHash, TbMessage2 } from 'react-icons/tb'
 import { isoToDDMonYYYY } from '../../../../utils/helpers/date-helpers'
-import { getContrastText } from '../../../../utils/helpers/color-utils'
 
 const CancellationCard = ({ data, pointer = false }) => {
-    const tempColor = '#ff0000';
-    const rawId = useId();
-    const gradientId = `cancel-grad-${rawId.replace(/:/g, '')}`;
+    const [expanded, setExpanded] = useState(false)
+    const hasComment = !!data?.comment
+    const hasIndex = data?.service_index !== undefined && data?.service_index !== null && data?.service_index !== ''
 
     return (
-        <div className="service-card-item-container" style={{ cursor: pointer ? 'pointer' : 'default' }}>
-            <div className="card-header" style={{ color: 'white' }}>
-                <svg className='gradient-background' viewBox="0 0 700 150" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id={gradientId}>
-                            <stop offset="0%" stopColor={tempColor} />
-                            <stop offset="100%" stopColor="#000000" />
-                        </linearGradient>
-                    </defs>
-
-                    <path
-                        d="M0,0 L700,0 L700,70 C600,70 500,75 400,90 C300,105 200,155 0,130 Z"
-                        fill={`url(#${gradientId})`}
-                    />
-                </svg>
-
-                <div className="left">
-                    <h4 style={{ color: getContrastText(tempColor) }}>Service Cancelled</h4>
-                    <p style={{ color: getContrastText(tempColor) }}>Service Card</p>
-                </div>
-                <div className="right">
-                    <p>{isoToDDMonYYYY(data?.date)}</p>
+        <div
+            className={`service-card-item-container cancellation ${expanded ? 'expanded' : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setExpanded((p) => !p)}
+        >
+            <div className="top-row">
+                <div className="tags">
+                    <span className="pill pkg-pill"><i className="dot" />Cancelled</span>
                 </div>
             </div>
 
-            <div className="middle-content">
-                {data?.comment ? <div className="middle-border-2" style={{ marginTop: '10px' }}>
-                    <p className='text' style={{ textAlign: 'end', }}>{data?.comment}</p>
-                </div> : ''}
+            <h4 className="title">Service Cancelled</h4>
+
+            <div className="bottom-row">
+                <p className="worker">{data?.worker_name}</p>
+                <span className="date">{isoToDDMonYYYY(data?.date)}</span>
             </div>
-            <div className="footer-content">
-                <div className="footer-border"
-                    style={{ backgroundColor: `${tempColor}18`, borderColor: `${tempColor}6b` }}
-                >
-                    <div className="left">
-                        <TbHash />
-                        <p>Index : {data?.service_index}</p>
-                    </div>
-                    <div className="right">
-                        <p>{data?.worker_name}</p>
-                        <TbUser />
+
+            {(hasIndex || hasComment) && (
+                <div className={`details-wrapper ${expanded ? 'open' : ''}`}>
+                    <div className="details-inner">
+                        {hasIndex && (
+                            <div className="details-head">
+                                <div className="srl-group">
+                                    <span className="srl" title="Service Index"><TbHash />Index : {data.service_index}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {hasComment && (
+                            <div className="detail-block">
+                                <h5><TbMessage2 /> Comment</h5>
+                                <p className="text">{data.comment}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 }

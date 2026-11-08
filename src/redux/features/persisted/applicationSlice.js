@@ -147,7 +147,7 @@ export const appDataSlice = createSlice({
             // find condition apply items 1 or 0
 
             const spares = state.serviceForm.service_products[productId].work?.components_list?.filter(c => {
-                if (c?.spare_category === 'PUMP' || (c?.spare_category === "MEMBRANE" && c?.selection_context !== 'RENEWAL_SPARE')) {
+                if (c?.spare_category === 'PUMP' || (c?.spare_category === "MEMBRANE" && state.serviceForm.service_products[productId]?.service_data?.mode !== 'RENEWAL')) {
                     return c
                 }
             })
@@ -207,7 +207,7 @@ export const appDataSlice = createSlice({
             }
         },
         updateSubmitStatus: (state, action) => {
-            const { product_id, ...status } = action.payload;
+            const { product_id } = action.payload;
 
             if (!state.serviceFormSettings.products) {
                 state.serviceFormSettings.products = {};

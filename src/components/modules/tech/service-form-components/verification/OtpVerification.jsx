@@ -15,6 +15,8 @@ const OtpVerification = ({ resetType }) => {
     const { verification, serviceForm } = useSelector((state) => state.application)
     const [otp, setOtp] = useState('')
     const [loading, setLoading] = useState('')
+    const [otpError, setOtpError] = useState('')
+    const [shake, setShake] = useState(false)
     const [cooldowns, setCooldowns] = useState({ SMS: 0, WHATSAPP: 0 });
 
     const getCooldownSeconds = (attempt = 0) => attempt * 2 * 60;
@@ -113,10 +115,9 @@ const OtpVerification = ({ resetType }) => {
                 verification_at: new Date().toISOString()
             }))
         } catch (error) {
-            dispatch(toast.push({
-                type: 'danger',
-                message: error?.message
-            }))
+            // inline error + shake the verify button (no toast)
+            setOtpError(error?.message || 'Incorrect OTP. Please try again.')
+            setShake(true)
             setOtp('')
         } finally {
             setLoading('')
@@ -130,6 +131,7 @@ const OtpVerification = ({ resetType }) => {
         if (value.length > 6) return;
 
         setOtp(value);
+        setOtpError('') // hide the error as soon as a new OTP entry starts
 
         if (value.length === 6) {
             verifyOtp(value);
@@ -184,9 +186,14 @@ const OtpVerification = ({ resetType }) => {
                     e.preventDefault();
                     verifyOtp()
                 }}>
-                    <input value={otp} placeholder='______' type='text' onChange={handleChangeOtp} name='otp' min={0} />
-                    <Button label={'Verify'} rounded severity={'primary'} disabled={loading === 'verify'}
-                        spinIcon={loading === 'verify'} />
+                    <div className="otp-field">
+                        <input className={otpError ? 'has-error' : ''} value={otp} placeholder='______' type='text' onChange={handleChangeOtp} name='otp' min={0} />
+                        {otpError && <p className="otp-error" role="alert">{otpError}</p>}
+                    </div>
+                    <div className={`verify-btn-wrap ${shake ? 'shake' : ''}`} onAnimationEnd={() => setShake(false)}>
+                        <Button label={'Verify'} rounded severity={otpError ? 'danger' : 'primary'} disabled={loading === 'verify'}
+                            spinIcon={loading === 'verify'} />
+                    </div>
 
                     <p className='reset-type' onClick={resetType}>Try Another Verification Type</p>
                 </form>

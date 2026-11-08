@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   TbCashBanknote,
   TbBriefcase,
-  TbCalendarEvent,
   TbClockHour4,
   TbRoute,
-  TbCalendarX,
+  TbMapPin,
   TbChevronRight,
 } from 'react-icons/tb';
+import AnimatedCounter from '../../../UI_Primitives/counter/AnimatedCounter';
 
 /**
  * Mobile performance report with two tabs: Today (default) and current Month.
@@ -31,15 +31,15 @@ const PerformanceReport = ({ today, month }) => {
   const metrics = tab === 'today'
     ? [
       { key: 'works', label: 'Works', value: today?.works, sub: 'Completed', icon: <TbBriefcase />, tone: 'primary' },
-      { key: 'schedules', label: 'Schedules', value: today?.schedules, sub: 'Remaining', icon: <TbCalendarEvent />, tone: 'info' },
       { key: 'work_time', label: 'Working Time', value: today?.workTime, sub: 'Hours : Minutes', icon: <TbClockHour4 />, tone: 'success' },
       { key: 'travel_time', label: 'Travel Time', value: today?.travelTime, sub: 'Hours : Minutes', icon: <TbRoute />, tone: 'warning' },
+      { key: 'distance', label: 'Distance', value: today?.distance, sub: 'Kilometers', icon: <TbMapPin />, tone: 'info' },
     ]
     : [
       { key: 'works', label: 'Works', value: month?.works, sub: 'Completed visits', icon: <TbBriefcase />, tone: 'primary' },
       { key: 'work_time', label: 'Working Time', value: month?.workTime, sub: `Avg: ${month?.workTimeAvg}`, icon: <TbClockHour4 />, tone: 'success' },
       { key: 'travel_time', label: 'Travel Time', value: month?.travelTime, sub: `Avg: ${month?.travelTimeAvg}`, icon: <TbRoute />, tone: 'warning' },
-      { key: 'cancel', label: 'Cancel Visit', value: month?.cancelled, sub: 'Visit(s)', icon: <TbCalendarX />, tone: 'danger' },
+      { key: 'distance', label: 'Distance', value: month?.distance, sub: 'Kilometers', icon: <TbMapPin />, tone: 'info' },
     ];
 
   const revenue = tab === 'today' ? today?.revenue : month?.revenue;
@@ -72,7 +72,7 @@ const PerformanceReport = ({ today, month }) => {
             <span className="vms-perf-report__revenue-label">
               {tab === 'today' ? "Today's Revenue" : `${monthName} Revenue`}
             </span>
-            <span className="vms-perf-report__revenue-value">₹{revenue}</span>
+            <span className="vms-perf-report__revenue-value">₹<AnimatedCounter key={`${tab}-${revenue}`} value={revenue} /></span>
           </div>
           <div className="vms-perf-report__revenue-icon"><TbCashBanknote /></div>
         </div>

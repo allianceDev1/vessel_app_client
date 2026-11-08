@@ -4,7 +4,7 @@ import Button from '../../../../UI_Primitives/buttons/Button'
 import { TbCheck, TbTools } from 'react-icons/tb'
 import EmptyState from '../../../../UI_Primitives/ui-states/EmptyState'
 import { useDispatch, useSelector } from 'react-redux'
-import { sfActions } from '../../../../../redux/features/persisted/applicationSlice'
+import { sfActions, sfSetting } from '../../../../../redux/features/persisted/applicationSlice'
 import { findSpareTypeAmount } from '../../../../../utils/flows/service_form_utils'
 import { toStandardText } from '../../../../../utils/helpers/text-formatting'
 
@@ -128,6 +128,8 @@ const ServiceList = ({ setWorkMenu, productInForm, workMenu }) => {
         }
       }))
     }
+
+    dispatch(sfSetting.productSubmit.resetStatus())
 
   }
 

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import './report.scss'
-import { Area, Bar, Cell, ComposedChart, Line, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Area, Bar, BarStack, Cell, ComposedChart, Line, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import ChartTooltip from '../primitives/ChartTooltip'
 import ChartLegend from '../primitives/ChartLegend'
 import { renderCustomChartLabel } from '../../../utils/helpers/chart_utils'
@@ -115,10 +115,8 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               style={{ width: '100%', height: '230px' }}
               data={monthChart}
               responsive
-              margin={{ left: -30 }}
             >
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis niceTicks="snap125" tick={{ fontSize: 11 }} />
               <ChartTooltip />
               <ChartLegend />
               <Area type="monotone" dataKey="Works" fill={chartLabelColors[11]} stroke={chartLabelColors[5]} fillOpacity={.3} />
@@ -128,16 +126,17 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
                 <Line type="monotone" dataKey="Addon" stroke={chartLabelColors[8]} strokeWidth={2} />
               )}
               {/* Packages only shown for specific product types (All products do not have package report) */}
-              {searchParams.get('parent_type') !== 'ALL' && Object.keys(packages || {}).map((key) => (
-                <Bar
-                  key={key}
-                  dataKey={key}
-                  barSize={20}
-                  fill={monthCharPackageColorCode?.[key] || chartLabelColors[0]}
-                  radius={[10, 10, 10, 10]}
-                  stackId="Package"
-                />
-              ))}
+              <BarStack radius={[50, 50, 0, 0]}>
+                {searchParams.get('parent_type') !== 'ALL' && Object.keys(packages || {}).map((key) => (
+                  <Bar
+                    key={key}
+                    dataKey={key}
+                    barSize={20}
+                    fill={monthCharPackageColorCode?.[key] || chartLabelColors[0]}
+                    stackId="Package"
+                  />
+                ))}
+              </BarStack>
             </ComposedChart>
           </div>
         </div>
@@ -167,7 +166,7 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
                   dataKey="value"
                   animationBegin={0}
                   animationDuration={800}
-                  paddingAngle={5}
+                  paddingAngle={1}
                 >
                   {summeryData.map((entry, index) => (
                     <Cell
@@ -204,14 +203,14 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
               style={{ width: '100%', height: '230px' }}
               data={chartData}
               responsive
-              margin={{ left: -30 }}
             >
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis niceTicks="snap125" tick={{ fontSize: 11 }} />
               <ChartTooltip />
               <ChartLegend />
-              <Bar dataKey="Renewal" barSize={20} fill={chartLabelColors[1]} radius={[10, 10, 10, 10]} stackId="Count" />
-              <Bar dataKey="Service" barSize={20} fill={chartLabelColors[0]} radius={[10, 10, 10, 10]} stackId="Count" />
+              <BarStack radius={[50, 50, 0, 0]}>
+                <Bar dataKey="Renewal" barSize={20} fill={chartLabelColors[1]} stackId="Count" />
+                <Bar dataKey="Service" barSize={20} fill={chartLabelColors[0]} stackId="Count" />
+              </BarStack>
             </ComposedChart>
           </div>
         </div>

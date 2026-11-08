@@ -13,22 +13,23 @@ const SubscriptionTable = () => {
   const [searchParams] = useSearchParams();
 
   const columnVisibility = {
-    'Product Id': false,
     'Expired At': false,
+    'Srl No': false,
+    'Product Type': false,
   }
 
   const tableColumns = [
-    { header: 'Idx', accessorKey: 'Idx', enableSorting: false },
-    { header: 'Srl No', accessorKey: 'Srl No', enableHiding: false },
-    { header: 'Title', accessorKey: 'Title' },
-    { header: 'Product Type', accessorKey: 'Product Type' },
-    { header: 'Status', accessorKey: 'Status' },
     { header: 'CID', accessorKey: 'CID' },
+    { header: 'Customer Name', accessorKey: 'Customer Name' },
+    { header: 'Title', accessorKey: 'Title' },
+    { header: 'Srl No', accessorKey: 'Srl No' },
+    { header: 'Product Type', accessorKey: 'Product Type' },
     { header: 'Product Id', accessorKey: 'Product Id' },
     { header: 'Start Date', accessorKey: 'Start Date' },
     { header: 'Expire Date', accessorKey: 'Expire Date' },
     { header: 'Expired At', accessorKey: 'Expired At' },
-    { header: 'Plan', accessorKey: 'Plan' }
+    { header: 'Plan', accessorKey: 'Plan' },
+    { header: 'Status', accessorKey: 'Status' },
   ]
 
   const getSortField = (id) => ({
@@ -80,6 +81,7 @@ const SubscriptionTable = () => {
         'Product Type': item.product_type ? toStandardText(item.product_type) : '',
         'Status': PACKAGE_STATUSES_TEXT?.[item?.package_status],
         'CID': item.customer_id,
+        'Customer Name': item.customer_name,
         'Product Id': item.product_id,
         'Start Date': item.start_date ? isoToDDMonYYYY(new Date(item.start_date)) : '',
         'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',

@@ -130,8 +130,8 @@ const Controller = () => {
                     <Route path='/completed' element={<PrivateRoute element={<CompletedService />} isAuthenticated={isAuthenticated} />} />
                     <Route path='/completed/service-job/:service_srl_no' element={<PrivateRoute element={<ServiceJob />} isAuthenticated={isAuthenticated} />} >
                         <Route index element={<ServiceJob />} />
-                        <Route path="pl/:pl_product_id" index element={<ProductLogInfo />} />
-                        <Route path="pp/:pp_product_id" index element={<PurchaseLogInfo />} />
+                        <Route path="pl/:pl_product_id" element={<ProductLogInfo />} />
+                        <Route path="pp/:pp_product_id" element={<PurchaseLogInfo />} />
                     </Route>
                     <Route path='/completed/service-job/v1.5/p/:service_srl_no/about' element={<PrivateRoute element={<PurifierServiceJobAbout />} isAuthenticated={isAuthenticated} />} />
 

@@ -104,15 +104,23 @@ const Payment = ({ pageKey }) => {
         )
 
         const complimentAmount = payment?.compliment_amount ?? 0
+        let complimentTakes = 0
+        let enteredAmount = 0
+
+        if (complimentAmount > 0 && grandTotal > 0) {
+            enteredAmount = Math.min(complimentAmount, grandTotal)
+            complimentTakes = enteredAmount
+        }
+
         const otherMethodAmounts = payment?.payment_methods?.reduce((acc, cur) => acc + Number(cur?.amount || 0), 0) || 0
-        const enteredAmount = (otherMethodAmounts || 0) + complimentAmount
+        enteredAmount += (otherMethodAmounts ?? 0)
         const balance = grandTotal - enteredAmount
 
         return {
             grandTotal: grandTotal ?? 0,
             paidAmount: enteredAmount ?? 0,
             balanceAmount: balance ?? 0,
-            complimentAmount
+            complimentAmount: complimentTakes
         }
 
     }, [payment, review])

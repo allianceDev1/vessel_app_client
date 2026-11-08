@@ -134,6 +134,14 @@ const AboutProduct = () => {
                             <p className='text-value'>{isoToDDMonYYYY(data?.package?.start_date)} to {isoToDDMonYYYY(data?.package?.expire_date)} </p>
                         </div>
                     </div>}
+                    {data?.package?.token?.total_tokens && <div className="item">
+                        <p className='label'>Tokens Available</p>
+                        <div>
+                            <p className='text-value'>
+                                {Number(data?.package?.token?.total_tokens || 0) - Number(data?.package?.token?.remaining_tokens || 0)} out of {Number(data?.package?.token?.total_tokens || 0)} tokens used | Balance : {Number(data?.package?.token?.remaining_tokens || 0)}
+                            </p>
+                        </div>
+                    </div>}
                     <div className="item">
                         <p className='label'>Next Service Date</p>
                         <div>
