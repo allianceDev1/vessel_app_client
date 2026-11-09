@@ -249,18 +249,18 @@
             border: 1px solid var(--item-color);
 
             &.renewal {
-                --item-color: var(--color-info-text);
-                --item-bg: var(--color-info-bg);
+                --item-color: #7c3aed;
+                --item-bg: #7c3aed2a;
             }
 
             &.package {
-                --item-color: var(--color-success-text);
-                --item-bg: var(--color-success-bg);
+                --item-color: #2563eb;
+                --item-bg: #2564eb2a;
             }
 
             &.additional {
-                --item-color: var(--color-warning-text);
-                --item-bg: var(--color-warning-bg);
+                --item-color: #d97706;
+                --item-bg: #d977062a;
             }
 
             .name {

@@ -187,7 +187,7 @@ const OtpVerification = ({ resetType }) => {
                     verifyOtp()
                 }}>
                     <div className="otp-field">
-                        <input className={otpError ? 'has-error' : ''} value={otp} placeholder='______' type='text' onChange={handleChangeOtp} name='otp' min={0} />
+                        <input className={otpError ? 'has-error' : ''} value={otp} placeholder='______' type='number' onChange={handleChangeOtp} name='otp' min={0} />
                         {otpError && <p className="otp-error" role="alert">{otpError}</p>}
                     </div>
                     <div className={`verify-btn-wrap ${shake ? 'shake' : ''}`} onAnimationEnd={() => setShake(false)}>

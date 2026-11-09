@@ -21,6 +21,12 @@ svg {
     pointer-events: none;
 }
 
+// Recharts needs pointer events on its SVG (e.g. Pie sector hover tooltips)
+.recharts-wrapper svg,
+svg.recharts-surface {
+    pointer-events: auto;
+}
+
 
 .tooltip {
     background-color: wheat;

@@ -25,6 +25,7 @@ const SubscriptionTable = () => {
     { header: 'Srl No', accessorKey: 'Srl No' },
     { header: 'Product Type', accessorKey: 'Product Type' },
     { header: 'Product Id', accessorKey: 'Product Id' },
+    { header: 'City name', accessorKey: 'City name' },
     { header: 'Start Date', accessorKey: 'Start Date' },
     { header: 'Expire Date', accessorKey: 'Expire Date' },
     { header: 'Expired At', accessorKey: 'Expired At' },
@@ -83,6 +84,7 @@ const SubscriptionTable = () => {
         'CID': item.customer_id,
         'Customer Name': item.customer_name,
         'Product Id': item.product_id,
+        'City name': item.city_name,
         'Start Date': item.start_date ? isoToDDMonYYYY(new Date(item.start_date)) : '',
         'Expire Date': item.expire_date ? isoToDDMonYYYY(new Date(item.expire_date)) : '',
         'Expired At': item.expired_at ? isoToDDMonYYYY(new Date(item.expired_at)) : '',
@@ -103,7 +105,7 @@ const SubscriptionTable = () => {
 
     return { data: transformed, total: res.total }
     // eslint-disable-next-line
-  }, [navigate, searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')])
+  }, [navigate, searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted'),searchParams.get('city_id')])
 
 
 
@@ -114,7 +116,7 @@ const SubscriptionTable = () => {
         columns={tableColumns}
         fetchFn={fetchServiceData}
         columnVisible={columnVisibility}
-        queryKey={['subsc_table', searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted')]}
+        queryKey={['subsc_table', searchParams.get('product_type'), searchParams.get('statuses'), searchParams.get('package_ids'), searchParams.get('date_type'), searchParams.get('from_date'), searchParams.get('end_date'), searchParams.get('blacklisted'),searchParams.get('city_id')]}
         tableKey="subsc_table"
       />
     </div>

@@ -4,6 +4,7 @@ import { TbAlertCircle, TbAlertTriangle, TbFileText, TbRotate2 } from 'react-ico
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { sfActions, sfSetting } from '../../../redux/features/persisted/applicationSlice'
+import { doDialog } from '../../../redux/features/non_persisted/miniSystemSlice'
 import { api } from '../../../api'
 import { buildCustomerPGStretcher } from '../../../utils/services/product_service'
 import { useQuery } from '@tanstack/react-query'
@@ -53,6 +54,34 @@ const ServiceForm = () => {
 
         setResourcesVerification(result)
         setIsVerifying(false)
+    }
+
+    const resetProductWork = (productId) => {
+        const resetAction = () => {
+            dispatch(sfActions.resetService(productId))
+            dispatch(sfSetting.productSubmit.resetStatus(productId))
+
+            const updatedForm = {
+                ...serviceForm,
+                service_products: {
+                    ...(serviceForm?.service_products || {}),
+                    [productId]: {
+                        ...(serviceForm?.service_products?.[productId] || {}),
+                        service_data: null,
+                        work: null,
+                        service_category: null
+                    }
+                }
+            }
+            handleVerify(formResources, updatedForm)
+        }
+
+        dispatch(
+            doDialog.confirm({
+                message: 'Are you sure to reset work category?',
+                accept: { onClick: () => resetAction() }
+            })
+        )
     }
 
     const {
@@ -179,6 +208,18 @@ const ServiceForm = () => {
                                                 </li>
                                             ))}
                                         </ul>
+
+                                        <div className="card-footer">
+                                            <Button
+                                                type="button"
+                                                label="Reset Work"
+                                                size="small"
+                                                rounded
+                                                outlined
+                                                severity="danger"
+                                                onClick={() => resetProductWork(prod.product_id)}
+                                            />
+                                        </div>
                                     </div>
                                 ))}
 

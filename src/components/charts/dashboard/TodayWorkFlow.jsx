@@ -117,12 +117,12 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
         });
     }
 
-    const hoveredSegmentRef = { current: null };
-
-    const CustomTooltip = ({ active, payload, label }) => {
+    const CustomTooltip = ({ active, payload }) => {
         if (!active || !payload || !payload.length) return null;
 
-        const data = hoveredSegmentRef.current;
+        // shared={false}: payload[0] is the exact bar segment under the cursor
+        const item = payload[0];
+        const data = item?.payload?.[`${item.dataKey}_meta`];
         if (!data || data.type === "gap") return null;
 
         const statusCfg = STATUS_CONFIG[data.status] || STATUS_CONFIG.Completed;
@@ -261,7 +261,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
                             tickLine={false}
                             axisLine={false}
                         />
-                        <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--surface-1)" }} />
+                        <Tooltip content={<CustomTooltip />} shared={false} cursor={false} />
 
                         {showNow && (
                             <ReferenceLine
@@ -275,10 +275,7 @@ const TodayWorkFlow = ({ technicians, workFlows }) => {
 
                         {BAR_KEYS.map((key, i) => (
                             <Bar key={key} dataKey={key} stackId="stack" radius={i === 0 ? [3, 0, 0, 3] : i === maxBars - 1 ? [0, 3, 3, 0] : 0}
-                                isAnimationActive={true} animationDuration={800 + i * 30} onMouseEnter={(data) => {
-                                    const meta = data?.[`${key}_meta`];
-                                    if (meta && meta.type !== "gap") hoveredSegmentRef.current = meta;
-                                }}>
+                                isAnimationActive={true} animationDuration={800 + i * 30}>
                                 {rows.map((row, ri) => {
                                     const meta = row[`${key}_meta`];
                                     if (!meta || meta.type === "gap") {

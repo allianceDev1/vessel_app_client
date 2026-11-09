@@ -321,9 +321,9 @@ const CustomerMiniReport = () => {
                                             stroke="none"
                                         />
                                     ))}
-                                    <ChartTooltip />
-                                    <ChartLegend />
                                 </Pie>
+                                <ChartTooltip />
+                                <ChartLegend />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -371,31 +371,31 @@ const CustomerMiniReport = () => {
                                     >
                                         <XAxis type="number" domain={[0, 100]} hide />
                                         <YAxis type="category" dataKey="name" hide />
-                                         <BarStack radius={[50, 50, 50, 50]}>
+                                        <BarStack radius={[50, 50, 50, 50]}>
 
-                                        <Bar
-                                            dataKey="In house"
-                                            stackId="a"
-                                            fill={chartLabelColors[0]}
-                                            barSize={10}
-                                            background={{
-                                                fill: "var(--surface-3)",
-                                                radius: 6,
-                                                pointerEvents: "none"
-                                            }}
-                                        />
-                                        <Bar
-                                            dataKey="Outside"
-                                            stackId="a"
-                                            fill={chartLabelColors[1]}
-                                            barSize={10}
-                                            background={{
-                                                fill: "var(--surface-3)",
-                                                radius: 6,
-                                                pointerEvents: "none"
-                                            }}
-                                        />
-                                         </BarStack>
+                                            <Bar
+                                                dataKey="In house"
+                                                stackId="a"
+                                                fill={chartLabelColors[0]}
+                                                barSize={10}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                            <Bar
+                                                dataKey="Outside"
+                                                stackId="a"
+                                                fill={chartLabelColors[1]}
+                                                barSize={10}
+                                                background={{
+                                                    fill: "var(--surface-3)",
+                                                    radius: 6,
+                                                    pointerEvents: "none"
+                                                }}
+                                            />
+                                        </BarStack>
                                         <ChartTooltip valueFormatter={(value) => `${value}%`} />
                                     </BarChart>
                                 </ResponsiveContainer>
