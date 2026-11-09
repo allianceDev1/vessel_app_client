@@ -11,6 +11,7 @@
             background-color: var(--surface-2);
             padding: 10px 15px;
             border-radius: 10px;
+            position: relative;
 
             .label {
                 font-size: 13px;
@@ -23,6 +24,18 @@
                 .text-value {
                     font-size: 14px;
                     font-weight: 500;
+                }
+            }
+
+            .right-icon {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translate(0, -50%);
+
+                svg {
+                    font-size: 25px;
+                    color: var(--text-tertiary);
                 }
             }
         }
@@ -59,7 +72,7 @@
         margin: 25px 0 15px 0;
     }
 
-  
+
 
     .table-list {
         .table-menu {

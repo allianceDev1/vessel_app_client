@@ -147,6 +147,18 @@
                 }
             }
 
+            input[type='number']::-webkit-inner-spin-button,
+            input[type='number']::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Firefox */
+            input[type='number'] {
+                -moz-appearance: textfield;
+                appearance: textfield;
+            }
+
             .reset-type {
                 margin-top: 15px;
                 color: var(--color-primary);
@@ -159,6 +171,7 @@
     }
 
 }
+
 .tech-service-form-otp-verification-comp .verify-section form {
     .otp-field {
         display: flex;
@@ -187,9 +200,25 @@
 }
 
 @keyframes otp-shake {
-    10%, 90% { transform: translateX(-2px); }
-    20%, 80% { transform: translateX(4px); }
-    30%, 50%, 70% { transform: translateX(-8px); }
-    40%, 60% { transform: translateX(8px); }
-}
 
+    10%,
+    90% {
+        transform: translateX(-2px);
+    }
+
+    20%,
+    80% {
+        transform: translateX(4px);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translateX(-8px);
+    }
+
+    40%,
+    60% {
+        transform: translateX(8px);
+    }
+}
