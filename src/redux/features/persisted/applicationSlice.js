@@ -94,10 +94,10 @@ export const appDataSlice = createSlice({
                 state.serviceForm.service_products[productId][key] = updates;
             });
         },
-        resetServiceCategory: (state) => {
-            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+        resetServiceCategory: (state, action) => {
+            const productId = action?.payload || state?.serviceFormSettings?.activeProduct?.[0] || null;
 
-            if (productId) {
+            if (productId && state?.serviceForm?.service_products) {
                 state.serviceForm.service_products[productId] = {
                     ...(state.serviceForm.service_products[productId] || {}),
                     service_data: null,
@@ -227,8 +227,8 @@ export const appDataSlice = createSlice({
                 ...product
             };
         },
-        updateSubmitStatusToFalse: (state) => {
-            const productId = state?.serviceFormSettings?.activeProduct?.[0] || null;
+        updateSubmitStatusToFalse: (state, action) => {
+            const productId = action?.payload || state?.serviceFormSettings?.activeProduct?.[0] || null;
 
             if (!productId) return;
 

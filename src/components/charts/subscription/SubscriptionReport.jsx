@@ -146,9 +146,9 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
                                 >
                                     <Cell key={`cell-1`} fill={chartLabelColors[0]} stroke='none' />
                                     <Cell key={`cell-2`} fill={chartLabelColors[1]} stroke='none' />
-                                    <ChartTooltip />
-                                    <ChartLegend />
                                 </Pie>
+                                <ChartTooltip />
+                                <ChartLegend />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -179,9 +179,9 @@ const SubscriptionReport = ({ data, loading, error, updatedAt }) => {
                                         {packageNameReport?.map((entry, index) => {
                                             return <Cell key={`cell-${index}`} fill={entry?.color_code} stroke='none' />
                                         })}
-                                        <ChartTooltip />
-                                        <ChartLegend />
                                     </Pie>
+                                    <ChartTooltip />
+                                    <ChartLegend />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
