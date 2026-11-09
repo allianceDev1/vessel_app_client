@@ -6,7 +6,7 @@ import Badge from '../../../UI_Primitives/badge/Badge'
 import Button from '../../../UI_Primitives/buttons/Button'
 import Table from '../../../UI_Primitives/table/Table'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../../../api'
 import { getContrastText } from '../../../../utils/helpers/color-utils'
 import EmptyState from '../../../UI_Primitives/ui-states/EmptyState'
@@ -15,9 +15,11 @@ import WaterPurifierV2 from './assessments/WaterPurifierV2'
 import VesselFilterV2 from './assessments/VesselFilterV2'
 import AddOnV2 from './assessments/AddOnV2'
 import Message from '../../../UI_Primitives/message/Message'
+import { TbArrowUpRight } from 'react-icons/tb'
 
 
 const ProductLogInfo = () => {
+    const navigate = useNavigate();
     const { service_srl_no, pl_product_id } = useParams();
     const [activeSection, setActionSection] = useState('')
 
@@ -129,10 +131,13 @@ const ProductLogInfo = () => {
                     message={'Customer was informed about renewal but is not ready to renew at this time.'}
                 />}
             <div className="text-content">
-                <div className="item">
+                <div className="item" onClick={() => navigate(`/controller/product/${data?.product_id}/about`)}>
                     <p className='label'>Product ID & Type</p>
                     <div>
                         <p className='text-value'>{data?.product_id} - {toStandardText(data?.product_type)}</p>
+                    </div>
+                    <div className="right-icon">
+                        <TbArrowUpRight />
                     </div>
                 </div>
                 <div className="item">

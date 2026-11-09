@@ -20,6 +20,7 @@ const FilterBox = () => {
     product_type: searchParams.get('product_type') || '',
     statuses: searchParams.get('statuses')?.split(',').filter(Boolean) || [],
     package_ids: searchParams.get('package_ids')?.split(',').filter(Boolean) || [],
+    city_id: searchParams.get('city_id') || '',
     date_type: searchParams.get('date_type') || '',
     from_date: searchParams.get('from_date') || '',
     end_date: searchParams.get('end_date') || '',
@@ -62,11 +63,22 @@ const FilterBox = () => {
     staleTime: 30_000
   })
 
+  const {
+    data: cityList
+  } = useQuery({
+    queryKey: ['city_input_list'],
+    queryFn: async () => {
+      const res = await api.cnPv2Axios('/l/location/city?area_type=service')
+      return res
+    },
+    staleTime: 30 * 60_000
+  })
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // validation
-    if (!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date) {
+    if (!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date && !form?.city_id) {
       return;
     }
 
@@ -84,6 +96,12 @@ const FilterBox = () => {
       newSearchParams.set('black_listed', form?.black_listed)
     } else {
       newSearchParams.delete('black_listed')
+    }
+    
+    if (form?.city_id) {
+      newSearchParams.set('city_id', form?.city_id)
+    } else {
+      newSearchParams.delete('city_id')
     }
 
     if (form?.statuses?.length) {
@@ -133,6 +151,9 @@ const FilterBox = () => {
           selected={packageIdOptions?.filter(item => form.package_ids?.includes(item.value))}
         />
 
+        <Select label={'City'} name={'city_id'} options={[{ label: '', value: '' }, ...(cityList || [])?.map((city) => ({ label: city.city_name, value: city.city_id }))]}
+          value={form.city_id} onChange={handleChange} />
+
         <MultiSelectInput label={'Status'} options={statusFilterTypes} name={'statuses'} onChange={handleMultiInputChange}
           selected={statusFilterTypes?.filter(item => form.statuses?.includes(item.value))} />
 
@@ -146,7 +167,7 @@ const FilterBox = () => {
           required={form?.date_type || form?.from_date} min={form?.from_date} />
 
         <Button label={'Apply Filter'} severity={'primary'} style={{ width: '100%' }}
-          rounded disabled={!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date} />
+          rounded disabled={!form?.product_type && !form?.statuses?.length && !form?.package_ids?.length && !form?.from_date && !form?.end_date && !form?.city_id} />
       </form>
     </div>
   )

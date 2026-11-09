@@ -20,6 +20,25 @@ import { generateUniqueId } from '../../../utils/helpers/generate_Id';
 
 
 
+const getStatusSeverity = (status = '') => {
+    const normalized = String(status).toUpperCase();
+    if (['PAID', 'SUCCESS', 'COMPLETED', 'CONFIRMED', 'ISSUED', 'ACTIVE', 'VERIFIED'].includes(normalized)) {
+        return 'success';
+    }
+    if (['PARTIALLY_PAID', 'PARTIAL', 'DRAFT', 'PENDING', 'PROCESSING'].includes(normalized)) {
+        return 'warning';
+    }
+    if (['UNPAID', 'FAILED', 'REJECTED', 'CANCELLED', 'VOID', 'OVERDUE'].includes(normalized)) {
+        return 'danger';
+    }
+    return 'secondary';
+};
+
+const formatCurrencySymbol = (currency = 'INR') => {
+    if (!currency || String(currency).toUpperCase() === 'INR') return '₹';
+    return `${currency} `;
+};
+
 const ServiceJob = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -35,24 +54,37 @@ const ServiceJob = () => {
         queryKey: ['service_job_view', service_srl_no, 'about'],
         queryFn: async () => {
             const data = await api.ssCv2Axios.get(`/service/completed/${service_srl_no}/about`);
+            const billData = await api.fnPv1Axios.get(`/bill/service-job/${service_srl_no}`).catch(() => null);
 
             const diff = getTimeDiff(new Date(data?.out_time), new Date(data?.reg_date))
 
-            const grandTotal = data?.bills?.reduce((acc, curr) => acc + (curr?.grand_total || 0), 0)
-            const paid = data?.bills?.reduce((acc, curr) => acc + (curr?.paid_amount || 0), 0)
-            const balance = grandTotal - paid;
-            const paymentStatus = grandTotal === paid ? 'Paid' : paid > 0 ? 'Partially Paid' : 'Unpaid';
-            const paidPercentage = (paid / grandTotal) * 100;
+            const billAmount = Number(billData?.bill_amount ?? 0);
+            const paidAmount = Number(billData?.paid_amount ?? 0);
+            const balance = Math.max(0, billAmount - paidAmount);
+            const paymentStatus = billData?.status
+                ? toStandardText(billData.status)
+                : billAmount === 0
+                    ? 'No Amounts'
+                    : balance <= 0 && paidAmount >= billAmount
+                        ? 'Paid'
+                        : paidAmount > 0
+                            ? 'Partially Paid'
+                            : 'Unpaid';
+            const paidPercentage = billAmount <= 0
+                ? (paidAmount > 0 ? 100 : 0)
+                : Math.min(100, (paidAmount / billAmount) * 100);
 
             return {
                 ...data,
+                bill: billData,
                 tat: { day: diff.days, hour: diff.hours, minute: diff.minutes },
                 bill_summery: {
-                    grand_total: grandTotal,
-                    paid_percentage: grandTotal === 0 ? 100 : paidPercentage,
-                    paid: paid,
+                    grand_total: billAmount,
+                    paid_percentage: paidPercentage,
+                    paid: paidAmount,
                     balance: balance,
-                    payment_status: paymentStatus
+                    payment_status: paymentStatus,
+                    currency_symbol: formatCurrencySymbol(billData?.currency)
                 }
             }
         },
@@ -88,7 +120,7 @@ const ServiceJob = () => {
             if (type === 'Bill') {
                 await downloadServiceBill(service_srl_no)
             } else {
-                await downloadServiceReceipt(data?.bills?.[0]?.bill_no || '')
+                await downloadServiceReceipt(data?.bill?.bill_no || '')
             }
 
         } catch (error) {
@@ -174,7 +206,7 @@ const ServiceJob = () => {
                                 items: [
                                     {
                                         icon: <TbDownload />, label: "Bill", onClick: () => downloadAction('Bill'),
-                                        disabled: data?.bills?.length > 0 ? false : true,
+                                        disabled: data?.bill?.bill_no ? false : true,
                                     },
                                     {
                                         icon: <TbDownload />, label: "Receipt", disabled: data?.bill_summery?.paid > 0 ? false : true,
@@ -287,17 +319,39 @@ const ServiceJob = () => {
                             </div>
                         </div>}
                     </div>
-                    {data?.bills?.length > 0 ? (
+                    {data?.bill?.bill_no ? (
                         <>
                             <div className="payment-border">
                                 <div className="summery-box">
+                                    <div className="bill-header">
+                                        <div className="bill-no-box">
+                                            <span className="bill-label">Bill No</span>
+                                            <h3 className="bill-number">{data?.bill?.bill_no}</h3>
+                                        </div>
+                                        <div className="bill-badges">
+                                            {data?.bill?.bill_status && (
+                                                <Badge
+                                                    size="small"
+                                                    value={toStandardText(data.bill.bill_status)}
+                                                    severity={getStatusSeverity(data.bill.bill_status)}
+                                                />
+                                            )}
+                                            {data?.bill?.status && (
+                                                <Badge
+                                                    size="small"
+                                                    value={toStandardText(data.bill.status)}
+                                                    severity={getStatusSeverity(data.bill.status)}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
                                     <div className="amount">
                                         <div className="left-section">
-                                            <h2>₹{(data?.bill_summery?.grand_total || 0).toFixed(2)}</h2>
-                                            <p>Total Amount</p>
+                                            <h2>{data?.bill_summery?.currency_symbol}{(data?.bill_summery?.grand_total || 0).toFixed(2)}</h2>
+                                            <p>Bill Amount</p>
                                         </div>
                                         <div className="right-section">
-                                            <h2>₹{(data?.bill_summery?.paid || 0).toFixed(2)}</h2>
+                                            <h2>{data?.bill_summery?.currency_symbol}{(data?.bill_summery?.paid || 0).toFixed(2)}</h2>
                                             <p>Paid Amount</p>
                                         </div>
                                     </div>
@@ -306,38 +360,54 @@ const ServiceJob = () => {
                                             <div className="graph-inner-line" style={{ width: `${data?.bill_summery?.paid_percentage || 0}%` }}></div>
                                         </div>
                                         <div className='footer'>
-                                            <h4>{data?.bill_summery?.grand_total > 0 ? data?.bill_summery?.payment_status : 'No Amounts'}</h4>
-                                            <h4>₹{(data?.bill_summery?.balance || 0).toFixed(2)} Balance</h4>
+                                            <h4>{data?.bill_summery?.payment_status || 'No Amounts'}</h4>
+                                            <h4>{data?.bill_summery?.currency_symbol}{(data?.bill_summery?.balance || 0).toFixed(2)} Balance</h4>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="bills-list">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Bill No</th>
-                                                <th>Total</th>
-                                                <th>Paid</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data?.bills?.map((bill) => (
-                                                <tr key={bill?.bill_no} style={{ color: bill?.status === 'DRAFT' ? 'var(--color-warning)' : '' }}>
-                                                    <td>{bill?.bill_no}</td>
-                                                    <td>₹ {(bill?.grand_total || 0).toFixed(2)}</td>
-                                                    <td>₹ {(bill?.paid_amount || 0).toFixed(2)}</td>
-                                                    <td>
-                                                        {bill?.status === 'DRAFT'
-                                                            ? <Badge size='small' value={'DRAFT'} severity={'warning'} />
-                                                            : bill?.payment_status === 'UNPAID'
-                                                                ? <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'danger'} />
-                                                                : <Badge size='small' value={toStandardText(bill?.payment_status)} severity={'success'} />}
-                                                    </td>
+                                    <div className="transactions-header">
+                                        <h4>Transactions</h4>
+                                        <span className="tx-count">{data?.bill?.transactions?.length || 0}</span>
+                                    </div>
+                                    {data?.bill?.transactions?.length > 0 ? (
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Transaction ID</th>
+                                                    <th>Date</th>
+                                                    <th>Mode</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                {data?.bill?.transactions?.map((tx, idx) => (
+                                                    <tr key={tx?.transaction_id || idx}>
+                                                        <td className="tx-id">{tx?.transaction_id || '-'}</td>
+                                                        <td>
+                                                            {tx?.payment_date
+                                                                ? `${isoToDDMonYYYY(tx.payment_date)}${convertIsoToAmPm(tx.payment_date) ? `, ${convertIsoToAmPm(tx.payment_date)}` : ''}`
+                                                                : '-'}
+                                                        </td>
+                                                        <td>{toStandardText(tx?.payment_mode) || '-'}</td>
+                                                        <td className="tx-amount">{data?.bill_summery?.currency_symbol}{(Number(tx?.allocated_amount) || 0).toFixed(2)}</td>
+                                                        <td>
+                                                            <Badge
+                                                                size="small"
+                                                                value={toStandardText(tx?.status || 'UNKNOWN')}
+                                                                severity={getStatusSeverity(tx?.status)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <div className="empty-transactions">
+                                            <p>No payment transactions recorded</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="info">

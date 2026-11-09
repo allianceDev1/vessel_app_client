@@ -175,9 +175,9 @@ const UpcomingReport = ({ data, loading, error, updatedAt }) => {
                       stroke='none'
                     />
                   ))}
-                  <ChartTooltip />
-                  <ChartLegend />
                 </Pie>
+                <ChartTooltip />
+                <ChartLegend />
               </PieChart>
             </ResponsiveContainer>
             <div className="count-report">

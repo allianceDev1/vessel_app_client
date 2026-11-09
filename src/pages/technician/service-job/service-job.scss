@@ -96,19 +96,58 @@
         }
 
         .payment-border {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             margin-top: 20px;
             background-color: var(--surface-2);
-            border-radius: 10px;
-            padding: 10px 20px;
+            border-radius: 12px;
+            padding: 16px;
 
             .summery-box {
+                display: flex;
+                flex-direction: column;
+
+                .bill-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding-bottom: 12px;
+                    border-bottom: 1px solid var(--border-light);
+
+                    .bill-no-box {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        .bill-label {
+                            font-size: 11px;
+                            color: var(--text-tertiary);
+                            font-weight: 500;
+                        }
+
+                        .bill-number {
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                        }
+                    }
+
+                    .bill-badges {
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        justify-content: flex-end;
+                        gap: 6px;
+                    }
+                }
+
                 .amount {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
-                    padding: 15px 0;
+                    padding: 14px 0 10px;
 
                     .left-section,
                     .right-section {
@@ -117,12 +156,12 @@
                         gap: 2px;
 
                         h2 {
-                            font-size: 25px;
+                            font-size: 22px;
                             font-weight: 600;
                         }
 
                         p {
-                            font-size: 14px;
+                            font-size: 12px;
                             font-weight: 500;
                             color: var(--text-tertiary);
                         }
@@ -134,6 +173,141 @@
                         h2 {
                             color: var(--color-success);
                         }
+                    }
+                }
+
+                .graph {
+                    margin-top: 6px;
+
+                    .graph-outer-line {
+                        width: 100%;
+                        height: 7px;
+                        border-radius: 20px;
+                        background-color: var(--surface-3);
+                        overflow: hidden;
+
+                        .graph-inner-line {
+                            height: 100%;
+                            border-radius: 20px;
+                            background-color: var(--color-success);
+                            transition: width 0.3s ease;
+                        }
+                    }
+
+                    .footer {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 6px;
+
+                        h4 {
+                            font-size: 12px;
+                            font-weight: 500;
+                            color: var(--text-secondary);
+                        }
+                    }
+                }
+            }
+
+            .transactions-section {
+                border-top: 1px solid var(--border-light);
+                padding-top: 14px;
+
+                .transactions-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+
+                    h4 {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+
+                    .tx-count {
+                        font-size: 11px;
+                        font-weight: 600;
+                        padding: 2px 8px;
+                        border-radius: 20px;
+                        background-color: var(--surface-3);
+                        color: var(--text-tertiary);
+                    }
+                }
+
+                .tx-card-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .tx-card {
+                        background-color: var(--surface-3);
+                        border-radius: 8px;
+                        padding: 10px 12px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;
+
+                        .tx-row-top {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: 8px;
+
+                            .tx-id-group {
+                                display: flex;
+                                align-items: center;
+                                flex-wrap: wrap;
+                                gap: 6px;
+
+                                .tx-id {
+                                    font-size: 13px;
+                                    font-weight: 600;
+                                    color: var(--text-primary);
+                                }
+
+                                .tx-mode-pill {
+                                    font-size: 10px;
+                                    font-weight: 600;
+                                    padding: 2px 6px;
+                                    border-radius: 6px;
+                                    background-color: var(--surface-2);
+                                    color: var(--text-secondary);
+                                }
+                            }
+
+                            .tx-amount {
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: var(--text-primary);
+                                white-space: nowrap;
+                            }
+                        }
+
+                        .tx-row-bottom {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: 8px;
+
+                            .tx-date {
+                                font-size: 11px;
+                                color: var(--text-tertiary);
+                                font-weight: 500;
+                            }
+                        }
+                    }
+                }
+
+                .empty-transactions {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 14px 0 4px;
+
+                    p {
+                        font-size: 12px;
+                        color: var(--text-tertiary);
                     }
                 }
             }

@@ -112,12 +112,49 @@
             .summery-box {
                 border-right: 1px solid var(--border-light);
                 padding-right: 25px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                .bill-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding-bottom: 12px;
+                    border-bottom: 1px solid var(--border-light);
+
+                    .bill-no-box {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        .bill-label {
+                            font-size: 12px;
+                            color: var(--text-tertiary);
+                            font-weight: 500;
+                        }
+
+                        .bill-number {
+                            font-size: 15px;
+                            font-weight: 600;
+                            color: var(--text-primary);
+                        }
+                    }
+
+                    .bill-badges {
+                        display: flex;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        gap: 6px;
+                    }
+                }
 
                 .amount {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
-                    padding: 15px 0;
+                    padding: 15px 0 10px;
 
                     .left-section,
                     .right-section {
@@ -149,26 +186,28 @@
                 }
 
                 .graph {
-                    margin-top: 15px;
+                    margin-top: 10px;
 
                     .graph-outer-line {
                         width: 100%;
                         height: 8px;
                         border-radius: 20px;
                         background-color: var(--surface-3);
+                        overflow: hidden;
 
                         .graph-inner-line {
                             width: 50%;
                             height: 8px;
                             border-radius: 20px;
                             background-color: var(--color-success);
+                            transition: width 0.3s ease;
                         }
                     }
 
                     .footer {
                         display: flex;
                         justify-content: space-between;
-                        margin-top: 5px;
+                        margin-top: 6px;
 
                         h4 {
                             font-size: 14px;
@@ -180,8 +219,31 @@
 
             .bills-list {
                 padding-left: 25px;
-                height: 130px;
+                max-height: 200px;
                 overflow: auto;
+                @include scrollBar();
+
+                .transactions-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 8px;
+
+                    h4 {
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                    }
+
+                    .tx-count {
+                        font-size: 11px;
+                        font-weight: 600;
+                        padding: 2px 8px;
+                        border-radius: 20px;
+                        background-color: var(--surface-3);
+                        color: var(--text-tertiary);
+                    }
+                }
 
                 table {
                     width: 100%;
@@ -189,10 +251,12 @@
 
                     thead {
                         tr {
+                            border-bottom: 1px solid var(--border-light);
+
                             th {
-                                padding: 10px 10px;
+                                padding: 8px 10px;
                                 text-align: start;
-                                font-size: 14px;
+                                font-size: 13px;
                                 font-weight: 500;
                                 color: var(--text-tertiary);
                             }
@@ -201,13 +265,38 @@
 
                     tbody {
                         tr {
+                            &:not(:last-child) {
+                                border-bottom: 1px solid var(--border-light);
+                            }
+
                             td {
-                                padding: 5px 10px;
+                                padding: 8px 10px;
                                 text-align: start;
                                 font-size: 13px;
                                 font-weight: 500;
+
+                                &.tx-id {
+                                    font-weight: 600;
+                                }
+
+                                &.tx-amount {
+                                    font-weight: 600;
+                                }
                             }
                         }
+                    }
+                }
+
+                .empty-transactions {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 110px;
+                    padding: 20px 0;
+
+                    p {
+                        font-size: 13px;
+                        color: var(--text-tertiary);
                     }
                 }
             }
@@ -253,8 +342,8 @@
 
                 .bills-list {
                     padding-left: 0;
-                    padding-top: 10px;
-                    height: auto;
+                    padding-top: 15px;
+                    max-height: none;
                     overflow: auto;
                 }
             }
