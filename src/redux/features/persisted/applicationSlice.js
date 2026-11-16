@@ -33,10 +33,15 @@ export const appDataSlice = createSlice({
         // Start work
         startServiceWork: (state, action) => {
             const payload = action.payload || {}
+            const parsedStart = payload.start_time ? new Date(payload.start_time) : new Date()
+            const startTime = Number.isNaN(parsedStart.getTime())
+                ? new Date().toISOString()
+                : parsedStart.toISOString()
+
             state.serviceForm = {
                 work_key: payload?.work_key,
                 customer_id: payload.customer_id,
-                start_time: new Date(payload.start_time).toISOString()
+                start_time: startTime
             }
             state.serviceFormSettings.pageHistory = [1000]
             state.serviceFormSettings.activePage = 1000
