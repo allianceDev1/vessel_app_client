@@ -5,7 +5,7 @@ import { api } from '../../../../api'
 import { useDispatch } from 'react-redux'
 import { modal, toast } from '../../../../redux/features/non_persisted/miniSystemSlice'
 import { useNavigate } from 'react-router-dom'
-import { isoToYYYYMMDD } from '../../../../utils/helpers/date-helpers'
+import { addDurationToDate, dateToDateTimeLocal, validateScheduleDateTime } from '../../../../utils/helpers/date-helpers'
 
 const getProductType = (products) => {
     const parentTypes = new Set();
@@ -33,14 +33,18 @@ const TechScheduleService = ({ registrationId, customerId, serviceType, serviceP
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState('')
-    const [form, setForm] = useState({ date: null, fromTime: null, endTime: null })
+    const [form, setForm] = useState({ dateTime: '' })
 
+    const timeError = validateScheduleDateTime(form.dateTime, 6, 21)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const startTime = new Date(`${form?.date} ${form?.fromTime}`)
-        const endTime = new Date(`${form?.date} ${form?.endTime}`)
+        if (timeError) return;
+
+        const startTime = new Date(form.dateTime)
+        if (isNaN(startTime.getTime())) return;
+        const endTime = addDurationToDate(startTime, { minutes: 30 })
 
         try {
             setLoading('submit')
@@ -57,8 +61,8 @@ const TechScheduleService = ({ registrationId, customerId, serviceType, serviceP
                 customer_id: customerId,
                 product_type: type,
                 service_type: serviceType,
-                schedule_slot_start_at: startTime,
-                schedule_slot_finish_at: endTime
+                schedule_slot_start_at: startTime.toISOString(),
+                schedule_slot_finish_at: endTime.toISOString()
             })
 
             dispatch(modal.pull.all())
@@ -85,16 +89,10 @@ const TechScheduleService = ({ registrationId, customerId, serviceType, serviceP
     return (
         <div className="tech-schedule-service-comp">
             <form action="" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} onSubmit={handleSubmit}>
-                <InputText label={'Schedule Date'} type='date' value={form?.date} onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    required min={isoToYYYYMMDD(new Date())} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <InputText label={'Start Time'} type='time' value={form?.fromTime} onChange={(e) => setForm({ ...form, fromTime: e.target.value })}
-                        required max={form?.endTime} />
-                    <InputText label={'End Time'} type='time' value={form?.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                        required min={form?.fromTime} />
-                </div>
+                <InputText label={'Schedule Date & Time'} type='datetime-local' value={form.dateTime} onChange={(e) => setForm({ ...form, dateTime: e.target.value })}
+                    required min={dateToDateTimeLocal(new Date())} error={timeError} helperText={'Choose schedule date and start time only'} />
                 <Button label={'Schedule work'} spinIcon={loading} severity={'primary'} rounded
-                    disabled={!form?.date || !form?.fromTime || !form?.endTime} />
+                    disabled={!form.dateTime || Boolean(timeError)} />
             </form>
         </div>
     )

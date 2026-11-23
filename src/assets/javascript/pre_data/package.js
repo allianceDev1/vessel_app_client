@@ -3,7 +3,7 @@ import { toStandardText } from "../../../utils/helpers/text-formatting";
 export const work_modes = ['COMPLAINT', 'SERVICE', 'RENEWAL']
 export const reg_priority = [
     [],
-    ['Low', 'info'],
+    ['Normal', 'info'],
     ['Urgent', 'warning'],
     ['High', 'danger']
 ]
