@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './eligibility-rules.scss'
 import Button from '../../../components/UI_Primitives/buttons/Button';
 import InputText from '../../../components/UI_Primitives/inputs/InputText';
@@ -19,6 +19,7 @@ const EligibilityRules = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.user)
+    const [search, setSearch] = useState('')
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['cn', 'eligibility-rules'],
@@ -29,6 +30,17 @@ const EligibilityRules = () => {
         staleTime: 30_000
     })
 
+
+    const filteredRules = useMemo(() => {
+        const query = search.trim().toLowerCase();
+        if (!query) return data || [];
+
+        return (data || []).filter((rule) => {
+            const nameMatch = (rule?.rule_name || '').toLowerCase().includes(query);
+            const conditionsMatch = String(rule?.conditions ?? 0).includes(query);
+            return nameMatch || conditionsMatch;
+        });
+    }, [data, search]);
 
     useEffect(() => {
         dispatch(page.config({ title: 'Eligibility rules', note: "Define which rules are eligible for this service workflow." }))
@@ -60,15 +72,15 @@ const EligibilityRules = () => {
     return (
         <div className="eligibility-rules-page-container">
             <div className="action-section">
-                <InputText label={'Search'} size='small' />
+                <InputText label={'Search'} size='small' value={search} onChange={(e) => setSearch(e.target.value)} />
                 {user?.allowed_origins?.includes('service_c_admin') &&
                     <Button label={'Rule'} icon={<TbPlus />} size='small' rounded onClick={() => navigate('/controller/app-config/eligibility-rules/new')}
                         severity={'primary'} style={{ width: '130px' }} />}
             </div>
 
-            {data?.length
+            {filteredRules.length
                 ? <div className="content">
-                    {data.map((rule) => (<div className="rule-item" key={rule.uuid} onClick={() => navigate(`/controller/app-config/eligibility-rule/${rule.uuid}`)}>
+                    {filteredRules.map((rule) => (<div className="rule-item" key={rule.uuid} onClick={() => navigate(`/controller/app-config/eligibility-rule/${rule.uuid}`)}>
                         <h4>{rule?.rule_name}</h4>
                         <div className="sub-line">
                             <p>Conditions : {rule?.conditions || 0}</p>
@@ -79,7 +91,7 @@ const EligibilityRules = () => {
                 : <EmptyState
                     icon={<TbAlertCircle />}
                     title={"No rules found !"}
-                    description={'Create the first rule using button.'}
+                    description={data?.length ? 'Try adjusting your search query.' : 'Create the first rule using button.'}
                     hight='70vh'
                 />}
 

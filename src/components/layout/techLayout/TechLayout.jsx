@@ -70,12 +70,12 @@ const TechLayout = ({ children }) => {
                     <h3>Service</h3>
                 </div>
                 <div className="section-two">
-                    <div className="navigate-button" title={themeLabel} onClick={handleThemeToggle}>
+                    <button type="button" className="navigate-button" title={themeLabel} onClick={handleThemeToggle} aria-label={themeLabel}>
                         {themeIcon}
-                    </div>
-                    <div className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)}>
+                    </button>
+                    <button type="button" className="navigate-button" title='Home Software' onClick={() => window.location.href = (`${env.REDIRECT_URL}?page=home`)} aria-label="Home Software">
                         <RxDashboard />
-                    </div>
+                    </button>
                 </div>
             </div>
             <div className="layout-body">
@@ -89,22 +89,22 @@ const TechLayout = ({ children }) => {
             </div>
             <div className="layout-menu">
                 <div className="menu-items">
-                    <div className={`item ${!activeSegment && 'active'}`} onClick={() => navigate('/tech')}>
+                    <button type="button" className={`item ${!activeSegment ? 'active' : ''}`} onClick={() => navigate('/tech')}>
                         <TbHome />
                         <p>Home</p>
-                    </div>
-                    <div className={`item ${activeSegment === 'services' && 'active'}`} onClick={() => navigate('/tech/services')}>
+                    </button>
+                    <button type="button" className={`item ${activeSegment === 'services' ? 'active' : ''}`} onClick={() => navigate('/tech/services')}>
                         <TbDropletHalf2 />
                         <p>Services</p>
-                    </div>
-                    <div className={`item ${activeSegment === 'schedules' && 'active'}`} onClick={() => navigate('/tech/schedules')}>
+                    </button>
+                    <button type="button" className={`item ${activeSegment === 'schedules' ? 'active' : ''}`} onClick={() => navigate('/tech/schedules')}>
                         <TbCalendarWeek />
                         <p>Schedules</p>
-                    </div>
-                    <div className={`item ${activeSegment === 'completed' && 'active'}`} onClick={() => navigate(`/tech/completed?fl=Yes&from_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`)}>
+                    </button>
+                    <button type="button" className={`item ${activeSegment === 'completed' ? 'active' : ''}`} onClick={() => navigate(`/tech/completed?fl=Yes&from_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`)}>
                         <TbDropletCheck />
                         <p>Completed</p>
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>
