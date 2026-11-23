@@ -47,6 +47,7 @@ const ControllerLayout = ({ children }) => {
     const navigate = useNavigate()
     const location = useLocation()
     const navbarRef = useRef(null)
+    const mobileMenuBtnRef = useRef(null)
 
     const [activeSegment, setActiveSegment] = useState('')
     const [navbarShow, setNavbarShow] = useState(false)
@@ -109,7 +110,12 @@ const ControllerLayout = ({ children }) => {
     // ── Outside click — close mobile sidebar ─────────────────────────────────
     useEffect(() => {
         const handleOutsideClick = (e) => {
-            if (navbarShow && navbarRef.current && !navbarRef.current.contains(e.target)) {
+            if (
+                navbarShow &&
+                navbarRef.current &&
+                !navbarRef.current.contains(e.target) &&
+                !mobileMenuBtnRef.current?.contains(e.target)
+            ) {
                 setNavbarShow(false)
             }
         }
@@ -224,12 +230,15 @@ const ControllerLayout = ({ children }) => {
                 <div className="layout-header">
                     <div className="header-left">
                         {/* Mobile hamburger */}
-                        <div
+                        <button
+                            type="button"
+                            ref={mobileMenuBtnRef}
                             className="mobile-menu-btn"
-                            onClick={() => setNavbarShow(!navbarShow)}
+                            onClick={() => setNavbarShow((prev) => !prev)}
+                            aria-label="Toggle navigation"
                         >
                             <IconMenu2 size={20} />
-                        </div>
+                        </button>
 
                         {/* Page Header / Title */}
                         {(page?.title || page?.head || page?.note) && (
