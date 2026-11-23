@@ -35,6 +35,8 @@ const SubscriptionTable = () => {
 
   const getSortField = (id) => ({
     'Srl No': 'serial_number',
+    'Customer Name': 'customer_name',
+    'City name': 'city_name',
     'Title': 'package_name',
     'Product Type': 'product_type',
     'Status': 'package_status',

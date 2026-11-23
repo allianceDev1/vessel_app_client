@@ -1,46 +1,68 @@
 import React from 'react'
 import './registration-info.scss';
-import { TbAlignJustified, TbCircleDashedLetterT, TbClockHour10, TbFileDescription, TbGrid3X3 } from 'react-icons/tb';
+import {
+    TbAlertCircle,
+    TbCircleDashedLetterT,
+    TbClockHour10,
+    TbGrid3X3,
+    TbNote,
+    TbStatusChange
+} from 'react-icons/tb';
 import Badge from '../../../UI_Primitives/badge/Badge';
 import { reg_priority } from '../../../../assets/javascript/pre_data/package';
 import { toStandardText } from '../../../../utils/helpers/text-formatting';
 
 const RegistrationInfo = ({ regId = null, regStatus = null, regType = null, serviceType = null, regTime = null, note = null, priority = 0, complaints = null }) => {
+    const hasComplaints = Array.isArray(complaints) ? complaints.length > 0 : Boolean(complaints);
+    const showPriority = [2, 3].includes(Number(priority));
+
     return (
         <div className="tech-registration-info-comp">
-            <div className="title">
-                <TbFileDescription />
-                <h4>Registration Info</h4>
-            </div>
+            {(hasComplaints || note) && (
+                <div className="highlights">
+                    {hasComplaints && (
+                        <div className="highlight-item complaints">
+                            <TbAlertCircle />
+                            <p>{complaints}</p>
+                        </div>
+                    )}
+                    {note && (
+                        <div className="highlight-item note">
+                            <TbNote />
+                            <p>{note}</p>
+                        </div>
+                    )}
+                </div>
+            )}
+
             <div className="content">
-                <div className="item">
-                    <TbGrid3X3 />
-                    <p>Reg ID</p>
-                    <p>: {regId}</p>
-                </div>
-                <div className="item">
-                    <TbGrid3X3 />
-                    <p>Reg Status</p>
-                    <p>: {regStatus}</p>
-                </div>
-                <div className="item">
-                    <TbClockHour10 />
-                    <p>Reg Time</p>
-                    <p>: {regTime}</p>
-                </div>
-                <div className="item">
-                    <TbCircleDashedLetterT />
-                    <p>Type & Priority</p>
-                    <p>: {toStandardText(regType ||'')} for {toStandardText(serviceType ||'')} {priority ? <Badge value={reg_priority[priority][0]} severity={reg_priority[priority][1]} /> : ''}</p>
-                </div>
-                {complaints && <div className="item">
-                    <TbAlignJustified />
-                    <p>Complaints</p>
-                    <p>: {complaints}</p>
-                </div>}
-            </div>
-            <div className="note">
-                <p><span>Note : </span> {note ? note : 'Not available'} </p>
+                {regId && (
+                    <div className="item">
+                        <TbGrid3X3 />
+                        <p>{regId}</p>
+                    </div>
+                )}
+                {regStatus && (
+                    <div className="item">
+                        <TbStatusChange />
+                        <p>{regStatus}</p>
+                    </div>
+                )}
+                {regTime && (
+                    <div className="item">
+                        <TbClockHour10 />
+                        <p>{regTime}</p>
+                    </div>
+                )}
+                {(regType || serviceType || showPriority) && (
+                    <div className="item item-full">
+                        <TbCircleDashedLetterT />
+                        <p>
+                            {toStandardText(regType || '')} for {toStandardText(serviceType || '')}
+                            {showPriority ? <> <Badge value={reg_priority[priority][0]} severity={reg_priority[priority][1]} /></> : null}
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     )

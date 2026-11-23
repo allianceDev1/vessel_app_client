@@ -251,3 +251,47 @@ export const formatSecondsToHHMM = (totalSeconds) => {
 
     return arr?.length ? arr.join(' ') : '0m';
 };
+
+export const dateToDateTimeLocal = (input) => {
+    if (!input) return '';
+
+    const date = typeof input === "string" ? new Date(input) : input;
+    if (isNaN(date.getTime())) return '';
+
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const min = String(date.getMinutes()).padStart(2, "0");
+
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+};
+
+export const isTimeBetween = (input, startHour = 6, endHour = 21) => {
+    if (!input) return false;
+
+    const date = typeof input === "string" ? new Date(input) : input;
+    if (isNaN(date.getTime())) return false;
+
+    const totalMinutes = date.getHours() * 60 + date.getMinutes();
+    return totalMinutes >= startHour * 60 && totalMinutes <= endHour * 60;
+};
+
+export const validateScheduleDateTime = (input, startHour = 6, endHour = 21) => {
+    if (!input) return '';
+
+    const selected = typeof input === "string" ? new Date(input) : input;
+    if (isNaN(selected.getTime())) return 'Invalid schedule date and time';
+
+    const now = new Date();
+    now.setSeconds(0, 0);
+    if (selected.getTime() < now.getTime()) {
+        return 'Schedule date and time must be current or future';
+    }
+
+    if (!isTimeBetween(selected, startHour, endHour)) {
+        return 'Schedule time must be between 6:00 AM and 9:00 PM';
+    }
+
+    return '';
+};
