@@ -2,7 +2,7 @@
 
 // Primary color
 $primary-color-light : #0066FF;
-$primary-color-dark : #009CFF ;
+$primary-color-dark : #3580F2;
 
 $primary-light-palette: (
     50: #E5F0FF,
@@ -18,22 +18,21 @@ $primary-light-palette: (
 );
 
 $primary-dark-palette: (
-    50: #E0F2FF ,
-    100: #B3E0FF ,
-    200: #80CDFF ,
-    300: #4DBBFF ,
-    400: #26ACFF ,
+    50: #EBF3FF,
+    100: #CFE2FF,
+    200: #A6C8FF,
+    300: #7AB0FF,
+    400: #5498FA,
     500: $primary-color-dark,
-    600: #008DEB,
-    700: #007AD5,
-    800: #0067BF,
-    900: #0042A6,
-
+    600: #2968CC,
+    700: #24529E,
+    800: #192E4D,
+    900: #132238,
 );
 
 // Success color
 $success-color-light: #009a46;
-$success-color-dark: $success-color-light;
+$success-color-dark: #22A86B;
 
 $success-light-palette: (
     50: #E0F5E8,
@@ -49,21 +48,21 @@ $success-light-palette: (
 );
 
 $success-dark-palette: (
-    50: #E0F5E8,
-    100: #B3E6C6,
-    200: #80D4A0,
-    300: #4DC17A,
-    400: #26AE5B,
+    50: #E6F7EF,
+    100: #C2ECD8,
+    200: #91DFBA,
+    300: #63CFA0,
+    400: #3DBE86,
     500: $success-color-dark,
-    600: #008C3F,
-    700: #007936,
-    800: #00652D,
-    900: #004B20,
+    600: #1B8A58,
+    700: #1D6B48,
+    800: #16362A,
+    900: #11271F,
 );
 
 // Warning color
 $warning-color-light: #938700;
-$warning-color-dark: $warning-color-light;
+$warning-color-dark: #D98A2B;
 
 $warning-light-palette: (
     50: #FFFEE0,
@@ -79,21 +78,21 @@ $warning-light-palette: (
 );
 
 $warning-dark-palette: (
-    50: #FFFEE0,
-    100: #FFFCB3,
-    200: #FFF680,
-    300: #E9D84D,
-    400: #BFA726,
+    50: #FDF5E6,
+    100: #FAE5BF,
+    200: #F6CF8E,
+    300: #F0B860,
+    400: #E6A141,
     500: $warning-color-dark,
-    600: #867B00,
-    700: #746800,
-    800: #615500,
-    900: #4B3E00,
+    600: #B8711F,
+    700: #8A561B,
+    800: #382B16,
+    900: #292012,
 );
 
 // Danger color
 $danger-color-light: #d30038;
-$danger-color-dark: $danger-color-light;
+$danger-color-dark: #DF5262;
 
 $danger-light-palette: (
     50: #FEE0E5,
@@ -109,21 +108,21 @@ $danger-light-palette: (
 );
 
 $danger-dark-palette: (
-    50: #FEE0E5,
-    100: #FFB3C0,
-    200: #F98092,
-    300: #E84D63,
-    400: #DD2648,
+    50: #FCECEF,
+    100: #F9CFD5,
+    200: #F4A7B1,
+    300: #EE8492,
+    400: #E76A79,
     500: $danger-color-dark,
-    600: #BF0032,
-    700: #A8002B,
-    800: #920025,
-    900: #74001B,
+    600: #BF3E4D,
+    700: #8E323E,
+    800: #3A1D26,
+    900: #2A161D,
 );
 
 // Info color
 $info-color-light: #0085f2;
-$info-color-dark: $info-color-light;
+$info-color-dark: #2B95E3;
 
 $info-light-palette: (
     50: #E0F1FF,
@@ -139,20 +138,20 @@ $info-light-palette: (
 );
 
 $info-dark-palette: (
-    50: #E0F1FF,
-    100: #B3DAFF,
-    200: #80BFFA,
-    300: #4D9FFF,
-    400: #268EFA,
+    50: #E8F5FE,
+    100: #C5E5FC,
+    200: #9AD0F9,
+    300: #70BAF5,
+    400: #4AA7EC,
     500: $info-color-dark,
-    600: #0079DE,
-    700: #0064C7,
-    800: #0050B0,
-    900: #00388A,
+    600: #2079BD,
+    700: #1E5E91,
+    800: #17324A,
+    900: #112436,
 );
 
 
-// Neutral colors (grayscale)
+// Neutral colors (light theme grayscale — preserved as-is)
 $neutral-color-light: white;
 $neutral-color-dark: black;
 
@@ -189,4 +188,40 @@ $neutral-palette: (
 
     // True Black
     1000: #000000
+);
+
+// Neutral colors for dark theme (smooth cool-slate charcoal scale to reduce glare & eye strain)
+$neutral-dark-palette: (
+    // Crisp white (for solid button icons/labels) & soft off-whites (for readable low-glare text)
+    0: #FFFFFF,
+    25: #F0F4F8,
+    50: #E6ECF2,
+    75: #D8E0EA,
+    100: #C8D2DF,
+
+    // Soft cool-slate mid-tones for secondary, tertiary & muted text
+    150: #B6C2D2,
+    200: #A5B3C5,
+    250: #94A3B8,
+    300: #8494AA,
+    350: #73839B,
+    400: #64748B,
+    450: #58677E,
+
+    // Mid-slate anchor & border tones
+    500: #4B596F,
+    550: #3F4C60,
+    600: #344052,
+    650: #2A3444,
+
+    // Smooth dark elevation surfaces
+    700: #263040,
+    750: #202937,
+    800: #1B2330,
+    850: #171E29,
+    900: #141A24,
+    950: #10151D,
+
+    // Deepest slate-black
+    1000: #0A0E14
 );

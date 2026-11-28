@@ -24,5 +24,22 @@ body {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 2px 8px;
-    font-size: 13px
+    font-size: 13px;
+}
+
+.dark {
+    .tooltip {
+        background-color: var(--surface-3);
+        color: var(--text-primary);
+        border-color: var(--border-default);
+    }
+
+    .recharts-cartesian-axis-tick-value {
+        fill: var(--text-tertiary);
+    }
+
+    .recharts-cartesian-axis-line,
+    .recharts-cartesian-axis-tick-line {
+        stroke: var(--border-light);
+    }
 }
