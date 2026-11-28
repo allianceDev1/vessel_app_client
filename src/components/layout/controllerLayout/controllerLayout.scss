@@ -162,7 +162,7 @@ $header-h: 58px;
                     // Active — solid primary pill
                     &.active {
                         background-color: var(--color-primary);
-                        color: var(--text-inverse);
+                        color: var(--color-white);
                         border-radius: 20px;
                     }
                 }
