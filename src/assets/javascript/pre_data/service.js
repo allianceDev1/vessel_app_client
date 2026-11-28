@@ -43,17 +43,17 @@ export const SERVICE_PRIORITY_TEXT = Object.fromEntries(
 );
 
 export const SERVICE_REG_STATUS_LIST = [
-    { key: 1, label: "Registered", bg: "rgba(107, 114, 128, 0.12)", text: "#6B7280", border: "rgba(107, 114, 128, 0.25)" },
-    { key: 2, label: "Proceed", bg: "rgba(37, 99, 235, 0.12)", text: "#2563EB", border: "rgba(37, 99, 235, 0.25)" },
-    { key: 3, label: "Scheduled", bg: "rgba(124, 58, 237, 0.12)", text: "#7C3AED", border: "rgba(124, 58, 237, 0.25)" },
-    { key: 4, label: "On Visit", bg: "rgba(234, 88, 12, 0.12)", text: "#EA580C", border: "rgba(234, 88, 12, 0.25)" },
-    { key: 5, label: "Closed", bg: "rgba(22, 163, 74, 0.12)", text: "#16A34A", border: "rgba(22, 163, 74, 0.25)" },
-    { key: 6, label: "Cancelled", bg: "rgba(220, 38, 38, 0.12)", text: "#DC2626", border: "rgba(220, 38, 38, 0.25)" }
+    { key: 1, label: "Registered", bg: "var(--status-neutral-bg)", text: "var(--status-neutral-text)", border: "var(--status-neutral-border)" },
+    { key: 2, label: "Proceed", bg: "var(--status-blue-bg)", text: "var(--status-blue-text)", border: "var(--status-blue-border)" },
+    { key: 3, label: "Scheduled", bg: "var(--status-purple-bg)", text: "var(--status-purple-text)", border: "var(--status-purple-border)" },
+    { key: 4, label: "On Visit", bg: "var(--status-orange-bg)", text: "var(--status-orange-text)", border: "var(--status-orange-border)" },
+    { key: 5, label: "Closed", bg: "var(--status-success-bg)", text: "var(--status-success-text)", border: "var(--status-success-border)" },
+    { key: 6, label: "Cancelled", bg: "var(--status-danger-bg)", text: "var(--status-danger-text)", border: "var(--status-danger-border)" }
 ]
 
 export const SERVICE_VISIT_STATUS_LIST = [
-    { key: 1, label: "Travel", bg: "rgba(37, 99, 235, 0.12)", text: "#2563EB", border: "rgba(37, 99, 235, 0.25)" },
-    { key: 2, label: "In Service", bg: "rgba(124, 58, 237, 0.12)", text: "#7C3AED", border: "rgba(124, 58, 237, 0.25)" },
-    { key: 3, label: "Completed", bg: "rgba(22, 163, 74, 0.12)", text: "#16A34A", border: "rgba(22, 163, 74, 0.25)" },
-    { key: 4, label: "Cancelled", bg: "rgba(220, 38, 38, 0.12)", text: "#DC2626", border: "rgba(220, 38, 38, 0.25)" }
+    { key: 1, label: "Travel", bg: "var(--status-blue-bg)", text: "var(--status-blue-text)", border: "var(--status-blue-border)" },
+    { key: 2, label: "In Service", bg: "var(--status-purple-bg)", text: "var(--status-purple-text)", border: "var(--status-purple-border)" },
+    { key: 3, label: "Completed", bg: "var(--status-success-bg)", text: "var(--status-success-text)", border: "var(--status-success-border)" },
+    { key: 4, label: "Cancelled", bg: "var(--status-danger-bg)", text: "var(--status-danger-text)", border: "var(--status-danger-border)" }
 ]

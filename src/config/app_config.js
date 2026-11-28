@@ -1,5 +1,5 @@
 export const ui_version = 'v2.5.0'
-export const app_version = 'v2.2.3'
+export const app_version = 'v2.2.4'
 
 
 export const parent_product_types = ["WATER_PURIFIER", "VESSEL_FILTER"]

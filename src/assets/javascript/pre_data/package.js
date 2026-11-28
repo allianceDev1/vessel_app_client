@@ -25,8 +25,8 @@ export const PACKAGE_STATUSES_TEXT = Object.fromEntries(
 );
 
 export const PACKAGE_STATUSES_LIST = [
-    { key: 1, label: "Pending", bg: "rgba(107, 114, 128, 0.12)", text: "#6B7280", border: "rgba(107, 114, 128, 0.25)" },
-    { key: 2, label: "Active", bg: "rgba(22, 163, 74, 0.12)", text: "#16A34A", border: "rgba(22, 163, 74, 0.25)" },
-    { key: 3, label: "Expired", bg: "rgba(220, 38, 38, 0.12)", text: "#DC2626", border: "rgba(220, 38, 38, 0.25)" },
-    { key: 4, label: "Frozen", bg: "rgba(234, 88, 12, 0.12)", text: "#EA580C", border: "rgba(234, 88, 12, 0.25)" }
+    { key: 1, label: "Pending", bg: "var(--status-neutral-bg)", text: "var(--status-neutral-text)", border: "var(--status-neutral-border)" },
+    { key: 2, label: "Active", bg: "var(--status-success-bg)", text: "var(--status-success-text)", border: "var(--status-success-border)" },
+    { key: 3, label: "Expired", bg: "var(--status-danger-bg)", text: "var(--status-danger-text)", border: "var(--status-danger-border)" },
+    { key: 4, label: "Frozen", bg: "var(--status-orange-bg)", text: "var(--status-orange-text)", border: "var(--status-orange-border)" }
 ]

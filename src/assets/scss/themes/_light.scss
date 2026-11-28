@@ -143,6 +143,35 @@
 
 
   // =========================================================
+  // STATUS BADGES / TABLE CELLS
+  // =========================================================
+
+  --status-neutral-bg: rgba(107, 114, 128, 0.12);
+  --status-neutral-text: #6B7280;
+  --status-neutral-border: rgba(107, 114, 128, 0.25);
+
+  --status-blue-bg: rgba(37, 99, 235, 0.12);
+  --status-blue-text: #2563EB;
+  --status-blue-border: rgba(37, 99, 235, 0.25);
+
+  --status-purple-bg: rgba(124, 58, 237, 0.12);
+  --status-purple-text: #7C3AED;
+  --status-purple-border: rgba(124, 58, 237, 0.25);
+
+  --status-orange-bg: rgba(234, 88, 12, 0.12);
+  --status-orange-text: #EA580C;
+  --status-orange-border: rgba(234, 88, 12, 0.25);
+
+  --status-success-bg: rgba(22, 163, 74, 0.12);
+  --status-success-text: #16A34A;
+  --status-success-border: rgba(22, 163, 74, 0.25);
+
+  --status-danger-bg: rgba(220, 38, 38, 0.12);
+  --status-danger-text: #DC2626;
+  --status-danger-border: rgba(220, 38, 38, 0.25);
+
+
+  // =========================================================
   // NEUTRAL / UTILITY
   // =========================================================
 
